@@ -1,0 +1,86 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <AssemblyName></AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <OutputType>WinExe</OutputType>
+    <UseWindowsForms>True</UseWindowsForms>
+    <TargetFramework>net48</TargetFramework>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>Preview</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <RootNamespace />
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Microsoft\**" />
+    <Compile Remove="WinFormAnimation2\**" />
+    <Compile Remove="WinFormAnimation\**" />
+    <EmbeddedResource Remove="Microsoft\**" />
+    <EmbeddedResource Remove="WinFormAnimation2\**" />
+    <EmbeddedResource Remove="WinFormAnimation\**" />
+    <None Remove="Microsoft\**" />
+    <None Remove="WinFormAnimation2\**" />
+    <None Remove="WinFormAnimation\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="nSUbb4ghEE10HW9gIn.OxRwsA5nGmxodA4dng" />
+    <None Remove="YqUXEBUNiBeDFaYbjF.UFldmcAMm1J7sWLLpT" />
+    <None Remove="CircularProgressBar\CircularProgressBar.bmp" />
+    <None Remove="LauncherGHU\cedrus.cedrus.ghu" />
+    <None Remove="LauncherGHU\cedrus.gunhoiuc.ghu" />
+    <None Remove="LauncherGHU\cedrus.Gunhoiuc.exe" />
+    <None Remove="fonts\fa-regular-400.ttf" />
+    <None Remove="fonts\fa-solid-900.ttf" />
+    <None Remove="fonts\fa-brands-400.ttf" />
+    <None Remove="MetroFramework\Localization\de.MetroToggle.xml" />
+    <None Remove="MetroFramework\Localization\en.MetroToggle.xml" />
+    <None Remove="MetroFramework\Fonts\Resources.Open_Sans_Bold.ttf" />
+    <None Remove="MetroFramework\Fonts\Resources.Open_Sans_Light.ttf" />
+    <None Remove="MetroFramework\Fonts\Resources.Open_Sans.ttf" />
+    <None Remove="MaterialSkin\Resources.Roboto-Regular.ttf" />
+    <None Remove="MaterialSkin\Resources.Roboto-Medium.ttf" />
+    <EmbeddedResource Include="nSUbb4ghEE10HW9gIn.OxRwsA5nGmxodA4dng" />
+    <EmbeddedResource Include="YqUXEBUNiBeDFaYbjF.UFldmcAMm1J7sWLLpT" />
+    <EmbeddedResource Include="CircularProgressBar\CircularProgressBar.bmp" />
+    <EmbeddedResource Include="LauncherGHU\cedrus.cedrus.ghu" />
+    <EmbeddedResource Include="LauncherGHU\cedrus.gunhoiuc.ghu" />
+    <EmbeddedResource Include="LauncherGHU\cedrus.Gunhoiuc.exe" />
+    <EmbeddedResource Include="fonts\fa-regular-400.ttf" />
+    <EmbeddedResource Include="fonts\fa-solid-900.ttf" />
+    <EmbeddedResource Include="fonts\fa-brands-400.ttf" />
+    <EmbeddedResource Include="MetroFramework\Localization\de.MetroToggle.xml" />
+    <EmbeddedResource Include="MetroFramework\Localization\en.MetroToggle.xml" />
+    <EmbeddedResource Include="MetroFramework\Fonts\Resources.Open_Sans_Bold.ttf" />
+    <EmbeddedResource Include="MetroFramework\Fonts\Resources.Open_Sans_Light.ttf" />
+    <EmbeddedResource Include="MetroFramework\Fonts\Resources.Open_Sans.ttf" />
+    <EmbeddedResource Include="MaterialSkin\Resources.Roboto-Regular.ttf" />
+    <EmbeddedResource Include="MaterialSkin\Resources.Roboto-Medium.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Data" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FontAwesome.Sharp" Version="5.15.3" />
+    <PackageReference Include="VisualBasic.PowerPacks.Vs" Version="1.0.0" />
+    <PackageReference Include="WinFormAnimation" Version="1.6.0.4" />
+  </ItemGroup>
+</Project>

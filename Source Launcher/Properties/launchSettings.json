@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "GunHoiUcV69": {
+      "commandName": "Project"
+    },
+    "GunnyLocPhatV10": {
+      "commandName": "Project"
+    },
+    "SieuGunny": {
+      "commandName": "Executable",
+      "commandLineArgs": "Home: http://185.88.175.192/"
+    }
+  }
+}

@@ -1,0 +1,155 @@
+<Result total="153" value="true" message="Success!">
+  <Item ID="100" Order="60" Show="0" Name="Acemi öğretmen" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikte elde et（Elde edilemez）" />
+  <Item ID="101" Order="61" Show="0" Name="Yüksek seviyeli öğretmen" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikte elde et（Elde edilemez）" />
+  <Item ID="102" Order="62" Show="0" Name="Sert öğretmen" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikte elde et（Elde edilemez）" />
+  <Item ID="103" Order="63" Show="0" Name="Kuzey ve güneyin öğretmeni" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikte elde et（Elde edilemez）" />
+  <Item ID="104" Order="64" Show="0" Name="Efsanevi öğretmen" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikte elde et（Elde edilemez）" />
+  <Item ID="105" Order="65" Show="0" Name="Dünyaca ünlü" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="1000 sunucular arası büyük hoparlörü kullan（Elde edilemez）" />
+  <Item ID="106" Order="66" Show="0" Name="Meşhur" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="1000 büyük hoparlör kullan（Elde edilemez）" />
+  <Item ID="107" Order="67" Show="0" Name="İsmini değiştirme" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="1000 küçük hoparlör kullan（Elde edilemez）" />
+  <Item ID="108" Order="68" Show="0" Name="Maliye bakanı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Birliğe 50000 katkı bağışla（Elde edilemez）" />
+  <Item ID="109" Order="69" Show="0" Name="Mutlu aşık/Güzel kadın" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Evlenme sayısı 1024 defaya ulaşsın（Elde edilemez）" />
+  <Item ID="111" Order="71" Show="0" Name="Delip geçme" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Saldırı değeri 2000'e ulaşsın（Elde edilemez）" />
+  <Item ID="112" Order="72" Show="0" Name="Ölüm geçirmez" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Savunma değeri 2000'e ulaşsın（Elde edilemez）" />
+  <Item ID="113" Order="73" Show="0" Name="Devirme çok geç" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Çeviklik değeri 2000'e ulaşsın（Elde edilemez）" />
+  <Item ID="114" Order="74" Show="0" Name="Ölümcül darbe" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Şans değeri 2000'e ulaşsın（Elde edilemez）" />
+  <Item ID="115" Order="75" Show="0" Name="Maymun kral" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Savaş gücü 60000'e ulaşsın（Elde edilemez）" />
+  <Item ID="116" Order="76" Show="0" Name="Kraliçeyi çevirme" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Kendi elinle 2000 defa karınca kraliçesini öldür（Elde edilemez）" />
+  <Item ID="117" Order="77" Show="0" Name="Bogo'nun öcü" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Kendi elinle 2000 defa Bogo BOSS'unu öldür（Elde edilemez）" />
+  <Item ID="118" Order="78" Show="0" Name="Kötü ruhlar kralı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Kendi elinle 2000 defa kabile reisini yen（Elde edilemez）" />
+  <Item ID="119" Order="79" Show="0" Name="Karşı konulmaz" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="10000 oyuncuyu yen（Elde edilemez）" />
+  <Item ID="120" Order="80" Show="0" Name="Son savaşçı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Serbest savaşta 10000 defa kazan（Elde edilemez）" />
+  <Item ID="121" Order="81" Show="0" Name="Birlik güzidesi" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Birlik savaşını 5000 defa kazan（Elde edilemez）" />
+  <Item ID="122" Order="82" Show="0" Name="Çok zengin" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="300000 altın biriktir（Elde edilemez）" />
+  <Item ID="123" Order="83" Show="0" Name="Yer gök para" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="10000000 altın biriktir（Elde edilemez）" />
+  <Item ID="124" Order="84" Show="0" Name="Altın tanrısı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Baskı tükendi（Elde edilemez）" />
+  <Item ID="125" Order="85" Show="0" Name="Yüce onur" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="300 madalya biriktir（Elde edilemez）" />
+  <Item ID="126" Order="86" Show="0" Name="Tanrı onuru" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="15. seviyeye yükselt（Elde edilemez）" />
+  <Item ID="127" Order="87" Show="0" Name="Bombom acemi eri" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="20. seviyeye yükselt（Elde edilemez）" />
+  <Item ID="128" Order="88" Show="0" Name="Bombom çavuşu" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="25. seviyeye yükselt（Elde edilemez）" />
+  <Item ID="129" Order="89" Show="0" Name="Bombom üsteğmeni" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="30. seviyeye yükselt（Elde edilemez）" />
+  <Item ID="130" Order="90" Show="0" Name="Bombom albayı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="35. seviyeye yükselt（Elde edilemez）" />
+  <Item ID="131" Order="91" Show="0" Name="Bombom Mareşalı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="40. seviyeye yükselt（Elde edilemez）" />
+  <Item ID="132" Order="92" Show="0" Name="Birlik kahramanı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Birlik savaşını 1000 defa kazan（Elde edilemez）" />
+  <Item ID="133" Order="93" Show="0" Name="Görmüş geçirmiş" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="1000 savaşı tamamla（Elde edilemez）" />
+  <Item ID="134" Order="94" Show="0" Name="Deliyle dövüşme" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="10000 savaşı tamamla（Elde edilemez）" />
+  <Item ID="135" Order="95" Show="0" Name="İyimserlik" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Sunucular arası savaşta 2000 defa kazan（Elde edilemez）" />
+  <Item ID="136" Order="96" Show="0" Name="Karanlık kral" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Kendi elinle 400 defa Minotaurosu yen（Elde edilemez）" />
+  <Item ID="137" Order="97" Show="0" Name="İnsan top" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="700 defa Bom silahını kullanarak kazan（Elde edilemez）" />
+  <Item ID="138" Order="98" Show="0" Name="Fırtına kahramanı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="700 defa kamikaze silahını kullanarak kazan（Elde edilemez）" />
+  <Item ID="139" Order="99" Show="0" Name="Öfke ateşi zırhı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="700 defa alev silahını kullanarak kazan（Elde edilemez）" />
+  <Item ID="140" Order="100" Show="0" Name="Sima ruh göçümü" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="700 defa öfke ateşi silahını kullanarak kazan（Elde edilemez）" />
+  <Item ID="141" Order="101" Show="0" Name="Silah savaşçısı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="700 defa engelsiz silahı kullanarak kazan（Elde edilemez）" />
+  <Item ID="142" Order="102" Show="0" Name="Meyve tanrısı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="700 defa  meyve sepeti silahını kullanarak kazan（Elde edilemez）" />
+  <Item ID="143" Order="103" Show="0" Name="Uçan bıçak" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="700 defa İlk yardım çantası silahını kullanarak kazan（Elde edilemez）" />
+  <Item ID="144" Order="104" Show="0" Name="Yıldırım Üstadı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="700 defa yıldırım silahını kullanarak kazan（Elde edilemez）" />
+  <Item ID="145" Order="105" Show="0" Name="Yenilmez eşya" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="700 defa siyah beyaz elektrik silahını kullanarak kazan（Elde edilemez）" />
+  <Item ID="146" Order="106" Show="0" Name="Silah ustası" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="9 çeşit silah ünvanlarının tamamının alınması gerekiyor（Elde edilemez）" />
+  <Item ID="147" Order="107" Show="0" Name="Güçlendirme ustası" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="12 güçteki bir ekipmanı kuşan（Elde edilemez）" />
+  <Item ID="148" Order="108" Show="0" Name="Cevher" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="2000 inci aç（Elde edilemez）" />
+  <Item ID="149" Order="109" Show="0" Name="Oyun ustası" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Çevrimiçi zamanın 60000 dakikayı aşsın（Elde edilemez）" />
+  <Item ID="150" Order="110" Show="0" Name="Kökten imha" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Karınca yuvasını 5000 defa geç（Elde edilemez）" />
+  <Item ID="151" Order="111" Show="0" Name="Avucunun içinde" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Bogo kalesini 5000 defa geç（Elde edilemez）" />
+  <Item ID="152" Order="112" Show="0" Name="Ben hükümdarım" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Kötü Kabileyi 5000 defa geç（Elde edilemez）" />
+  <Item ID="153" Order="113" Show="0" Name="V5" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="500 defa zafer anonsu et（Elde edilemez）" />
+  <Item ID="154" Order="114" Show="0" Name="Liang dağı Kahramanları" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Birlik varlığını bağış ile 10000 yap （Elde edilemez）" />
+  <Item ID="155" Order="115" Show="0" Name="Görev delisi" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="2000 günlük görev tamamla（Elde edilemez）" />
+  <Item ID="156" Order="116" Show="0" Name="Ezik" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Karanlık kaleyi 500 defa geç（Elde edilemez）" />
+  <Item ID="157" Order="117" Show="0" Name="Olağanüstü mükafat" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Savaşta 50000 rozet biriktir（Elde edilemez）" />
+  <Item ID="158" Order="118" Show="0" Name="Eşsiz" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Karı koca eşliğinde 3000 savaş kazan（Elde edilemez）" />
+  <Item ID="159" Order="119" Show="0" Name="VIP" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="VIP seviyesi 1.seviyeye ulaştı（Elde edilemez）" />
+  <Item ID="160" Order="120" Show="0" Name="Altın VİP" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="VIP seviyesi 1.seviyeye ulaştı（Elde edilemez）" />
+  <Item ID="161" Order="121" Show="0" Name="Platin VİP" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="VIP seviyesi 1.seviyeye ulaştı（Elde edilemez）" />
+  <Item ID="162" Order="122" Show="0" Name="Elmas VİP" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="VIP seviyesi 1.seviyeye ulaştı（Elde edilemez）" />
+  <Item ID="163" Order="123" Show="0" Name="En iyi VİP" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="VIP seviyesi 1.seviyeye ulaştı（Elde edilemez）" />
+  <Item ID="164" Order="124" Show="0" Name="Benben" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Kendi elinle 400 defa pis salağı yen（Elde edilemez）" />
+  <Item ID="165" Order="125" Show="0" Name="Civciv hızlı vurmak" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Civciv koş'u 500 defa geç（Elde edilemez）" />
+  <Item ID="166" Order="126" Show="0" Name="Boksör kralı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Kendi elinle 400 defa Meca'yı yen（Elde edilemez）" />
+  <Item ID="167" Order="127" Show="0" Name="Spor şampiyonu" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Bogo olimpiyatını 500 defa yen（Elde edilemez）" />
+  <Item ID="168" Order="128" Show="0" Name="Ejderha öldürücüsü" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Kendi elinle 400 defa Palu Batur'u yen （Elde edilemez）" />
+  <Item ID="169" Order="129" Show="0" Name="Cesur" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Ejderha yuvasını 500 defa geç（Elde edilemez）" />
+  <Item ID="170" Order="130" Show="0" Name="Tam tekmil savaşçı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Alıştırmada 5 çeşit yöntemle yüksek seviyeli eğitmeni yen（Elde edilemez）" />
+  <Item ID="171" Order="131" Show="0" Name="Terminatör" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Kendi elinle 400 defa Legali'yi yen（Elde edilemez）" />
+  <Item ID="172" Order="132" Show="0" Name="Zaman muhafızı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Uzay zaman boşluğunu 500 defa geç（Elde edilemez）" />
+  <Item ID="173" Order="133" Show="0" Name="Savaşçı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Kendi elinle 400 defa ikiz kralı yen（Elde edilemez）" />
+  <Item ID="174" Order="134" Show="0" Name="Bombom Derebeyi" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="50.seviyeye yükseldi（Elde edilemez）" />
+  <Item ID="175" Order="135" Show="0" Name="Güçlü Bombom oyuncusu" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="60. seviyeye ulaş（Elde edilemez）" />
+  <Item ID="176" Order="136" Show="0" Name="Bombom Tanrısı" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Savaşı atletik maçı 500 defa geç（Elde edilemez）" />
+  <Item ID="602" Order="1" Show="1" Name="Savaş Gücü Kralı" Pic="1001" Att="30" Def="0" Agi="0" Luck="0" Desc="Savaş gücün, bin kişiye bedel," />
+  <Item ID="603" Order="2" Show="1" Name="Cazibe" Pic="1002" Att="0" Def="0" Agi="0" Luck="10" Desc="Cazibenle kimse yarışamaz" />
+  <Item ID="604" Order="3" Show="1" Name="Yarışma Şampiyonu" Pic="1003" Att="10" Def="0" Agi="20" Luck="0" Desc="Savaş sırasında sen yenilmezliğin simgesisin." />
+  <Item ID="611" Order="4" Show="1" Name="Ekstrem elmas" Pic="1004" Att="0" Def="0" Agi="30" Luck="0" Desc="Bombom egemenlik savaşı 3 kral yolu" />
+  <Item ID="612" Order="5" Show="1" Name="Ekstrem altın" Pic="1005" Att="0" Def="0" Agi="20" Luck="0" Desc="Bombom egemenlik savaşı 3 kralın biri" />
+  <Item ID="613" Order="6" Show="1" Name="Ekstrem gümüş" Pic="1006" Att="0" Def="0" Agi="10" Luck="0" Desc="Bombom egemenlik savaşı 3 kralın biri" />
+  <Item ID="614" Order="7" Show="1" Name="Elit oyuncular" Pic="1007" Att="0" Def="0" Agi="0" Luck="10" Desc="Bombom egemenlik savaşında krala karşı olma arzusu olan insanlar" />
+  <Item ID="615" Order="8" Show="1" Name="Binek gezgini" Pic="1008" Att="0" Def="0" Agi="10" Luck="0" Desc="Bineğin Bombom alemi dünyasında bir efsane." />
+  <Item ID="618" Order="10" Show="1" Name="Ağustos böceği" Pic="1011" Att="5" Def="5" Agi="15" Luck="5" Desc="Yaz mevsimi ve ağustos böceği, işte bu büyük haşere savaşının anlamıdır." />
+  <Item ID="619" Order="13" Show="1" Name="Solucan yakalayıcı" Pic="1012" Att="0" Def="0" Agi="10" Luck="0" Desc="Büyük böcek savaşının etkinliğinde Usta Zarifliğine katılabilirsin." />
+  <Item ID="620" Order="12" Show="1" Name="Solucan yakalama fanatiği" Pic="1013" Att="0" Def="0" Agi="15" Luck="0" Desc="O zavallı böceklere bir yaşam yolu bırak!" />
+  <Item ID="621" Order="14" Show="1" Name="Solucan yakalama ustası" Pic="1014" Att="0" Def="0" Agi="5" Luck="0" Desc="Böcek yakalama yeteneğin delikanlılar içinde nam saldı." />
+  <Item ID="622" Order="15" Show="1" Name="Erken kalkan kuş" Pic="1015" Att="0" Def="0" Agi="10" Luck="0" Desc="Etkinlikte elde et" />
+  <Item ID="624" Order="17" Show="1" Name="Doğu kaybetmez" Pic="1017" Att="0" Def="20" Agi="0" Luck="0" Desc="Etkinlikte elde et" />
+  <Item ID="625" Order="18" Show="1" Name="Sisli bulut" Pic="1018" Att="20" Def="20" Agi="20" Luck="20" Desc="En Yüksek Binek Seviyesi" />
+  <Item ID="626" Order="9" Show="1" Name="Böcek perisinin kralı" Pic="1019" Att="10" Def="10" Agi="15" Luck="5" Desc="Böcek savaşında en iyi böcek yakalayan kişi, benzeri yok." />
+  <Item ID="627" Order="19" Show="1" Name="Çiçek" Pic="1020" Att="30" Def="30" Agi="30" Luck="30" Desc="Etkinlikte elde et" />
+  <Item ID="629" Order="11" Show="1" Name="Yusufçuk çocuğu" Pic="1022" Att="5" Def="5" Agi="10" Luck="0" Desc="Yusufçuk mu, kelebek mi, hiçbiri elimdeki ağdan kaçamaz." />
+  <Item ID="630" Order="51" Show="1" Name="Birlik hükümdarı" Pic="2026" Att="0" Def="10" Agi="5" Luck="0" Desc="Etkinlik Olsun" />
+  <Item ID="631" Order="52" Show="1" Name="Birlik eliti" Pic="2027" Att="0" Def="0" Agi="10" Luck="5" Desc="Etkinlik Olsun" />
+  <Item ID="632" Order="53" Show="1" Name="Birlik kahramanı" Pic="2028" Att="10" Def="0" Agi="0" Luck="10" Desc="Etkinlik Olsun" />
+  <Item ID="633" Order="54" Show="1" Name="Birlik yıldızı" Pic="2029" Att="0" Def="0" Agi="15" Luck="5" Desc="Etkinlik Olsun" />
+  <Item ID="634" Order="55" Show="1" Name="Güzel tanrıça" Pic="2030" Att="0" Def="5" Agi="0" Luck="20" Desc="Etkinlik Olsun" />
+  <Item ID="635" Order="50" Show="1" Name="Çiçek odasının kızı" Pic="2025" Att="5" Def="5" Agi="5" Luck="5" Desc="Etkinlik Olsun" />
+  <Item ID="636" Order="56" Show="1" Name="Sofu" Pic="2031" Att="5" Def="0" Agi="10" Luck="0" Desc="Etkinlik Olsun" />
+  <Item ID="637" Order="57" Show="1" Name="Çavdar koruyucusu" Pic="2032" Att="10" Def="10" Agi="0" Luck="0" Desc="Etkinlik Olsun" />
+  <Item ID="638" Order="58" Show="1" Name="Hippi genç" Pic="2033" Att="5" Def="0" Agi="15" Luck="0" Desc="Etkinlik Olsun" />
+  <Item ID="639" Order="59" Show="1" Name="Ozan" Pic="2034" Att="20" Def="0" Agi="0" Luck="5" Desc="Etkinlik Olsun" />
+  <Item ID="675" Order="137" Show="1" Name="Mutluluk" Pic="1068" Att="20" Def="20" Agi="20" Luck="20" Desc="Gelişmiş düğün" />
+  <Item ID="676" Order="69" Show="1" Name="Sonsuz Aşk" Pic="1069" Att="30" Def="30" Agi="30" Luck="30" Desc="Büyük-Kaliteli düğün yaptıktan sonra elde edebilirsiniz." />
+  <Item ID="686" Order="157" Show="1" Name="Eleme Ustası" Pic="1079" Att="15" Def="10" Agi="10" Luck="10" Desc="Eleme Ustası Etkinliğinden alın" />
+  <Item ID="687" Order="158" Show="1" Name="Fotoğrafik Hafıza" Pic="1080" Att="10" Def="10" Agi="15" Luck="10" Desc="İkişer İkişer Etkinliğinden alın" />
+  <Item ID="688" Order="159" Show="1" Name="Üst" Pic="1081" Att="80" Def="80" Agi="80" Luck="80" Desc="Sunucular arası Savaş Sıralaması No.1" />
+  <Item ID="689" Order="160" Show="1" Name="Benzersiz" Pic="1082" Att="70" Def="70" Agi="70" Luck="70" Desc="Sunucular arası Savaş Sıralaması No.2" />
+  <Item ID="690" Order="161" Show="1" Name="Parlak" Pic="1083" Att="60" Def="60" Agi="60" Luck="60" Desc="Sunucular arası Savaş Sıralaması No.3" />
+  <Item ID="691" Order="162" Show="1" Name="Toplayıcı" Pic="1084" Att="20" Def="10" Agi="20" Luck="10" Desc="Kart Etkinliğinden alınır." />
+  <Item ID="695" Order="166" Show="1" Name="Savaşçı" Pic="1088" Att="10" Def="15" Agi="5" Luck="5" Desc="Kutsal Yolculuktan kazanılır." />
+  <Item ID="701" Order="172" Show="1" Name="Gerçek Koleksiyoncu" Pic="1094" Att="20" Def="20" Agi="20" Luck="20" Desc="Kart Başarısından elde edilir." />
+  <Item ID="702" Order="173" Show="1" Name="Altın Koleksiyoncu" Pic="1095" Att="50" Def="50" Agi="50" Luck="50" Desc="Kart Başarısından elde edilir." />
+  <Item ID="703" Order="174" Show="1" Name="Bakır Adam" Pic="1096" Att="5" Def="5" Agi="5" Luck="5" Desc="Kart Başarısından elde edilir." />
+  <Item ID="704" Order="175" Show="1" Name="Karınca Adam" Pic="1097" Att="100" Def="100" Agi="100" Luck="100" Desc="Çimen Savaşından elde edilir." />
+  <Item ID="705" Order="176" Show="1" Name="Bogo Galibi" Pic="1098" Att="100" Def="100" Agi="100" Luck="100" Desc="Çimen Savaşından elde edilir." />
+  <Item ID="706" Order="177" Show="1" Name="Kabile Şefi" Pic="1099" Att="100" Def="100" Agi="100" Luck="100" Desc="Çimen Savaşından elde edilir." />
+  <Item ID="707" Order="178" Show="1" Name="Karanlık Lord" Pic="1100" Att="100" Def="100" Agi="100" Luck="100" Desc="Çimen Savaşından elde edilir." />
+  <Item ID="708" Order="179" Show="1" Name="Ejderha Kesici" Pic="1101" Att="100" Def="100" Agi="100" Luck="100" Desc="Çimen Savaşından elde edilir." />
+  <Item ID="709" Order="180" Show="1" Name="Zaman Anaforcu" Pic="1102" Att="100" Def="100" Agi="100" Luck="100" Desc="Çimen Savaşından elde edilir." />
+  <Item ID="710" Order="181" Show="1" Name="Arena Kralı" Pic="1103" Att="100" Def="100" Agi="100" Luck="100" Desc="Çimen Savaşından elde edilir." />
+  <Item ID="822" Order="224" Show="1" Name="Bir Numaralı Traftar" Pic="2148" Att="50" Def="50" Agi="50" Luck="50" Desc="Etkinlikten elde et" />
+  <Item ID="957" Order="225" Show="1" Name="2020 Özel Oyuncusu" Pic="2149" Att="30" Def="30" Agi="30" Luck="30" Desc="Etkinlikten elde et" />
+  <Item ID="1000" Order="20" Show="1" Name="Ejderha Şövalye" Pic="2000" Att="10" Def="0" Agi="0" Luck="0" Desc="Dünya Boss" />
+  <Item ID="1001" Order="21" Show="1" Name="İyi Futbol Oyuncusu" Pic="2001" Att="10" Def="0" Agi="0" Luck="0" Desc="Dünya Boss" />
+  <Item ID="1002" Order="22" Show="1" Name="Küçük Arı" Pic="2002" Att="5" Def="5" Agi="0" Luck="0" Desc="28 gün Oyuna Giriş" />
+  <Item ID="1003" Order="23" Show="1" Name="Kurucucular" Pic="2003" Att="1" Def="5" Agi="1" Luck="5" Desc="Sürüm 6.3 Etkinliği" />
+  <Item ID="1004" Order="24" Show="1" Name="Alışverişkolik" Pic="2004" Att="30" Def="30" Agi="30" Luck="30" Desc="Harcama Ustası" />
+  <Item ID="1005" Order="25" Show="1" Name="Dünyada tek" Pic="2005" Att="7" Def="5" Agi="7" Luck="5" Desc="Etkinlik Olsun" />
+  <Item ID="1006" Order="26" Show="1" Name="❀Honey Sevgili" Pic="2006" Att="0" Def="0" Agi="0" Luck="60" Desc="Hediye Kutusu ve Ücretsiz Çicek" />
+  <Item ID="1007" Order="27" Show="1" Name="Çiçek Gardiyanı" Pic="2007" Att="0" Def="5" Agi="0" Luck="20" Desc="Çiçek Kokusu Deposu" />
+  <Item ID="1008" Order="28" Show="1" Name="Bekçi Sevgili" Pic="2008" Att="0" Def="13" Agi="0" Luck="14" Desc="Çiçek Kokusu Deposu" />
+  <Item ID="1009" Order="29" Show="1" Name="Futbol Beyi" Pic="2009" Att="70" Def="20" Agi="30" Luck="70" Desc="2014 Dünya Kupası Etkinliği" />
+  <Item ID="1010" Order="186" Show="1" Name="Acemi Büyücü" Pic="2010" Att="0" Def="10" Agi="5" Luck="0" Desc="Etkinlikten elde et" />
+  <Item ID="1011" Order="187" Show="1" Name="Kıdemli Büyücü" Pic="2011" Att="10" Def="0" Agi="5" Luck="0" Desc="Etkinlikten elde et" />
+  <Item ID="1012" Order="188" Show="1" Name="Usta Büyücü" Pic="2012" Att="10" Def="0" Agi="0" Luck="5" Desc="Etkinlikten elde et" />
+  <Item ID="1013" Order="33" Show="1" Name="Patron Benim" Pic="1035" Att="50" Def="50" Agi="50" Luck="50" Desc="Etkinlik Olsun" />
+  <Item ID="1014" Order="182" Show="1" Name="Sıradışı Adam" Pic="1042" Att="5" Def="0" Agi="10" Luck="5" Desc="Etkinlikten elde et" />
+  <Item ID="1016" Order="183" Show="1" Name="Merry Xmas" Pic="1061" Att="0" Def="0" Agi="10" Luck="10" Desc="Etkinlikten elde et" />
+  <Item ID="1017" Order="184" Show="1" Name="Çalışkan" Pic="1049" Att="30" Def="0" Agi="0" Luck="0" Desc="Etkinlikten elde et" />
+  <Item ID="1018" Order="185" Show="1" Name="Muhbir" Pic="2013" Att="15" Def="10" Agi="15" Luck="10" Desc="Etkinlikten elde et" />
+  <Item ID="1021" Order="189" Show="1" Name="Heykel Sahibi" Pic="2014" Att="100" Def="100" Agi="100" Luck="100" Desc="Etkinlikten elde et" />
+  <Item ID="1022" Order="190" Show="1" Name="Heykel Sponsoru" Pic="2015" Att="75" Def="75" Agi="75" Luck="75" Desc="Etkinlikten elde et" />
+  <Item ID="1023" Order="191" Show="1" Name="Heykel Mimarı" Pic="2016" Att="50" Def="50" Agi="50" Luck="50" Desc="Etkinlikten elde et" />
+  <Item ID="1024" Order="192" Show="1" Name="Heykel Muciti" Pic="2017" Att="30" Def="30" Agi="30" Luck="30" Desc="Etkinlikten elde et" />
+  <Item ID="1025" Order="193" Show="1" Name="Heykel İşçisi" Pic="2018" Att="20" Def="20" Agi="20" Luck="20" Desc="Etkinlikten elde et" />
+  <Item ID="1026" Order="194" Show="1" Name="Heykel Ressamı" Pic="2019" Att="10" Def="10" Agi="10" Luck="10" Desc="Etkinlikten elde et" />
+  <Item ID="5000" Order="220" Show="1" Name="Usta On Numara" Pic="8000" Att="30" Def="30" Agi="30" Luck="30" Desc="Etkinlikten elde et" />
+  <Item ID="5001" Order="221" Show="1" Name="Harika Nişancı" Pic="8001" Att="40" Def="15" Agi="15" Luck="40" Desc="Etkinlikten elde et" />
+  <Item ID="5002" Order="222" Show="1" Name="Süper Defans" Pic="8002" Att="15" Def="40" Agi="40" Luck="15" Desc="Etkinlikten elde et" />
+  <Item ID="5003" Order="223" Show="1" Name="Fanatik Futbol Hayranı" Pic="8003" Att="10" Def="10" Agi="10" Luck="10" Desc="Etkinlikten elde et" />
+</Result>

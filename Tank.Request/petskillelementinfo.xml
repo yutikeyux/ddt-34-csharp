@@ -1,0 +1,659 @@
+<Result value="true" message="Success!">
+  <item ID="1001" Name="Ek bir top artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1002" Name="4 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1003" Name="5 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1004" Name="6 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1005" Name="10 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1006" Name="11 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1007" Name="12 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1008" Name="16 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1009" Name="17 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1010" Name="18 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1011" Name="22 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1012" Name="23 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1013" Name="24 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1014" Name="50 hasar görür" EffectPic="" Description="" Pic="-1" />
+  <item ID="1015" Name="100 hasar görür" EffectPic="" Description="" Pic="-1" />
+  <item ID="1016" Name="150 hasar görür" EffectPic="" Description="" Pic="-1" />
+  <item ID="1017" Name="Hareket edilemez" EffectPic="" Description="Hep hareket edilemez." Pic="-1" />
+  <item ID="1018" Name="Dağ gibi hareket edilmez Sv.1" EffectPic="effect003" Description="Çukur engelleme elde edilir, savunma etkisi artırır, ama hareket edilemez." Pic="3" />
+  <item ID="1019" Name="Dağ gibi hareket edilmez Sv.2" EffectPic="effect003" Description="Çukur engelleme elde edilir, savunma etkisi artırır, ama hareket edilemez." Pic="3" />
+  <item ID="1020" Name="Dağ gibi hareket edilmez Sv.3" EffectPic="effect003" Description="Çukur engelleme elde edilir, savunma etkisi artırır, ama hareket edilemez." Pic="3" />
+  <item ID="1021" Name="Çukur engelleme" EffectPic="" Description="2 raund sürer" Pic="-1" />
+  <item ID="1022" Name="Bogolu kalkan Sv.1" EffectPic="effect017" Description="Zırh puanı artırır." Pic="2" />
+  <item ID="1023" Name="Bogolu kalkan Sv.2" EffectPic="effect017" Description="Zırh puanı artırır." Pic="2" />
+  <item ID="1024" Name="Bogolu kılıç Sv.1" EffectPic="effect016" Description="Hasar puanı artırır." Pic="1" />
+  <item ID="1025" Name="Bogolu kılıç Sv.2" EffectPic="effect016" Description="Hasar puanı artırır." Pic="1" />
+  <item ID="1026" Name="Bir sefer çiçek açma Sv.1" EffectPic="effect002" Description="Can iyileştirir." Pic="5" />
+  <item ID="1027" Name="Bir sefer çiçek açma Sv.2" EffectPic="effect002" Description="Can iyileştirir." Pic="5" />
+  <item ID="1028" Name="Bir sefer çiçek açma Sv.3" EffectPic="effect002" Description="Can iyileştirir." Pic="5" />
+  <item ID="1029" Name="Gittikçe güçlendiriyor Sv.1" EffectPic="effect007" Description="Gördüğün hasarı azaltır." Pic="7" />
+  <item ID="1030" Name="Gittikçe güçlendiriyor Sv.2" EffectPic="effect007" Description="Gördüğün hasarı azaltır." Pic="7" />
+  <item ID="1031" Name="Gittikçe güçlendiriyor Sv.3" EffectPic="effect007" Description="Gördüğün hasarı azaltır." Pic="7" />
+  <item ID="1032" Name="53 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1033" Name="54 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1034" Name="55 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1035" Name="Hasar %10 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1036" Name="Hasar %20 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1037" Name="Hasar %30 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1038" Name="Kılavuz" EffectPic="" Description="" Pic="-1" />
+  <item ID="1039" Name="Hasar %250 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1040" Name="Bogolu dilek Sv.1" EffectPic="effect014" Description="Şans puanı artırır." Pic="4" />
+  <item ID="1041" Name="Bogolu dilek Sv.2" EffectPic="effect014" Description="Şans puanı artırır." Pic="4" />
+  <item ID="1042" Name="Bogolu dilek Sv.3" EffectPic="effect014" Description="Şans puanı artırır." Pic="4" />
+  <item ID="1043" Name="Yavaş iyileştirme Sv.1" EffectPic="effect033" Description="Can iyileştirir." Pic="5" />
+  <item ID="1044" Name="Yavaş iyileştirme Sv.2" EffectPic="effect033" Description="Can iyileştirir." Pic="5" />
+  <item ID="1045" Name="Yavaş iyileştirme Sv.3" EffectPic="effect033" Description="Can iyileştirir." Pic="5" />
+  <item ID="1046" Name="Sıcak karınca topu Sv.1" EffectPic="effect012" Description="Savunma puanı artırır." Pic="3" />
+  <item ID="1047" Name="Sıcak karınca topu Sv.2" EffectPic="effect012" Description="Savunma puanı artırır." Pic="3" />
+  <item ID="1048" Name="Sıcak karınca topu Sv.3" EffectPic="effect012" Description="Savunma puanı artırır." Pic="3" />
+  <item ID="1049" Name="Sabit nokta atışı Sv.1" EffectPic="effect019" Description="Zırh puanı artırır, hareket edildiğinde ekti yok olacak." Pic="2" />
+  <item ID="1050" Name="Sabit nokta atışı Sv.2" EffectPic="effect019" Description="Zırh puanı artırır, hareket edildiğinde ekti yok olacak." Pic="2" />
+  <item ID="1051" Name="Zırh 50 puan artırır" EffectPic="effect017" Description="" Pic="-1" />
+  <item ID="1052" Name="Zırh 70 puan artırır" EffectPic="effect017" Description="" Pic="-1" />
+  <item ID="1053" Name="Etki kaldırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1054" Name="Etki kaldırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1055" Name="58 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1056" Name="Tanrı yağmuru Sv.1" EffectPic="effect005" Description="" Pic="-1" />
+  <item ID="1057" Name="Tanrı yağmuru Sv.2" EffectPic="effect005" Description="" Pic="-1" />
+  <item ID="1058" Name="1000 can iyileştirir" EffectPic="" Description="" Pic="-1" />
+  <item ID="1059" Name="3000 can iyileştirir" EffectPic="" Description="" Pic="-1" />
+  <item ID="1060" Name="47 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1061" Name="48 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1062" Name="49 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1063" Name="Yüz çiçek açma Sv.1" EffectPic="effect006" Description="Can iyileştirir." Pic="5" />
+  <item ID="1064" Name="Yüz çiçek açma Sv.2" EffectPic="effect006" Description="Can iyileştirir." Pic="5" />
+  <item ID="1065" Name="63 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1066" Name="64 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1067" Name="Karınca iğnesi Sv.1" EffectPic="" Description="Hasar yansıtır." Pic="9" />
+  <item ID="1068" Name="Karınca iğnesi Sv.2" EffectPic="" Description="Hasar yansıtır." Pic="9" />
+  <item ID="1069" Name="70 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1070" Name="71 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1071" Name="Etki kaldırır 1072, 1073" EffectPic="" Description="" Pic="-1" />
+  <item ID="1072" Name="Üstün ateş gücü Sv.1" EffectPic="effect016" Description="Hasar puanı artırır, saldırıldığında yok olacak." Pic="1" />
+  <item ID="1073" Name="Üstün ateş gücü Sv.2" EffectPic="effect016" Description="" Pic="1" />
+  <item ID="1074" Name="Melek armağanı etkisi 300 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1075" Name="Melek armağanı etkisi 600 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1076" Name="Evcil hayvan etrafına 200 hasar verir" EffectPic="effect036" Description="" Pic="-1" />
+  <item ID="1077" Name="Evcil hayvan etrafına 400 hasar verir" EffectPic="effect036" Description="" Pic="-1" />
+  <item ID="1078" Name="Hemen 500 can değeri iyileştirir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1079" Name="Hemen 1000 can değeri iyileştirir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1080" Name="300 can iyileştirir" EffectPic="" Description="" Pic="-1" />
+  <item ID="1081" Name="600 can iyileştirir" EffectPic="" Description="" Pic="-1" />
+  <item ID="1082" Name="Hep çukur engelleme" EffectPic="" Description="" Pic="-1" />
+  <item ID="1083" Name="V3 top platformu Sv.1" EffectPic="effect018" Description="Çukur engelleme elde edilir, saldırı, şans artırır, savunma etkisi azaltır. Hare" Pic="6" />
+  <item ID="1084" Name="V3 top platformu Sv.2" EffectPic="effect018" Description="Çukur engelleme elde edilir, saldırı, şans artırır, savunma etkisi azaltır. Hare" Pic="6" />
+  <item ID="1085" Name="Şans 500 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1086" Name="Şans 800 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1087" Name="Savunma 1000 azaltır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1088" Name="Savunma 800 azaltır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1089" Name="88 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1090" Name="Etki kaldırır 1082, 1083, 1084, 1085" EffectPic="" Description="" Pic="-1" />
+  <item ID="1091" Name="Etki kaldırır 1086, 1087, 1088," EffectPic="" Description="" Pic="-1" />
+  <item ID="1092" Name="Herkes şerefe Sv.1" EffectPic="effect004" Description="Saldırı, savunma, çeviklik, şans, can üst sınırı artırır." Pic="10" />
+  <item ID="1093" Name="Herkes şerefe Sv.2" EffectPic="effect004" Description="Saldırı, savunma, çeviklik, şans, can üst sınırı artırır." Pic="10" />
+  <item ID="1094" Name="Savunma 100 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1095" Name="Savunma 300 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1096" Name="Çeviklik 100 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1097" Name="Çeviklik 300 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1098" Name="Şans 100 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1099" Name="Şans 300 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1100" Name="Can üst sınırı 1000 artırır." EffectPic="" Description="" Pic="-1" />
+  <item ID="1101" Name="Can üst sınırı 2000 artırır." EffectPic="" Description="" Pic="-1" />
+  <item ID="1102" Name="Can 500 iyileştirir" EffectPic="" Description="" Pic="-1" />
+  <item ID="1103" Name="Can 1000 iyileştirir" EffectPic="" Description="" Pic="-1" />
+  <item ID="1104" Name="Uçan bomba *800" EffectPic="" Description="" Pic="-1" />
+  <item ID="1105" Name="Uçan bomba *1000" EffectPic="" Description="" Pic="-1" />
+  <item ID="1106" Name="1 büyü değeri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1107" Name="50 büyü değeri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1108" Name="3 büyü değeri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1109" Name="98 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1110" Name="50 sihir gücü değeri kaldırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1111" Name="Karınca iğnesi Sv.1" EffectPic="effect008" Description="Hasar yansıtır. (İpuçları 1067de bulunur)" Pic="-1" />
+  <item ID="1112" Name="Karınca iğnesi Sv.2" EffectPic="effect008" Description="Hasar yansıtır. (İpuçları 1068de bulunur)" Pic="-1" />
+  <item ID="1113" Name="300 hasar yansıtır" EffectPic="effect008" Description="" Pic="-1" />
+  <item ID="1114" Name="500 hasar yansıtır" EffectPic="effect008" Description="" Pic="-1" />
+  <item ID="1115" Name="500 can iyileştirir" EffectPic="" Description="" Pic="-1" />
+  <item ID="1116" Name="1000 can iyileştirir" EffectPic="" Description="" Pic="-1" />
+  <item ID="1117" Name="Yenilmez olacak" EffectPic="effect035" Description="Çoğu hasarlara karşı koyar." Pic="7" />
+  <item ID="1118" Name="Hızlandırılmış büyüme Sv.1" EffectPic="" Description="Savunma puanı artırır." Pic="3" />
+  <item ID="1119" Name="Hızlandırılmış büyüme Sv.2" EffectPic="" Description="Savunma puanı artırır." Pic="3" />
+  <item ID="1120" Name="Sert kabuk Sv.1" EffectPic="" Description="Zırh puanı artırır." Pic="2" />
+  <item ID="1121" Name="Sert kabuk Sv.2" EffectPic="" Description="Zırh puanı artırır." Pic="2" />
+  <item ID="1122" Name="Evcil hayvan saldırısı Sv.1" EffectPic="" Description="Evcil hayvanın 1 kez saldırısı oranı %5." Pic="-1" />
+  <item ID="1123" Name="Evcil hayvan saldırısı Sv.2" EffectPic="" Description="Evcil hayvanın 1 kez saldırısı oranı %7." Pic="-1" />
+  <item ID="1124" Name="Evcil hayvan saldırısı Sv.3" EffectPic="" Description="Evcil hayvanın 1 kez saldırısı oranı %10." Pic="-1" />
+  <item ID="1125" Name="Hasar %50 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1126" Name="Hasar %70 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1127" Name="Hasar %100 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1128" Name="Hasar %300 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1129" Name="Hasar %350 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1130" Name="Saldırı 200 azaltır." EffectPic="" Description="Saldırı 200 azaltır." Pic="-1" />
+  <item ID="1131" Name="Saldırı 150 azaltır." EffectPic="" Description="Saldırı 150 azaltır." Pic="-1" />
+  <item ID="1132" Name="Saldırı 100 azaltır." EffectPic="" Description="Saldırı 100 azaltır." Pic="-1" />
+  <item ID="1133" Name="Hasar %220 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1134" Name="Hasar %280 artırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1135" Name="Gördüğün hasarı 500 azaltır." EffectPic="effect007" Description="Gördüğün hasarı 500 azaltır." Pic="7" />
+  <item ID="1136" Name="Sürekli delme" EffectPic="effect001" Description="Sürekli delme" Pic="-1" />
+  <item ID="1137" Name="Kendisine hasar verme" EffectPic="effect034" Description="Kendisine hasar verme etki" Pic="-1" />
+  <item ID="1138" Name="kritik atak olasılık %100" EffectPic="" Description="%100 kritik atak" Pic="-1" />
+  <item ID="1139" Name="Evcil hayvan atağı Lv2 (Ejder Özelliği)" EffectPic="" Description="Evcil hayvan saldırsında x% hasar" Pic="-1" />
+  <item ID="1149" Name="Evcil hayvan atağı Lv2 (Ejder Özelliği)" EffectPic="" Description="Evcil hayvan saldırsında x% hasar" Pic="-1" />
+  <item ID="1150" Name="Ateş Bombası Sv 1" EffectPic="effect042" Description="%1 can azalır. 3 tur sürer." Pic="14" />
+  <item ID="1151" Name="Ateş Bombası Sv 2" EffectPic="effect042" Description="%2 can azalır. 3 tur sürer." Pic="14" />
+  <item ID="1152" Name="Ateş Bombası Sv 3" EffectPic="effect042" Description="%3 can azalır. 3 tur sürer." Pic="14" />
+  <item ID="1153" Name="Şeytani Ejderha Sv 1" EffectPic="effect039" Description="Hasarı %15 arttırır. Zırhı 500 düşürür. 3 tur sürer." Pic="13" />
+  <item ID="1154" Name="Şeytani Ejderha Sv 2" EffectPic="effect039" Description="Hasarı %25 arttırır. Zırhı 650 düşürür. 3 tur sürer." Pic="13" />
+  <item ID="1155" Name="Şeytani Ejderha Sv 1" EffectPic="" Description="Zırhı 500 azaltır." Pic="-1" />
+  <item ID="1156" Name="Şeytani Ejderha Sv 2" EffectPic="" Description="Zırhı 650 azaltır." Pic="-1" />
+  <item ID="1157" Name="Ejderha Koruyucusu Sv 1" EffectPic="effect033" Description="Canı %2 yeniler." Pic="-1" />
+  <item ID="1158" Name="Ejderha Koruyucusu Sv 1" EffectPic="effect033" Description="Canı %4 yeniler." Pic="-1" />
+  <item ID="1159" Name="Ateş İşareti" EffectPic="effect040" Description="Her turda kaybedilen 1.000 can için %2 can azalır." Pic="14" />
+  <item ID="1160" Name="Ateş İşareti" EffectPic="effect041" Description="Her turda kaybedilen 2.000 can için %4 can azalır." Pic="14" />
+  <item ID="1161" Name="Ejderhanın Gazabı Sv 1" EffectPic="effect042" Description="3000 Can azaltır. %5 can kaldığında öldürür." Pic="-1" />
+  <item ID="1162" Name="Ejderhanın Gazabı Sv 1" EffectPic="effect042" Description="5000 can azaltır. %10 can kaldığında öldürür." Pic="-1" />
+  <item ID="1163" Name="Ejderha Boynuzu Sv 1" EffectPic="effect016" Description="Saldırıyı 150, Hasarı 100 arttırır." Pic="9" />
+  <item ID="1164" Name="Ejderha Boynuzu Sv 2" EffectPic="effect016" Description="Saldırıyı 300, Hasarı 200 arttırır." Pic="9" />
+  <item ID="1165" Name="Ejderha Boynuzu Sv 1" EffectPic="" Description="Hasarı 100 arttırır." Pic="-1" />
+  <item ID="1166" Name="Ejderha Boynuzu Sv 2" EffectPic="" Description="Hasarı 200 arttırır." Pic="-1" />
+  <item ID="1167" Name="Öfkesiz Ejder Davranışı" EffectPic="" Description="" Pic="-1" />
+  <item ID="1168" Name="Öfkesiz Ejder Davranışı" EffectPic="" Description="" Pic="-1" />
+  <item ID="1169" Name="Öfkesiz Ejder Davranışı" EffectPic="" Description="(Aynı zamanda düşmanın Ejder alev izini çıkar)" Pic="-1" />
+  <item ID="1170" Name="Öfkeli Ejder Takibi Lv1" EffectPic="" Description="Her seferinde düşman raunduna döndüğünde, evcil hayvan saldırabilir." Pic="-1" />
+  <item ID="1171" Name="Öfkeli Ejder Takibi Lv2" EffectPic="" Description="Her seferinde düşman raunduna döndüğünde, evcil hayvan saldırabilir." Pic="-1" />
+  <item ID="1172" Name="Ejder Ruhu Koruyucusu Lv1" EffectPic="" Description="Saldırı anında HP yenilenir" Pic="-1" />
+  <item ID="1173" Name="Ejder Ruhu Koruyucusu Lv2" EffectPic="" Description="Saldırı anında HP yenilenir" Pic="-1" />
+  <item ID="1174" Name="Ejderha Koruyucusu Sv 1" EffectPic="effect037" Description="Saldırıdaki canı yeniden kazanma şansı vardır." Pic="11" />
+  <item ID="1175" Name="Ejderha Koruyucusu Sv 2" EffectPic="effect037" Description="Saldırıdaki canı yeniden kazanma şansı vardır." Pic="11" />
+  <item ID="1176" Name="Öfkeli Ejder Takibi Lv1" EffectPic="effect038" Description="Her seferinde düşman raunduna döndüğünde, evcil hayvan saldırabilir." Pic="12" />
+  <item ID="1177" Name="Öfkeli Ejder Takibi Lv2" EffectPic="effect038" Description="Her seferinde düşman raunduna döndüğünde, evcil hayvan saldırabilir." Pic="12" />
+  <item ID="1178" Name="Şiddetli Buz Bombası Sv1" EffectPic="effect011" Description="Saldırıyı 100 puan yükseltir" Pic="1" />
+  <item ID="1179" Name="Şiddetli Buz Bombası Sv2" EffectPic="effect011" Description="Saldırıyı 300 puan yükseltir" Pic="1" />
+  <item ID="1180" Name="Şiddetli Buz Bombası Sv3" EffectPic="effect011" Description="Saldırıyı 500 puan yükseltir" Pic="1" />
+  <item ID="1181" Name="Kristal Bariyer Sv1" EffectPic="effect048" Description="Zırhı 100 puan yükseltir" Pic="8" />
+  <item ID="1182" Name="Kristal Bariyer Sv2" EffectPic="effect048" Description="Zırhı 200 puan yükseltir" Pic="8" />
+  <item ID="1183" Name="Kristal Bariyer Sv3" EffectPic="effect048" Description="Zırhı 300 puan yükseltir" Pic="8" />
+  <item ID="1184" Name="Kutup Buz Cehennemi Sv1" EffectPic="effect049" Description="Hasarı 150 puan yükseltir" Pic="1" />
+  <item ID="1185" Name="Kutup Buz Cehennemi Sv2" EffectPic="effect049" Description="Hasarı 300 puan yükseltir" Pic="1" />
+  <item ID="1186" Name="Kutup Buz Cehennemi Sv1" EffectPic="" Description="Her raund HP yi 500 puan azaltır" Pic="14" />
+  <item ID="1187" Name="Kutup Buz Cehennemi Sv2" EffectPic="" Description="Her raund HP yi 800 puan azaltır" Pic="14" />
+  <item ID="1188" Name="Kazanma Becerisi 139" EffectPic="" Description="" Pic="-1" />
+  <item ID="1189" Name="Kaldırma Etkisi" EffectPic="" Description="" Pic="-1" />
+  <item ID="1190" Name="Yıldırım Sv1" EffectPic="" Description="Çevikliği 300 puan artırır" Pic="5" />
+  <item ID="1191" Name="Yıldırım Sv2" EffectPic="" Description="Çevikliği 500 puan artırır" Pic="5" />
+  <item ID="1192" Name="Anka Kuşu Kalbi Sv1" EffectPic="" Description="Saldırıyı 100 puan yükseltir" Pic="6" />
+  <item ID="1193" Name="Anka Kuşu Kalbi Sv2" EffectPic="" Description="Saldırıyı 300 puan yükseltir" Pic="6" />
+  <item ID="1194" Name="Bir Vuruşta Öldürme Deneyimi Sv1" EffectPic="" Description="Saldırıyı 200 puan yükseltir" Pic="1" />
+  <item ID="1195" Name="Bir Vuruşta Öldürme Deneyimi Sv2" EffectPic="" Description="Çevikliği 300 puan artırır" Pic="1" />
+  <item ID="1196" Name="Bir Vuruşta Öldürme Deneyimi Sv1" EffectPic="" Description="Hasarı 100 puan yükseltir" Pic="6" />
+  <item ID="1197" Name="Bir Vuruşta Öldürme Deneyimi Sv2" EffectPic="" Description="Hasarı 150 puan yükseltir" Pic="6" />
+  <item ID="1198" Name="Bir Vuruşta Öldürme Deneyimi Sv1" EffectPic="effect050" Description="Kritik vuruş oranını %30 yükseltir" Pic="9" />
+  <item ID="1199" Name="Bir Vuruşta Öldürme Deneyimi Sv2" EffectPic="effect050" Description="Kritik vuruş oranını %50 yükseltir" Pic="9" />
+  <item ID="1200" Name="Buz Ruhu" EffectPic="" Description="Sıra size geldiği zaman, arkadaşların tümünün petlerinin sihirsel değerlerini 2" Pic="-1" />
+  <item ID="1201" Name="Şaman yılan zehiri Sv1" EffectPic="" Description="Hasar -100" Pic="4" />
+  <item ID="1202" Name="Şaman yılan zehiri Sv2" EffectPic="" Description="Hasar -200" Pic="4" />
+  <item ID="1203" Name="Şaman yılan zehiri Sv3" EffectPic="" Description="Hasar -300" Pic="4" />
+  <item ID="1204" Name="Piton kıvrılması Sv1" EffectPic="effect063" Description="Saldırı -300, Savunma -300" Pic="9" />
+  <item ID="1205" Name="Piton kıvrılması Sv2" EffectPic="effect063" Description="Saldırı -500, Savunma -500" Pic="9" />
+  <item ID="1206" Name="Piton kıvrılması Sv1" EffectPic="" Description="Saldırı -300, Savunma -300" Pic="-1" />
+  <item ID="1207" Name="Piton kıvrılması Sv2" EffectPic="" Description="Saldırı -500, Savunma -500" Pic="-1" />
+  <item ID="1208" Name="Mohulaja Sv1" EffectPic="effect060" Description="Evcil hayvan sihirsel değerini 10 puan düşürür." Pic="-1" />
+  <item ID="1209" Name="Mohulaja Sv2" EffectPic="effect060" Description="Evcil hayvan sihirsel değerini 30 puan düşürür." Pic="-1" />
+  <item ID="1210" Name="Kan emici çılgın Sv1" EffectPic="" Description="Her raund HP -500" Pic="14" />
+  <item ID="1211" Name="Kan emici çılgın Sv2" EffectPic="" Description="Her raund HP -1000" Pic="14" />
+  <item ID="1212" Name="Kan emici çılgın Sv1" EffectPic="effect061" Description="Kritik saldırı oranı +20%" Pic="6" />
+  <item ID="1213" Name="Kan emici çılgın Sv2" EffectPic="effect061" Description="Kritik saldırı oranı +50%" Pic="6" />
+  <item ID="1214" Name="Karanlık diş Sv1" EffectPic="" Description="Zırh +100, HP +1500" Pic="3" />
+  <item ID="1215" Name="Karanlık diş Sv2" EffectPic="" Description="Zırh +200, HP +3000" Pic="3" />
+  <item ID="1216" Name="Karanlık diş Sv1" EffectPic="" Description="HP yi 1500 puan artırır." Pic="-1" />
+  <item ID="1217" Name="Karanlık diş Sv2" EffectPic="" Description="HP yi 3000 puan artırır." Pic="-1" />
+  <item ID="1218" Name="Karanlık diş Sv1" EffectPic="" Description="" Pic="-1" />
+  <item ID="1219" Name="Karanlık diş Sv2" EffectPic="" Description="" Pic="-1" />
+  <item ID="1220" Name="Sonsuz çaresizlik Sv1" EffectPic="" Description="Zırh -100" Pic="7" />
+  <item ID="1221" Name="Sonsuz çaresizlik Sv2" EffectPic="" Description="Zırh -200" Pic="7" />
+  <item ID="1222" Name="Bin göz şeytan kurbanı" EffectPic="effect062" Description="Hareket edemez" Pic="9" />
+  <item ID="1223" Name="İntikam yüreği" EffectPic="" Description="Her seferinde vurulunca evcil hayvan değerini 2 puan artırır." Pic="-1" />
+  <item ID="1224" Name="Kutup soğu cehennemi Sv1" EffectPic="" Description="Her raund 500 HP azaltır" Pic="-1" />
+  <item ID="1225" Name="Kutup soğu cehennemi Sv2" EffectPic="" Description="Her raund 800 HP azaltır" Pic="-1" />
+  <item ID="1226" Name="Kan emici çılgın Sv1" EffectPic="" Description="Her raund 500 HP azaltır" Pic="-1" />
+  <item ID="1227" Name="Kan emici çılgın Sv2" EffectPic="" Description="Her raund 1000 HP azaltır" Pic="-1" />
+  <item ID="1228" Name="PençelerleLv1" EffectPic="" Description="Hasara karşı koy" Pic="9" />
+  <item ID="1229" Name="PençelerleLv2" EffectPic="" Description="Hasara karşı koy" Pic="9" />
+  <item ID="1230" Name="Pençe devamlı" EffectPic="effect064" Description="İğnelemeye devam et" Pic="-1" />
+  <item ID="1231" Name="Hasar azaltma 500 puan" EffectPic="effect065" Description="Hasar azaltma 500 puan" Pic="7" />
+  <item ID="1232" Name="Kazanılan yetenek10416" EffectPic="" Description="" Pic="-1" />
+  <item ID="1233" Name="Kazanılan yetenek10417" EffectPic="" Description="" Pic="-1" />
+  <item ID="1234" Name="Kazanılan yetenek10418" EffectPic="" Description="" Pic="-1" />
+  <item ID="1235" Name="Kendine dönen hasar" EffectPic="effect066" Description="Karşı hasarın etkisi" Pic="-1" />
+  <item ID="1236" Name="Karşı koyma 500 puan hasar" EffectPic="effect008" Description="" Pic="-1" />
+  <item ID="1237" Name="Karşı koyma 800 puan hasar" EffectPic="effect008" Description="" Pic="-1" />
+  <item ID="1238" Name="Aşk şok dalgasıLv1" EffectPic="effect012" Description="Hasar değerini artır." Pic="3" />
+  <item ID="1239" Name="Aşk şok dalgasıLv2" EffectPic="effect012" Description="Hasar değerini artır." Pic="3" />
+  <item ID="1240" Name="Aşk şok dalgasıLv3" EffectPic="effect012" Description="Hasar değerini artır." Pic="3" />
+  <item ID="1241" Name="Sert korumaLv1" EffectPic="" Description="Zırh değerini artır." Pic="2" />
+  <item ID="1242" Name="Sert korumaLv2" EffectPic="" Description="Zırh değerini artır." Pic="2" />
+  <item ID="1243" Name="Dönen 1500 puan HP" EffectPic="" Description="" Pic="-1" />
+  <item ID="1244" Name="Dönen 2500 puan HP" EffectPic="" Description="" Pic="-1" />
+  <item ID="1245" Name="Sihir değeri kazan2" EffectPic="" Description="Her uğranılan saldırı sihir değerini 2 puan artırır." Pic="-1" />
+  <item ID="1246" Name="Hasar azaltma 650 puan" EffectPic="effect065" Description="Hasar azaltma 650 puan" Pic="7" />
+  <item ID="1247" Name="Hasar azaltma 750 puan" EffectPic="effect065" Description="Hasar azaltma 750 puan" Pic="7" />
+  <item ID="1248" Name="Meow iyileştirmesiLv1" EffectPic="effect007" Description="Hasar azaltma." Pic="7" />
+  <item ID="1249" Name="Meow iyileştirmesiLv2" EffectPic="effect007" Description="Hasar azaltma." Pic="7" />
+  <item ID="1250" Name="Meow iyileştirmesiLv3" EffectPic="effect007" Description="Hasar azaltma." Pic="7" />
+  <item ID="1251" Name="Karınca iğnesiLv1 (Pençe)" EffectPic="effect008" Description="Hasara karşı koy. (TIPS 1067 te)" Pic="-1" />
+  <item ID="1252" Name="Karınca iğnesiLv2 (Pençe)" EffectPic="effect008" Description="Hasara karşı koy. (TIPS 1068 te)" Pic="-1" />
+  <item ID="1253" Name="Her seferinde kendi raundunda 3 puan sihir değeri" EffectPic="" Description="Evcil hayvan sihir değeri 3 puan azalır" Pic="-1" />
+  <item ID="1254" Name="100 saldırı azaltır" EffectPic="" Description="100 saldırı azaltır" Pic="-1" />
+  <item ID="1255" Name="200 saldırı azaltır" EffectPic="" Description="200 saldırı azaltır" Pic="-1" />
+  <item ID="1256" Name="300 saldırı azaltır" EffectPic="" Description="300 saldırı azaltır" Pic="-1" />
+  <item ID="1257" Name="Arkadaşın zırhını 100 artırır" EffectPic="effect067" Description="Zırhı 100 puanlık artırır" Pic="8" />
+  <item ID="1258" Name="Arkadaşın zırhını 200 artırır" EffectPic="effect067" Description="Zırhı 200 puanlık artırır" Pic="8" />
+  <item ID="1259" Name="Arkadaşlarına 800 HP geri kazandırır" EffectPic="" Description="HP değerini geri kazandırır" Pic="5" />
+  <item ID="1260" Name="Arkadaşlarına 1000 HP geri kazandırırır" EffectPic="" Description="HP değerini geri kazandırır" Pic="5" />
+  <item ID="1261" Name="Şansı 300 puanlık artırırır" EffectPic="" Description="Şansı 300 puanlık artırır" Pic="5" />
+  <item ID="1262" Name="Şansı 500 puanlık artırırır" EffectPic="" Description="Şansı 500 puanlık artırır" Pic="5" />
+  <item ID="1263" Name="2 sihirli şans değeri  kazandırır" EffectPic="" Description="2 sihirli şans değeri  kazandırır" Pic="-1" />
+  <item ID="1264" Name="Arkadaşlarının hasar vermesini 100 artırırır" EffectPic="" Description="Saldırıyı 100 puanlık güçlendirir" Pic="6" />
+  <item ID="1265" Name="Arkadaşlarının hasar vermesini 300 artırırır" EffectPic="" Description="Saldırıyı 300 puanlık güçlendirir" Pic="6" />
+  <item ID="1266" Name="Düşmanın sihir değerini 10 puanlık azaltır" EffectPic="effect068" Description="Vurduğun düşman petinin sihirsel değerini 10 puanlık azaltır" Pic="-1" />
+  <item ID="1267" Name="Düşmanın sihir değerini 20 puanlık azaltır" EffectPic="effect068" Description="Vurduğun düşman petinin sihirsel değerini 20 puanlık azaltır" Pic="-1" />
+  <item ID="1268" Name="Takım arkadaşı petine 5 puanlık sihir değeri ekler" EffectPic="" Description="Takım arkadaşı petine 5 puanlık sihir değeri ekler" Pic="-1" />
+  <item ID="1269" Name="Takım arkadaşı petine 10 puanlık sihir değeri ekle" EffectPic="" Description="Takım arkadaşı petine 10 puanlık sihir değeri ekler" Pic="-1" />
+  <item ID="1270" Name="Oyuncuya vurarak 800 HP azaltırır" EffectPic="" Description="Oyuncuya vurarak 800 HP azaltır" Pic="-1" />
+  <item ID="1271" Name="Oyuncuya vurarak 1000 HP azaltırır" EffectPic="" Description="Oyuncuya vurarak 1000 HP azaltır" Pic="-1" />
+  <item ID="1272" Name="獲得192技能" EffectPic="" Description="獲得核爆技能192" Pic="-1" />
+  <item ID="1273" Name="獲得193技能" EffectPic="" Description="獲得核爆技能193" Pic="-1" />
+  <item ID="1274" Name="Al 1 Büyü Puanı" EffectPic="" Description="Al 1 Büyü Puanı" Pic="-1" />
+  <item ID="1275" Name="AL 2 Büyü Puanı" EffectPic="" Description="AL 2 Büyü Puanı" Pic="-1" />
+  <item ID="1276" Name="%1 Can Yenileme" EffectPic="" Description="%1 Can Yenileme" Pic="1" />
+  <item ID="1277" Name="%2 Can Yenileme" EffectPic="" Description="%2 Can Yenileme" Pic="1" />
+  <item ID="1278" Name="%20 Kritik Hasar Düşürme" EffectPic="effect065" Description="%20 Kritik Hasar Düşürme" Pic="7" />
+  <item ID="1279" Name="%30 Kritik Hasar Düşürme" EffectPic="effect065" Description="%30 Kritik Hasar Düşürme" Pic="7" />
+  <item ID="1280" Name="单体隐身" EffectPic="" Description="隐身" Pic="-1" />
+  <item ID="1281" Name="Alınan Hasarı %15 Azaltma" EffectPic="effect065" Description="Alınan Hasarı %15 Azaltma" Pic="15" />
+  <item ID="1282" Name="Alınan Hasarı %30 Azaltma" EffectPic="effect065" Description="Alınan Hasarı %30 Azaltma" Pic="15" />
+  <item ID="1283" Name="Alınan Hasarı %50 Azaltma" EffectPic="effect065" Description="Alınan Hasarı %50 Azaltma" Pic="15" />
+  <item ID="1284" Name="%30 Can Yenileme" EffectPic="" Description="%30 Can Yenileme" Pic="1" />
+  <item ID="1285" Name="%30 Can Yenileme" EffectPic="" Description="%30 Can Yenileme" Pic="1" />
+  <item ID="1286" Name="坐骑技能封锁" EffectPic="effect069" Description="坐骑技能封锁" Pic="9" />
+  <item ID="1287" Name="宠物技能封锁" EffectPic="effect069" Description="宠物技能封锁" Pic="9" />
+  <item ID="1288" Name="瞬移" EffectPic="" Description="竞技中随机瞬移到一个位置" Pic="-1" />
+  <item ID="1289" Name="获得210技能" EffectPic="" Description="获得妙手空空技能210，获得技能216" Pic="-1" />
+  <item ID="1290" Name="获得211技能" EffectPic="" Description="获得妙手空空技能211，获得技能216" Pic="-1" />
+  <item ID="1291" Name="减少敌人魔法值1点" EffectPic="effect068" Description="减少敌人魔法值1点" Pic="-1" />
+  <item ID="1292" Name="减少敌人魔法值2点" EffectPic="effect068" Description="减少敌人魔法值2点" Pic="-1" />
+  <item ID="1293" Name="获得206技能" EffectPic="" Description="获得痛击206" Pic="-1" />
+  <item ID="1294" Name="获得207技能" EffectPic="" Description="获得痛击207" Pic="-1" />
+  <item ID="1295" Name="获得214技能" EffectPic="" Description="获得痛击214" Pic="-1" />
+  <item ID="1296" Name="获得215技能" EffectPic="" Description="获得痛击215" Pic="-1" />
+  <item ID="1297" Name="移除效果笑里藏刀" EffectPic="" Description="" Pic="-1" />
+  <item ID="1298" Name="移除效果吸血1" EffectPic="" Description="" Pic="-1" />
+  <item ID="1299" Name="移除效果吸血2" EffectPic="" Description="" Pic="-1" />
+  <item ID="1300" Name="Düşmanın aktif becerisinden %30 Büyü çalar." EffectPic="" Description="Düşmanın aktif becerisinden %30 Büyü çalar." Pic="-1" />
+  <item ID="1301" Name="Düşmanın aktif becerisinden %50 Büyü çalar." EffectPic="" Description="Düşmanın aktif becerisinden %50 Büyü çalar." Pic="-1" />
+  <item ID="1302" Name="Al 1 Büyü Puanı" EffectPic="" Description="Al 1 Büyü Puanı" Pic="-1" />
+  <item ID="1303" Name="Al 2 Büyü Puanı" EffectPic="" Description="Al 2 Büyü Puanı" Pic="-1" />
+  <item ID="1304" Name="Düşmanın 1 Büyü Puanını Düşür" EffectPic="effect068" Description="Düşmanın 1 Büyü Puanını Düşür" Pic="-1" />
+  <item ID="1305" Name="Düşmanın 2 Büyü Puanını Düşür" EffectPic="effect068" Description="Düşmanın 2 Büyü Puanını Düşür" Pic="-1" />
+  <item ID="1306" Name="获得218" EffectPic="" Description="获得技能218" Pic="-1" />
+  <item ID="1307" Name="获得219" EffectPic="" Description="获得技能219" Pic="-1" />
+  <item ID="1308" Name="%30 Hasar azaltma" EffectPic="" Description="%30 Hasar azaltma" Pic="3" />
+  <item ID="1309" Name="%30 Hasar azaltma" EffectPic="" Description="%30 Hasar azaltma" Pic="3" />
+  <item ID="1310" Name="获得技能220" EffectPic="" Description="获得技能220" Pic="-1" />
+  <item ID="1311" Name="获得技能221" EffectPic="" Description="获得技能221" Pic="-1" />
+  <item ID="1322" Name="Can Kaybettikçe Enerji Kazan" EffectPic="" Description="Alınan her 3500 hasar için 1 enerji artar." Pic="-1" />
+  <item ID="1323" Name="Öldür" EffectPic="" Description="%5 can kaldığında öldürür." Pic="-1" />
+  <item ID="1324" Name="Öldür" EffectPic="" Description="%10 can kaldığında öldürür." Pic="-1" />
+  <item ID="1325" Name="Evcil Hayvan Saldırısı Sv 1" EffectPic="" Description="Hasar evcil hayvan saldırısının %xine eşittir." Pic="-1" />
+  <item ID="1326" Name="Evcil Hayvan Saldırısı Sv 2" EffectPic="" Description="Hasar evcil hayvan saldırısının %xine eşittir." Pic="-1" />
+  <item ID="1327" Name="Evcil Hayvan Saldırısı Sv 3" EffectPic="" Description="Hasar evcil hayvan saldırısının %xine eşittir." Pic="-1" />
+  <item ID="1328" Name="100% Hasar Artar" EffectPic="" Description="" Pic="-1" />
+  <item ID="1329" Name="130% Hasar Artar" EffectPic="" Description="" Pic="-1" />
+  <item ID="1330" Name="155% Hasar Artar" EffectPic="" Description="" Pic="-1" />
+  <item ID="1331" Name="Kırılmaz Sv 1" EffectPic="effect003" Description="Çukur etkisini kaldırır ve savunmayı arttırır. Ama hareket edemezsin." Pic="3" />
+  <item ID="1332" Name="Kırılmaz Sv 2" EffectPic="effect003" Description="Çukur etkisini kaldırır ve savunmayı arttırır. Ama hareket edemezsin." Pic="3" />
+  <item ID="1333" Name="Kırılmaz Sv 3" EffectPic="effect003" Description="Çukur etkisini kaldırır ve savunmayı arttırır. Ama hareket edemezsin." Pic="3" />
+  <item ID="1334" Name="20% Saldırı Arttır" EffectPic="" Description="Saldırıyı %20 azaltır." Pic="-1" />
+  <item ID="1335" Name="15%Saldırı Arttır" EffectPic="" Description="Saldırıyı %15 azaltır." Pic="-1" />
+  <item ID="1336" Name="Sabit Nokta Sv 1" EffectPic="effect019" Description="Zırhı arttırır. Hareket ettiğinizde bu etki kaybolur." Pic="2" />
+  <item ID="1337" Name="Sabit Nokta Sv 2" EffectPic="effect019" Description="Zırhı arttırır. Hareket ettiğinizde bu etki kaybolur." Pic="2" />
+  <item ID="1338" Name="242. Beceri alınır." EffectPic="" Description="" Pic="-1" />
+  <item ID="1339" Name="Efekt kaldırır." EffectPic="" Description="" Pic="-1" />
+  <item ID="1340" Name="Evcil hayvanın düşmana %2 hasar verdi." EffectPic="effect036" Description="" Pic="-1" />
+  <item ID="1341" Name="Evcil hayvanın düşmana %3 hasar verdi." EffectPic="effect036" Description="" Pic="-1" />
+  <item ID="1342" Name="Nöbet Silahı Sv 1" EffectPic="effect018" Description="Çukuru engeller. Hasarı ve şansı arttırır fakar zırhı düşürür. Hareket ettiğiniz" Pic="6" />
+  <item ID="1343" Name="Nöbet Silahı Sv 2" EffectPic="effect018" Description="Çukuru engeller. Hasarı ve şansı arttırır fakar zırhı düşürür. Hareket ettiğiniz" Pic="6" />
+  <item ID="1344" Name="10% Şans Arttır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1345" Name="15% Şans Arttır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1346" Name="30% Zırh Azaltır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1347" Name="25% Zırh Azaltır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1348" Name="243. Özellik Alınır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1349" Name="1082,1083,1084,1085 Becerilerinin Etkilerini Kaldı" EffectPic="" Description="" Pic="-1" />
+  <item ID="1350" Name="1086,1087,1088 Becerilerinin Etkilerini Kaldırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1351" Name="Receives 4 MP." EffectPic="" Description="" Pic="-1" />
+  <item ID="1352" Name="3.3% Can azalır" EffectPic="" Description="Can değerini %3.3 azaltır." Pic="1" />
+  <item ID="1353" Name="Öfkeli Civciv Sv 1" EffectPic="effect016" Description="Saldırı sonrası hasar artar." Pic="1" />
+  <item ID="1354" Name="Öfkeli Civciv Sv 2" EffectPic="effect016" Description="Saldırı sonrası hasar artar." Pic="1" />
+  <item ID="1355" Name="244. Özellik Alınır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1356" Name="1354,1355 Becerilerinin Etkilerini Kaldırır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1357" Name="244. Özellik Alınır" EffectPic="" Description="" Pic="-1" />
+  <item ID="1358" Name="Regeneration Lv 1" EffectPic="effect033" Description="Restores Health." Pic="5" />
+  <item ID="1359" Name="Regeneration Lv 2" EffectPic="effect033" Description="Restores Health." Pic="5" />
+  <item ID="1360" Name="Regeneration Lv 3" EffectPic="effect033" Description="Restores Health." Pic="5" />
+  <item ID="1361" Name="Healing Flower Lv 1" EffectPic="effect002" Description="Restores Health." Pic="5" />
+  <item ID="1362" Name="Healing Flower Lv 2" EffectPic="effect002" Description="Restores Health." Pic="5" />
+  <item ID="1363" Name="Healing Flower Lv 3" EffectPic="effect002" Description="Restores Health." Pic="5" />
+  <item ID="1364" Name="Restores Health by 8%" EffectPic="" Description="" Pic="-1" />
+  <item ID="1365" Name="Restores Health by 10%" EffectPic="" Description="" Pic="-1" />
+  <item ID="1366" Name="Flower Blessing Lv 1" EffectPic="effect006" Description="Restores Health." Pic="5" />
+  <item ID="1367" Name="Flower Blessing Lv 2" EffectPic="effect006" Description="Restores Health." Pic="5" />
+  <item ID="1368" Name="Skill obtained" EffectPic="" Description="Restores Health when being attacked." Pic="3" />
+  <item ID="1369" Name="Skill obtained" EffectPic="" Description="Restores Health when being attacked. The effect will be double if Health is low." Pic="3" />
+  <item ID="1370" Name="Shield" EffectPic="" Description="Restores Health when being attacked." Pic="-1" />
+  <item ID="1371" Name="Shield" EffectPic="" Description="Restores Health when being attacked. The effect will be double if Health is low." Pic="-1" />
+  <item ID="1372" Name="Healing Hand effect" EffectPic="" Description="" Pic="-1" />
+  <item ID="1373" Name="Healing Hand effect" EffectPic="" Description="" Pic="-1" />
+  <item ID="1374" Name="Flying bomb" EffectPic="" Description="" Pic="-1" />
+  <item ID="1375" Name="Flying bomb" EffectPic="" Description="" Pic="-1" />
+  <item ID="1376" Name="Magic Spread" EffectPic="" Description="" Pic="-1" />
+  <item ID="1418" Name="Hasar Arttırma Oranı 20%" EffectPic="" Description="" Pic="-1" />
+  <item ID="1419" Name="Hasar Arttırma Oranı 50%" EffectPic="" Description="" Pic="-1" />
+  <item ID="1420" Name="Hasar Arttırma Oranı 80%" EffectPic="" Description="" Pic="-1" />
+  <item ID="1421" Name="Kritik vurma oranı %20 artar" EffectPic="" Description="Kritik vurma oranı %20 artar" Pic="20" />
+  <item ID="1422" Name="Artar Sihir Saldırısı Artar" EffectPic="" Description="Sihir Saldırısı Artar" Pic="22" />
+  <item ID="1423" Name="Sihir Savunması Azalır" EffectPic="" Description="Sihir Savunması Azalır" Pic="21" />
+  <item ID="1424" Name="Sihir Saldırısı Artar" EffectPic="" Description="Sihir Saldırısı Artar" Pic="22" />
+  <item ID="1425" Name="Sihir Savunması Azalır" EffectPic="" Description="Sihir Savunması Azalır" Pic="21" />
+  <item ID="1426" Name="1 Tur sabitle" EffectPic="effect081" Description="1 Tur sabitle" Pic="-1" />
+  <item ID="1427" Name="Enerji Azalır" EffectPic="" Description="10 Enerji Azalır" Pic="-1" />
+  <item ID="1428" Name="Hasar alımı Azalır" EffectPic="" Description="Aldığınız hasar azalır ve kirik önleme şansınız vardır." Pic="23" />
+  <item ID="1429" Name="Hasar alımı Azalır" EffectPic="" Description="Aldığınız hasar azalır ve kirik önleme şansınız vardır." Pic="23" />
+  <item ID="1430" Name="Kritik Önleme" EffectPic="" Description="Kritik Önleme" Pic="-1" />
+  <item ID="1431" Name="Kritik Önleme" EffectPic="" Description="Kritik Önleme" Pic="-1" />
+  <item ID="1432" Name="Tüm görünmeyenleri işaretle" EffectPic="" Description="Görünmeyen tüm oyuncuları işaretler" Pic="25" />
+  <item ID="1433" Name="Beceri Elde et." EffectPic="" Description="Hasar arttırma becerisi elde et." Pic="-1" />
+  <item ID="1434" Name="Hasar Artar" EffectPic="" Description="Hasar Artar" Pic="-1" />
+  <item ID="1435" Name="Son darbeyi alırken sağlık yenilemesi." EffectPic="effect082" Description="Son darbeyi alırken sağlık yenilemesi." Pic="24" />
+  <item ID="1436" Name="Toplam Hasar" EffectPic="" Description="Toplam Hasar" Pic="-1" />
+  <item ID="1437" Name="Toplam Hasar" EffectPic="" Description="Toplam Hasar" Pic="-1" />
+  <item ID="1438" Name="Öğe kullan ve Enerji arttır." EffectPic="" Description="Savaş öğesi kullan ve enerji arttır." Pic="-1" />
+  <item ID="1439" Name="Yanan Karınca Topu Sv 1" EffectPic="effect012" Description="Zırhı arttırır" Pic="3" />
+  <item ID="1440" Name="Yanan Karınca Topu Sv 2" EffectPic="effect012" Description="Zırhı arttırır" Pic="3" />
+  <item ID="1441" Name="Yanan Karınca Topu Sv 3" EffectPic="effect012" Description="Zırhı arttırır" Pic="3" />
+  <item ID="1442" Name="Hasar azaldı" EffectPic="effect007" Description="Hasar azaldı" Pic="7" />
+  <item ID="1443" Name="Hasar azaldı" EffectPic="effect007" Description="Hasar azaldı" Pic="7" />
+  <item ID="1444" Name="Hasar azaldı" EffectPic="effect007" Description="Hasar azaldı" Pic="7" />
+  <item ID="1445" Name="Öfke Artışı Sv 1" EffectPic="effect007" Description="Hasar azaldı" Pic="7" />
+  <item ID="1446" Name="Öfke Artışı Sv 2" EffectPic="effect007" Description="Hasar azaldı" Pic="7" />
+  <item ID="1447" Name="Karınca İğnesi Sv 1" EffectPic="effect008" Description="Yansıma （TIPS在1067）" Pic="-1" />
+  <item ID="1448" Name="Karınca İğnesi Sv 2" EffectPic="effect008" Description="Yansıma （TIPS在1068）" Pic="-1" />
+  <item ID="1449" Name="Sert Kabuk Sv 1" EffectPic="" Description="Zırhı ve Savunmayı arttırır." Pic="2" />
+  <item ID="1450" Name="Sert Kabuk Sv 2" EffectPic="" Description="Zırhı ve Savunmayı arttırır." Pic="2" />
+  <item ID="1451" Name="Sert Kabuk Sv 1" EffectPic="" Description="Savunmayı arttırır." Pic="-1" />
+  <item ID="1452" Name="Sert Kabuk Sv 2" EffectPic="" Description="Savunmayı arttırır." Pic="-1" />
+  <item ID="1453" Name="Yansıma" EffectPic="effect008" Description="" Pic="-1" />
+  <item ID="1454" Name="Yansıma" EffectPic="effect008" Description="" Pic="-1" />
+  <item ID="1455" Name="%5 Can yenilenir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1456" Name="%15 Can yenilenir." EffectPic="" Description="" Pic="-1" />
+  <item ID="1457" Name="2 Beceri kazanıldı." EffectPic="" Description="" Pic="-1" />
+  <item ID="1458" Name="Saldırıya uğradığında büyü değeri yenilenir" EffectPic="" Description="" Pic="-1" />
+  <item ID="1459" Name="Hasarın %3ünü yansıtır." EffectPic="effect008" Description="" Pic="-1" />
+  <item ID="1460" Name="Hasarın %5ini yansıtır." EffectPic="effect008" Description="" Pic="-1" />
+  <item ID="1462" Name="Evcil Saldırısı" EffectPic="" Description="Evcil saldırısının %xine eşit hasar" Pic="-1" />
+  <item ID="1463" Name="Uyandı · Ejderha Boynuzu" EffectPic="effect016" Description="Saldırıyı 450, Hasarı 300 arttırır." Pic="9" />
+  <item ID="1464" Name="Uyandı · Ejderha Boynuzu" EffectPic="" Description="Hasarı 300 arttırır." Pic="-1" />
+  <item ID="1465" Name="Uyandı · Şeytan Ejderha" EffectPic="effect039" Description="Hasarı %30, max canı %15 arttırır ve zırhı 750 azaltır." Pic="13" />
+  <item ID="1466" Name="Zırhı azaltır." EffectPic="" Description="Savunmayı 750 aaltır." Pic="-1" />
+  <item ID="1467" Name="Max. Canı arttırır." EffectPic="" Description="Max. Can değerini %15 arttırır." Pic="-1" />
+  <item ID="1468" Name="Beceri kazanıldı" EffectPic="" Description="Saldırı altındayken, canı yeniler." Pic="-1" />
+  <item ID="1469" Name="Uyandı · Ejderha Gardiyanı" EffectPic="effect037" Description="Saldırı altındayken, canın yenilenme şansı varıdr." Pic="11" />
+  <item ID="1470" Name="Canı yeniler." EffectPic="effect033" Description="%4 can yenilenir." Pic="-1" />
+  <item ID="1471" Name="Beceri kazanıldı" EffectPic="" Description="" Pic="-1" />
+  <item ID="1473" Name="Evcil Saldırısı" EffectPic="" Description="Evcil saldırısının %xine eşit hasar" Pic="-1" />
+  <item ID="1474" Name="Saldırıyı %20 azaltır" EffectPic="" Description="Saldırıyı %20 azaltır." Pic="-1" />
+  <item ID="1475" Name="Savunmayı %20 azaltır" EffectPic="" Description="Savunmayı %20 azaltır." Pic="-1" />
+  <item ID="1476" Name="Kritik Oranını %10 arttırır" EffectPic="" Description="Kritik oranını %10 arttırır." Pic="-1" />
+  <item ID="1477" Name="Hedefin canını azaltır" EffectPic="" Description="Hedefin canını azaltır." Pic="-1" />
+  <item ID="1478" Name="Hareket edemez." EffectPic="effect062" Description="Hareket edemez." Pic="9" />
+  <item ID="1479" Name="1 büyü değeri azaltır." EffectPic="" Description="1 büyü değeri azalır." Pic="-1" />
+  <item ID="1480" Name="Evcil Saldırısı" EffectPic="" Description="Evcil saldırısının %xine eşit hasar" Pic="-1" />
+  <item ID="1481" Name="Evcil Saldırısı" EffectPic="" Description="Evcil saldırısının %xine eşit hasar" Pic="-1" />
+  <item ID="1482" Name="Uyandı · Buz Bombası" EffectPic="effect011" Description="Saldırıyı ve Savunmayı arttıtır." Pic="1" />
+  <item ID="1483" Name="Buz Bombası" EffectPic="effect011" Description="Hasarı arttırır." Pic="-1" />
+  <item ID="1484" Name="Uyandı · Kristal Bariyer" EffectPic="effect048" Description="Hasar azaltma oranını %30 arttırır" Pic="8" />
+  <item ID="1485" Name="Uyandı · Buz Alanı" EffectPic="" Description="Her turda %8 can azaltır." Pic="14" />
+  <item ID="1486" Name="Uyandı · Buz Alanı" EffectPic="effect049" Description="800 Hasar arttırır." Pic="1" />
+  <item ID="1487" Name="Uyandı · Yıldırım" EffectPic="" Description="600 Çeviklik arttırır." Pic="5" />
+  <item ID="1488" Name="Uyandı · Anka Kuşu Kalbi" EffectPic="" Description="600 Saldırı arttırır." Pic="6" />
+  <item ID="1489" Name="Uyandı · Ölümcül Patlama" EffectPic="" Description="Saldırıyı arttırır." Pic="1" />
+  <item ID="1490" Name="Uyandı · Ölümcül Patlama" EffectPic="" Description="Hasarı arttırır." Pic="6" />
+  <item ID="1491" Name="Uyandı · Ölümcül Patlama" EffectPic="effect050" Description="Kritik oranını arttırır." Pic="9" />
+  <item ID="1492" Name="Takip etmek" EffectPic="" Description="" Pic="-1" />
+  <item ID="1493" Name="Canı yeniler." EffectPic="" Description="Canı yeniler" Pic="-1" />
+  <item ID="1494" Name="Evcil Saldırısı" EffectPic="" Description="Evcil saldırısının %xine eşit hasar" Pic="-1" />
+  <item ID="1495" Name="Uyandı · Yılan Zehiri" EffectPic="" Description="Saldırı %25 azaltıldı" Pic="4" />
+  <item ID="1496" Name="Uyandı · Yılan Boğması" EffectPic="effect063" Description="Saldırı ve Savunma %30 azaltıldı" Pic="9" />
+  <item ID="1497" Name="Yılan Boğması Sv 2" EffectPic="" Description="" Pic="-1" />
+  <item ID="1498" Name="Uyandı · Kan Emici" EffectPic="" Description="Her turda %6 can azalır" Pic="14" />
+  <item ID="1499" Name="Uyandı · Kan Emici" EffectPic="effect061" Description="Kritik oranı +%80, Kritik Hasar +%20" Pic="6" />
+  <item ID="1500" Name="Kan Emici Sv 2" EffectPic="" Description="" Pic="-1" />
+  <item ID="1501" Name="Şeytan Kurban" EffectPic="" Description="Kalkan ve büyü savunmasını azaltır" Pic="7" />
+  <item ID="1502" Name="Şeytan Kurban" EffectPic="effect062" Description="Hareket edemez." Pic="9" />
+  <item ID="1503" Name="Şeytan Kurban" EffectPic="" Description="Büyü savunmasını azaltır" Pic="-1" />
+  <item ID="1504" Name="Beceri kazanıldı" EffectPic="" Description="Zehir etkisi alır." Pic="-1" />
+  <item ID="1505" Name="Kanlı İntikam" EffectPic="" Description="Alınan hasar %10 arttırıldı" Pic="9" />
+  <item ID="1506" Name="Evcil Saldırısı" EffectPic="" Description="Evcil saldırısının %xine eşit hasar" Pic="-1" />
+  <item ID="1507" Name="Uyandı · Şeftali Hücumu" EffectPic="" Description="Kritik oranı %25 arttırıldı" Pic="20" />
+  <item ID="1508" Name="Büyü değeri azaldı" EffectPic="" Description="Büyü değeri 20 düşürüldü" Pic="-1" />
+  <item ID="1509" Name="Uyandı · Demir Deri" EffectPic="" Description="Alınan hasar azaltır ve kritik engelleme şansı vardır." Pic="23" />
+  <item ID="1510" Name="Kritik engelleme" EffectPic="" Description="Kritik engelleme" Pic="-1" />
+  <item ID="1511" Name="Beceri kazanıldı" EffectPic="" Description="Hasar arttırma becerisi kazanıldı." Pic="-1" />
+  <item ID="1512" Name="Saldırı arttırıldı" EffectPic="" Description="Hasar arttırma" Pic="-1" />
+  <item ID="1513" Name="Alınan son darbede öfke kurtarılır." EffectPic="" Description="Alınan son darbede öfke kurtarılır." Pic="-1" />
+  <item ID="1514" Name="Şifalı Saç" EffectPic="effect082" Description="Son darbe alınırken canı ve öfkeyi kurtarır." Pic="24" />
+  <item ID="1515" Name="Öğeleri kullan ve büyü değerini arttır." EffectPic="" Description="Savaş eşyalarını kullanır ve büyü değerini arttırır." Pic="-1" />
+  <item ID="1516" Name="Öğeleri kullan ve öfke puanını arttır." EffectPic="" Description="Öğeleri kullanır ve Öfke artar." Pic="-1" />
+  <item ID="1517" Name="Uyandı · Diş Bıçağı" EffectPic="" Description="Kalkan +500, Can +%8" Pic="3" />
+  <item ID="1518" Name="Uyandı · Diş Bıçağı" EffectPic="" Description="Can arttırılır." Pic="-1" />
+  <item ID="1519" Name="Uyandı · Diş Bıçağı" EffectPic="" Description="" Pic="-1" />
+  <item ID="1520" Name="Beceri 139u alır." EffectPic="" Description="" Pic="-1" />
+  <item ID="1521" Name="Efekti kaldırır." EffectPic="" Description="" Pic="-1" />
+  <item ID="1522" Name="Sevgi Darbesi Sv. 1" EffectPic="effect012" Description="Zırhı arttırır." Pic="3" />
+  <item ID="1523" Name="Sevgi Darbesi Sv. 2" EffectPic="effect012" Description="Zırhı arttırır." Pic="3" />
+  <item ID="1524" Name="Sevgi Darbesi Sv. 3" EffectPic="effect012" Description="Zırhı arttırır." Pic="3" />
+  <item ID="1525" Name="Hasarı Azaltır." EffectPic="effect007" Description="Hasarı Azaltır." Pic="7" />
+  <item ID="1526" Name="Hasarı Azaltır." EffectPic="effect007" Description="Hasarı Azaltır." Pic="7" />
+  <item ID="1527" Name="Hasarı Azaltır." EffectPic="effect007" Description="Hasarı Azaltır." Pic="7" />
+  <item ID="1528" Name="Güçlü Kalkan Sv. 1" EffectPic="" Description="Zırhı ve Savunmayı arttırır." Pic="2" />
+  <item ID="1529" Name="Güçlü Kalkan Sv. 2" EffectPic="" Description="Zırhı ve Savunmayı arttırır." Pic="2" />
+  <item ID="1530" Name="Savunmayı Arttırır." EffectPic="" Description="Savunmayı Arttırır." Pic="-1" />
+  <item ID="1531" Name="Savunmayı Arttırır." EffectPic="" Description="Savunmayı Arttırır." Pic="-1" />
+  <item ID="1532" Name="Evcil Saldırısı" EffectPic="" Description="Verilen hasar evcil saldırısının %x ine eşittir." Pic="-1" />
+  <item ID="1533" Name="Evcil becerileri kullanılamaz." EffectPic="effect069" Description="Evcil becerileri kullanılamaz." Pic="9" />
+  <item ID="1534" Name="Düşmanın %60 büyü değerini tüketir." EffectPic="" Description="Düşmanların büyü değerini azaltır." Pic="-1" />
+  <item ID="1535" Name="Kritik oranını %15 arttırır." EffectPic="" Description="Kritik Oranını arttırır." Pic="-1" />
+  <item ID="1536" Name="Alınan Kritik hasarı %30 azaltır." EffectPic="effect065" Description="Kritik Hasarı azaltır ve Kritik Oranını arttırır." Pic="7" />
+  <item ID="1537" Name="Alınan Hasarı %50 azaltır." EffectPic="effect065" Description="Alınan hasarı %50 azaltır." Pic="15" />
+  <item ID="1538" Name="Alınan Hasarı %35 oranında can olarak ekler." EffectPic="" Description="Alınan hasarın %35ini can olarak yeniler." Pic="3" />
+  <item ID="1539" Name="Beceri kazandın." EffectPic="" Description="Beceri kazanıldı." Pic="-1" />
+  <item ID="1540" Name="Kutsal" EffectPic="" Description="Tüm müttefiklerin büyü değerini 1 arttırır." Pic="-1" />
+  <item ID="1541" Name="Büyü değerini arttırır." EffectPic="" Description="Büyü değerini 4 arttırır." Pic="-1" />
+  <item ID="1542" Name="Pet Saldırısı Lv1" EffectPic="" Description="Pet saldırısı% X hasar" Pic="-1" />
+  <item ID="1543" Name="Pet Saldırısı Lv2" EffectPic="" Description="Pet saldırısı% X hasar" Pic="-1" />
+  <item ID="1544" Name="Pet Saldırısı Lv3" EffectPic="" Description="Pet saldırısı% X hasar" Pic="-1" />
+  <item ID="1545" Name="Uçan Yumurta Girişim Lv1" EffectPic="" Description="Hasar% 30 azaldı" Pic="32" />
+  <item ID="1546" Name="Uçan Yumurta Girişim Lv2" EffectPic="" Description="Hasar% 30 azaldı" Pic="32" />
+  <item ID="1547" Name="Uçan Yumurta Girişim Lv3" EffectPic="" Description="Hasar% 30 azaldı" Pic="32" />
+  <item ID="1548" Name="Hasar% 150 arttı" EffectPic="" Description="Hasar% 150 arttı" Pic="-1" />
+  <item ID="1549" Name="Hasar% 180 arttı" EffectPic="" Description="Hasar% 180 arttı" Pic="-1" />
+  <item ID="1550" Name="Hasar% 220 arttı" EffectPic="" Description="Hasar% 220 arttı" Pic="-1" />
+  <item ID="1551" Name="Kritik oranı% 100" EffectPic="" Description="% 100 kritik" Pic="-1" />
+  <item ID="1552" Name="Kritik hasarı% 40 azaltın" EffectPic="" Description="Kritik vuruşlardan kaynaklanan hasarı azaltın, alınan hasarı azaltın" Pic="33" />
+  <item ID="1553" Name="Kritik hasarı% 60 azaltın" EffectPic="" Description="Kritik vuruşlardan kaynaklanan hasarı azaltın, alınan hasarı azaltın" Pic="33" />
+  <item ID="1554" Name="Alınan hasarı% 20 azaltın" EffectPic="" Description="Hasarı azaltın" Pic="-1" />
+  <item ID="1555" Name="Alınan hasarı% 35 azaltın" EffectPic="" Description="Hasarı azaltın" Pic="-1" />
+  <item ID="1556" Name="Leopar Hızı Lv1" EffectPic="" Description="" Pic="-1" />
+  <item ID="1557" Name="Leopar Hızı Lv2" EffectPic="" Description="" Pic="-1" />
+  <item ID="1558" Name="Gizlilik Lv1" EffectPic="" Description="" Pic="-1" />
+  <item ID="1559" Name="Gizlilik Lv2" EffectPic="" Description="" Pic="-1" />
+  <item ID="1560" Name="Klon Lv1" EffectPic="" Description="" Pic="-1" />
+  <item ID="1561" Name="Klon Lv2" EffectPic="" Description="" Pic="-1" />
+  <item ID="1562" Name="Kelepçe Lv1" EffectPic="" Description="Açı ayarlanamaz" Pic="34" />
+  <item ID="1563" Name="Kelepçe Lv2" EffectPic="" Description="Açı ayarlanamaz" Pic="34" />
+  <item ID="1564" Name="Savunma sv1" EffectPic="" Description="Savunma seviyesi 1 kuşan" Pic="-1" />
+  <item ID="1565" Name="Savunma sv2" EffectPic="" Description="Savunma seviyesi 2 kuşan" Pic="-1" />
+  <item ID="1566" Name="Zırh delici lv1" EffectPic="" Description="Zırh delici lv1" Pic="-1" />
+  <item ID="1567" Name="Zırh delici lv2" EffectPic="" Description="Zırh delici lv2" Pic="-1" />
+  <item ID="1568" Name="Zırh delici lv1 kaldırmak" EffectPic="" Description="Zırh delici lv1 kaldırıldı" Pic="-1" />
+  <item ID="1569" Name="Zırh delici lv2 kaldırmak" EffectPic="" Description="Zırh delici lv2 kaldırıldı" Pic="-1" />
+  <item ID="1570" Name="Zırh delici lv1i kaldır" EffectPic="" Description="Zırh delici lv1i kaldır" Pic="-1" />
+  <item ID="1571" Name="Zırh delici lv2yi kaldır" EffectPic="" Description="Zırh delici lv2yi kaldır" Pic="-1" />
+  <item ID="1572" Name="Ejderha Yin" EffectPic="" Description="Düşmanın savunmasının bir kısmını görmezden gelin" Pic="-1" />
+  <item ID="1573" Name="Ejderha Yin" EffectPic="" Description="Düşmanın savunmasının bir kısmını görmezden gelin" Pic="-1" />
+  <item ID="1574" Name="Kung Fu Uzmanlığı" EffectPic="" Description="" Pic="-1" />
+  <item ID="1575" Name="4 Enerji kazanın" EffectPic="" Description="Enerji 4" Pic="-1" />
+  <item ID="1576" Name="Hasarı arttırmak" EffectPic="" Description="Hasarı arttırmak" Pic="-1" />
+  <item ID="1577" Name="Öfkeli lv1" EffectPic="" Description="Öfkeli lv1" Pic="-1" />
+  <item ID="1578" Name="Pet Saldırısı Lv1" EffectPic="" Description="Pet saldırısı% X hasar" Pic="-1" />
+  <item ID="1579" Name="Pet Saldırısı Lv2" EffectPic="" Description="Pet saldırısı% X hasar" Pic="-1" />
+  <item ID="1580" Name="Pet Saldırısı Lv3" EffectPic="" Description="Pet saldırısı% X hasar" Pic="-1" />
+  <item ID="1581" Name="Uçan Yumurta Girişim Lv1" EffectPic="effect063" Description="Hasar% 30 azaldı" Pic="32" />
+  <item ID="1582" Name="Uçan Yumurta Girişim Lv2" EffectPic="effect063" Description="Hasar% 30 azaldı" Pic="32" />
+  <item ID="1583" Name="Uçan Yumurta Girişim Lv3" EffectPic="" Description="Hasar% 30 azaldı" Pic="32" />
+  <item ID="1584" Name="Hasar% 120 arttı" EffectPic="" Description="Hasar% 120 arttı" Pic="-1" />
+  <item ID="1585" Name="Hasar% 150 arttı" EffectPic="effect060" Description="Hasar% 150 arttı" Pic="-1" />
+  <item ID="1586" Name="Hasar% 180 arttı" EffectPic="effect060" Description="Hasar% 180 arttı" Pic="-1" />
+  <item ID="1587" Name="Kritik oranı% 100" EffectPic="" Description="% 100 kritik" Pic="-1" />
+  <item ID="1588" Name="Kritik hasarı% 20 azaltın" EffectPic="" Description="Kritik vuruşlardan kaynaklanan hasarı azaltın, alınan hasarı azaltın" Pic="33" />
+  <item ID="1589" Name="Kritik hasarı% 40 azaltın" EffectPic="effect061" Description="Kritik vuruşlardan kaynaklanan hasarı azaltın, alınan hasarı azaltın" Pic="33" />
+  <item ID="1590" Name="Alınan hasarı% 10 azaltın" EffectPic="effect061" Description="Hasarı azaltın" Pic="-1" />
+  <item ID="1591" Name="Alınan hasarı% 20 azaltın" EffectPic="" Description="Hasarı azaltın" Pic="-1" />
+  <item ID="1592" Name="Leopar Hızı Lv1" EffectPic="" Description="" Pic="-1" />
+  <item ID="1593" Name="Leopar Hızı Lv2" EffectPic="" Description="" Pic="-1" />
+  <item ID="1594" Name="Gizlilik Lv1" EffectPic="" Description="" Pic="-1" />
+  <item ID="1595" Name="Gizlilik Lv2" EffectPic="" Description="" Pic="-1" />
+  <item ID="1596" Name="Klon Lv1" EffectPic="" Description="" Pic="-1" />
+  <item ID="1597" Name="Klon Lv2" EffectPic="" Description="" Pic="-1" />
+  <item ID="1598" Name="Kelepçe Lv1" EffectPic="" Description="Açı ayarlanamaz" Pic="34" />
+  <item ID="1599" Name="Kelepçe Lv2" EffectPic="effect062" Description="Açı ayarlanamaz" Pic="34" />
+  <item ID="1600" Name="Savunma seviyesi 1" EffectPic="" Description="Savunma seviyesi 1 kuşan" Pic="-1" />
+  <item ID="1601" Name="Savunma seviyesi 2" EffectPic="" Description="Savunma seviyesi 2 kuşan" Pic="-1" />
+  <item ID="1602" Name="Zırh delici lv1" EffectPic="" Description="Zırh delici lv1" Pic="-1" />
+  <item ID="1603" Name="Zırh delici lv2" EffectPic="" Description="Zırh delici lv2" Pic="-1" />
+  <item ID="1604" Name="Zırh delici lv1 kaldırmak" EffectPic="" Description="Zırh delici lv2 kaldırmak alın" Pic="-1" />
+  <item ID="1605" Name="Zırh delici lv2 kaldırmak" EffectPic="" Description="Zırh delici lv1 kaldırmak alın" Pic="-1" />
+  <item ID="1606" Name="Zırh delici lv1i kaldır" EffectPic="" Description="Zırh delici lv1i kaldır" Pic="-1" />
+  <item ID="1607" Name="Zırh delici lv2yi kaldır" EffectPic="" Description="Zırh delici lv2yi kaldır" Pic="-1" />
+  <item ID="1608" Name="Ejderha Yin" EffectPic="" Description="Düşmanın savunmasının bir kısmını görmezden gelin" Pic="-1" />
+  <item ID="1609" Name="Ejderha Yin" EffectPic="" Description="Düşmanın savunmasının bir kısmını görmezden gelin" Pic="-1" />
+  <item ID="1610" Name="Kung Fu uzmanlığı" EffectPic="" Description="" Pic="-1" />
+  <item ID="1611" Name="2 Enerji alın" EffectPic="" Description="Enerji 2" Pic="-1" />
+  <item ID="1612" Name="Hasarı arttırmak" EffectPic="" Description="Hasarı arttırmak" Pic="-1" />
+  <item ID="1613" Name="Öfkeli lv1" EffectPic="" Description="Öfkeli lv1" Pic="-1" />
+  <item ID="1614" Name="Kelebek gizli" EffectPic="" Description="Tetik HP%" Pic="-1" />
+  <item ID="1615" Name="Kelebek gizli" EffectPic="" Description="Tetik HP%" Pic="-1" />
+  <item ID="1633" Name="Zırhı güçlendir" EffectPic="" Description="Zırhı ve savunmayı geliştirin." Pic="36" />
+  <item ID="1634" Name="Savunma değerini artırın" EffectPic="" Description="Savunma değerini artırın." Pic="36" />
+  <item ID="1635" Name="Hasar azaltma" EffectPic="" Description="Hasar% 50 azaldı" Pic="37" />
+  <item ID="1636" Name="Büyülü saldırıyı artırın" EffectPic="" Description="Büyülü saldırıyı% 30 artır" Pic="38" />
+  <item ID="1637" Name="Becerileri artırmak için hasar kazanın" EffectPic="" Description="Kazanılan hasar arttırma becerileri" Pic="-1" />
+  <item ID="1638" Name="Artan hasar" EffectPic="" Description="Alınan hasar% 20 arttı" Pic="39" />
+  <item ID="1999" Name="空技能" EffectPic="" Description="" Pic="-1" />
+  <item ID="2000" Name="血量增加1000" EffectPic="" Description="" Pic="-1" />
+  <item ID="2001" Name="护甲增加30" EffectPic="" Description="" Pic="-1" />
+  <item ID="2002" Name="攻击+50" EffectPic="" Description="" Pic="-1" />
+  <item ID="2003" Name="伤害+30" EffectPic="" Description="" Pic="-1" />
+  <item ID="2004" Name="防御+50" EffectPic="" Description="" Pic="-1" />
+  <item ID="2005" Name="敏捷+50" EffectPic="" Description="" Pic="-1" />
+  <item ID="2006" Name="幸运+50" EffectPic="" Description="" Pic="-1" />
+  <item ID="2007" Name="血量增加400" EffectPic="" Description="" Pic="-1" />
+  <item ID="2008" Name="血量增加100" EffectPic="" Description="" Pic="-1" />
+  <item ID="2009" Name="防御+30" EffectPic="" Description="" Pic="-1" />
+  <item ID="2010" Name="血量增加500" EffectPic="" Description="" Pic="-1" />
+  <item ID="2011" Name="伤害+10" EffectPic="" Description="" Pic="-1" />
+  <item ID="2012" Name="护甲增加5" EffectPic="" Description="" Pic="-1" />
+  <item ID="2013" Name="降低被暴擊傷害10%" EffectPic="" Description="" Pic="-1" />
+  <item ID="2014" Name="伤害+20" EffectPic="" Description="" Pic="-1" />
+  <item ID="2015" Name="护甲增加20" EffectPic="" Description="" Pic="-1" />
+  <item ID="2016" Name="伤害+2" EffectPic="" Description="" Pic="-1" />
+  <item ID="2017" Name="伤害+4" EffectPic="" Description="" Pic="-1" />
+  <item ID="2018" Name="伤害+6" EffectPic="" Description="" Pic="-1" />
+  <item ID="2019" Name="伤害+8" EffectPic="" Description="" Pic="-1" />
+  <item ID="2020" Name="伤害+10" EffectPic="" Description="" Pic="-1" />
+  <item ID="2021" Name="血量增加100" EffectPic="" Description="" Pic="-1" />
+  <item ID="2022" Name="血量增加200" EffectPic="" Description="" Pic="-1" />
+  <item ID="2023" Name="血量增加300" EffectPic="" Description="" Pic="-1" />
+  <item ID="2024" Name="血量增加400" EffectPic="" Description="" Pic="-1" />
+  <item ID="2025" Name="血量增加500" EffectPic="" Description="" Pic="-1" />
+  <item ID="2026" Name="敏捷+50" EffectPic="" Description="" Pic="-1" />
+  <item ID="2027" Name="血量增加1500" EffectPic="" Description="" Pic="-1" />
+  <item ID="2028" Name="降低被暴擊傷害10%" EffectPic="" Description="" Pic="-1" />
+  <item ID="2029" Name="防御+40" EffectPic="" Description="" Pic="-1" />
+  <item ID="2030" Name="受到傷害降低5%" EffectPic="" Description="" Pic="-1" />
+  <item ID="2031" Name="攻擊+20" EffectPic="" Description="" Pic="-1" />
+  <item ID="2032" Name="防禦+20" EffectPic="" Description="" Pic="-1" />
+  <item ID="2033" Name="敏捷+20" EffectPic="" Description="" Pic="-1" />
+  <item ID="2034" Name="幸運+20" EffectPic="" Description="" Pic="-1" />
+  <item ID="2035" Name="伤害+12" EffectPic="" Description="" Pic="-1" />
+  <item ID="2036" Name="伤害+14" EffectPic="" Description="" Pic="-1" />
+  <item ID="2037" Name="伤害+16" EffectPic="" Description="" Pic="-1" />
+  <item ID="2038" Name="血量增加600" EffectPic="" Description="" Pic="-1" />
+  <item ID="2039" Name="血量增加700" EffectPic="" Description="" Pic="-1" />
+  <item ID="2040" Name="血量增加800" EffectPic="" Description="" Pic="-1" />
+  <item ID="2041" Name="攻击+30" EffectPic="" Description="" Pic="-1" />
+  <item ID="2042" Name="敏捷+30" EffectPic="" Description="" Pic="-1" />
+  <item ID="2043" Name="幸運+30" EffectPic="" Description="" Pic="-1" />
+  <item ID="2044" Name="攻擊+60" EffectPic="" Description="" Pic="-1" />
+  <item ID="2045" Name="降低被暴擊傷害20%" EffectPic="" Description="" Pic="-1" />
+  <item ID="2046" Name="護甲+50" EffectPic="" Description="" Pic="-1" />
+  <item ID="2047" Name="血量增加1000" EffectPic="" Description="" Pic="-1" />
+  <item ID="2048" Name="魔攻+20點" EffectPic="" Description="" Pic="-1" />
+  <item ID="2049" Name="魔防+20點" EffectPic="" Description="" Pic="-1" />
+  <item ID="2050" Name="傷害+70" EffectPic="" Description="" Pic="-1" />
+  <item ID="2051" Name="防御+35" EffectPic="" Description="" Pic="-1" />
+  <item ID="2052" Name="护甲增加35" EffectPic="" Description="" Pic="-1" />
+  <item ID="2053" Name="护甲增加50" EffectPic="" Description="" Pic="-1" />
+  <item ID="2054" Name="血量增加2000" EffectPic="" Description="" Pic="-1" />
+  <item ID="2055" Name="傷害+50" EffectPic="" Description="" Pic="-1" />
+  <item ID="2056" Name="魔攻+50" EffectPic="" Description="" Pic="-1" />
+  <item ID="2101" Name="Ölümcül hasar %5 arttı." EffectPic="" Description="Ölümcül hasar %5 arttı." Pic="-1" />
+  <item ID="2102" Name="Ölümcül hasar %10 arttı." EffectPic="" Description="Ölümcül hasar %10 arttı." Pic="-1" />
+  <item ID="2103" Name="Ölümcül hasar %15 arttı." EffectPic="" Description="Ölümcül hasar %15 arttı." Pic="-1" />
+  <item ID="2104" Name="Ölümcül hasar %20 arttı." EffectPic="" Description="Ölümcül hasar %20 arttı." Pic="-1" />
+  <item ID="2105" Name="Ölümcül hasar %25 arttı." EffectPic="" Description="Ölümcül hasar %25 arttı." Pic="-1" />
+  <item ID="2106" Name="Ölümcül hasar %30 arttı." EffectPic="" Description="Ölümcül hasar %30 arttı." Pic="-1" />
+  <item ID="2107" Name="Ölümcül hasar %35 arttı." EffectPic="" Description="Ölümcül hasar %35 arttı." Pic="-1" />
+  <item ID="2108" Name="Ölümcül hasar %40 arttı." EffectPic="" Description="Ölümcül hasar %40 arttı." Pic="-1" />
+  <item ID="2109" Name="Ölümcül hasar %45 arttı." EffectPic="" Description="Ölümcül hasar %45 arttı." Pic="-1" />
+  <item ID="2110" Name="Ölümcül hasar %50 arttı." EffectPic="" Description="Ölümcül hasar %50 arttı." Pic="-1" />
+  <item ID="2201" Name="Alınan kritik hasar %10 azaldı." EffectPic="effect065" Description="Alınan kritik hasar %10 azaldı." Pic="-1" />
+  <item ID="2202" Name="Alınan kritik hasar %15 azaldı." EffectPic="effect065" Description="Alınan kritik hasar %15 azaldı." Pic="-1" />
+  <item ID="2203" Name="Alınan kritik hasar %20 azaldı." EffectPic="effect065" Description="Alınan kritik hasar %20 azaldı." Pic="-1" />
+  <item ID="2204" Name="Alınan kritik hasar %25 azaldı." EffectPic="effect065" Description="Alınan kritik hasar %25 azaldı." Pic="-1" />
+  <item ID="2205" Name="Alınan kritik hasar %30 azaldı." EffectPic="effect065" Description="Alınan kritik hasar %30 azaldı." Pic="-1" />
+  <item ID="2206" Name="Alınan kritik hasar %35 azaldı." EffectPic="effect065" Description="Alınan kritik hasar %35 azaldı." Pic="-1" />
+  <item ID="2207" Name="Alınan kritik hasar %40 azaldı." EffectPic="effect065" Description="Alınan kritik hasar %40 azaldı." Pic="-1" />
+  <item ID="2208" Name="Alınan kritik hasar %45 azaldı." EffectPic="effect065" Description="Alınan kritik hasar %45 azaldı." Pic="-1" />
+  <item ID="2209" Name="Alınan kritik hasar %50 azaldı." EffectPic="effect065" Description="Alınan kritik hasar %50 azaldı." Pic="-1" />
+  <item ID="2210" Name="Alınan kritik hasar %50 azaldı." EffectPic="effect065" Description="Alınan kritik hasar %50 azaldı." Pic="-1" />
+  <item ID="2301" Name="Beceri kazan 431" EffectPic="" Description="Beceri kazan 431" Pic="-1" />
+  <item ID="2302" Name="Beceri kazan 432" EffectPic="" Description="Beceri kazan 432" Pic="-1" />
+  <item ID="2303" Name="Beceri kazan 433" EffectPic="" Description="Beceri kazan 433" Pic="-1" />
+  <item ID="2304" Name="Beceri kazan 434" EffectPic="" Description="Beceri kazan 434" Pic="-1" />
+  <item ID="2305" Name="Beceri kazan 435" EffectPic="" Description="Beceri kazan 435" Pic="-1" />
+  <item ID="2306" Name="Beceri kazan 436" EffectPic="" Description="Beceri kazan 436" Pic="-1" />
+  <item ID="2307" Name="Beceri kazan 437" EffectPic="" Description="Beceri kazan 437" Pic="-1" />
+  <item ID="2308" Name="Beceri kazan 438" EffectPic="" Description="Beceri kazan 438" Pic="-1" />
+  <item ID="2309" Name="Beceri kazan 439" EffectPic="" Description="Beceri kazan 439" Pic="-1" />
+  <item ID="2310" Name="Beceri kazan 440" EffectPic="" Description="Beceri kazan 440" Pic="-1" />
+  <item ID="2401" Name="Büyü direncini %2 arttır." EffectPic="" Description="Büyü direncini %2 arttır." Pic="-1" />
+  <item ID="2402" Name="Büyü direncini %4 arttır." EffectPic="" Description="Büyü direncini %4 arttır." Pic="-1" />
+  <item ID="2403" Name="Büyü direncini %6 arttır." EffectPic="" Description="Büyü direncini %6 arttır." Pic="-1" />
+  <item ID="2404" Name="Büyü direncini %8 arttır." EffectPic="" Description="Büyü direncini %8 arttır." Pic="-1" />
+  <item ID="2405" Name="Büyü direncini %10 arttır." EffectPic="" Description="Büyü direncini %10 arttır." Pic="-1" />
+  <item ID="2406" Name="Büyü direncini %12 arttır." EffectPic="" Description="Büyü direncini %12 arttır." Pic="-1" />
+  <item ID="2407" Name="Büyü direncini %14 arttır." EffectPic="" Description="Büyü direncini %14 arttır." Pic="-1" />
+  <item ID="2408" Name="Büyü direncini %16 arttır." EffectPic="" Description="Büyü direncini %16 arttır." Pic="-1" />
+  <item ID="2409" Name="Büyü direncini %18 arttır." EffectPic="" Description="Büyü direncini %18 arttır." Pic="-1" />
+  <item ID="2410" Name="Büyü direncini %20 arttır." EffectPic="" Description="Büyü direncini %20 arttır." Pic="-1" />
+</Result>
