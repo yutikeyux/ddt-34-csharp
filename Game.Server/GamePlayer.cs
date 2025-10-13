@@ -39,6 +39,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 
+
+//                                              GEREKEN YERLERDEKİ TÜM LANGUAGE MGR KODLARI TÜRKÇELEŞTİRİLDİ
 public class GamePlayer : IGamePlayer
 {
     public delegate void PlayerOwnSpaEventHandle(int onlineTimeSpa);
@@ -1403,7 +1405,7 @@ public class GamePlayer : IGamePlayer
     }
     public int AddGP(int gp)
     {
-        // Chức năng của BAOLT - Lâm đừng copaste nha
+        // Chức năng của BAOLT - Lâm đừng copaste nha //incelerim bi ara
         if (this.isPlayerWarrior())
             return 0;
         if (gp >= 0)
@@ -1609,7 +1611,7 @@ public class GamePlayer : IGamePlayer
                 return 0;
             }
             m_character.Money += value;
-            //this.count_addmoney++;
+            //this.count_addmoney++;            LOGA EKLEDİĞİ İÇİN TÜRKÇEYE ÇEVİRMEME GEREK YOK!
             AddLog("AddMoney", "Tài khoản " + m_character.UserName + "nhận " + value + "xu vào tài khoản" + m_character.NickName);
             OnPropertiesChanged();
             return value;
@@ -2173,7 +2175,7 @@ public class GamePlayer : IGamePlayer
                             itemInfo.LuckCompose = item.LuckCompose;
                             itemInfo.IsBinds = item.IsBind;
                             itemInfo.ValidDate = item.ValidDate;
-                            SendItemToMail(itemInfo, LanguageMgr.GetTranslation("Game.Server.GameObjects.SendEventLiveRewards.Content", eventLiveInfo.Description), LanguageMgr.GetTranslation("Game.Server.GameObjects.SendEventLiveRewards.Title"), eMailType.Manage);
+                            SendItemToMail(itemInfo, LanguageMgr.GetTranslation("Tebrikler! Oyunumuzda belirli koşulları sağladığınız için bu ödülleri almaya hak kazandınız! Bu ödüller size sistem tarafından belirlenen koşulları yerine getirdiğiniz için teslim edildi! Değerli öğelerin tadını çıkarın!", eventLiveInfo.Description), LanguageMgr.GetTranslation("Koşullu Etkinlik Yöneticisi"), eMailType.Manage);
                         }
                     }
                 }
@@ -5651,7 +5653,7 @@ public class GamePlayer : IGamePlayer
                     {
                         damageScore = value / 400;
                         honor = value / 1200;
-                        msg = LanguageMgr.GetTranslation("GamePlayer.Msg20", damageScore, honor);
+                        msg = LanguageMgr.GetTranslation("Savaş başarıyla tamamlandı!", damageScore, " Puan ve", honor, " onur kazandınız!", damageScore, honor);
                         AddDamageScores(damageScore);
                         RoomMgr.WorldBossRoom.UpdateRank(this, damageScore, honor);
                         RoomMgr.WorldBossRoom.ReduceBlood(value);

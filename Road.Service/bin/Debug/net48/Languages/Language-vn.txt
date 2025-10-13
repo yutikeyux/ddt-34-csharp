@@ -1,4 +1,4 @@
-#中文包 
+﻿#中文包 
 Game.Server.Hello: Merhaba. 
 
 #协议包中的就不加命名空间前缀 
@@ -433,9 +433,9 @@ MarryInfoAddHandler.Msg2:Arkadaşlık bilgileri girildi.
 MarryInfoDeleteHandler.Fail:Arkadaşlık edinme bilgilerini iptal etme başarısız.
 PlayerBussiness.DeleteAuction.Succeed:Arkadaşlık edinme bilgilerini iptal etme başarılı.
 
-MarryInfoUpdateHandler.Fail:Arkadaşlık bilgilerini güncelleme başarısız. 
+MarryInfoUpdateHandler.Fail:
 MarryInfoUpdateHandler.Msg1:Arkadaşlık bilgileri silindi. 
-MarryInfoUpdateHandler.Succeed:Arkadaşlık bilgilerini güncelleme başarılı. 
+MarryInfoUpdateHandler.Succeed:
 MarryRoomLoginHandler.Failed:Evlenme odasına giriş başarısız, oda mevcut değil. 
 MarryRoomLoginHandler.Forbid:Bu odaya girişiniz yasaklandı. 
 MarryRoomLoginHandler.AlreadyBegin:Tören başlıyor, lütfen bekleyin. 

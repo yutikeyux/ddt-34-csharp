@@ -32,7 +32,7 @@ namespace Game.Service.actions
 
 		private SqlConnection Baglanti_Membership_2 = new SqlConnection("Data Source=WIN-8H6JMQBVGP2/GUNNYTURKEY;Initial Catalog=Db_Membership;Persist Security Info=True;User ID=sa;Password=56855685");
 
-		private static string link = "http://127.0.0.1/Request/";
+		private static string link = "http://109.122.6.15/Request/";
 
 		private IContainer components;
 
@@ -1362,7 +1362,7 @@ namespace Game.Service.actions
             this.groupBox6.ForeColor = System.Drawing.Color.White;
             this.groupBox6.Location = new System.Drawing.Point(220, 203);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(176, 471);
+            this.groupBox6.Size = new System.Drawing.Size(166, 279);
             this.groupBox6.TabIndex = 61;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Oyuncu Bilgileri";
@@ -1374,7 +1374,7 @@ namespace Game.Service.actions
             this.label13.ForeColor = System.Drawing.Color.White;
             this.label13.Location = new System.Drawing.Point(13, 33);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(35, 16);
+            this.label13.Size = new System.Drawing.Size(34, 16);
             this.label13.TabIndex = 44;
             this.label13.Text = "Nick";
             // 
@@ -1385,7 +1385,7 @@ namespace Game.Service.actions
             this.label27.ForeColor = System.Drawing.Color.White;
             this.label27.Location = new System.Drawing.Point(14, 253);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(82, 16);
+            this.label27.Size = new System.Drawing.Size(81, 16);
             this.label27.TabIndex = 58;
             this.label27.Text = "Savaşma G.";
             // 
@@ -1396,7 +1396,7 @@ namespace Game.Service.actions
             this.label24.ForeColor = System.Drawing.Color.White;
             this.label24.Location = new System.Drawing.Point(83, 253);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(82, 16);
+            this.label24.Size = new System.Drawing.Size(81, 16);
             this.label24.TabIndex = 59;
             this.label24.Text = "Savaşma G.";
             // 
@@ -1407,7 +1407,7 @@ namespace Game.Service.actions
             this.nickName.ForeColor = System.Drawing.Color.White;
             this.nickName.Location = new System.Drawing.Point(83, 33);
             this.nickName.Name = "nickName";
-            this.nickName.Size = new System.Drawing.Size(35, 16);
+            this.nickName.Size = new System.Drawing.Size(34, 16);
             this.nickName.TabIndex = 40;
             this.nickName.Text = "Nick";
             // 
@@ -1418,7 +1418,7 @@ namespace Game.Service.actions
             this.label12.ForeColor = System.Drawing.Color.White;
             this.label12.Location = new System.Drawing.Point(14, 57);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(39, 16);
+            this.label12.Size = new System.Drawing.Size(38, 16);
             this.label12.TabIndex = 45;
             this.label12.Text = "K.Adı";
             // 
@@ -1429,7 +1429,7 @@ namespace Game.Service.actions
             this.label31.ForeColor = System.Drawing.Color.White;
             this.label31.Location = new System.Drawing.Point(14, 227);
             this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(32, 16);
+            this.label31.Size = new System.Drawing.Size(31, 16);
             this.label31.TabIndex = 57;
             this.label31.Text = "Can";
             // 
@@ -1440,7 +1440,7 @@ namespace Game.Service.actions
             this.label4.ForeColor = System.Drawing.Color.White;
             this.label4.Location = new System.Drawing.Point(83, 57);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(39, 16);
+            this.label4.Size = new System.Drawing.Size(38, 16);
             this.label4.TabIndex = 41;
             this.label4.Text = "K.Adı";
             // 
@@ -1451,7 +1451,7 @@ namespace Game.Service.actions
             this.label23.ForeColor = System.Drawing.Color.White;
             this.label23.Location = new System.Drawing.Point(83, 227);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(32, 16);
+            this.label23.Size = new System.Drawing.Size(31, 16);
             this.label23.TabIndex = 56;
             this.label23.Text = "Can";
             // 
@@ -1462,7 +1462,7 @@ namespace Game.Service.actions
             this.label11.ForeColor = System.Drawing.Color.White;
             this.label11.Location = new System.Drawing.Point(14, 79);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(41, 16);
+            this.label11.Size = new System.Drawing.Size(40, 16);
             this.label11.TabIndex = 46;
             this.label11.Text = "Level";
             // 
@@ -1473,7 +1473,7 @@ namespace Game.Service.actions
             this.label35.ForeColor = System.Drawing.Color.White;
             this.label35.Location = new System.Drawing.Point(14, 200);
             this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(39, 16);
+            this.label35.Size = new System.Drawing.Size(38, 16);
             this.label35.TabIndex = 51;
             this.label35.Text = "Şans";
             // 
@@ -1484,7 +1484,7 @@ namespace Game.Service.actions
             this.label22.ForeColor = System.Drawing.Color.White;
             this.label22.Location = new System.Drawing.Point(83, 200);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(39, 16);
+            this.label22.Size = new System.Drawing.Size(38, 16);
             this.label22.TabIndex = 55;
             this.label22.Text = "Şans";
             // 
@@ -1495,7 +1495,7 @@ namespace Game.Service.actions
             this.label7.ForeColor = System.Drawing.Color.White;
             this.label7.Location = new System.Drawing.Point(83, 79);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(41, 16);
+            this.label7.Size = new System.Drawing.Size(40, 16);
             this.label7.TabIndex = 42;
             this.label7.Text = "Level";
             // 
@@ -1506,7 +1506,7 @@ namespace Game.Service.actions
             this.label21.ForeColor = System.Drawing.Color.White;
             this.label21.Location = new System.Drawing.Point(83, 173);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(58, 16);
+            this.label21.Size = new System.Drawing.Size(57, 16);
             this.label21.TabIndex = 54;
             this.label21.Text = "Çeviklik ";
             // 
@@ -1517,7 +1517,7 @@ namespace Game.Service.actions
             this.label39.ForeColor = System.Drawing.Color.White;
             this.label39.Location = new System.Drawing.Point(14, 173);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(58, 16);
+            this.label39.Size = new System.Drawing.Size(57, 16);
             this.label39.TabIndex = 50;
             this.label39.Text = "Çeviklik ";
             // 
@@ -1528,7 +1528,7 @@ namespace Game.Service.actions
             this.label8.ForeColor = System.Drawing.Color.White;
             this.label8.Location = new System.Drawing.Point(83, 101);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(46, 16);
+            this.label8.Size = new System.Drawing.Size(45, 16);
             this.label8.TabIndex = 47;
             this.label8.Text = "Kupon";
             // 
@@ -1539,7 +1539,7 @@ namespace Game.Service.actions
             this.label20.ForeColor = System.Drawing.Color.White;
             this.label20.Location = new System.Drawing.Point(83, 148);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(65, 16);
+            this.label20.Size = new System.Drawing.Size(64, 16);
             this.label20.TabIndex = 53;
             this.label20.Text = "Savunma";
             // 
@@ -1550,7 +1550,7 @@ namespace Game.Service.actions
             this.label42.ForeColor = System.Drawing.Color.White;
             this.label42.Location = new System.Drawing.Point(14, 101);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(46, 16);
+            this.label42.Size = new System.Drawing.Size(45, 16);
             this.label42.TabIndex = 43;
             this.label42.Text = "Kupon";
             // 
@@ -1561,7 +1561,7 @@ namespace Game.Service.actions
             this.label43.ForeColor = System.Drawing.Color.White;
             this.label43.Location = new System.Drawing.Point(14, 148);
             this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(65, 16);
+            this.label43.Size = new System.Drawing.Size(64, 16);
             this.label43.TabIndex = 49;
             this.label43.Text = "Savunma";
             // 
@@ -1572,7 +1572,7 @@ namespace Game.Service.actions
             this.label19.ForeColor = System.Drawing.Color.White;
             this.label19.Location = new System.Drawing.Point(83, 123);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(46, 16);
+            this.label19.Size = new System.Drawing.Size(45, 16);
             this.label19.TabIndex = 52;
             this.label19.Text = "Saldırı";
             // 
@@ -1583,7 +1583,7 @@ namespace Game.Service.actions
             this.label45.ForeColor = System.Drawing.Color.White;
             this.label45.Location = new System.Drawing.Point(14, 123);
             this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(46, 16);
+            this.label45.Size = new System.Drawing.Size(45, 16);
             this.label45.TabIndex = 48;
             this.label45.Text = "Saldırı";
             // 
@@ -1735,6 +1735,7 @@ namespace Game.Service.actions
             this.groupBox5.TabIndex = 28;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Online İtem Etkinliği";
+            this.groupBox5.Enter += new System.EventHandler(this.groupBox5_Enter);
             // 
             // groupBox4
             // 
@@ -1980,9 +1981,9 @@ namespace Game.Service.actions
             // 
             this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(404, 433);
+            this.dataGridView1.Location = new System.Drawing.Point(404, 606);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(231, 216);
+            this.dataGridView1.Size = new System.Drawing.Size(231, 43);
             this.dataGridView1.TabIndex = 78;
             // 
             // comboBox4
@@ -2094,7 +2095,7 @@ namespace Game.Service.actions
             // 
             this.label32.AutoSize = true;
             this.label32.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label32.Location = new System.Drawing.Point(660, 688);
+            this.label32.Location = new System.Drawing.Point(656, 688);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(123, 20);
             this.label32.TabIndex = 86;
@@ -2151,7 +2152,7 @@ namespace Game.Service.actions
             this.MaximizeBox = false;
             this.Name = "ServerManagementForm";
             this.ShowIcon = false;
-            this.Text = "GunnyTurkey";
+            this.Text = "BomBomRia";
             this.Load += new System.EventHandler(this.ServerManagementForm_Load);
             this.groupBox3.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
@@ -2174,5 +2175,10 @@ namespace Game.Service.actions
             this.PerformLayout();
 
 		}
-	}
+
+        private void groupBox5_Enter(object sender, EventArgs e)
+        {
+
+        }
+    }
 }

@@ -107,7 +107,7 @@
   <Item ID="676" Order="69" Show="1" Name="Sonsuz Aşk" Pic="1069" Att="30" Def="30" Agi="30" Luck="30" Desc="Büyük-Kaliteli düğün yaptıktan sonra elde edebilirsiniz." />
   <Item ID="686" Order="157" Show="1" Name="Eleme Ustası" Pic="1079" Att="15" Def="10" Agi="10" Luck="10" Desc="Eleme Ustası Etkinliğinden alın" />
   <Item ID="687" Order="158" Show="1" Name="Fotoğrafik Hafıza" Pic="1080" Att="10" Def="10" Agi="15" Luck="10" Desc="İkişer İkişer Etkinliğinden alın" />
-  <Item ID="688" Order="159" Show="1" Name="Üst" Pic="1081" Att="80" Def="80" Agi="80" Luck="80" Desc="Sunucular arası Savaş Sıralaması No.1" />
+  <Item ID="688" Order="159" Show="1" Name="Dünya Şampiyonu" Pic="1081" Att="80" Def="80" Agi="80" Luck="80" Desc="Sunucular arası Savaş Sıralaması No.1" />
   <Item ID="689" Order="160" Show="1" Name="Benzersiz" Pic="1082" Att="70" Def="70" Agi="70" Luck="70" Desc="Sunucular arası Savaş Sıralaması No.2" />
   <Item ID="690" Order="161" Show="1" Name="Parlak" Pic="1083" Att="60" Def="60" Agi="60" Luck="60" Desc="Sunucular arası Savaş Sıralaması No.3" />
   <Item ID="691" Order="162" Show="1" Name="Toplayıcı" Pic="1084" Att="20" Def="10" Agi="20" Luck="10" Desc="Kart Etkinliğinden alınır." />

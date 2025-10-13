@@ -1493,7 +1493,7 @@ namespace Game.Logic
                             {
                                 foreach (Player allFightPlayer in GetAllFightPlayers())
                                 {
-                                    allFightPlayer.PlayerDetail.SendMessage($"Người chơi {ContinuousRunningPlayer} nhận được thêm 1 lần tấn công");
+                                    allFightPlayer.PlayerDetail.SendMessage($"Oyuncu: {ContinuousRunningPlayer} sürekli saldırı fırsatı elde etti!");
                                 }
                             }
 
@@ -2253,7 +2253,7 @@ namespace Game.Logic
                         }
                         if (info.IsTips)
                         {
-                            player.PlayerDetail.PVERewardNotice($"[{player.PlayerDetail.ZoneName}] Chúc mừng người chơi [{player.PlayerDetail.PlayerCharacter.NickName}] tại phó bản {MissionInfo.Name} nhận được vật phẩm {info.TemplateID} x{info.Count}. ", info.ItemID, info.TemplateID);
+                            player.PlayerDetail.PVERewardNotice($"[{player.PlayerDetail.ZoneName}] oyuncusu değerli [{player.PlayerDetail.PlayerCharacter.NickName}] Keşif rıhtımındaki {MissionInfo.Name} keşiften değerli ödüller kazandı. Kazandıkları ödüller: {info.TemplateID} x{info.Count}. ", info.ItemID, info.TemplateID);
                             player.PlayerDetail.AddLog("TakeCard PVE: ", "MissionName: " + MissionInfo.Name + "|Name: " + info.Name + "|Count: " + info.Count);
                         }
                     }

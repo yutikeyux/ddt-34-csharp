@@ -963,7 +963,7 @@ namespace Game.Server.Rooms
             }
             else
             {
-                m_player.Out.SendMessage(eMessageType.GM_NOTICE, "Vị trí này đã có người xí chỗ!");
+                m_player.Out.SendMessage(eMessageType.GM_NOTICE, "Bu yer dolu!");
                 return false;
             }
             this.SendPlaceState();
@@ -1100,19 +1100,19 @@ namespace Game.Server.Rooms
             switch (level)
             {
                 case eHardLevel.Easy:
-                    id = 200619;// EASY_TICKET_ID
+                    id = 200619;// Arena Kolay Bileti Template_ID si
                     break;
                 case eHardLevel.Normal:
-                    id = 200620;// NORMAL_TICKET_ID
+                    id = 200620;// Arena Normal Bileti Template_ID si
                     break;
                 case eHardLevel.Hard:
-                    id = 200621;// HARD_TICKET_ID
+                    id = 200621;// Arena Zor Bileti Template_ID si
                     break;
                 case eHardLevel.Terror:
-                    id = 200622;// HERO_TICKET_ID
+                    id = 200622;// Arena Kah Bileti Template_ID si
                     break;
                 case eHardLevel.Epic:
-                    id = 201105;// EPIC_TICKET_ID
+                    id = 201105;// Arena Destan Bileti Template_ID si
                     break;
             }
             return id;

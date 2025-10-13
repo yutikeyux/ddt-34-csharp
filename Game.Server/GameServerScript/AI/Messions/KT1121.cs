@@ -21,13 +21,13 @@ namespace GameServerScript.AI.Messions
         private PhysicalObj m_front;
 
         private static string[] KillPlayerChat = {
-                "Ah, mặt tôi .....",
-                "Ặc, giáp trụ xinh đẹp của mình đã bị trầy rồi.....",
-                "Ui za, đau quá !"
+                "Ah, zavallım .....",
+                "Hey sen, bu mağaradan çıkış olmadığını öğrenmiş oldun.....",
+                "Uza!"
         };
 
         private static string[] AngryChat = {
-                "Ah, của tôi hết đừng lấy！"
+                "İşte şimdi sinirlenmeye başladım！"
         };
 
         public override int CalculateScoreGrade(int score)
@@ -68,7 +68,7 @@ namespace GameServerScript.AI.Messions
             m_front = base.Game.Createlayer(1131, 150, "font", "game.asset.living.AntQueenAsset", "out", 1, 1);
             boss = base.Game.CreateBoss(bossID, 1316, 444, -1, 1, "");
             boss.SetRelateDemagemRect(-42, -200, 84, 194);
-            boss.Say(LanguageMgr.GetTranslation("Hộp là của tôi, con tôi, miễn là tôi có thể thấy là của tôi!"), 0, 200, 0);
+            boss.Say(LanguageMgr.GetTranslation("Sandıklarım, hazinelerim, bunlar benim en değerli eşyalarım!"), 0, 200, 0);
             m_moive.PlayMovie("in", 6000, 0);
             m_front.PlayMovie("in", 6100, 0);
             m_moive.PlayMovie("out", 10000, 1000);

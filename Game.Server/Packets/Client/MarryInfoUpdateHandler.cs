@@ -32,7 +32,7 @@ namespace Game.Server.Packets.Client
 					marryInfoSingle.RegistTime = DateTime.Now;
 					if (playerBussiness.UpdateMarryInfo(marryInfoSingle))
 					{
-						translateId = "MarryInfoUpdateHandler.Succeed";
+						//translateId = "MarryInfoUpdateHandler.Succeed";
 					}
 				}
 				client.Out.SendMarryInfoRefresh(marryInfoSingle, marryInfoID, marryInfoSingle != null);

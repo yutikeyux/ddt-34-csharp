@@ -15,7 +15,6 @@ namespace Game.Logic.Cmd
     {
         public void HandleCommand(BaseGame game, Player player, GSPacketIn packet)
         {
-
             if (game is PVPGame)
             {
                 PVPGame pvp = game as PVPGame;
@@ -29,44 +28,36 @@ namespace Game.Logic.Cmd
                     }
                 }
 
-                List<String> randomText1 = new List<string>(new[] {
-                    "Beni yenebileceğini mi düşünüyorsun?",
-                    "Ha ha zavallı",
-                    "bu atışlar ile kazanabileceğine emin misin?",
-                    "Bana bak ve öğren!",
-                    "Kaçırdım dostum",
-                    "iyi deneme",
-                    "Korkak!",
-                });
+                Random randchat = new Random();
+                int chatI = randchat.Next(0, 3);
 
-                List<String> randomText2 = new List<string>(new[] {
-                    "Oyunu bırak, sana işkence etmek istemiyorum",
-                    "ben yenilmezim",
-                    "Sakin ol dostum, barışabilir miyiz?",
-                    "Çok sıkıcısın",
-                    "çok kötüsün 😘",
-                    "Bu bir vızıltı",
-                    "Çok korktum",
-                });
+                if (chatI == 1)
+                {
+                    List<String> randomText1 = new List<string>(new[] {
+                        "Kaçırdım dostum",
+                        "iyi deneme",
+                    });
+
+                    Random rand1 = new Random();
+                    int index1 = rand1.Next(0, randomText1.Count);
+                    game.SendChat(player.PlayerDetail, randomText1[index1]);
+                }
+                else if (chatI == 2)
+                {
+                    List<String> randomText2 = new List<string>(new[] {
+                        "ben yenilmezim",
+                        "Sakin ol dostum, barışabilir miyiz?",
+                        "Çok sıkıcısın",
+                    });
+
+                    Random rand2 = new Random();
+                    int index2 = rand2.Next(0, randomText2.Count);
+                    game.SendChat(player.PlayerDetail, randomText2[index2]);
+                }
 
                 Random rand = new Random();
                 int next = rand.Next(0, enemies.Count);
                 Player target = enemies.ElementAt(next);
-
-                Random randchat = new Random();
-                int chatI = randchat.Next(0, 3);
-                if (chatI == 1)
-                {
-                    int b1 = target.TotalShootCount;
-                    if (b1 < randomText1.Count)
-                        game.SendChat(player.PlayerDetail, randomText1[b1]);
-                }
-                else if (chatI == 2)
-                {
-                    int b2 = target.TotalShootCount;
-                    if (b2 < randomText2.Count)
-                        game.SendChat(player.PlayerDetail, randomText2[b2]);
-                }
 
                 if (target.X > player.X)
                 {

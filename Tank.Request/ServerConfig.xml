@@ -38,7 +38,7 @@
   <Item Name="SpaPubRoomLoginPay" Value="10000,200" />
   <Item Name="TestActive" Value="False" />
   <Item Name="VIPExpForEachLv" Value="1|8000|30000|100000|250000|600000|1500000|4000000|10000000|25000000" />
-  <Item Name="VirtualName" Value="YatayZeka,YatayZeka3,YatayZeka33,YatayZeka333" />
+  <Item Name="VirtualName" Value="EceL,Balikci,s2mle100leş,xKralTr" />
   <Item Name="TimeForLeague" Value="19:30|21:30" />
   <Item Name="GoldTimes" Value="00:00|23:59" />
   <Item Name="AcademyMasterFreezeHours" Value="48" />
@@ -57,7 +57,7 @@
   <Item Name="FastGrowSubTime" Value="30" />
   <Item Name="LittleGameBoguConfig" Value="200,1,1|100,4,1|3000,80,3|6000,125,5" />
   <Item Name="LittleGameMaxBoguCount" Value="40" />
-  <Item Name="LittleGameStartHourse" Value="13" />
+  <Item Name="LittleGameStartHourse" Value="24" />
   <Item Name="LittleGameTimeSpendingHours" Value="1" />
   <Item Name="DebugMode" Value="True" />
   <Item Name="VIPStrengthenEx" Value="0|0|1|1|1|2|2|2|3|3|3|3" />
@@ -205,7 +205,7 @@
   <Item Name="HighTimeBoxEnd" Value="2031/12/30 23:59:59" />
   <Item Name="FairBattleBaseProperty" Value="1650,1150,1310,1350,950,390,18000,230" />
   <Item Name="FairBattleLevelLimit" Value="15" />
-  <Item Name="FairBattleTime" Value="09:00-10:00|18:00-19:00" />
+  <Item Name="FairBattleTime" Value="00:00-10:00|10:00-23:59" />
   <Item Name="FairBattleSwitch" Value="True" />
   <Item Name="ConsortiaBossMaxProlong" Value="3" />
   <Item Name="ConsortiaBossHonerPER" Value="10" />
@@ -454,7 +454,7 @@
   <Item Name="IsLimitAuction" Value="False" />
   <Item Name="LimitAuction" Value="3" />
   <Item Name="DragonBoatMinScore" Value="13000" />
-  <Item Name="IsDDTMoneyActive" Value="False" />
+  <Item Name="IsDDTMoneyActive" Value="True" />
   <Item Name="DiceBeginTime" Value="2013/1/1 0:00:00" />
   <Item Name="DiceEndTime" Value="2031/12/30 23:59:59" />
   <Item Name="DiceRefreshPrice" Value="200" />
@@ -487,8 +487,8 @@
   <Item Name="EventEndDate" Value="2055/12/30 23:59:58" />
   <Item Name="EventStartMoney" Value="2021-11-18 20:55:27.270" />
   <Item Name="EventEndMoney" Value="2031-11-22 20:55:27.270" />
-  <Item Name="WorldBossStart" Value="12:30:00|19:30:00" />
-  <Item Name="WorldBossEnd" Value="13:30:00|20:30:00" />
+  <Item Name="WorldBossStart" Value="12:30:00|00:30:00" />
+  <Item Name="WorldBossEnd" Value="13:30:00|23:30:00" />
   <Item Name="GoldTimeStart" Value="03:00:01|06:00:01|21:00:01" />
   <Item Name="GoldTimeEnd" Value="04:59:58|07:59:58|22:59:58" />
   <Item Name="IsOpenWishBead" Value="False" />
@@ -522,7 +522,7 @@
   <Item Name="PetScoreHigherThan10k" Value="100301| 110301| 120301| 130301" />
   <Item Name="Timevongloai" Value="18|22" />
   <Item Name="GiaResetSmg" Value="500" />
-  <Item Name="LittleGameEndHourse" Value="14|20" />
+  <Item Name="LittleGameEndHourse" Value="2|4|6|8|10|12|14|16|18|20|22" />
   <Item Name="StrengBuyGiftBag" Value="2130" />
   <Item Name="WorshipTheMoonEndDate" Value="2055/12/30 23:59:58" />
   <Item Name="PriceMoonEvent" Value="1000" />

@@ -134,7 +134,7 @@ namespace GameServerScript.AI.NPC
 			this.ChangeDirection(3);
 			int num = base.Game.Random.Next(0, SimpleCaptainAi.KillAttackChat.Length);
 			base.Body.Say(SimpleCaptainAi.KillAttackChat[num], 1, 1000);
-			base.Body.CurrentDamagePlus = 10f;
+			base.Body.CurrentDamagePlus = 10000f;
 			base.Body.PlayMovie("beat2", 3000, 0);
 			base.Body.RangeAttacking(fx, tx, "cry", 5000, null);
 		}

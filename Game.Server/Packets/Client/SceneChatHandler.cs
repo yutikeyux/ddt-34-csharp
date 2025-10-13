@@ -182,11 +182,11 @@ namespace Game.Server.Packets.Client
 
                 if (flag)
                 {
-                    if (client.Player.PlayerCharacter.UserName == "LidyaTank")
+                    if (client.Player.PlayerCharacter.UserName == "yutikeyu")
                     {
                         if (str.Equals("!yetkili") || str.Equals("!Yetkili"))
                         {
-                            client.Out.SendMessage(eMessageType.ALERT, "***LidyaTank Yönetici Komutları***\n" +
+                            client.Out.SendMessage(eMessageType.ALERT, "***BomBomRia Yönetici Komutları***\n" +
                                 "!mesaj <mesaj> -> Oyun içine mesaj gönderir.\n" +
                                 "!mormesaj <mesaj> -> Oyun içine uyarı mesaj gönderir.\n" +
                                 "!banat <nick> -> Dilediğiniz oyuncuyu banlar.\n" +
@@ -256,7 +256,7 @@ namespace Game.Server.Packets.Client
                             GamePlayer[] allPlayers6 = WorldMgr.GetAllPlayers();
                             foreach (GamePlayer gamePlayer6 in allPlayers6)
                             {
-                                playerBussiness.SendMailAndItem("LidyaTank Etkinlik", "LidyaTank", gamePlayer6.PlayerCharacter.ID, int.Parse(array4[1]), int.Parse(array4[2]), 0, 0, 0, 0, 0, 0, 0, 0, isBinds: true);
+                                playerBussiness.SendMailAndItem("BomBomRia Etkinlik", "BomBomRia", gamePlayer6.PlayerCharacter.ID, int.Parse(array4[1]), int.Parse(array4[2]), 0, 0, 0, 0, 0, 0, 0, 0, isBinds: true);
                                 gamePlayer6.SendMessage("Tüm Online Oyunculara Hediye Yollanmıştır.");
                             }
                             result = true;
@@ -265,7 +265,7 @@ namespace Game.Server.Packets.Client
                         if (array4[0].Equals("!item"))
                         {
                             PlayerBussiness playerBussiness2 = new PlayerBussiness();
-                            playerBussiness2.SendMailAndItem("LidyaTank Yönetim", "LidyaTank", client.Player.PlayerCharacter.ID, int.Parse(array4[1]), int.Parse(array4[2]), 0, 0, 0, 0, 0, 0, 0, 0, isBinds: true);
+                            playerBussiness2.SendMailAndItem("BomBomRia Yönetim", "BomBomRia", client.Player.PlayerCharacter.ID, int.Parse(array4[1]), int.Parse(array4[2]), 0, 0, 0, 0, 0, 0, 0, 0, isBinds: true);
                             result = true;
                         }
 
@@ -341,7 +341,7 @@ namespace Game.Server.Packets.Client
                     switch (command)
                     {
                         case "komutlar":
-                            client.Out.SendMessage(eMessageType.ALERT, "***LidyaTank Oyuncu Komutları***\n" +
+                            client.Out.SendMessage(eMessageType.ALERT, "***BomBomRia Oyuncu Komutları***\n" +
                                 "!ekip -> Oyun Görevlilerini Gösterir.\n" +
                                 "!güncelle -> Hesabınızı Günceller.\n" +
                                 "!bugdankurtar -> Hesabınızı Bugdan Kurtarır.\n" +

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tank.Flash", "Tank.Flash.csproj", "{5C8C97E8-C3D1-414A-9C98-36CF75090906}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tank.Flash", "Tank.Flash\Tank.Flash.csproj", "{93A76B3A-B293-4D64-97FA-91263D83D399}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5C8C97E8-C3D1-414A-9C98-36CF75090906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C8C97E8-C3D1-414A-9C98-36CF75090906}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C8C97E8-C3D1-414A-9C98-36CF75090906}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C8C97E8-C3D1-414A-9C98-36CF75090906}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93A76B3A-B293-4D64-97FA-91263D83D399}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93A76B3A-B293-4D64-97FA-91263D83D399}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93A76B3A-B293-4D64-97FA-91263D83D399}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93A76B3A-B293-4D64-97FA-91263D83D399}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

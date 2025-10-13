@@ -550,7 +550,7 @@ namespace Game.Logic
                         }
                         p.PlayerDetail.AddMoney(moneyPVP, igroneAll: false);
                         p.PlayerDetail.AddGiftToken(giftPVP);
-                        string noticePVP = string.Format("Özgür savaş başarıyla tamamlandı! {0} kupon, {2} altın ve {1} tecrübe kazandınız.", new object[3]
+                        string noticePVP = string.Format("Özgür savaş başarıyla tamamlandı! {0} kupon, {2} hediye altın ve {1} tecrübe kazandınız.", new object[3]
                         {
                             moneyPVP,
                             expPVP,

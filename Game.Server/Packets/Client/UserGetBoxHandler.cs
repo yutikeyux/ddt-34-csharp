@@ -110,11 +110,11 @@ namespace Game.Server.Packets.Client
 						loadUserBoxInfo = UserBoxMgr.FindTemplateByCondition(0, player.PlayerCharacter.Grade, player.PlayerCharacter.BoxProgression);
 						if (loadUserBoxInfo != null)
 						{
-							player.Out.SendMessage(eMessageType.GM_NOTICE, $"Nhâ\u0323n qua\u0300 tư\u0300 rương thơ\u0300i gian {loadUserBoxInfo.Condition} phu\u0301t.");
+							player.Out.SendMessage(eMessageType.GM_NOTICE, $"Zaman sandığı alma başarılı! Bir sonraki sandığı {loadUserBoxInfo.Condition} dakika sonra alabilirsiniz!");
 						}
 						else
 						{
-							player.Out.SendMessage(eMessageType.GM_NOTICE, $"Ba\u0323n đa\u0303 nhâ\u0323n hê\u0301t cu\u0309a nga\u0300y hôm nay");
+							player.Out.SendMessage(eMessageType.GM_NOTICE, $"Bugün zaten tüm sandıkları kazandınız!");
 						}
 					}
 					else

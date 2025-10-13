@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Base", "Game.Base\Game
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Road.Flash", "Road.Flash\Road.Flash.csproj", "{0718EC51-72B2-42B9-A1E3-C18790C9781A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tank.Request", "Tank.Request\Tank.Request.csproj", "{4A72BA54-BFFE-4904-8C2B-2DD6FC032027}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tank.Request", "\Tank.Request\Tank.Request.csproj", "{4A72BA54-BFFE-4904-8C2B-2DD6FC032027}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

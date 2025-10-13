@@ -2746,18 +2746,45 @@ namespace Bussiness
 
         public EventLiveInfo InitEventLiveInfo(SqlDataReader reader)
         {
-            return new EventLiveInfo
-            {
-                EventID = (int)reader["EventID"],
-                Description = reader["Description"].ToString(),
-                CondictionType = (int)reader["CondictionType"],
-                Condiction_Para1 = (int)reader["Condiction_Para1"],
-                Condiction_Para2 = (int)reader["Condiction_Para2"],
-                StartDate = (DateTime)reader["StartDate"],
-                EndDate = (DateTime)reader["EndDate"]
-            };
-        }
+            EventLiveInfo eventLiveInfo = new EventLiveInfo();
 
+            // EventID (int) - NULL ise 0 ata
+            eventLiveInfo.EventID = reader.IsDBNull(reader.GetOrdinal("EventID"))
+                ? 0
+                : Convert.ToInt32(reader["EventID"]);
+
+            // Description (string) - NULL ise string.Empty ata
+            eventLiveInfo.Description = reader.IsDBNull(reader.GetOrdinal("Description"))
+                ? string.Empty
+                : reader["Description"].ToString();
+
+            // CondictionType (int) - NULL ise 0 ata
+            eventLiveInfo.CondictionType = reader.IsDBNull(reader.GetOrdinal("CondictionType"))
+                ? 0
+                : Convert.ToInt32(reader["CondictionType"]);
+
+            // Condiction_Para1 (int) - NULL ise 0 ata
+            eventLiveInfo.Condiction_Para1 = reader.IsDBNull(reader.GetOrdinal("Condiction_Para1"))
+                ? 0
+                : Convert.ToInt32(reader["Condiction_Para1"]);
+
+            // Condiction_Para2 (int) - NULL ise 0 ata
+            eventLiveInfo.Condiction_Para2 = reader.IsDBNull(reader.GetOrdinal("Condiction_Para2"))
+                ? 0
+                : Convert.ToInt32(reader["Condiction_Para2"]);
+
+            // StartDate (DateTime) - NULL ise DateTime.MinValue ata
+            eventLiveInfo.StartDate = reader.IsDBNull(reader.GetOrdinal("StartDate"))
+                ? DateTime.MinValue
+                : Convert.ToDateTime(reader["StartDate"]);
+
+            // EndDate (DateTime) - NULL ise DateTime.MinValue ata
+            eventLiveInfo.EndDate = reader.IsDBNull(reader.GetOrdinal("EndDate"))
+                ? DateTime.MinValue
+                : Convert.ToDateTime(reader["EndDate"]);
+
+            return eventLiveInfo;
+        }
         public EventLiveGoods InitEventLiveGoods(SqlDataReader reader)
         {
             return new EventLiveGoods

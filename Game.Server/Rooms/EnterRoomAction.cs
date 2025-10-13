@@ -35,7 +35,7 @@ namespace Game.Server.Rooms
                 return;
             if (this.m_player.MainWeapon == null)
             {
-                this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, "Không mang vũ khí, không thể tham gia.");
+                this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, "Silah kuşanman gerekli!.");
                 this.m_player.Out.SendRoomLoginResult(false);
                 return;
             }
@@ -112,7 +112,7 @@ namespace Game.Server.Rooms
                         }
                         else
                         {
-                            this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("Phòng đã đầy!"));
+                            this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("Oda Dolu!"));
                             this.m_player.Out.SendRoomLoginResult(false);
                             return;
                         }

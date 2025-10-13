@@ -609,7 +609,7 @@ namespace Game.Server
                         foreach (var xxx in players)
                         {
                             xxx.Out.SendOpenWorldBoss(0, 0);
-                            xxx.Out.SendMessage(eMessageType.GM_NOTICE, "Boss thế giới đã mở, hãy tham gia ngay từ mục Sự Kiện!");
+                            xxx.Out.SendMessage(eMessageType.GM_NOTICE, "Dünya BOSS açıldı!");
                         }
                     }
                     else if (DateTime.Now >= stopTime && DateTime.Now < closeTime && RoomMgr.WorldBossRoom.WorldOpen)
@@ -621,7 +621,7 @@ namespace Game.Server
                         foreach (var xxx in players)
                         {
                             xxx.Out.SendOpenWorldBoss(0, 0);
-                            xxx.Out.SendMessage(eMessageType.GM_NOTICE, "Boss thế giới kết thúc, các bạn còn 10 phút đổi điểm.");
+                            xxx.Out.SendMessage(eMessageType.GM_NOTICE, "Dünya BOSS sona erdi.");
                         }
                         RoomMgr.WorldBossRoom.SendRoomClose();
                         RoomMgr.WorldBossRoom.WorldBossClose();
@@ -635,7 +635,7 @@ namespace Game.Server
                         foreach (var xxx in players)
                         {
                             xxx.Out.SendOpenWorldBoss(0, 0);
-                            xxx.Out.SendMessage(eMessageType.GM_NOTICE, "Boss thế giới đã đóng, hẹn các bạn tham gia vào những lần sau...");
+                            xxx.Out.SendMessage(eMessageType.GM_NOTICE, "Dünya BOSS tamamen sona erdi");
                             xxx.PlayerCharacter.damageScores = 0;
                         }
                         RoomMgr.WorldBossRoom.SendAllOver();
@@ -644,7 +644,7 @@ namespace Game.Server
                     {
                         foreach (var xxx in players)
                         {
-                            xxx.Out.SendMessage(eMessageType.GM_NOTICE, $"Boss thế giới còn {(int)startTime.Subtract(DateTime.Now).TotalMinutes} phút sẽ bắt đầu, mọi người chuẩn bị tham gia nàoo.");
+                            xxx.Out.SendMessage(eMessageType.GM_NOTICE, $"Dünya Boss {(int)startTime.Subtract(DateTime.Now).TotalMinutes} dakika sonra başlayacaktır.");
                         }
                     }
                 }
@@ -729,7 +729,7 @@ namespace Game.Server
                         foreach (var player in WorldMgr.GetAllPlayers())
                         {
                             player.Actives.SendLittleGameActived();
-                            player.Out.SendMessage(eMessageType.Normal, $"Sự kiện Đại chiến Hút Gà còn {(int)(60 - DateTime.Now.Minute)} phút sẽ bắt đầu, tham gia từ Đặc Sắc ở sảnh game nhé !");
+                            player.Out.SendMessage(eMessageType.Normal, $"Tavuk Savaşı {(int)(60 - DateTime.Now.Minute)} dakika sonra başlıyor!");
                         }
                     }
                     else if (DateTime.Now.Hour == startTime && LittleGameWorldMgr.IsOpen && DateTime.Now.Minute >= 55)
@@ -737,7 +737,7 @@ namespace Game.Server
                         foreach (var player in WorldMgr.GetAllPlayers())
                         {
                             player.Actives.SendLittleGameActived();
-                            player.Out.SendMessage(eMessageType.Normal, $"Sự kiện Đại chiến Hút Gà còn {(int)(60 - DateTime.Now.Minute)} phút sẽ kết thúc. Nhanh chóng đổi thưởng nàoo !");
+                            player.Out.SendMessage(eMessageType.Normal, $"Tavuk Savaşı {(int)(60 - DateTime.Now.Minute)} sona erdi!");
                         }
                     }
                     if (log.IsInfoEnabled)
@@ -813,7 +813,7 @@ namespace Game.Server
                             if (result)
                             {
                                 isReset = true;
-                                player.SendMessage("Đã làm mới tiến trình hấp dẫn mỗi tuần!");
+                                player.SendMessage("Haftalık ödüller yenilendi!");
                                 player.Extra.ResetUsersEventProcess((int)NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK, isReset);
                                 player.Extra.ResetUsersEventProcess((int)NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK, isReset);
                             }

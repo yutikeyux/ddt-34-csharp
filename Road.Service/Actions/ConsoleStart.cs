@@ -72,7 +72,7 @@ namespace Game.Service.actions
 				GamePlayer[] allPlayers2 = WorldMgr.GetAllPlayers();
 				foreach (GamePlayer gamePlayer in allPlayers2)
 				{
-					gamePlayer.SendMessage($"Sistem : Şuanda oyunda {num} kişi online !. [Dandantank 2022]");
+					gamePlayer.SendMessage($"Sistem : Şuanda oyunda {num} kişi online !. [BomBomRia 2026]");
 				}
 				Console.WriteLine("Online sayısı gönderildi");
 				_count2 = 31;
@@ -90,11 +90,11 @@ namespace Game.Service.actions
         public void OnAction(Hashtable parameters)
         {
             bool flag = true;
-            Console.Title = "GunnyTurkey Road Service ";
+            Console.Title = "Road Service";
             Console.ForegroundColor = ConsoleColor.Green;
             GameServer.CreateInstance(config = new GameServerConfig());
             Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine("GunnyTurkey Road Serveri Başlatılıyor...");
+            Console.WriteLine("Road Server Başlatılıyor...");
             GameServer.Instance.Start();
             Console.ForegroundColor = ConsoleColor.Cyan;
            
@@ -141,7 +141,7 @@ namespace Game.Service.actions
 					}
 					Console.Clear();
 					Console.ForegroundColor = ConsoleColor.Cyan;
-					Console.WriteLine("GunnyTurkey Yönetim Konsolu.");
+					Console.WriteLine("BomBomRia Yönetim Konsolu.");
 					Console.WriteLine("Lütfen numara seçin ;");
 					Console.WriteLine("1.  Mesaj Gönder.");
 					Console.WriteLine("2.  Nick e Ban At.");
@@ -426,7 +426,7 @@ namespace Game.Service.actions
 											new PlayerBussiness().SendMailAndItem(title, content, playerInfo.ID, templateID, count, validDate, gold, money, strengthenLevel, attackCompose, defendCompose, agilityCompose, luckCompose, isBinds);
 											string msg2 = $"[ Online Oyuncu Etkinliği Sistemi ] Hediye Ödüller Gönderilmiştir.";
 											gamePlayer2.SendMessage(msg2);
-											using ManageBussiness manageBussiness3 = new ManageBussiness();
+                                            using ManageBussiness manageBussiness3 = new ManageBussiness();
 											string msg3 = $"Sistem Yöneticisi : Hediye Ödüller Gönderilmiştir.";
 											manageBussiness3.SystemNotice(msg3);
 										}

@@ -18,7 +18,7 @@ namespace GameServerScript.AI.Messions
         private int npcID = 1009;
 
         private static string[] KillChat = {
-                "Gửi cho bạn trở về nhà!",
+                "Yanıma yaklaşınca eline ne geçti?!",
                 "Một mình, bạn có ảo tưởng có thể đánh bại tôi?"
         };
 

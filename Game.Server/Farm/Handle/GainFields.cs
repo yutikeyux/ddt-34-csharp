@@ -24,17 +24,17 @@ namespace Game.Server.Farm.Handle
             string msg = LanguageMgr.GetTranslation("EnterFarmHandler.Msg2");
             if (userId == Player.PlayerCharacter.ID && Player.Farm.GainField(fieldId))
             {
-                msg = LanguageMgr.GetTranslation("EnterFarmHandler.Msg3");
+                msg = LanguageMgr.GetTranslation("Ekin Toplama Baþarýlý!");
             }
             else if (userId != Player.PlayerCharacter.ID)
             {
                 if (Player.Farm.GainFriendFields(userId, fieldId))
                 {
-                    msg = LanguageMgr.GetTranslation("EnterFarmHandler.Msg4");
+                    msg = LanguageMgr.GetTranslation("Ekin Çalma Baþarýlý!");
                 }
                 else
                 {
-                    msg = LanguageMgr.GetTranslation("EnterFarmHandler.Msg5");
+                    msg = LanguageMgr.GetTranslation("Daha Fazla Çalamazsýn!");
                 }
             }
             Player.SendMessage(msg);
