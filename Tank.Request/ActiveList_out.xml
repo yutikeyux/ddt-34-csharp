@@ -1,1 +1,4 @@
-<Result value="true" message="Success!" />
+<Result value="true" message="Success!">
+  <Item ActiveID="2" Description="takaset" Content="takaset" AwardContent="takaset" HasKey="0" EndDate="2030-12-12 00:00:00" IsOnly="0" StartDate="2025-01-23 00:00:00" Title="takaset" Type="1" ActiveType="0" IsAdvance="false" GoodsExchangeTypes="" GoodsExchangeNum="" limitType="" limitValue="" ActionTimeContent="" />
+  <Item ActiveID="1" Description="ödülalödülal" Content="ödülal" AwardContent="ödülal" HasKey="3" EndDate="2030-12-12 00:00:00" IsOnly="0" StartDate="2025-01-23 00:00:00" Title="ödülal" Type="0" ActiveType="0" IsAdvance="false" GoodsExchangeTypes="" GoodsExchangeNum="" limitType="" limitValue="" ActionTimeContent="" />
+</Result>

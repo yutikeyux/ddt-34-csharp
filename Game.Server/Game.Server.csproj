@@ -24,6 +24,12 @@
     <ProjectReference Include="..\SqlDataProvider\SqlDataProvider.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>..\Center.Server\bin\Debug\net472\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net.Core">
+      <HintPath>..\Center.Server\bin\Debug\net472\protobuf-net.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System.ServiceModel">
       <HintPath>C:\WINDOWS\Microsoft.NET\assembly\GAC_MSIL\System.ServiceModel\v4.0_4.0.0.0__b77a5c561934e089\System.ServiceModel.dll</HintPath>
     </Reference>
@@ -33,7 +39,6 @@
     <Reference Include="System.Data">
       <HintPath>C:\WINDOWS\Microsoft.NET\assembly\GAC_32\System.Data\v4.0_4.0.0.0__b77a5c561934e089\System.Data.dll</HintPath>
     </Reference>
-    <Reference Include="protobuf-net" />
     <Reference Include="System.Xml.Linq">
       <HintPath>C:\WINDOWS\Microsoft.NET\assembly\GAC_MSIL\System.Xml.Linq\v4.0_4.0.0.0__b77a5c561934e089\System.Xml.Linq.dll</HintPath>
     </Reference>

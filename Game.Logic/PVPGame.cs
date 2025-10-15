@@ -564,7 +564,7 @@ namespace Game.Logic
 
                     else
                     {
-                        p.PlayerDetail.SendMessage("Altın saatlerde x1 Kupon kazanamazsınız");
+                        p.PlayerDetail.SendMessage("Herhangi bir hasar vermediğiniz için herhangi bir ödül kazanamazsınız!");
                     }
 
                     num4 += expPVP;

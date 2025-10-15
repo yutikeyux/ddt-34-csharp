@@ -144,13 +144,13 @@ namespace Tank.Request
 		// Token: 0x14000001 RID: 1
 		// (add) Token: 0x060000DA RID: 218 RVA: 0x000079C0 File Offset: 0x00005BC0
 		// (remove) Token: 0x060000DB RID: 219 RVA: 0x000079F8 File Offset: 0x00005BF8
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 
 		// Token: 0x14000002 RID: 2
 		// (add) Token: 0x060000DC RID: 220 RVA: 0x00007A30 File Offset: 0x00005C30
 		// (remove) Token: 0x060000DD RID: 221 RVA: 0x00007A68 File Offset: 0x00005C68
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		// Token: 0x060000DE RID: 222 RVA: 0x00007AA0 File Offset: 0x00005CA0

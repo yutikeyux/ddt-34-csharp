@@ -24,7 +24,7 @@ namespace Game.Server.WorldBoss.Handle
                     if (buffer != null)
                     {
                         buffer.Start(Player);
-                        Player.SendMessage("Otomatik Buff Satın alma başarılı!");
+                        Player.SendMessage("Otomatik Buff Satın alma başarılı!"); //türkçeleştirildi not: yuti
                     }
                 }
             }

@@ -40,7 +40,7 @@ using System.Text;
 using System.Threading;
 
 
-//                                              GEREKEN YERLERDEKİ TÜM LANGUAGE MGR KODLARI TÜRKÇELEŞTİRİLDİ
+//                                              GEREKEN YERLERDEKİ TÜM LANGUAGE MGR KODLARI TÜRKÇELEŞTİRİLDİ not: yuti
 public class GamePlayer : IGamePlayer
 {
     public delegate void PlayerOwnSpaEventHandle(int onlineTimeSpa);
@@ -199,7 +199,7 @@ public class GamePlayer : IGamePlayer
     }
     #endregion
 
-    public readonly string[] labyrinthGolds = new string[40]
+    public readonly string[] labyrinthGolds = new string[40] //savaşçının gizli yeri burası normalde not: yuti
     {
         "0|0",
         "2|2",
@@ -1138,7 +1138,7 @@ public class GamePlayer : IGamePlayer
 
     public int CountMissedEquipGhost = 0;
 
-    //public EventSevenDaysInfo EventSeven;
+    //public EventSevenDaysInfo EventSeven; //burası niye kaldırılmış sonradan incelicem not: yuti
 
     public string LastChatMsg;
 
@@ -1227,7 +1227,7 @@ public class GamePlayer : IGamePlayer
             Y = 30
         };
         m_LittleGameProcessor = new LittleGameLogicProcessor();
-        //m_character.CheckCode = "baodeptrai";
+        m_character.CheckCode = "baodeptrai";
         m_isViewer = false;
         this._timecheckhack = (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
         //this.count_addmoney = 0;
@@ -1395,7 +1395,7 @@ public class GamePlayer : IGamePlayer
             if (m_character.Gold == int.MinValue)
             {
                 m_character.Gold = int.MaxValue;
-                SendMessage("Altınların sınırına ulaşmış!"); //türkçeleştirildi
+                SendMessage("Altınların sınırına ulaşmış!"); //türkçeleştirildi not: yuti
             }
             OnPlayerAddItem("Gold", value);
             OnPropertiesChanged();
@@ -1405,7 +1405,7 @@ public class GamePlayer : IGamePlayer
     }
     public int AddGP(int gp)
     {
-        // Chức năng của BAOLT - Lâm đừng copaste nha //incelerim bi ara
+        // Chức năng của BAOLT - Lâm đừng copaste nha //incelerim bi ara not: yuti
         if (this.isPlayerWarrior())
             return 0;
         if (gp >= 0)
@@ -1430,11 +1430,11 @@ public class GamePlayer : IGamePlayer
             if (Level == maxLevel && levelInfo != null)
             {
                 m_character.GP = levelInfo.GP;
-                int num = gp / 100;
+                int num = gp / 1000; //100 olan değer 1000e yükseltildi. not: yuti
                 if (num > 0)
                 {
                     AddOffer(num);
-                    SendHideMessage(string.Format("Maksimum seviyeye ulaştığınız için kazandığınız deneyim mükafata dönüştürüldü. Kazanılan Mükafat:", num));
+                    SendHideMessage(string.Format("Maksimum seviyeye ulaştığınız için kazandığınız deneyim mükafata dönüştürüldü. Kazanılan Mükafat:", num)); //türkçeleştirildi not: yuti
                 }
             }
             //this.count_addgp++;
@@ -1471,11 +1471,11 @@ public class GamePlayer : IGamePlayer
             if (Level == maxLevel && levelInfo != null)
             {
                 m_character.GP = levelInfo.GP;
-                int num = gp / 100;
+                int num = gp / 1000; //100 olan değer 1000e yükseltildi not: yuti
                 if (num > 0)
                 {
                     AddOffer(num);
-                    SendHideMessage(string.Format("Maksimum seviyeye ulaştığınız için kazandığınız deneyim mükafata dönüştürüldü. Kazanılan Mükafat:", num));
+                    SendHideMessage(string.Format("Maksimum seviyeye ulaştığınız için kazandığınız deneyim mükafata dönüştürüldü. Kazanılan Mükafat:", num)); //türkçeleştirildi not: yuti
                 }
             }
             //this.count_addgp++;
@@ -1605,7 +1605,7 @@ public class GamePlayer : IGamePlayer
         {
             if (!igroneAll && BlockReceiveMoney)
             {
-                SendMessage("Karakter sınırını aştığınız için kuponlar hesabınıza eklenemedi.");
+                SendMessage("Karakter sınırını aştığınız için kuponlar hesabınıza eklenemedi."); //türkçeleştirildi not: yuti
                 //m_character.Money += (int)Math.Round((double)value * 0.3);
                 //OnPropertiesChanged();
                 return 0;
@@ -1640,7 +1640,7 @@ public class GamePlayer : IGamePlayer
             if (m_character.badLuckNumber == int.MinValue)
             {
                 m_character.badLuckNumber = int.MaxValue;
-                SendMessage("Limiti aştınız.");
+                SendMessage("Limiti aştınız."); //türkçeleştirildi not: yuti
             }
             OnPropertiesChanged();
             return value;
@@ -1693,7 +1693,7 @@ public class GamePlayer : IGamePlayer
             if (m_character.petScore == int.MinValue)
             {
                 m_character.petScore = int.MaxValue;
-                SendMessage("Sınırı aştınız.");
+                SendMessage("Sınırı aştınız."); //türkçeleştirildi not: yuti
             }
             OnPropertiesChanged();
             return value;
@@ -1710,7 +1710,7 @@ public class GamePlayer : IGamePlayer
         }
         else
         {
-            SendMessage("Özgür savaş başarıyla tamamlandı.");
+            SendMessage("Özgür savaş başarıyla tamamlandı."); //türkçeleştirildi not: yuti
         }
     }
 
@@ -2175,7 +2175,7 @@ public class GamePlayer : IGamePlayer
                             itemInfo.LuckCompose = item.LuckCompose;
                             itemInfo.IsBinds = item.IsBind;
                             itemInfo.ValidDate = item.ValidDate;
-                            SendItemToMail(itemInfo, LanguageMgr.GetTranslation("Tebrikler! Oyunumuzda belirli koşulları sağladığınız için bu ödülleri almaya hak kazandınız! Bu ödüller size sistem tarafından belirlenen koşulları yerine getirdiğiniz için teslim edildi! Değerli öğelerin tadını çıkarın!", eventLiveInfo.Description), LanguageMgr.GetTranslation("Koşullu Etkinlik Yöneticisi"), eMailType.Manage);
+                            SendItemToMail(itemInfo, LanguageMgr.GetTranslation("Tebrikler! Oyunumuzda belirli koşulları sağladığınız için bu ödülleri almaya hak kazandınız! Bu ödüller size sistem tarafından belirlenen koşulları yerine getirdiğiniz için teslim edildi! Değerli öğelerin tadını çıkarın!", eventLiveInfo.Description), LanguageMgr.GetTranslation("Koşullu Etkinlik Yöneticisi"), eMailType.Manage); //türkçeleştirildi not: yuti
                         }
                     }
                 }
@@ -2293,7 +2293,7 @@ public class GamePlayer : IGamePlayer
         List<ItemInfo> items = this.StoreBag.GetItems();
         if (items.Count > 0)
         {
-            this.StoreBag.SendAllItemsToMail("Sistem", "İade Edilen Ürün", eMailType.StoreCanel);
+            this.StoreBag.SendAllItemsToMail("Sistem", "İade Edilen Ürün", eMailType.StoreCanel); //türkçeleştirildi not: yuti
         }
     }
 
@@ -3092,15 +3092,15 @@ public class GamePlayer : IGamePlayer
             if (m_character.CheckNewDay())
             {
                 TimeSpan diff = DateTime.Now - m_character.NewDay;
-                if ((int)Math.Ceiling(diff.TotalDays) >= 15)
+                if ((int)Math.Ceiling(diff.TotalDays) >= 30)//15 gün girilmez sayan değer 30a yükseltildi eski oyuncu ödülü not: yuti
                 {
                     DateTime startDate = Convert.ToDateTime(GameProperties.StartEventOldPlayer);
                     DateTime stopDate = Convert.ToDateTime(GameProperties.EndEventOldPlayer);
                     if (DateTime.Now >= startDate && DateTime.Now < stopDate)
                     {
-                        int Money = 3000000;
-                        string Title = "Quà Dành Cho Người Chơi Trở Lại";
-                        string Cotent = "Đây là phần thưởng dành cho người chơi offline quá 15 ngày.";
+                        int Money = 5000; //3000000 olan değer 5000e düşürüldü not: yuti
+                        string Title = "Eski Oyuncu Geri Dönüşü"; //türkçeleştirildi not: yuti
+                        string Cotent = "Tebrikler!"; //türkçeleştirildi not: yuti
                         List<ItemInfo> items = new List<ItemInfo>();
                         foreach (OldPlayerAwardInfo oldPlayerAward in OldPlayerAwardMgr.oldPlayerAwards)
                         {
@@ -3111,7 +3111,7 @@ public class GamePlayer : IGamePlayer
                         m_character.isOldPlayerHasValidEquitAtLogin = true;
                         SendItemsToMail(items, Cotent, Title, eMailType.ItemOverdue);
                         Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
-                        SendMessage($"Bạn đã nhận được {Money} xu từ quà người chơi cũ trở về!");
+                        SendMessage($"Eski oyuncu geri dönüş ödülleri kapsamında hesabınıza {Money} kupon eklendi!"); //türkçeleştirildi not: yuti
                     }
                 }
                 //this.QuestInventory.Restart();
@@ -3130,11 +3130,11 @@ public class GamePlayer : IGamePlayer
                 m_extra.Info.LeftRoutteRate = 0f;
                 Extra.ResetNoviceEvent(NoviceActiveType.RECHANGE_MONEY_ACTIVE);
                 Extra.ResetNoviceEvent(NoviceActiveType.USE_MONEY_ACTIVE);
-                //if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
-                //{
-                //    Extra.ResetNoviceEvent(NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK);
-                //    Extra.ResetNoviceEvent(NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK);
-                //}
+                if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
+                {
+                    Extra.ResetNoviceEvent(NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK);
+                    Extra.ResetNoviceEvent(NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK);
+                }
                 m_character.MaxBuyHonor = 0;
                 Farm.ResetFarmProp();
                 AccumulativeUpdate();
@@ -3189,12 +3189,12 @@ public class GamePlayer : IGamePlayer
             AddExpVip(result * 2);
             this.Out.SendOpenVIP(this);
             this.m_character.VIPNextLevelDaysNeeded = this.GetVIPNextLevelDaysNeeded(this.m_character.VIPLevel, this.m_character.VIPExp);
-            this.SendMessage($"Trong thời hạn VIP, bạn nhận được {result * 2} exp VIP mỗi ngày.");
+            this.SendMessage($"Tekrardan Hoş Geldiniz! Yeni güne giriş yaptığınızda {result * 2} kat VIP günlük tecrübe puanı kazandınız!"); //türkçeleştirildi not: yuti
         }
         else
         {
             if (RemoveExpVip(result))
-                this.SendMessage($"VIP hết hạn, bạn bị trừ {result} exp VIP mỗi ngày.");
+                this.SendMessage($"Yeni güne giriş yaptığınızda hesabınızdan {result} VIP tecrübesi eksildi!"); //türkçeleştirildi not: yuti
         }
         return true;
     }
@@ -3228,7 +3228,7 @@ public class GamePlayer : IGamePlayer
                 this.RemoveGiftToken(value);
                 return true;
             }
-            this.SendMessage("Xu khóa không đủ, thao tác thất bại.");
+            this.SendMessage("Hediye altınınız yeterli değil."); //türkçeleştirildi not: yuti
         }
         return false;
     }
@@ -3535,7 +3535,7 @@ public class GamePlayer : IGamePlayer
                     if (ActiveSystemMgr.IsLeagueOpen)
                     {
                         Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.maxCount, 1);
-                        SendMessage(eMessageType.GM_NOTICE, "Lig Başladı! Birlik savaşlarında kim kimi yenecek bakalım!");
+                        SendMessage(eMessageType.GM_NOTICE, "Lig Başladı! Birlik savaşlarında kim kimi yenecek bakalım!"); //türkçeleştirildi not: yuti
                     }
                     else
                     {
@@ -3543,9 +3543,9 @@ public class GamePlayer : IGamePlayer
                     }
                     if (ActiveSystemMgr.IsGoldTimeOpen)
                     {
-                        SendMessage(eMessageType.GM_NOTICE, "Altın Saat Etkinliği başladı! Haydi Oyun salonunda buluşalım!");
+                        SendMessage(eMessageType.GM_NOTICE, "Altın Saat Etkinliği başladı! Haydi Oyun salonunda buluşalım!"); //türkçeleştirildi not: yuti
                     }
-                    //ShowCheckCode();
+                    ShowCheckCode();
                     Out.SendUserSyncEquipGhost(this);
                     Out.SendGuildMemberWeekOpenClose(Extra.Info);
                     this.Dice.SendDiceActiveOpen();
@@ -3554,8 +3554,8 @@ public class GamePlayer : IGamePlayer
                     if (this.PlayerCharacter.Grade >= 13 && this.Actives.IsPyramidOpen())
                     {
                         this.Out.SendPyramidOpenClose(this.Actives.PyramidConfig);
-                        //if (!this.Actives.IsYearMonsterOpen())
-                        //// this.Out.SendCatchBeastOpen(id, true);
+                        //if (!this.Actives.IsYearMonsterOpen())                    bunlara bi bakalım ya not: yuti
+                        //// this.Out.SendCatchBeastOpen(id, true);                 bunlara bi bakalım ya not: yuti
                         ///
                     }
                     WonderFulActivityManager.WonderFulActivityInit(this); //GEÇİCİ
@@ -3789,12 +3789,12 @@ public class GamePlayer : IGamePlayer
             if (id == 1243)
             {
                 m_rank.AddNewRank(1000, 3);
-                GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice($"Người chơi [{m_character.NickName}] đích thân tiêu diệt Boss thế giới nhận được danh hiêu [CHÚA TỂ RỒNG]."));
+                GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice($"Dünya BOSS'a meydan okuyan değerli oyuncumuz [{m_character.NickName}], son vuruşunu başarıyla gerçekleştirdi ve ek ödüller kazandı! Tebrikler!")); //türkçeleştirildi not: yuti
             }
             else if (id == 30004)
             {
                 m_rank.AddNewRank(1001, 3);
-                GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice($"Người chơi [{m_character.NickName}] đích thân tiêu diệt Boss thế giới nhận được danh hiêu [VUA BÓNG ĐÁ]."));
+                GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice($"Dünya BOSS'a meydan okuyan değerli oyuncumuz [{m_character.NickName}], son vuruşunu başarıyla gerçekleştirdi ve ek ödüller kazandı! Tebrikler!")); //türkçeleştirildi not: yuti
             }
         }
     }
@@ -4408,7 +4408,7 @@ public class GamePlayer : IGamePlayer
         return false;
     }
 
-    public UserLabyrinthInfo LoadLabyrinth(int sType)
+    public UserLabyrinthInfo LoadLabyrinth(int sType) //savaşçının gizli yeri not: yuti
     {
         if (userLabyrinthInfo == null)
         {
@@ -5653,7 +5653,7 @@ public class GamePlayer : IGamePlayer
                     {
                         damageScore = value / 400;
                         honor = value / 1200;
-                        msg = LanguageMgr.GetTranslation("Savaş başarıyla tamamlandı!", damageScore, " Puan ve", honor, " onur kazandınız!", damageScore, honor);
+                        msg = LanguageMgr.GetTranslation("Savaş başarıyla tamamlandı!", damageScore, " Puan ve", honor, " onur kazandınız!", damageScore, honor); //türkçeleştirildi not: yuti
                         AddDamageScores(damageScore);
                         RoomMgr.WorldBossRoom.UpdateRank(this, damageScore, honor);
                         RoomMgr.WorldBossRoom.ReduceBlood(value);
@@ -5954,7 +5954,7 @@ public class GamePlayer : IGamePlayer
         }
         if (Extra.Info.FreeSendMailCount >= GameProperties.LimitMail)
         {
-            SendMessage($"Số lần gửi = {GameProperties.LimitMail}");
+            SendMessage($"Limiti aştınız = {GameProperties.LimitMail}"); //türkçeleştirildi not: yuti
             return true;
         }
         Extra.Info.FreeSendMailCount++;

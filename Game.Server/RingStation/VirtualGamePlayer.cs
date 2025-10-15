@@ -434,7 +434,7 @@ namespace Game.Server.RingStation
             gSPacketIn.WriteInt(-1);
             gSPacketIn.WriteInt(templateId);
             SendTCP(gSPacketIn);
-            if (templateId == 10001 || templateId == 10002)
+            if (templateId == 10001 || templateId == 10002) //gömmmmmmm bakalım :D not: yuti
             {
                 ItemTemplateInfo itemTemplateInfo = ItemMgr.FindItemTemplate(templateId);
                 for (int i = 0; i < itemTemplateInfo.Property2; i++)

@@ -20,7 +20,7 @@ namespace Game.Base
         private const int SCAN_MAX_PACKETS_PER_IP = 300;
         private const int TIMES_TO_DISABLE = 3;
         private const string BLOCK_LIST_FILENAME = "IPBlockList.txt";
-        private const string WHITE_LIST_FILENAME = "IPWhiteList.txt"; // Yeni: Whitelist dosyası
+        private const string WHITE_LIST_FILENAME = "IPWhiteList.txt"; // Yeni: Whitelist dosyası not: yuti
 
         public static bool IsActive;
         public static bool IsStarted;
@@ -28,7 +28,7 @@ namespace Game.Base
         public static Dictionary<IPAddress, int> ConnectionList = new();
         public static Dictionary<IPAddress, int> PacketList = new();
         public static List<IPAddress> BlockList = new();
-        public static List<IPAddress> WhiteList = new(); // Yeni: Whitelist listesi
+        public static List<IPAddress> WhiteList = new(); // Yeni: Whitelist listesi not: yuti
 
         public static int ConnectionCount;
         public static int BlockedConnections;
@@ -45,10 +45,10 @@ namespace Game.Base
 
         static HydroFilter()
         {
-            LoadWhiteList(); // Yeni: Whitelist'i yükle
+            LoadWhiteList(); // Yeni: Whitelist'i yükle not: yuti
         }
 
-        // Yeni: Whitelist'e IP ekleme metodu
+        // Yeni: Whitelist'e IP ekleme metodu not: yuti
         public static void AddToWhiteList(IPAddress ipAddress)
         {
             try
@@ -59,7 +59,7 @@ namespace Game.Base
                     SaveWhiteList();
                     log.Info($"IP whitelist'e eklendi: {ipAddress}");
 
-                    // Eğer IP engellenmişse, engellemeyi kaldır
+                    // Eğer IP engellenmişse, engellemeyi kaldır not: yuti
                     if (BlockList.Contains(ipAddress))
                     {
                         RemoveBlockIP(ipAddress);
@@ -73,7 +73,7 @@ namespace Game.Base
             }
         }
 
-        // Yeni: Whitelist'ten IP kaldırma metodu
+        // Yeni: Whitelist'ten IP kaldırma metodu not: yuti
         public static void RemoveFromWhiteList(IPAddress ipAddress)
         {
             try
@@ -91,7 +91,7 @@ namespace Game.Base
             }
         }
 
-        // Yeni: Whitelist'i dosyaya kaydetme
+        // Yeni: Whitelist'i dosyaya kaydetme not: yuti
         private static void SaveWhiteList()
         {
             try
@@ -104,7 +104,7 @@ namespace Game.Base
             }
         }
 
-        // Yeni: Whitelist'i dosyadan yükleme
+        // Yeni: Whitelist'i dosyadan yükleme not: yuti
         private static void LoadWhiteList()
         {
             try
@@ -128,18 +128,18 @@ namespace Game.Base
             }
         }
 
-        // Yeni: IP'nin whitelist'te olup olmadığını kontrol et
+        // Yeni: IP'nin whitelist'te olup olmadığını kontrol et not: yuti
         public static bool IsWhiteListed(IPAddress ipAddress)
         {
             return WhiteList.Contains(ipAddress);
         }
 
-        // Tüm engellenmiş IP'leri kaldıran ana metot
+        // Tüm engellenmiş IP'leri kaldıran ana metot not: yuti
         public static void UnblockAllIPs()
         {
             try
             {
-                // 1. Bellekteki engellenen IP listesini temizle
+                // 1. Bellekteki engellenen IP listesini temizle not: yuti
                 BlockList.Clear();
                 log.Info("Bellekteki engellenen IP listesi temizlendi.");
 
@@ -170,7 +170,7 @@ namespace Game.Base
             }
         }
 
-        // Güvenlik duvarından tüm HydroFilter kurallarını kaldırır
+        // Güvenlik duvarından tüm HydroFilter kurallarını kaldırır not: yuti
         private static void RemoveAllFirewallRules()
         {
             try
@@ -252,7 +252,7 @@ namespace Game.Base
                 timerCheck = null;
             }
 
-            // Program durduğunda tüm engellemeleri kaldır
+            // Program durduğunda tüm engellemeleri kaldır not: yuti
             UnblockAllIPs();
             log.Info("HydroFilter is stopped!");
         }
@@ -320,7 +320,7 @@ namespace Game.Base
             {
                 foreach (KeyValuePair<IPAddress, int> keyValuePair in ConnectionList)
                 {
-                    // Yeni: Whitelist kontrolü
+                    // Yeni: Whitelist kontrolü not: yuti
                     if (IsWhiteListed(keyValuePair.Key))
                     {
                         log.Info($"IP whitelist'te, engelleme atlandı: {keyValuePair.Key}");
@@ -340,7 +340,7 @@ namespace Game.Base
             {
                 foreach (KeyValuePair<IPAddress, int> keyValuePair in PacketList)
                 {
-                    // Yeni: Whitelist kontrolü
+                    // Yeni: Whitelist kontrolü not: yuti
                     if (IsWhiteListed(keyValuePair.Key))
                     {
                         log.Info($"IP whitelist'te, engelleme atlandı: {keyValuePair.Key}");
@@ -383,7 +383,7 @@ namespace Game.Base
 
         public static void BlockIP(IPAddress ipAddress, bool Save = true)
         {
-            // Yeni: Whitelist kontrolü
+            // Yeni: Whitelist kontrolü not: yuti
             if (IsWhiteListed(ipAddress))
             {
                 log.Info($"IP whitelist'te, engelleme atlandı: {ipAddress}");
@@ -488,7 +488,7 @@ namespace Game.Base
                     {
                         if (!string.IsNullOrWhiteSpace(ip) && IPAddress.TryParse(ip, out IPAddress address))
                         {
-                            // Yeni: Whitelist kontrolü
+                            // Yeni: Whitelist kontrolü not: yuti
                             if (!IsWhiteListed(address))
                             {
                                 BlockIP(address, false);

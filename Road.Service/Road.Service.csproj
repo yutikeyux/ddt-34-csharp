@@ -1,84 +1,124 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<AssemblyName>Road.Service</AssemblyName>
-		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-		<OutputType>Exe</OutputType>
-		<TargetFramework>net48</TargetFramework>
-		<EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
-	</PropertyGroup>
-	<PropertyGroup>
-		<LangVersion>Preview</LangVersion>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<ApplicationIcon>alpha.ico</ApplicationIcon>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DefineConstants>DEBUG;TRACE</DefineConstants>
-		<PlatformTarget>AnyCPU</PlatformTarget>
-		<OutputPath>bin\Debug\</OutputPath>
-	</PropertyGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\Bussiness\Bussiness.csproj" />
-		<ProjectReference Include="..\Game.Base\Game.Base.csproj" />
-		<ProjectReference Include="..\Game.Logic\Game.Logic.csproj" />
-		<ProjectReference Include="..\Game.Server\Game.Server.csproj" />
-		<ProjectReference Include="..\SqlDataProvider\SqlDataProvider.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<Reference Include="System.Net" />
-		<Reference Include="System.ServiceProcess">
-			<HintPath>C:\WINDOWS\Microsoft.NET\assembly\GAC_MSIL\System.ServiceProcess\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.ServiceProcess.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Configuration.Install">
-			<HintPath>C:\WINDOWS\Microsoft.NET\assembly\GAC_MSIL\System.Configuration.Install\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Configuration.Install.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Configuration">
-			<HintPath>C:\WINDOWS\Microsoft.NET\assembly\GAC_MSIL\System.Configuration\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Configuration.dll</HintPath>
-		</Reference>
-		<Reference Include="System.Windows.Forms" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Update="App.config">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="battle.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="Datas\consortiatask.data">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="Datas\consortiatask.snapedata">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="Datas\LittleGame\map.data">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="Datas\shopfreecount.data">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="Datas\shopfreecount.snapedata">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="logconfig.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="Datas\" />
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Include="actions\ServerManagementForm.cs">
-			<SubType>Form</SubType>
-		</Compile>
-	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Include="Actions\ServerManagementForm.resx" />
-		<EmbeddedResource Include="Properties\Resources.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
-			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="log4net" Version="2.0.14" />
-		<PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
-	</ItemGroup>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2E0869A7-0B41-4B4B-B591-B755DB1DA75F}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Road.Service</RootNamespace>
+    <AssemblyName>Road.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Road.Service.ico</ApplicationIcon>
+    <StartupObject>Game.Service.Program</StartupObject>
+    <!-- AŞAĞIDAKİ SATIRI EKLEDİK -->
+    <RuntimeIdentifiers>win</RuntimeIdentifiers>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Bussiness">
+      <HintPath>..\..\RoadSource\sourceroad\Road.Service\bin\Debug\Bussiness.dll</HintPath>
+    </Reference>
+    <Reference Include="Game.Base">
+      <HintPath>..\..\RoadSource\sourceroad\Road.Service\bin\Debug\Game.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Game.Logic">
+      <HintPath>..\..\RoadSource\sourceroad\Road.Service\bin\Debug\Game.Logic.dll</HintPath>
+    </Reference>
+    <Reference Include="Game.Server">
+      <HintPath>..\..\RoadSource\sourceroad\Road.Service\bin\Debug\Game.Server.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\RoadSource\sourceroad\Road.Service\bin\Debug\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Center.Server\bin\Debug\net472\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\Center.Server\bin\Debug\net472\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlDataProvider">
+      <HintPath>..\SqlDataProvider\bin\Debug\net472\SqlDataProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration">
+      <HintPath>..\..\Road.Service\bin\Debug\net48\System.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration.Install">
+      <HintPath>..\..\Road.Service\bin\Debug\net48\System.Configuration.Install.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceProcess">
+      <HintPath>..\..\Road.Service\bin\Debug\net48\System.ServiceProcess.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="zlib.net">
+      <HintPath>..\Center.Server\bin\Debug\net472\zlib.net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Game\Service\actions\ConsoleStart.cs" />
+    <Compile Include="Game\Service\actions\PlayerReport.cs" />
+    <Compile Include="Game\Service\actions\ServerManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Game\Service\actions\ServerManagementForm.Designer.cs">
+      <DependentUpon>ServerManagementForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Game\Service\actions\ServiceInstall.cs" />
+    <Compile Include="Game\Service\actions\ServiceRun.cs" />
+    <Compile Include="Game\Service\actions\ServiceStart.cs" />
+    <Compile Include="Game\Service\actions\ServiceStop.cs" />
+    <Compile Include="Game\Service\actions\ServiceUninstall.cs" />
+    <Compile Include="Game\Service\GameServerService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Game\Service\GameServerServiceInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Game\Service\IAction.cs" />
+    <Compile Include="Game\Service\Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Game\Service\actions\ServerManagementForm.resources" />
+    <EmbeddedResource Include="Road.Service.Road.Service.Actions.ServerManagementForm.resources" />
+    <EmbeddedResource Include="Road.Service.Road.Service.Properties.Resources.resources" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\Center.Server\bin\Debug\net472\protobuf-net.Core.dll" />
+    <Analyzer Include="..\Center.Server\bin\Debug\net472\protobuf-net.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

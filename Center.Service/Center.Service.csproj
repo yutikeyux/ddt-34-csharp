@@ -26,6 +26,14 @@
     <ProjectReference Include="..\Game.Base\Game.Base.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>..\Center.Server\bin\Debug\net472\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net.Core">
+      <HintPath>..\Center.Server\bin\Debug\net472\protobuf-net.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <None Update="App.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

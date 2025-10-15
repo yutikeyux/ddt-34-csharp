@@ -101,7 +101,7 @@ namespace Game.Server.LittleGame
                     foreach (var player in WorldMgr.GetAllPlayers())
                     {
                         player.Actives.SendLittleGameActived();
-                        player.Out.SendMessage(eMessageType.Normal, "Sự kiện Đại chiến Hút Gà đã bắt đầu! Hãy tham gia từ mục Đặc Sắc tại sảnh game nhé!");
+                        player.Out.SendMessage(eMessageType.Normal, "Bogo savaşı başladı! Herkes katılabilir!"); //türkçeleştirildi not: yuti
                     }
                 }
             }
@@ -136,7 +136,7 @@ namespace Game.Server.LittleGame
                 foreach (var player in WorldMgr.GetAllPlayers())
                 {
                     player.Actives.SendLittleGameActived();
-                    player.Out.SendMessage(eMessageType.Normal, "Sự kiện Đại chiến Hút Gà đã kết thúc! \n Hẹn gặp bạn vào lần sau.");
+                    player.Out.SendMessage(eMessageType.Normal, "Bogo savaşı sona erdi."); //türkçeleştirildi. not: yuti
                 }
             }
         }

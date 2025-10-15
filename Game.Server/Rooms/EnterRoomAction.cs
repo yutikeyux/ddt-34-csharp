@@ -35,7 +35,7 @@ namespace Game.Server.Rooms
                 return;
             if (this.m_player.MainWeapon == null)
             {
-                this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, "Silah kuşanman gerekli!.");
+                this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, "Silah kuşanman gerekli!"); //türkçeleştirildi not: yuti
                 this.m_player.Out.SendRoomLoginResult(false);
                 return;
             }
@@ -112,7 +112,7 @@ namespace Game.Server.Rooms
                         }
                         else
                         {
-                            this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("Oda Dolu!"));
+                            this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("Oda Dolu!")); //türkçeleştirildi not: yuti
                             this.m_player.Out.SendRoomLoginResult(false);
                             return;
                         }

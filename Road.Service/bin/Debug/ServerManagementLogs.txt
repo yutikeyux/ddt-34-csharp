@@ -1,0 +1,68 @@
+[14.10.2025 21:53:38] Sunucu yönetim paneli başlatıldı.
+[14.10.2025 21:53:38] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[14.10.2025 21:53:38] [Bilgi] Sunucu yönetim paneli yüklendi.
+[14.10.2025 21:54:18] [Hata] Güncelleme başarısız: Balllist.ashx
+[14.10.2025 21:54:39] Sunucu yönetim paneli başlatıldı.
+[14.10.2025 21:54:39] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[14.10.2025 21:54:39] [Bilgi] Sunucu yönetim paneli yüklendi.
+[14.10.2025 21:55:01] [Bilgi] Banlı hesaplar listelendi.
+[14.10.2025 21:55:28] [Hata] Güncelleme başarısız: Balllist.ashx
+[14.10.2025 21:55:49] [Hata] Güncelleme başarısız: MapServerList.ashx
+[14.10.2025 21:55:57] Sunucu yönetim paneli başlatıldı.
+[14.10.2025 21:55:57] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[14.10.2025 21:55:57] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:07:56] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:07:56] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:07:57] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:08:29] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:08:29] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:08:29] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:08:45] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:08:45] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:08:45] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:09:12] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:09:12] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:09:12] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:15:06] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:15:06] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:15:06] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:16:25] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:16:25] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:16:25] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:22:24] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:22:24] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:22:24] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:24:13] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:24:13] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:24:13] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:24:28] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:24:28] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:24:28] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:26:57] [Bilgi] Banlı hesaplar listelendi.
+[15.10.2025 09:32:44] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:32:44] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:32:44] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:33:35] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:33:35] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:33:35] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:34:05] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:34:05] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:34:05] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:34:36] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:34:36] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:34:36] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:36:23] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:36:23] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:36:23] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:37:37] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:37:37] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:37:37] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:44:40] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:44:40] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:44:40] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:47:02] Sunucu yönetim paneli başlatıldı.
+[15.10.2025 09:47:02] [Hata] Sunucu ayarları yüklenemedi: Invalid object name 'ServerSettings'.
+[15.10.2025 09:47:02] [Bilgi] Sunucu yönetim paneli yüklendi.
+[15.10.2025 09:47:48] [Hata] Sunucu durumu güncellenemedi: Value cannot be null.
+Parameter name: item
+[15.10.2025 09:52:02] [Bilgi] Otomatik mesaj gönderildi: Sunucumuza hoş geldiniz! İyi oyunlar dileriz.

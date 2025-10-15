@@ -172,9 +172,9 @@ namespace Game.Server.GameUtils
 				itemInfo.Count = num3;
 				if (num3 > 0)
 				{
-					string content = $"Yardımcıdan Kazandığınız: {num3} {itemInfo.Template.Name}";
-					string translation = LanguageMgr.GetTranslation("Çiftlik yardımcısından kazandığınız itemler");
-					m_player.SendItemToMail(itemInfo, content, translation, eMailType.ItemOverdue);
+					string content = $"Yardımcıdan Kazandığınız: {num3} {itemInfo.Template.Name}"; //türkçeleştirildi not: yuti
+                    string translation = LanguageMgr.GetTranslation("Çiftlik yardımcısından kazandığınız itemler"); //türkçeleştirildi not: yuti
+                    m_player.SendItemToMail(itemInfo, content, translation, eMailType.ItemOverdue);
 					m_player.Out.SendMailResponse(m_player.PlayerCharacter.ID, eMailRespose.Receiver);
 				}
 				lock (m_lock)
@@ -215,13 +215,13 @@ namespace Game.Server.GameUtils
 			ItemTemplateInfo goods = ItemMgr.FindItemTemplate(itemTemplateInfo.Property4);
 			ItemInfo item = ItemInfo.CreateFromTemplate(goods, 1, 102);
 			List<ItemInfo> list = new List<ItemInfo>();
-			if (!GetOtherFieldAt(fieldId).isDig())
-			{
+			if (!GetOtherFieldAt(fieldId).isDig()) // ünlem eklenip ekin çalma fixlendi not: yuti
+            {
 				return false;
 			}
 			lock (m_lock)
 			{
-				if (m_otherFields[fieldId].GainCount <= 8)
+				if (m_otherFields[fieldId].GainCount <= 8) // 9 olan değer 8 e düşürüldü yani böylelikle 10/10 olan yemden 2 tane çalınabiliyor. not: yuti
 				{
 					return false;
 				}
@@ -251,8 +251,8 @@ namespace Game.Server.GameUtils
 			m_player.Out.SendtoGather(m_player.PlayerCharacter, m_otherFields[fieldId]);
 			if (list.Count > 0)
 			{
-				string translation = LanguageMgr.GetTranslation("Çantanız dolu");
-				m_player.SendItemsToMail(list, translation, translation, eMailType.ItemOverdue);
+				string translation = LanguageMgr.GetTranslation("Çantanız dolu"); //türkçeleştirildi not: yuti
+                m_player.SendItemsToMail(list, translation, translation, eMailType.ItemOverdue);
 				m_player.Out.SendMailResponse(m_player.PlayerCharacter.ID, eMailRespose.Receiver);
 			}
 			return true;
@@ -390,8 +390,8 @@ namespace Game.Server.GameUtils
 				m_player.OnCropPrimaryEvent();
 				if (list.Count > 0)
 				{
-					string translation = LanguageMgr.GetTranslation("Çantanız dolu!");
-					m_player.SendItemsToMail(list, translation, translation, eMailType.ItemOverdue);
+					string translation = LanguageMgr.GetTranslation("Çantanız dolu!"); //türkçeleştirildi not: yuti
+                    m_player.SendItemsToMail(list, translation, translation, eMailType.ItemOverdue);
 					m_player.Out.SendMailResponse(m_player.PlayerCharacter.ID, eMailRespose.Receiver);
 				}
 				return true;

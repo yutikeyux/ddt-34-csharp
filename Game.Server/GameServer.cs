@@ -522,8 +522,8 @@ namespace Game.Server
                 }
 
                 Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-                DateTime startTime = Convert.ToDateTime("19:30:00");
-                DateTime stopTime = Convert.ToDateTime("21:30:00");
+                DateTime startTime = Convert.ToDateTime("00:00:00"); //lig başlama saatleri şimdilik 7/24 şekilde not: yuti
+                DateTime stopTime = Convert.ToDateTime("23:59:59"); //lig başlama saatleri şimdilik 7/24 şekilde not: yuti
 
                 List<DayOfWeek> opendays = new List<DayOfWeek>
                 {
@@ -532,8 +532,8 @@ namespace Game.Server
                     DayOfWeek.Wednesday,
                     DayOfWeek.Thursday,
                     DayOfWeek.Friday,
-                    //DayOfWeek.Saturday,
-                    //DayOfWeek.Sunday
+                    DayOfWeek.Saturday, //bunları iptal edebiliriz haftasonu lig iptal şeklinde not: yuti
+                    DayOfWeek.Sunday    //bunları iptal edebiliriz haftasonu lig iptal şeklinde not: yuti
                 };
 
                 if (opendays.Contains(DateTime.Now.DayOfWeek))
@@ -575,8 +575,8 @@ namespace Game.Server
 
                 Thread.CurrentThread.Priority = ThreadPriority.Lowest;
                 GamePlayer[] players = WorldMgr.GetAllPlayers();
-                DateTime startTime = Convert.ToDateTime("19:30:00");//GameProperties.WorldBossStart.Split('|')[0]);
-                DateTime stopTime = Convert.ToDateTime("20:30:00");//GameProperties.WorldBossEnd.Split('|')[0]);
+                DateTime startTime = Convert.ToDateTime("00:00:00");//world boss başlama saatleri şimdilik 7/24 şekilde not: yuti
+                DateTime stopTime = Convert.ToDateTime("23:59:59");//world boss başlama saatleri şimdilik 7/24 şekilde not: yuti
                 DateTime closeTime = stopTime.AddMinutes(1.0);
                 int npcID = 1243;
                 int configblood = NPCInfoMgr.GetNpcInfoById(npcID).Blood;
@@ -702,19 +702,19 @@ namespace Game.Server
                 }
 
                 Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-                List<DayOfWeek> opendays = new List<DayOfWeek>//3 5 7
+                List<DayOfWeek> opendays = new List<DayOfWeek>//hangi günler açık veya kapalı olacağı. şu an her gün açık. not: yuti
                 {
                     DayOfWeek.Monday,
-                    //DayOfWeek.Tuesday,
-                    //DayOfWeek.Wednesday,
-                    //DayOfWeek.Thursday,
-                    //DayOfWeek.Friday,
+                    DayOfWeek.Tuesday,
+                    DayOfWeek.Wednesday,
+                    DayOfWeek.Thursday,
+                    DayOfWeek.Friday,
                     DayOfWeek.Saturday,
                     DayOfWeek.Sunday
                 };
                 if (opendays.Contains(DateTime.Now.DayOfWeek))
                 {
-                    int startTime = GameProperties.LittleGameStartHourse;
+                    int startTime = GameProperties.LittleGameStartHourse; //saçma sapan bi mantık değiştirebiliriz not: yuti
                     int stopTime = GameProperties.LittleGameStartHourse + GameProperties.LittleGameTimeSpending;
                     if (DateTime.Now.Hour == startTime && !LittleGameWorldMgr.IsOpen)
                     {
@@ -729,7 +729,7 @@ namespace Game.Server
                         foreach (var player in WorldMgr.GetAllPlayers())
                         {
                             player.Actives.SendLittleGameActived();
-                            player.Out.SendMessage(eMessageType.Normal, $"Tavuk Savaşı {(int)(60 - DateTime.Now.Minute)} dakika sonra başlıyor!");
+                            player.Out.SendMessage(eMessageType.Normal, $"Bogo Savaşı {(int)(60 - DateTime.Now.Minute)} dakika sonra başlıyor!");
                         }
                     }
                     else if (DateTime.Now.Hour == startTime && LittleGameWorldMgr.IsOpen && DateTime.Now.Minute >= 55)
@@ -737,7 +737,7 @@ namespace Game.Server
                         foreach (var player in WorldMgr.GetAllPlayers())
                         {
                             player.Actives.SendLittleGameActived();
-                            player.Out.SendMessage(eMessageType.Normal, $"Tavuk Savaşı {(int)(60 - DateTime.Now.Minute)} sona erdi!");
+                            player.Out.SendMessage(eMessageType.Normal, $"Bogo Savaşı {(int)(60 - DateTime.Now.Minute)} sona erdi!");
                         }
                     }
                     if (log.IsInfoEnabled)
@@ -1477,8 +1477,8 @@ namespace Game.Server
                     return false;
                 if (!InitComponent(TotemHonorMgr.Init(), "TotemHonorMgr Init"))
                     return false;
-                //if (!InitComponent(DailyLeagueAwardMgr.Init(), "DailyLeagueAwardMgr Init"))
-                //    return false;
+                if (!InitComponent(DailyLeagueAwardMgr.Init(), "DailyLeagueAwardMgr Init")) //kaldırılmıştı eklendi not: yuti
+                    return false;
                 if (!InitComponent(SpiritInfoMgr.Init(), "SpiritInfoMgr Int"))
                     return false;
                 if (!InitComponent(SetsBuildTempMgr.Init(), "SetsBuildTempMgr Init"))

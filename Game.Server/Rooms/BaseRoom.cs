@@ -210,9 +210,9 @@ namespace Game.Server.Rooms
             isOpenBoss = false;
         }
 
-        public bool CanStart()
+        public bool CanStart() //düello izleyici mantığı
         {
-            if (RoomType == eRoomType.Freedom)//khieu chien
+            if (RoomType == eRoomType.Freedom)
             {
                 int num = 0;
                 int num2 = 0;
@@ -232,19 +232,57 @@ namespace Game.Server.Rooms
                 }
                 return num > 0 && num2 > 0;
             }
-            int num3 = 0;
-            int viewCnt = 0;
-            for (int j = 0; j < 10; j++)
+            else if (RoomType == eRoomType.Match) //normaloda izleyici mantığı
             {
-                if (m_playerState[j] > 0)
+                // Match: 4 normal + 1 viewer (total 5 positions)
+                int normalyer = 0;
+                int izleyiciyeri = 0;
+                for (int j = 0; j < 5; j++) 
                 {
-                    if (j < 8)
-                        num3++;
-                    else
-                        viewCnt++;
+                    if (m_playerState[j] > 0)
+                    {
+                        if (j < 4) 
+                            normalyer++;
+                        else 
+                            izleyiciyeri++;
+                    }
                 }
+                return normalyer == m_playerCount && izleyiciyeri == m_viewerCnt;
             }
-            return num3 == m_playerCount && viewCnt == m_viewerCnt;
+            else if (RoomType == eRoomType.Dungeon) //keşif izleyici mantığı
+            {
+                // Dungeon: 4 normal + 2 viewers (total 6 positions)
+                int normalyer = 0;
+                int izleyiciyeri = 0;
+                for (int j = 0; j < 6; j++) 
+                {
+                    if (m_playerState[j] > 0)
+                    {
+                        if (j < 4) 
+                            normalyer++;
+                        else 
+                            izleyiciyeri++;
+                    }
+                }
+                return normalyer == m_playerCount && izleyiciyeri == m_viewerCnt;
+            }
+            else
+            {
+                
+                int normalyer = 0;
+                int izleyiciyeri = 0;
+                for (int j = 0; j < 10; j++)
+                {
+                    if (m_playerState[j] > 0)
+                    {
+                        if (j < 8)
+                            normalyer++;
+                        else
+                            izleyiciyeri++;
+                    }
+                }
+                return normalyer == m_playerCount && izleyiciyeri == m_viewerCnt;
+            }
         }
 
         public bool CanAddPlayer()
@@ -963,7 +1001,7 @@ namespace Game.Server.Rooms
             }
             else
             {
-                m_player.Out.SendMessage(eMessageType.GM_NOTICE, "Bu yer dolu!");
+                m_player.Out.SendMessage(eMessageType.GM_NOTICE, "Bu yer dolu!"); //türkçeleştirildi not: yuti
                 return false;
             }
             this.SendPlaceState();

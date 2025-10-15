@@ -729,7 +729,7 @@ namespace Game.Server.RingStation
 
         public static bool SetupVirtualPlayer()
         {
-            int[] weaponArr = new int[]//Danh sách vũ khí
+            int[] weaponArr = new int[]//botun silahları ne koysak ki ya not: yuti
             {
                 //71664,
                 //71854,
@@ -746,7 +746,7 @@ namespace Game.Server.RingStation
                 //75484,
                 7008
             };
-            int[] headArr = new int[]
+            int[] headArr = new int[] //botun şapkaları ne koysak ki ya not: yuti
             {
                 //1147,
                 //1149,
@@ -764,7 +764,7 @@ namespace Game.Server.RingStation
                 1142,
                 1214
             };
-            int[] glassArr = new int[]
+            int[] glassArr = new int[] //botun gözlükleri ne koysak ki ya not: yuti
             {
                 //2117,
                 //2119,
@@ -783,7 +783,7 @@ namespace Game.Server.RingStation
                 2104,
                 2204
             };
-            int[] hairArr = new int[]
+            int[] hairArr = new int[] // botun saçları ne koysak ki ya not: yuti
             {
                 //3111,
                 //3114,
@@ -807,7 +807,7 @@ namespace Game.Server.RingStation
                 3158,
                 3244
             };
-            int[] effArr = new int[]
+            int[] effArr = new int[] // botun yüz takısı ne koysak ki ya not: yuti
             {
                 //4120,
                 //4121,
@@ -830,7 +830,7 @@ namespace Game.Server.RingStation
                 4101,
                 4201
             };
-            int[] clothArr = new int[]
+            int[] clothArr = new int[] //botun kıyafeti ne koysak ki ya not: yuti
             {
                 //5131,
                 //5142,
@@ -852,7 +852,7 @@ namespace Game.Server.RingStation
                 5104,
                 5207
             };
-            int[] faceArr = new int[]//Mắt
+            int[] faceArr = new int[]//botun gözü ne koysak ki ya not: yuti
             {
                 //6110,
                 //6112,
@@ -872,7 +872,7 @@ namespace Game.Server.RingStation
                 6101,
                 6202
             };
-            int[] wingArr = new int[]
+            int[] wingArr = new int[]//botun kanadı ne koysak ki ya not: yuti
             {
                 //15064,
                 //15065,
@@ -978,7 +978,7 @@ namespace Game.Server.RingStation
                 Defence = player.Info.Defence/2,
                 Luck = player.Info.Luck/2,
                 Agility = player.Info.Agility/2,
-                hp = player.Info.hp/2,
+                hp = player.Info.hp/5, // bölü iki idi bölü 5 yaptım canı bi tık daha az olsun da moruk not: yuti
                 FightPower = player.Info.FightPower/2,
                 BaseAttack = player.BaseDamage/2,
                 BaseDefence = player.BaseGuard/2,
@@ -1017,8 +1017,8 @@ namespace Game.Server.RingStation
             {
                 VirtualGamePlayer rp = new VirtualGamePlayer
                 {
-                    NickName = _names[rand.Next(_names.Length)] + npcId + x,
-                 ConsortiaName="LidyaTank",  //özgür savaş botunun birlik ismi
+                NickName = _names[rand.Next(_names.Length)], //nickname üzerindeki numaralar kaldırıldı düz nickname gelir artık not: yuti
+                ConsortiaName="BloodBrother",  //özgür savaş botunun birlik ismi not: yuti
                 GP = player.PlayerCharacter.GP,
                 Grade = player.PlayerCharacter.Grade,
                 Attack = player.PlayerCharacter.Attack/2,
