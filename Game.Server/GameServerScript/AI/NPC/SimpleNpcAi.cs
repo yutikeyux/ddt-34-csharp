@@ -13,19 +13,19 @@ namespace GameServerScript.AI.NPC
 
 		private static string[] listChat = new string[]
 		{
-			"Chào mừng các bạn đến với GunnyV2",
-			"Giữ vũ khí trong tay, đừng run rẩy ~",
-			"Chiến đấu cho nhà vua!",
-			"Kẻ thù đang ở trước mặt bạn, mọi người sẵn sàng chiến đấu!",
-			"Tôi cảm thấy rằng hành vi của vua vua ngày càng trở nên bất thường ...",
-			"Vì chiến thắng của con gián !! Anh em vội vàng!",
-			"Nhanh chóng tiêu diệt kẻ thù!",
-			"Mọi người đi cùng nhau, mọi người mạnh mẽ hơn!",
-			"Mọi người nhanh chóng chiến đấu cùng nhau!",
-			"Bao vây kẻ thù và tiêu diệt chúng.",
-			"Củng cố! Củng cố! Chúng ta cần thêm quân tiếp viện !!",
-			"Ngay cả khi bạn hy sinh bản thân, bạn sẽ không thể làm cho nó dễ dàng.",
-			"Đừng đánh giá thấp sức mạnh của bạn, hoặc bạn sẽ trả tiền cho nó."
+			"Seni gidi seni! Şimdi izle sana ne yapacağımı!",
+			"Silahını bir savaşçı gibi tut. Karşıma titreme!",
+			"Birlikten kuvvet doğar arkadaşlarım!",
+			"Düşman karşımızda! Herkes çarpışmaya hazırlansın!",
+			"Ne oluyor şu an? Bu duruma düşmemeliydik hiçbir zaman!",
+			"Bu savaşın sonucu çoktan belli. Biz kazanacağız!",
+			"Seni yok edeceğim!",
+			"Bir elin nesi var? İKİ ELİN SESİ VAR!",
+			"Savaşta yan yana duralım! Asla geçit vermeyeceğiz!",
+			"Düşmanları kuşatın ve onları YOK edin!",
+			"777 Manifest yaaa offf niye böyle olduu!",
+			"Kendinizi feda etseniz bile buradan geçişiniz yok! Çıkmaz sokağa geldiniz!",
+			"Gücümüzü küçümsemeyin! Yoksa bedelini canınızla ödersiniz!"
 		};
 
 		public override void OnBeginSelfTurn()

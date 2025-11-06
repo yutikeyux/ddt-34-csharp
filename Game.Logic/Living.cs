@@ -730,7 +730,7 @@ public class Living : Physics
         }
     }
 
-    public int MakeCriticalDamage(Living target, int baseDamage)
+    public int MakeCriticalDamage(Living target, int baseDamage) //kritik mantýðý
     {
         double lucky = Lucky;
         if (lucky * 45.0 / (800.0 + lucky) + (double)PetEffects.CritRate >= (double)m_game.Random.Next(100))
@@ -1111,7 +1111,7 @@ public class Living : Physics
         return true;
     }
 
-    protected int MakeDamage(Living target)
+    protected int MakeDamage(Living target) 
     {
         if (target.Config.IsChristmasBoss)
             return 1;
@@ -1125,7 +1125,7 @@ public class Living : Physics
             baseGuard += (double)addPoint;
             defence += (double)addPoint;
         }
-        if (IgnoreArmor)
+        if (IgnoreArmor) //zýrh delici mantýðý kodu not: yuti
         {
             baseGuard = 0.0;
             defence = 0.0;
@@ -1155,7 +1155,7 @@ public class Living : Physics
             num += (double)num3;
             num2 += (double)num3;
         }
-        if (IgnoreArmor)
+        if (IgnoreArmor) //zýrh delici mantýðý kodu not: yuti
         {
             num = 0.0;
             num2 = 0.0;

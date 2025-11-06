@@ -65,8 +65,8 @@ namespace Game.Server.Packets.Client
                                     ItemInfo itemAward = ItemInfo.CreateFromTemplate(ItemMgr.FindItemTemplate(item.TemplateID), 1, 105);
                                     itemAward.IsBinds = item.IsBinds;
                                     itemAward.ValidDate = item.ValidDate;
-                                    client.Player.AddTemplate(itemAward, LanguageMgr.GetTranslation("ChickenBoxHandler.Msg7"));
-                                    client.Player.SendMessage(LanguageMgr.GetTranslation("ChickenBoxHandler.Msg8", itemAward.Template.Name, item.Count));
+                                    client.Player.AddTemplate(itemAward, LanguageMgr.GetTranslation("Hazine Tarlası Ödülü!"));
+                                    client.Player.SendMessage(LanguageMgr.GetTranslation("Tebrikler! x{1} adet {0} kazandınız.", itemAward.Template.Name, item.Count));
                                     ChickenBox.canOpenCounts--;
                                     if (ChickenBox.canOpenCounts == 0)
                                     {
@@ -78,12 +78,12 @@ namespace Game.Server.Packets.Client
                             }
                             else
                             {
-                                client.Player.SendMessage(LanguageMgr.GetTranslation("ChickenBoxHandler.Msg1"));
+                                client.Player.SendMessage(LanguageMgr.GetTranslation("Bu ödül bulunamadı!"));
                             }
                         }
                         else
                         {
-                            client.Player.SendMessage(LanguageMgr.GetTranslation("ChickenBoxHandler.Msg9"));
+                            client.Player.SendMessage(LanguageMgr.GetTranslation("Kart açma hakkınız kalmadı!"));
 
                         }
                         break;
@@ -126,12 +126,12 @@ namespace Game.Server.Packets.Client
                             }
                             else
                             {
-                                client.Player.SendMessage(LanguageMgr.GetTranslation("ChickenBoxHandler.Msg1"));
+                                client.Player.SendMessage(LanguageMgr.GetTranslation("Ödül Bulunamadı!"));
                             }
                         }
                         else
                         {
-                            client.Player.SendMessage(LanguageMgr.GetTranslation("ChickenBoxHandler.Msg2"));
+                            client.Player.SendMessage(LanguageMgr.GetTranslation("Kartal Gözü Hakkınız Sona Erdi!"));
 
                         }
                         break;
@@ -145,14 +145,14 @@ namespace Game.Server.Packets.Client
                             {
                                 client.Player.Actives.PayFlushView();
                                 client.Player.Actives.SendChickenBoxItemList();
-                                client.Player.SendMessage(LanguageMgr.GetTranslation("ChickenBoxHandler.Msg3"));
+                                client.Player.SendMessage(LanguageMgr.GetTranslation("Başarıyla Yenilendi!"));
                             }
                         }
                         else
                         {
                             client.Player.Actives.PayFlushView();
                             client.Player.Actives.SendChickenBoxItemList();
-                            client.Player.SendMessage(LanguageMgr.GetTranslation("ChickenBoxHandler.Msg4"));
+                            client.Player.SendMessage(LanguageMgr.GetTranslation("Bugün Ücretsiz Yenileme Hakkınızı Kullandınız!"));
                         }
                         break;
                     }
@@ -208,14 +208,14 @@ namespace Game.Server.Packets.Client
                                 }
                                 else
                                 {
-                                    client.Player.SendMessage(LanguageMgr.GetTranslation("ChickenBoxHandler.Msg5", templateInfo.Name));
+                                    client.Player.SendMessage(LanguageMgr.GetTranslation("Bu işlemi yapmak için {0} eşyasına ihtiyacınız var.", templateInfo.Name));
                                 }
                             }
                             client.Player.Actives.LuckyStartStartTurn = DateTime.Now;
                         }
                         else
                         {
-                            client.Player.SendMessage(LanguageMgr.GetTranslation("ChickenBoxHandler.Msg6"));
+                            client.Player.SendMessage(LanguageMgr.GetTranslation("Lütfen bir sonraki tur için bekleyin!"));
                         }
                     }
                     break;
@@ -227,7 +227,7 @@ namespace Game.Server.Packets.Client
                         if (template != null && template.CategoryID != client.Player.Actives.coinTemplateID)
                         {
                             ItemInfo item = ItemInfo.CreateFromTemplate(template, award.Count, 105);
-                            client.Player.AddTemplate(item, LanguageMgr.GetTranslation("ChickenBoxHandler.Msg10"));
+                            client.Player.AddTemplate(item, LanguageMgr.GetTranslation("Hazine Tarlası"));
                         }
                     }
                     break;

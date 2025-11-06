@@ -61,7 +61,7 @@ namespace Game.Base.Packets
         GSPacketIn SendFriendState(int playerID, int state, byte typeVip, int viplevel);
 
         GSPacketIn sendBuyBadge(int BadgeID, int ValidDate, bool result, string BadgeBuyTime, int playerid);
-        //evde var
+        
         GSPacketIn SendConsortiaMail(bool result, int playerid);
 
         GSPacketIn sendOneOnOneTalk(int receiverID, bool isAutoReply, string SenderNickName, string msg, int playerid);

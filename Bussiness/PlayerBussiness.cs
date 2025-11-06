@@ -4928,6 +4928,8 @@ namespace Bussiness
             }
         }
 
+        // PlayerBussiness.cs dosyası içindeki metodu bu şekilde güncelleyin:
+        // PlayerBussiness.cs dosyasında bulunan SendMailAndItem metodunun TAM ve DÜZELTİLMİŞ hali
         public int SendMailAndItem(string title, string content, int UserID, int templateID, int count, int validDate, int gold, int money, int StrengthenLevel, int AttackCompose, int DefendCompose, int AgilityCompose, int LuckCompose, bool isBinds)
         {
             MailInfo mail = new MailInfo
@@ -4938,7 +4940,7 @@ namespace Bussiness
                 Money = money,
                 Receiver = "",
                 ReceiverID = UserID,
-                Sender = "Administrators",
+                Sender = "Sistem Yöneticisi",
                 SenderID = 0,
                 Title = content
             };

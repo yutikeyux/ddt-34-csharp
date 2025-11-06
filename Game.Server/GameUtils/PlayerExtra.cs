@@ -170,7 +170,7 @@ namespace Game.Server.GameUtils
                 ItemInfo itemInfo = ItemInfo.CreateFromTemplate(itemTemplateInfo, 1, 105);
                 itemInfo.IsBinds = true;
                 itemInfo.Count = count;
-                this.Player.AddTemplate(itemInfo, itemInfo.Template.BagType, count, eGameView.OtherTypeGet, "Bản đồ kho báu");
+                this.Player.AddTemplate(itemInfo, itemInfo.Template.BagType, count, eGameView.OtherTypeGet, "Ek Öğeler");
             }
         }
         public void UpdateGoodItems(EventAwardInfo good)
@@ -400,7 +400,7 @@ namespace Game.Server.GameUtils
                 }
                 if (Info.MinHotSpring <= 0)
                 {
-                    this.m_player.SendMessage("Bạn đã hết giờ tham gia suối nước nóng.");
+                    this.m_player.SendMessage("Kaplıcadaki süreniz sona erdi.");
                     this.m_player.CurrentHotSpringRoom.RemovePlayer(this.m_player);
                 }
                 int getExp = HotSpringMgr.GetExpWithLevel(this.m_player.PlayerCharacter.Grade) / 10;
@@ -410,7 +410,7 @@ namespace Game.Server.GameUtils
                     m_player.OnPlayerSpa(1);
                     if (Info.MinHotSpring <= 5)
                     {
-                        m_player.SendMessage("Bạn chỉ còn " + Info.MinHotSpring + " phút.");
+                        m_player.SendMessage("Sürenizin sonlanması için kalan son " + Info.MinHotSpring + " dakika.");
                     }
                     if (m_player.CurrentHotSpringRoom.Info.roomID > 4)
                     {
@@ -522,38 +522,38 @@ namespace Game.Server.GameUtils
             }
         }
 
-        public string GetNoviceActivityName(NoviceActiveType activeType)
-        {
-            string format = "Unknown";
-            switch (activeType)
-            {
-                case NoviceActiveType.GRADE_UP_ACTIVE:
-                    format = "Tăng cấp nhận thưởng";
-                    break;
-                case NoviceActiveType.STRENGTHEN_WEAPON_ACTIVE:
-                    format = "Cường hóa tặng quà";
-                    break;
-                case NoviceActiveType.USE_MONEY_ACTIVE:
-                    format = "Tiêu phí thưởng mỗi ngày";
-                    break;
-                case NoviceActiveType.RECHANGE_MONEY_ACTIVE:
-                    format = "Nạp thưởng mỗi ngày";
-                    break;
-                case NoviceActiveType.UPGRADE_VIP_ACTIVE:
-                    format = "Tăng vip nhận quà";
-                    break;
-                case NoviceActiveType.UPDATE_FIGHTPOWER:
-                    format = "Quà lực chiến";
-                    break;
-                case NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK:
-                    format = "Tiêu xu thưởng hằng tuần";
-                    break;
-                case NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK:
-                    format = "Nạp xu thưởng hằng tuần";
-                    break;
-            }
-            return string.Format(format);
-        }
+        //public string GetNoviceActivityName(NoviceActiveType activeType)
+        //{
+        //string format = "Unknown";
+        //switch (activeType)
+        //{
+        //case NoviceActiveType.GRADE_UP_ACTIVE:
+        //format = "Tăng cấp nhận thưởng";
+        //break;
+        //case NoviceActiveType.STRENGTHEN_WEAPON_ACTIVE:
+        //format = "Cường hóa tặng quà";
+        //break;
+        //case NoviceActiveType.USE_MONEY_ACTIVE:
+        //format = "Tiêu phí thưởng mỗi ngày";
+        //break;
+        //case NoviceActiveType.RECHANGE_MONEY_ACTIVE:
+        //format = "Nạp thưởng mỗi ngày";
+        //break;
+        //case NoviceActiveType.UPGRADE_VIP_ACTIVE:
+        //format = "Tăng vip nhận quà";
+        // break;
+        //case NoviceActiveType.UPDATE_FIGHTPOWER:
+        //format = "Quà lực chiến";
+        //break;
+        // case NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK:
+        // format = "Tiêu xu thưởng hằng tuần";
+        // break;
+        // case NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK:
+        //format = "Nạp xu thưởng hằng tuần";
+        //        break;
+        //  }
+        //  return string.Format(format);
+        //}
 
         private EventRewardProcessInfo setValue(int activeType) => new EventRewardProcessInfo()
         {

@@ -59,8 +59,9 @@
     <Reference Include="protobuf-net">
       <HintPath>..\Center.Server\bin\Debug\net472\protobuf-net.dll</HintPath>
     </Reference>
-    <Reference Include="SqlDataProvider">
-      <HintPath>..\SqlDataProvider\bin\Debug\net472\SqlDataProvider.dll</HintPath>
+    <Reference Include="SqlDataProvider, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\SqlDataProvider.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration">
@@ -109,6 +110,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Game\Service\actions\ServerManagementForm.resources" />
+    <EmbeddedResource Include="Game\Service\actions\ServerManagementForm.resx">
+      <DependentUpon>ServerManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Road.Service.Road.Service.Actions.ServerManagementForm.resources" />
     <EmbeddedResource Include="Road.Service.Road.Service.Properties.Resources.resources" />
   </ItemGroup>

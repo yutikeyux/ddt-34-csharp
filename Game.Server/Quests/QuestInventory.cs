@@ -395,7 +395,7 @@ namespace Game.Server.Quests
                         }
                         if (overdueItems.Count > 0)
                         {
-                            this.m_player.SendItemsToMail(overdueItems, "Túi đầy", "Vật phẩm được gửi từ hệ thống", eMailType.ItemOverdue);
+                            this.m_player.SendItemsToMail(overdueItems, "Süresi geçen öğeler", "Öğenin Süresi Doldu", eMailType.ItemOverdue);
                             this.m_player.Out.SendMailResponse(this.m_player.PlayerCharacter.ID, eMailRespose.Receiver);
                         }
                         msg = LanguageMgr.GetTranslation("Game.Server.Quests.FinishQuest.Reward", Array.Empty<object>()) + msg;
@@ -458,7 +458,7 @@ namespace Game.Server.Quests
                 }
                 else
                 {
-                    m_player.SendMessage("Bạn cần dọn túi trước khi hoàn thành nhiệm vụ.");
+                    m_player.SendMessage("Ödülü alabilmen için sırt çantanda yer olması lazım :D");
                 }
                 this.OnQuestsChanged(baseQuest);
             }

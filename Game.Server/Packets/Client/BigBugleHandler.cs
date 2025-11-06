@@ -15,7 +15,7 @@ namespace Game.Server.Packets.Client
 			ItemInfo itemByTemplateID = client.Player.PropBag.GetItemByTemplateID(0, num);
 			if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(2.0), DateTime.Now) > 0)
 			{
-				client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("BigBugleHandler.Msg"));
+				client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("2 saniye sonra büyük hoparlör mesajı gönderilebilir!"));
 				return 1;
 			}
 			GSPacketIn gSPacketIn = new GSPacketIn(72);

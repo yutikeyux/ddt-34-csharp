@@ -1477,8 +1477,8 @@ namespace Game.Server
                     return false;
                 if (!InitComponent(TotemHonorMgr.Init(), "TotemHonorMgr Init"))
                     return false;
-                if (!InitComponent(DailyLeagueAwardMgr.Init(), "DailyLeagueAwardMgr Init")) //kaldırılmıştı eklendi not: yuti
-                    return false;
+               // if (!InitComponent(DailyLeagueAwardMgr.Init(), "DailyLeagueAwardMgr Init")) //kaldırıldı not: yuti
+                   // return false;
                 if (!InitComponent(SpiritInfoMgr.Init(), "SpiritInfoMgr Int"))
                     return false;
                 if (!InitComponent(SetsBuildTempMgr.Init(), "SetsBuildTempMgr Init"))

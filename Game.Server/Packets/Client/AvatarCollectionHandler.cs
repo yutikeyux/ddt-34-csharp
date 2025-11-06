@@ -92,7 +92,7 @@ namespace Game.Server.Packets.Client
                         }
                         else
                         {
-                            client.Player.SendMessage("Başarısız.");
+                            client.Player.SendMessage("Sırt çantan doldu! Mailini kontrol et!");
                         }
                         result = 1;
                         break;

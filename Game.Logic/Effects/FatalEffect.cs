@@ -83,7 +83,7 @@ namespace Game.Logic.Effects
 					if (m_saycount == 1)
 					{
 						player.EffectTrigger = true;
-						player.Game.SendEquipEffect(player, "Tân thủ nên được quyền lợi hiệu ứng dẫn đường!");
+						player.Game.SendEquipEffect(player, "Rehber Özelliği aktif edildi!");
 					}
 				}
 			}

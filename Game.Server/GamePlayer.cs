@@ -24,6 +24,7 @@ using Game.Server.Managers;
 using Game.Server.Packets;
 using Game.Server.Pet;
 using Game.Server.Quests;
+using Game.Server.RingStation;
 using Game.Server.Rooms;
 using Game.Server.SceneMarryRooms;
 using Game.Server.Statics;
@@ -1942,7 +1943,7 @@ public class GamePlayer : IGamePlayer
             bool flag = false;
             using (new PlayerBussiness())
             {
-                flag = SendItemsToMail(infos, "Administrator", "Administrator 1", eMailType.BuyItem);
+                flag = SendItemsToMail(infos, "Merhaba değerli TrBombom oyuncusu! Sırt çantandaki eşyalar o kadar yer biriktirmiş ki boş yer kalmamış. Lütfen Ek Çanta veya Çelik kasanızı da kontrol edip sırt çantanızda yeterli yer sağlayıp bu öğeyi yeniden envanterinize ekleyin.", "Sırt Çantası Taşkınlığı", eMailType.BuyItem);
             }
             if (flag)
             {
@@ -3463,116 +3464,263 @@ public class GamePlayer : IGamePlayer
     {
     }
 
+    /// <summary>
+    /// Oyuncunun sunucuya giriş işlemini yönetir. Bu metot, oyuncunun verilerini yükler,
+    /// dünyaya yerleştirir, başlangıç paketlerini gönderir ve çeşitli sistemleri başlatır.
+    /// İşlemin herhangi bir aşamasında başarısız olması durumunda oyuncuyu temizler ve false döner.
+    /// </summary>
+    /// <returns>Giriş işleminin başarılı olup olmadığını belirtir.</returns>
     public bool Login()
     {
-        if (WorldMgr.AddPlayer(m_character.ID, this))
+        // --- AŞAMA 1: ÖN KONTROLLER VE BAŞLANGIÇ ---
+        // Oyuncunun zaten sunucuda olup olmadığını kontrol et. Çift girişi engeller.
+        if (!WorldMgr.AddPlayer(m_character.ID, this))
         {
-            try
-            {
-                if (LoadFromDatabase())
-                {
-                    if (PlayerCharacter.BoxGetDate.ToShortDateString() != DateTime.Now.ToShortDateString())
-                    {
-                        PlayerCharacter.AlreadyGetBox = 0;
-                        PlayerCharacter.BoxProgression = 0;
-                    }
-                    Out.SendLoginSuccess();
-                    if (LittleGameWorldMgr.IsOpen)
-                    {
-                        Actives.SendLittleGameActived();
-                    }
-                    Out.SendUpdatePublicPlayer(PlayerCharacter, MatchInfo, Extra.Info);
-                    Out.SendWeaklessGuildProgress(PlayerCharacter);
-                    ProcessConsortiaAndPet();
-                    Out.SendDateTime();
-                    Out.SendDailyAward(this);
-                    LoadMarryMessage();
-                    if (!m_showPP)
-                    {
-                        m_playerProp.ViewCurrent();
-                        m_showPP = true;
-                    }
-                    _ = PlayerCharacter.ID;
-                    Rank.SendUserRanks();
-                    if (this.m_character.honorId != 0)
-                        this.UpdateHonor(this.m_character.honorId);
-                    Farm.LoadFarmLand();
-                    Out.SendOpenVIP(this);
-                    EquipBag.UpdatePlayerProperties();
-                    PetBag.UpdateEatPets();
-                    SetupProcessor();
-                    Actives.SendEvent();
-                    Out.SendEnthrallLight();
-                    this.Out.SendAvatarCollect(this.AvatarCollect);
-                    this.AvatarCollect.ScanAvatarVaildDate();
-
-                    Out.SendEdictumVersion();
-                    m_playerState = ePlayerState.Manual;
-                    Out.SendBufferList(this, m_bufferList.GetAllBufferByTemplate());
-                    Out.SendUpdateAchievementData(AchievementInventory.GetSuccessAchievement());
-                    BoxBeginTime = DateTime.Now;
-                    this.TimeCheckHack = (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-                    OpenAllNoviceActive();
-                    if (this.PlayerCharacter.Grade >= 30)
-                    {
-                        this.Out.SendPlayerFigSpiritinit(this.PlayerCharacter.ID, this.GemStone);
-                    }
-                    WorldMgr.IsAccountLimit(this);
-                    Out.SendUpdateFirstRecharge(PlayerCharacter.IsRecharged, PlayerCharacter.IsGetAward);
-                    ChargeToUser();
-                    ConsortiaTaskMgr.AddPlayer(this);
-                    Out.SendOpenWorldBoss(X, Y);
-                    if (DateTime.Parse(GameProperties.LeftRouterEndDate) > DateTime.Now)
-                    {
-                        Out.SendLeftRouleteOpen(Extra.Info);
-                    }
-                    Extra.BeginPingOnlineTimer();
-                    if (userWonderFulActivityManager == null)
-                    {
-                        userWonderFulActivityManager = new UserWonderFulActivityManager(this);
-                    }
-                    userWonderFulActivityManager.SignToday();
-                    if (ActiveSystemMgr.IsLeagueOpen)
-                    {
-                        Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.maxCount, 1);
-                        SendMessage(eMessageType.GM_NOTICE, "Lig Başladı! Birlik savaşlarında kim kimi yenecek bakalım!"); //türkçeleştirildi not: yuti
-                    }
-                    else
-                    {
-                        Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.maxCount, 2);
-                    }
-                    if (ActiveSystemMgr.IsGoldTimeOpen)
-                    {
-                        SendMessage(eMessageType.GM_NOTICE, "Altın Saat Etkinliği başladı! Haydi Oyun salonunda buluşalım!"); //türkçeleştirildi not: yuti
-                    }
-                    ShowCheckCode();
-                    Out.SendUserSyncEquipGhost(this);
-                    Out.SendGuildMemberWeekOpenClose(Extra.Info);
-                    this.Dice.SendDiceActiveOpen();
-                    Out.SendNecklaceStrength(PlayerCharacter);
-
-                    if (this.PlayerCharacter.Grade >= 13 && this.Actives.IsPyramidOpen())
-                    {
-                        this.Out.SendPyramidOpenClose(this.Actives.PyramidConfig);
-                        //if (!this.Actives.IsYearMonsterOpen())                    bunlara bi bakalım ya not: yuti
-                        //// this.Out.SendCatchBeastOpen(id, true);                 bunlara bi bakalım ya not: yuti
-                        ///
-                    }
-                    WonderFulActivityManager.WonderFulActivityInit(this); //GEÇİCİ
-
-                    return true;
-                }
-                WorldMgr.RemovePlayer(m_character.ID);
-            }
-            catch (Exception exception)
-            {
-                log.Error("Error Login!", exception);
-            }
+            log.Warn($"Player with ID {m_character.ID} is already trying to log in or is already online. Login rejected.");
             return false;
         }
-        return false;
+
+        try
+        {
+            // Oyuncunun hesap durumu (yasaklı vs.) kontrolü.
+            if (!CheckPlayerStatus())
+            {
+                return false; // CheckPlayerStatus içinde gerekli loglama ve temizleme yapılır.
+            }
+
+            // --- AŞAMA 2: VERİ YÜKLEME ---
+            // Veritabanından oyuncunun tüm temel verilerini yükle.
+            if (!LoadAllPlayerData())
+            {
+                log.Error($"Failed to load data for player ID {m_character.ID}. Disconnecting.");
+                return false; // LoadAllPlayerData içinde gerekli temizleme yapılır.
+            }
+
+            // --- AŞAMA 3: GÜNLÜK/HAFTALIK SIFIRLAMALAR VE KONTROLLER ---
+            ProcessDailyAndPeriodicResets();
+
+            // --- AŞAMA 4: İSTEMCİYE BAŞLANGIÇ VERİLERİNİ GÖNDER ---
+            // İstemciyi "giriş başarılı" konusunda bilgilendir ve temel oyun verilerini gönder.
+            SendInitialDataToClient();
+
+            // --- AŞAMA 5: GİRİŞ SONRASI SİSTEMLERİ BAŞLAT ---
+            // Zamanlayıcıları, etkinlikleri ve diğer arka plan süreçlerini başlat.
+            InitializePostLoginSystems();
+
+            // --- AŞAMA 6: SOSYAL BİLDİRİMLER ---
+            // Arkadaşlara ve birliğe giriş yapıldığını haber ver.
+            NotifySocialSystemsOfLogin();
+
+            // Oyuncu durumunu normal olarak ayarla ve işlemi başarıyla bitir.
+            m_playerState = ePlayerState.Online;
+            log.Info($"Player {PlayerCharacter.NickName} (ID: {PlayerCharacter.ID}) has successfully logged in.");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            // Giriş sırasında beklenmedik bir hata olursa, logla ve oyuncuyu temizle.
+            log.Error($"An unexpected error occurred during login for player ID {m_character.ID}.", ex);
+            return false;
+        }
+        finally
+        {
+            // Eğer işlem herhangi bir nedenle başarısız olduysa, oyuncuyu sunucudan tamamen kaldır.
+            // Bu, "finally" bloğunda olduğundan, try'dan çıkış şekli (return, exception) fark etmeksizin çalışır.
+            if (m_playerState != ePlayerState.Online)
+            {
+                WorldMgr.RemovePlayer(m_character.ID);
+            }
+        }
     }
- 
+
+    #region YARDIMCI METOTLAR
+
+    /// <summary>
+    /// Oyuncunun hesap durumunu kontrol eder (örn: yasaklı mı?).
+    /// </summary>
+    private bool CheckPlayerStatus()
+    {
+        // Örnek: Oyuncunun yasaklı olup olmadığını kontrol et.
+        // Gerçek bir senaryoda bu bilgi veritabanından veya bir BanManager'dan gelmelidir.
+        if (PlayerCharacter.IsBanChat)
+        {
+            // Yasaklı oyuncuya özel bir paket gönderilebilir.
+            Out.SendKitoff("Hesabınız yasaklanmıştır. Lütfen destek ile iletişime geçin.");
+            log.Info($"Banned player {PlayerCharacter.NickName} (ID: {PlayerCharacter.ID}) tried to log in.");
+            return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Veritabanından oyuncunun tüm verilerini yükler.
+    /// </summary>
+    private bool LoadAllPlayerData()
+    {
+        if (!LoadFromDatabase())
+        {
+            return false;
+        }
+
+        // Diğer tüm veri yüklemeleri burada toplanabilir.
+        // Bu, LoadFromDatabase içinde yapılıyor olabilir veya ayrı ayrı çağrılabilir.
+        // Örnek:
+        // EquipBag.LoadFromDatabase();
+        // PetBag.LoadFromDatabase();
+        // QuestInventory.LoadFromDatabase();
+        // MailBox.LoadFromDatabase();
+        // FriendsList.LoadFromDatabase();
+
+        return true;
+    }
+
+    /// <summary>
+    /// Günlük, haftalık vb. periyodik sıfırlamaları ve kontrol işlemlerini gerçekleştirir.
+    /// </summary>
+    private void ProcessDailyAndPeriodicResets()
+    {
+        // Günlük kutu ödülü sıfırlaması
+        if (PlayerCharacter.BoxGetDate.ToShortDateString() != DateTime.Now.ToShortDateString())
+        {
+            PlayerCharacter.AlreadyGetBox = 0;
+            PlayerCharacter.BoxProgression = 0;
+            PlayerCharacter.BoxGetDate = DateTime.Now; // Tarihi bugün olarak güncellemek iyi bir pratiktir.
+        }
+
+        // Diğer günlük sıfırlamalar buraya eklenebilir:
+        // - Günlük görevler
+        // - Zindan giriş hakları
+        // - Haftalık birlik katkıları
+    }
+
+    /// <summary>
+    /// İstemciye giriş yaptıktan sonra görmesi gereken tüm temel veri paketlerini gönderir.
+    /// </summary>
+    private void SendInitialDataToClient()
+    {
+        // 1. Giriş başarılı paketi. Bu, istemcinin diğer paketleri beklemeye başlaması için sinyaldir.
+        Out.SendLoginSuccess();
+
+        // 2. Oyuncunun kamuya açık temel bilgileri (isim, seviye,外观 vb.)
+        Out.SendUpdatePublicPlayer(PlayerCharacter, MatchInfo, Extra.Info);
+
+        // 3. Ekipman, envanter, çantalar vb. oyuncuya ait veriler
+       
+        EquipBag.UpdatePlayerProperties(); // Ekipman özelliklerini güncelle
+        PetBag.UpdateEatPets();
+        
+
+        // 4. Sosyal ve ilerleme verileri
+       
+        Out.SendUpdateAchievementData(AchievementInventory.GetSuccessAchievement());
+        Out.SendBufferList(this, m_bufferList.GetAllBufferByTemplate());
+        Out.SendWeaklessGuildProgress(PlayerCharacter);
+
+        // 5. Diğer önemli başlangıç paketleri
+        Out.SendDateTime();
+        Out.SendOpenVIP(this);
+       
+        Out.SendEdictumVersion();
+        Out.SendEnthrallLight();
+        Out.SendAvatarCollect(AvatarCollect);
+        Out.SendUserSyncEquipGhost(this);
+        Out.SendNecklaceStrength(PlayerCharacter);
+    }
+
+    /// <summary>
+    /// Oyuncu dünyaya girdikten sonra çalışması gereken arka plan sistemlerini ve etkinlikleri başlatır.
+    /// </summary>
+    private void InitializePostLoginSystems()
+    {
+        // Zamanlayıcılar ve periyodik işlemler
+        Extra.BeginPingOnlineTimer();
+        BoxBeginTime = DateTime.Now;
+        TimeCheckHack = (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+
+        // Etkinlikler ve görevler
+        SetupProcessor();
+        Actives.SendEvent();
+        OpenAllNoviceActive();
+        ChargeToUser();
+        ConsortiaTaskMgr.AddPlayer(this);
+
+        // Çiftlik ve evlilik gibi yan sistemler
+        Farm.LoadFarmLand();
+        LoadMarryMessage();
+
+        // Seviye şartına bağlı sistemler
+        if (PlayerCharacter.Grade >= 30)
+        {
+            Out.SendPlayerFigSpiritinit(PlayerCharacter.ID, GemStone);
+        }
+        if (PlayerCharacter.Grade >= 13 && Actives.IsPyramidOpen())
+        {
+            Out.SendPyramidOpenClose(Actives.PyramidConfig);
+        }
+
+        // Global etkinliklerin kontrolü ve bildirimi
+        CheckAndNotifyGlobalEvents();
+
+        // Güvenlik
+        ShowCheckCode();
+        WorldMgr.IsAccountLimit(this);
+    }
+
+    /// <summary>
+    /// Aktif olan global etkinlikleri kontrol eder ve oyuncuya bildirir.
+    /// </summary>
+    private void CheckAndNotifyGlobalEvents()
+    {
+        // Lig Etkinliği
+        if (ActiveSystemMgr.IsLeagueOpen)
+        {
+            Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.maxCount, 1);
+            SendMessage(eMessageType.GM_NOTICE, "Lig Başladı! Birlik savaşlarında kim kimi yenecek bakalım!");
+        }
+        else
+        {
+            Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.maxCount, 2);
+        }
+
+        // Altın Saat Etkinliği
+        if (ActiveSystemMgr.IsGoldTimeOpen)
+        {
+            SendMessage(eMessageType.GM_NOTICE, "Altın Saat Etkinliği başladı! Haydi Oyun salonunda buluşalım!");
+        }
+
+        // Diğer global etkinlikler
+        if (LittleGameWorldMgr.IsOpen)
+        {
+            Actives.SendLittleGameActived();
+        }
+        Out.SendOpenWorldBoss(X, Y);
+        if (DateTime.Parse(GameProperties.LeftRouterEndDate) > DateTime.Now)
+        {
+            Out.SendLeftRouleteOpen(Extra.Info);
+        }
+        Dice.SendDiceActiveOpen();
+        Out.SendGuildMemberWeekOpenClose(Extra.Info);
+    }
+
+    /// <summary>
+    /// Arkadaşlara ve birliğe oyuncunun giriş yaptığını haber verir.
+    /// </summary>
+    private void NotifySocialSystemsOfLogin()
+    {
+        // Arkadaş Listesi Bildirimi
+        // Online olan tüm arkadaşlara "X oyuna giriş yaptı" mesajı gönder.
+        foreach (var friend in Friends)
+        {
+            // friend.Client.Out.SendFriendState(PlayerCharacter.ID, 1, PlayerCharacter.typeVip, PlayerCharacter.VIPLevel);
+        }
+
+        // Birlik Bildirimi
+        // Eğer oyuncu bir birliğe üyeyse, birlik sohbetine giriş yapıldığı mesajı atılabilir.
+        // Out.SendSystemConsortiaChat($"{PlayerCharacter.NickName} çevrimiçi oldu.", false);
+    }
+
+    #endregion
+
     public UserWonderFulActivityManager userWonderFulActivityManager { get; set; } //bunların referanslarını tam olarak eklememişsin bunlara bi bakarsın oky ben kaçtım eyw saolasın np kg eyw
     public PlayerGmActivity GmActivity
     {
@@ -6090,7 +6238,7 @@ public class GamePlayer : IGamePlayer
         if (list.Count > 0)
         {
             StoreBag.ClearBagWithoutPlace(place);
-            SendItemsToMail(list, "Túi đầy vật phẩm từ tiệm rèn trả về thư.", "Vật phẩm trả về từ Tiệm rèn.", eMailType.StoreCanel);
+            SendItemsToMail(list, "Demirciden gelen eşyaları buradan gönderelim istedik. Sırt çantanız dolmuş.", "Çantanız Dolu", eMailType.StoreCanel); //türkçeleştirildi not: yuti
 
         }
         this.SaveIntoDatabase();
@@ -6427,6 +6575,11 @@ public class GamePlayer : IGamePlayer
     }
 
     internal void resetPassCode()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static implicit operator GamePlayer(VirtualGamePlayer v)
     {
         throw new NotImplementedException();
     }

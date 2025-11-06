@@ -21,7 +21,7 @@ namespace Game.Server.Packets.Client
 				string str = packet.ReadString();
 				if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(2.0), DateTime.Now) > 0)
 				{
-					client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("SmallBugleHandler.Msg"));
+					client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("2 saniye sonra  küçük hoparlör mesajı gönderilebilir."));
 					return 1;
 				}
 				GSPacketIn gSPacketIn = new GSPacketIn(71);

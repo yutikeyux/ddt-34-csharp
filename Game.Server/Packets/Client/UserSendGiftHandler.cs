@@ -49,8 +49,8 @@ namespace Game.Server.Packets.Client
                             Sender = client.Player.PlayerCharacter.NickName,
                             ReceiverID = playerInfo.ID,
                             Receiver = playerInfo.NickName,
-                            Title = LanguageMgr.GetTranslation("UserGiftSystem.MailTitle"),
-                            Content = client.Player.PlayerCharacter.NickName + LanguageMgr.GetTranslation("GoodsPresentHandler.Content") + itemTemplateInfo.Name + "]",
+                            Title = LanguageMgr.GetTranslation("Hediyelik Eşya"),
+                            Content = "Değerli arkadaşım, TrBombom oyuncusu olan ben " + client.Player.PlayerCharacter.NickName + " sana senin kadar değerli bir hediye göndermek istedim." + LanguageMgr.GetTranslation("Çam sakızı çoban armağanı, umarım benim sana gönderdiğim bu [") + itemTemplateInfo.Name + "] hediyesini beğenirsin ♥!",
                             Type = 55
                         }) && clientByPlayerNickName != null)
                         {

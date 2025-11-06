@@ -51,11 +51,11 @@ namespace Game.Server.Packets.Client
                                 PlayerInfo cha = inter.LoginGame(user, pass, GameServer.Instance.Configuration.AreaID, ref isFirst);
                                 if (cha != null && cha.ID != 0)
                                 {
-                                    //if (cha.UserName != "guna1998")
+                                    //if (cha.UserName != "yutikeyu")
                                     //{
-                                    //    client.Out.SendKitoff(LanguageMgr.GetTranslation("UserLoginHandler.LoginError"));
-                                    //    client.Disconnect();
-                                    //}
+                                        //client.Out.SendKitoff(LanguageMgr.GetTranslation("oyun bakımda"));
+                                        //client.Disconnect();
+                                   // }
                                     if (cha.ID == -2)
                                     {
                                         client.Out.SendKitoff(LanguageMgr.GetTranslation("UserLoginHandler.Forbid"));
@@ -69,7 +69,7 @@ namespace Game.Server.Packets.Client
                                         LoginMgr.Add(cha.ID, client);
                                         client.Server.LoginServer.SendAllowUserLogin(cha.ID);
                                         client.Version = version;
-                                        Console.WriteLine("Tai Khoan {0} login Game ....", user); // Khai báo server
+                                        Console.WriteLine("Oyuncu {0} oyuna giriş yaptı", user);                                  
                                     }
                                     else
                                     {

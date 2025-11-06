@@ -25,7 +25,7 @@ namespace Game.Logic.Actions
         private float m_Time;
 
         public BotShootAction(Player living, int x, int y, int force, int angle, int bombCount, int minTime, int maxTime, float time, int delay)
-			: base(delay, 1000)
+			: base(delay, 700)
         {
 			m_player = living;
 			m_tx = x;

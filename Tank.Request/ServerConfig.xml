@@ -2,7 +2,7 @@
   <Item Name="BeginAuction" Value="20" />
   <Item Name="BigExp" Value="11906|99" />
   <Item Name="BoxAppearCondition" Value="4" />
-  <Item Name="Cess" Value="0.0" />
+  <Item Name="Cess" Value="0.1" />
   <Item Name="CustomLimit" Value="20|20|20|20|20" />
   <Item Name="CheckCount" Value="2" />
   <Item Name="WarriorFamRaidPriceBig" Value="40000" />
@@ -15,7 +15,7 @@
   <Item Name="FreeExp" Value="11901|1" />
   <Item Name="FreeMoney" Value="9990000" />
   <Item Name="HoleLevelUpExpList" Value="400|600|700|800|1200" />
-  <Item Name="HotSpringExp" Value="200,240,288,346,415,498,597,717,860,946,1041,1145,1259,1385,1523,1676,1843,2028,2231,2342,2459,2582,2711,2847,2989,3139,3295,3460,3633,3815,3929,4047,4169,4294,4423,4555,4692,4833,4978,5127,5281,5439,5602,5770,5944,6122,6306,6495,6690,6890,7097,7310,7529,7755,7988,8227,8474,8728,8990,9260,9530,9800,10070,10340,10610" />
+  <Item Name="HotSpringExp" Value="1|2" />
   <Item Name="IsLimitCount" Value="False" />
   <Item Name="IsLimitMail" Value="False" />
   <Item Name="IsLimitMoney" Value="False" />

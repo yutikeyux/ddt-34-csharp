@@ -139,7 +139,7 @@ namespace GameServerScript.AI.NPC
 			{
 				int num = base.Game.Random.Next(0, WorldAcientDragon.KillAttackChat.Length);
 				base.Body.Say(WorldAcientDragon.KillAttackChat[num], 1, 1000);
-				base.Body.CurrentDamagePlus = 15f;
+				base.Body.CurrentDamagePlus = 1500f;
 				base.Body.PlayMovie("beatF", 3000, 0);
 				base.Body.RangeAttacking(0, base.Body.X + 1000, "cry", 5000, null);
 			}

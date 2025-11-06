@@ -74,7 +74,7 @@ namespace Game.Server.Pet.Handle
 				player.PetBag.RemoveEqPet(currentPet.Place, 2);
 				player.PetBag.OnChangedPetEquip(currentPet.Place);
 
-				player.SendMessage(LanguageMgr.GetTranslation("PetHandler.Msg8"));
+				player.SendMessage(LanguageMgr.GetTranslation("Pet baþarýyla geri alýndý!")); //türkçeleþtirildi not:yuti
 				player.PetBag.UpdatePet(currentPet);
 				player.PetBag.SaveToDatabase(saveAdopt: false);
 			}

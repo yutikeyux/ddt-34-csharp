@@ -504,31 +504,30 @@ namespace Game.Logic
                         if (DateTime.Now >= GoldTimeStart && DateTime.Now <= GoldTimeEnd)
                         {
                             timex2 = GameProperties.TimeX2;
-                            p.PlayerDetail.SendHideMessage($"Altın Saat Etkinliği içerisinde savaşta bulunduğunuz için x{timex2} Kat Tecrübe ve Kupon kazandınız!");
+                            p.PlayerDetail.SendHideMessage($"Altın Saat Etkinliği içerisinde savaşta bulunduğunuz için x{timex2} Kat Tecrübe kazandınız!");
                         }
                         if (DateTime.Now >= GoldTimeStart1 && DateTime.Now <= GoldTimeEnd1)
                         {
                             timex2 = GameProperties.TimeX2;
-                            p.PlayerDetail.SendHideMessage($"Altın Saat Etkinliği içerisinde savaşta bulunduğunuz için x{timex2} Kat Tecrübe ve Kupon kazandınız!");
+                            p.PlayerDetail.SendHideMessage($"Altın Saat Etkinliği içerisinde savaşta bulunduğunuz için x{timex2} Kat Tecrübe kazandınız!");
                         }
                         if (DateTime.Now >= GoldTimeStart2 && DateTime.Now <= GoldTimeEnd2)
                         {
                             timex2 = GameProperties.TimeX2;
-                            p.PlayerDetail.SendHideMessage($"Altın Saat Etkinliği içerisinde savaşta bulunduğunuz için x{timex2} Kat Tecrübe ve Kupon kazandınız!");
+                            p.PlayerDetail.SendHideMessage($"Altın Saat Etkinliği içerisinde savaşta bulunduğunuz için x{timex2} Kat Tecrübe kazandınız!");
                         }
 
                         if (isWin)
                         {
                             if (base.GameType == eGameType.Guild)
                             {
-                                moneyPVP = (random.Next(MONEY_MIN_RATE_WIN, MONEY_MAX_RATE_WIN) * timex2) + 
-                                    random.Next(30, 35);
-                                expPVP = (random.Next(EXP_MIN_RATE_WIN, EXP_MAX_RATE_WIN) * timex2) + random.Next(50, 55);
-                                giftPVP = random.Next(GIFT_MIN_RATE_WIN, GIFT_MAX_RATE_WIN) * 2;
+                                moneyPVP = (random.Next(MONEY_MIN_RATE_WIN, MONEY_MAX_RATE_WIN) * timex2); // + random.Next(50, 55);
+                                expPVP = (random.Next(EXP_MIN_RATE_WIN, EXP_MAX_RATE_WIN) * timex2); // + random.Next(50, 55);
+                                giftPVP = random.Next(GIFT_MIN_RATE_WIN, GIFT_MAX_RATE_WIN) * 2; 
                             }
                             else
                             {
-                                moneyPVP = (random.Next(MONEY_MIN_RATE_WIN, MONEY_MAX_RATE_WIN) * timex2) + random.Next(30, 35);
+                                moneyPVP = (random.Next(MONEY_MIN_RATE_WIN, MONEY_MAX_RATE_WIN) * timex2); 
                                 expPVP = random.Next(EXP_MIN_RATE_WIN, EXP_MAX_RATE_WIN) * timex2;
                                 giftPVP = random.Next(GIFT_MIN_RATE_WIN, GIFT_MAX_RATE_WIN);
                             }
@@ -537,20 +536,20 @@ namespace Game.Logic
                         {
                             if (base.GameType == eGameType.Guild)
                             {
-                                moneyPVP = (random.Next(MONEY_MIN_RATE_WIN, MONEY_MAX_RATE_WIN) * timex2) + random.Next(30, 35);
-                                expPVP = (random.Next(EXP_MIN_RATE_LOSE, EXP_MAX_RATE_LOSE) * timex2) + random.Next(50, 55);
+                                moneyPVP = (random.Next(MONEY_MIN_RATE_WIN, MONEY_MAX_RATE_WIN) * timex2); // + random.Next(50, 55);
+                                expPVP = (random.Next(EXP_MIN_RATE_LOSE, EXP_MAX_RATE_LOSE) * timex2);  // + random.Next(50, 55);
                                 giftPVP = random.Next(GIFT_MIN_RATE_LOSE, GIFT_MAX_RATE_LOSE) * 2;
                             }
                             else
                             {
-                                moneyPVP = (random.Next(MONEY_MIN_RATE_WIN, MONEY_MAX_RATE_WIN) * timex2) + random.Next(30, 35);
-                                expPVP = random.Next(EXP_MIN_RATE_LOSE, EXP_MAX_RATE_LOSE) * timex2;
+                                moneyPVP = (random.Next(MONEY_MIN_RATE_WIN, MONEY_MAX_RATE_WIN) * timex2); // + random.Next(50, 55);
+                                expPVP = random.Next(EXP_MIN_RATE_LOSE, EXP_MAX_RATE_LOSE) * timex2; // + random.Next(50, 55);
                                 giftPVP = random.Next(GIFT_MIN_RATE_LOSE, GIFT_MAX_RATE_LOSE);
                             }
                         }
                         p.PlayerDetail.AddMoney(moneyPVP, igroneAll: false);
                         p.PlayerDetail.AddGiftToken(giftPVP);
-                        string noticePVP = string.Format("Özgür savaş başarıyla tamamlandı! {0} kupon, {2} hediye altın ve {1} tecrübe kazandınız.", new object[3]
+                        string noticePVP = string.Format("Savaş başarıyla tamamlandı!", new object[3] //string noticePVP = string.Format("Savaş başarıyla tamamlandı! {0} kupon, {2} hediye altın ve {1} tecrübe kazandınız.", new object[3]
                         {
                             moneyPVP,
                             expPVP,

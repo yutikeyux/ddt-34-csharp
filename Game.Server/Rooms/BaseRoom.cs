@@ -237,13 +237,13 @@ namespace Game.Server.Rooms
                 // Match: 4 normal + 1 viewer (total 5 positions)
                 int normalyer = 0;
                 int izleyiciyeri = 0;
-                for (int j = 0; j < 5; j++) 
+                for (int j = 0; j < 5; j++)
                 {
                     if (m_playerState[j] > 0)
                     {
-                        if (j < 4) 
+                        if (j < 4)
                             normalyer++;
-                        else 
+                        else
                             izleyiciyeri++;
                     }
                 }
@@ -254,13 +254,13 @@ namespace Game.Server.Rooms
                 // Dungeon: 4 normal + 2 viewers (total 6 positions)
                 int normalyer = 0;
                 int izleyiciyeri = 0;
-                for (int j = 0; j < 6; j++) 
+                for (int j = 0; j < 6; j++)
                 {
                     if (m_playerState[j] > 0)
                     {
-                        if (j < 4) 
+                        if (j < 4)
                             normalyer++;
-                        else 
+                        else
                             izleyiciyeri++;
                     }
                 }
@@ -268,7 +268,7 @@ namespace Game.Server.Rooms
             }
             else
             {
-                
+
                 int normalyer = 0;
                 int izleyiciyeri = 0;
                 for (int j = 0; j < 10; j++)
@@ -292,16 +292,32 @@ namespace Game.Server.Rooms
 
         public bool CanAddViewPlayer()
         {
-            int viewCnt = 0;
-            for (int j = 0; j < 10; j++)
+            // CanStart metodundaki gibi RoomType'a göre farklı mantıklar çalıştırır.
+            switch (RoomType)
             {
-                if (m_playerState[j] > 0)
-                {
-                    if (j >= 8)
-                        viewCnt++;
-                }
+                case eRoomType.Freedom:
+                    // Freedom modunda özel bir "izleyici" slotu yoktur.
+                    // Herkes oyuncu olarak kabul edilir. Dolayısıyla izleyici eklemek yerine,
+                    // odaya genel olarak oyuncu eklenip eklenemeyeceğini kontrol etmeliyiz.
+                    // Bu, mevcut CanAddPlayer() metoduyla aynı mantıktır.
+                    return CanAddPlayer();
+
+                case eRoomType.Match:
+                    // Match: 4 normal oyuncu + 1 izleyici (toplam 5 slot)
+                    // İzleyici yeri 4. indekstir. Bu slotun boş olup olmadığını kontrol et.
+                    // m_playerState > 0 dolu olduğu için, <= 0 boş olduğu anlamına gelir.
+                    return m_playerState[4] <= 0;
+
+                case eRoomType.Dungeon:
+                    // Dungeon: 4 normal oyuncu + 2 izleyici (toplam 6 slot)
+                    // İzleyici yerleri 4 ve 5. indekstir. Bu slotlardan en az birinin boş olması yeterli.
+                    return m_playerState[4] <= 0 || m_playerState[5] <= 0;
+
+                default: // Diğer tüm oda tipleri için (muhtemelen 10 slotlu)
+                         // Varsayılan: 8 normal oyuncu + 2 izleyici (toplam 10 slot)
+                         // İzleyici yerleri 8 ve 9. indekstir. Bu slotlardan en az birinin boş olması yeterli.
+                    return m_playerState[8] <= 0 || m_playerState[9] <= 0;
             }
-            return m_viewerCnt < maxViewerCnt;
         }
 
         public List<GamePlayer> GetPlayers()
@@ -363,7 +379,7 @@ namespace Game.Server.Rooms
             }
             else
             {
-                m_placesCount = 2;
+                m_placesCount = 4;
             }
             for (int i = m_placesCount; i < 10; i++)
             {

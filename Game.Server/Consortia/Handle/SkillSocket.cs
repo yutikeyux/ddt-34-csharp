@@ -20,7 +20,7 @@ namespace Game.Server.Consortia.Handle
 			}
 			if (DateTime.Compare(Player.LastRequestTime.AddSeconds(2.0), DateTime.Now) > 0)
 			{
-				Player.SendMessage(LanguageMgr.GetTranslation("GoSlow"));
+				Player.SendMessage(LanguageMgr.GetTranslation("Yavaþla!"));
 				return 0;
 			}
 			Player.LastRequestTime = DateTime.Now;
@@ -83,7 +83,7 @@ namespace Game.Server.Consortia.Handle
 						Player.RemoveMedal(needMoneyOrRiches);
 					}
 					ConsortiaMgr.AddBuffConsortia(Player, buffInfo, Player.PlayerCharacter.ConsortiaID, id, validate);
-					Player.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Consortia.Msg4"));
+					Player.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Buff Aktif edildi!"));
 				}
 				else
 				{

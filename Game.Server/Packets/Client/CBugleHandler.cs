@@ -14,9 +14,9 @@ namespace Game.Server.Packets.Client
             int templateId = 11100;
             int clientId = packet.ReadInt();
             ItemInfo itemByTemplateID = client.Player.PropBag.GetItemByTemplateID(0, templateId);
-            if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(2.0), DateTime.Now) > 0)
+            if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(300.0), DateTime.Now) > 0)
             {
-                client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("GoSlow"));
+                client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("5 dakikada 1 sunucular arası mesaj gönderebilirsin!"));
                 return 1;
             }
             GSPacketIn gSPacketIn = new GSPacketIn(73, clientId);

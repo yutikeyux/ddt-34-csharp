@@ -149,7 +149,7 @@ ConsortiaDescriptionUpdateHandler.Long:Nội dung nhập vào quá dài.
 ConsortiaDutyUpdateHandler.Long:Chức danh thành viên nhập vào quá dài.
 ConsortiaPlacardUpdateHandler.Long:Nội dung nhập vào quá dài.
 ConsortiaUserRemarkHandler.Long:Nội dung nhập vào quá dài.
-ActivePullDownHandler.Fail:GiftCode Không chính xác.
+ActivePullDownHandler.Fail:Ödül Alımı başarısız!
 UserChangeRankHandler.Success:Đổi danh hiệu thành công.
 GameServer.VIP.ActiveSuccess:Kích hoạt VIP thành công.
 

@@ -731,165 +731,137 @@ namespace Game.Server.RingStation
         {
             int[] weaponArr = new int[]//botun silahları ne koysak ki ya not: yuti
             {
-                //71664,
-                //71854,
-                //71914,
-                //71941,
-                //71961,
-                //70234,
-                //71991,
-                //72054,
-                //72104,
-                //72194,
-                //75484,
-                //702413
-                //75484,
-                7008
+                7001,
+                7002,
+                7003,
+                7005,
+                7006,
+                7007,
+                7008,
+                7009,
+                7010,
+                7011,
+                7012,
+                7013,
+                7014
             };
             int[] headArr = new int[] //botun şapkaları ne koysak ki ya not: yuti
             {
-                //1147,
-                //1149,
-                //1150,
-                //1165,
-                //1166,
-                //1173,
-                //1174,
-                //1175,
-                //1176,
-                //1177,
-                //1186,
-                //1763,
-                //52000510
-                1142,
-                1214
+                1119,
+                1104,
+                1105,
+                1112,
+                1113,
+                1122,
+                1126,
+                1136,
+                1137,
+                1138,
+                1140,
+                1141
+
             };
             int[] glassArr = new int[] //botun gözlükleri ne koysak ki ya not: yuti
             {
-                //2117,
-                //2119,
-                //2120,
-                //2121,
-                //2123,
-                //2126,
-                //2134,
-                //2142,
-                //2147,
-                //2149,
-                //2176,
-                //2186,
-                //2191,
-                //2198
-                2104,
-                2204
+                2102,
+                2103,
+                2105,
+                2106,
+                2108,
+                2109,
+                2116,
+                2117,
+                2120,
+                2121,
+                2122,
+                2123
             };
             int[] hairArr = new int[] // botun saçları ne koysak ki ya not: yuti
             {
-                //3111,
-                //3114,
-                //3119,
-                //3122,
-                //3125,
-                //3127,
-                //3129,
-                //3131,
-                //3135,
-                //3136,
-                //3139,
-                //3142,
-                //3143,
-                //3144,
-                //3150,
-                //3163,
-                //3165,
-                //3169,
-                //3180
-                3158,
-                3244
+                3102,
+                3103,
+                3104,
+                3105,
+                3106,
+                3107,
+                3108,
+                3109,
+                3110,
+                3111,
+                3112,
+                3113,
+                3114,
+                3115,
+                3116
             };
             int[] effArr = new int[] // botun yüz takısı ne koysak ki ya not: yuti
             {
-                //4120,
-                //4121,
-                //4122,
-                //4123,
-                //4124,
-                //4125,
-                //4126,
-                //4129,
-                //4130,
-                //4131,
-                //4132,
-                //4133,
-                //4134,
-                //4135,
-                //4136,
-                //4137,
-                //4138,
-                //4139
                 4101,
-                4201
+                4102,
+                4103,
+                4104,
+                4105,
+                4106,
+                4107,
+                4108,
+                4109,
+                4110,
+                4111,
+                4112,
+                4113,
+                4114,
+                4115,
+                4116
+
             };
             int[] clothArr = new int[] //botun kıyafeti ne koysak ki ya not: yuti
             {
-                //5131,
-                //5142,
-                //5143,
-                //5144,
-                //5145,
-                //5150,
-                //5156,
-                //5164,
-                //5165,
-                //5175,
-                //5178,
-                //5180,
-                //5181,
-                //5182,
-                //5196,
-                //5198,
-                //5199
+                5101,
+                5102,
+                5103,
                 5104,
-                5207
+                5105,
+                5106,
+                5107,
+                5108,
+                5109,
+                5110,
+                5111,
+                5112,
+                5113,
+                5114,
+                5115,
+                5116
             };
             int[] faceArr = new int[]//botun gözü ne koysak ki ya not: yuti
             {
-                //6110,
-                //6112,
-                //6113,
-                //6114,
-                //6115,
-                //6116,
-                //6117,
-                //6125,
-                //6127,
-                //6130,
-                //6131,
-                //6132,
-                //6139,
-                //6141,
-                //6145
                 6101,
-                6202
+                6102,
+                6103,
+                6104,
+                6105,
+                6106,
+                6107,
+                6108,
+                6109,
+                6110,
+                6111,
+                6112,
+                6113,
+                6114,
+                6115,
+                6116,
             };
             int[] wingArr = new int[]//botun kanadı ne koysak ki ya not: yuti
             {
-                //15064,
-                //15065,
-                //15066,
-                //15070,
-                //15075,
-                //15076,
-                //15081,
-                //15093,
-                //15127,
-                //15128,
-                //15129,
-                //15137,
-                //15138,
-                //15139,
-                //15140
-                15001
+                15002,
+                15003,
+                15004,
+                15005,
+                15006,
+                15007,
+                15008,
+                15009
             };
             int count = weaponArr.Length;
             int h = 0, g = 0, ha = 0, e = 0, c = 0, f = 0, w = 0;
@@ -978,7 +950,7 @@ namespace Game.Server.RingStation
                 Defence = player.Info.Defence/2,
                 Luck = player.Info.Luck/2,
                 Agility = player.Info.Agility/2,
-                hp = player.Info.hp/5, // bölü iki idi bölü 5 yaptım canı bi tık daha az olsun da moruk not: yuti
+                hp = player.Info.hp/1, // bölü iki idi bölü 1 yaptım canı bi tık daha fazla olsun da moruk not: yuti
                 FightPower = player.Info.FightPower/2,
                 BaseAttack = player.BaseDamage/2,
                 BaseDefence = player.BaseGuard/2,
@@ -1094,7 +1066,7 @@ namespace Game.Server.RingStation
 
                 rp.Style = vp.Style;
                 rp.Colors = ",,,,,,,,,,,,,,,";
-                rp.Hide = 1111111111;
+                rp.Hide = 1111112223;
                 rp.TemplateID = vp.Weapon;
                 rp.StrengthLevel = 0;
                 rp.WeaklessGuildProgressStr = weaklessGuildProgressStr;
