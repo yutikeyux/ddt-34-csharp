@@ -50,7 +50,7 @@ namespace Game.Server.Packets.Client
                             ReceiverID = playerInfo.ID,
                             Receiver = playerInfo.NickName,
                             Title = LanguageMgr.GetTranslation("Hediyelik Eşya"),
-                            Content = "Değerli arkadaşım, TrBombom oyuncusu olan ben " + client.Player.PlayerCharacter.NickName + " sana senin kadar değerli bir hediye göndermek istedim." + LanguageMgr.GetTranslation("Çam sakızı çoban armağanı, umarım benim sana gönderdiğim bu [") + itemTemplateInfo.Name + "] hediyesini beğenirsin ♥!",
+                            Content = "Değerli arkadaşım, TrBombom oyuncusu olan ben " + client.Player.PlayerCharacter.NickName + " sana senin kadar değerli bir hediye göndermek istedim. Çam sakızı çoban armağanı, umarım benim sana gönderdiğim bu [" + itemTemplateInfo.Name + "] hediyesini umarım beğenirsin ♥!",
                             Type = 55
                         }) && clientByPlayerNickName != null)
                         {

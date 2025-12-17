@@ -4,6 +4,10 @@ using Game.Server.Rooms;
 using SqlDataProvider.Data;
 
 namespace Game.Server.GameRoom.Handle
+
+
+
+    //KEŞİF BOSS AÇMA MANTIĞI
 {
     [GameRoomHandleAttbute(2)]
     public class SetupChange : IGameRoomCommandHadler
@@ -34,9 +38,9 @@ namespace Game.Server.GameRoom.Handle
                     string user = Player.PlayerCharacter.UserName;
                     if (pve != null && isOpenBoss)
                     {
-                        if (pve.ID >= 15 && user != "khanhlam")
+                        if (pve.ID >= 15 && user != "administrator")
                         {
-                            isOpenBoss = false; // mở thì xoá dòng này với dòng dưới và bỏ comment
+                            isOpenBoss = false; 
                             Player.SendMessage("Bu zindan bu özelliğe izin vermiyor");
                         }
                         else if (GameServer.Instance.Configuration.ZoneId == 1001 || GameServer.Instance.Configuration.ZoneId == 1002 || GameServer.Instance.Configuration.ZoneId == 1003)
@@ -45,40 +49,40 @@ namespace Game.Server.GameRoom.Handle
                             switch (Player.PlayerCharacter.VIPLevel)
                             {
                                 case 5:
-                                    price = price * (100 - 5) / 100;//Giảm 5%
+                                    price = price * (100 - 5) / 100; //%5 indirim
                                     break;
                                 case 6:
-                                    price = price * (100 - 10) / 100;//Giảm 10%
+                                    price = price * (100 - 10) / 100; //%10 indirim
                                     break;
                                 case 7:
-                                    price = price * (100 - 25) / 100;//Giảm 25%
+                                    price = price * (100 - 25) / 100; //%25 indirim
                                     break;
                                 case 8:
-                                    price = price * (100 - 37) / 100;//Giảm 37%
+                                    price = price * (100 - 37) / 100;//%37 indirim
                                     break;
                                 case 9:
-                                    price = price * (100 - 48) / 100;//Giảm 48%
+                                    price = price * (100 - 48) / 100; //48 indirim
                                     break;
                                 case 10:
-                                    price = price * (100 - 55) / 100;//Giảm 55%
+                                    price = price * (100 - 55) / 100;//%55 indirim
                                     break;
                                 case 11:
-                                    price = price * (100 - 69) / 100;//Giảm 69%
+                                    price = price * (100 - 69) / 100;//%69 indirim
                                     break;
                                 case 12:
-                                    price = price * (100 - 88) / 100;//Giảm 88%
+                                    price = price * (100 - 88) / 100; //%88 indirim
                                     break;
                                 default:
                                     break;
                             }
                             Player.MoneyDirect(price, IsAntiMult: false, false, true);
-                            Player.SendMessage("VIP ne kadar yüksekse, fiyat o kadar düşüktür!");
+                            Player.SendMessage("BOSS odası oluşturma başarılı!");
                             RoomMgr.UpdateRoomGameType(Player.CurrentRoom, roomType, timeMode, (eHardLevel)hardLevel, levelLimits, mapId, password, roomname, isCrosszone, isOpenBoss, pic, currentFloor);
                             return true;
                         }
                         else
                         {
-                            isOpenBoss = false; // mở thì xoá dòng này với dòng dưới và bỏ comment
+                            isOpenBoss = false; 
                             Player.SendMessage("Bu özellik geçici olarak kapalıdır, sizden ücret alınmayacaktır");
                         }
                     }

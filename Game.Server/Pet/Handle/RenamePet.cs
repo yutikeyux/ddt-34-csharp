@@ -15,7 +15,7 @@ namespace Game.Server.Pet.Handle
 			int value = Convert.ToInt32(PetMgr.FindConfig("ChangeNameCost").Value);
 			if (player.MoneyDirect(value, IsAntiMult: false, false, true) && player.PetBag.RenamePet(place, name))
 			{
-				player.SendMessage(LanguageMgr.GetTranslation("PetHandler.Msg20"));
+				player.SendMessage(LanguageMgr.GetTranslation("Yeniden adlandýrma baþarýlý!"));
 			}
 			return false;
         }

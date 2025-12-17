@@ -33,6 +33,11 @@ public class Living : Physics
 
     public int ReduceCritFisrtGem;
 
+    public bool CanAttack = true;
+    public string strWrongAttack = "";
+    public bool ClearBuff;
+
+
     public int ReduceCritSecondGem;
 
     public int countBoom;
@@ -2335,6 +2340,72 @@ public class Living : Physics
     {
         return this.JumpTo(x, y, ation, delay, type, 20, callback, 0);
     }
+
+    protected static int stepX = 1;
+    protected static int stepY = 3;
+    public bool NewMoveTo(int x, int y, string action, int delay, string sAction, int speed, LivingCallBack callback, int delayCallback)
+    {
+        if (m_x == x && m_y == y)
+            return false;
+
+        if (x < 0 || x > m_map.Bound.Width) return false;
+        List<Point> path = new List<Point>();
+
+        int tx = m_x;
+        int ty = m_y;
+        int direction = x > tx ? 1 : -1;
+        Point currentPoint = new Point(tx, ty);
+
+        if (Config.IsFly)
+        {
+            Point offset = new Point(x - currentPoint.X, y - currentPoint.Y);
+            while (offset.Length() > speed)
+            {
+                offset = offset.Normalize(speed);
+
+                currentPoint = new Point(currentPoint.X + offset.X, currentPoint.Y + offset.Y);
+
+                offset = new Point(x - currentPoint.X, y - currentPoint.Y);
+                if (currentPoint != Point.Empty)
+                {
+                    path.Add(currentPoint);
+                    continue;
+                }
+
+                path.Add(new Point(x, y));
+                break;
+            }
+        }
+        else
+        {
+            while ((x - tx) * direction > 0)
+            {
+                currentPoint = m_map.FindNextWalkPointDown(tx, ty, direction, speed * stepX, speed * stepY);
+                if (currentPoint != Point.Empty)
+                {
+                    path.Add(currentPoint);
+                    tx = currentPoint.X;
+                    ty = currentPoint.Y;
+                    continue;
+                }
+
+                break;
+            }
+        }
+
+        if (path.Count > 0)
+        {
+            m_game.AddAction(new NewLivingMoveToAction(this, path, action, delay, speed, sAction, callback,
+                delayCallback));
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool XuyenThau = false;
 
     public int KeepLifeCount { get; set; }
 

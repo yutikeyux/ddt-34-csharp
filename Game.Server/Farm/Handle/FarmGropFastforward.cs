@@ -23,7 +23,7 @@ namespace Game.Server.Farm.Handle
 				{
 					if (Player.RemoveGiftToken(FastGrowNeedMoney) > 0)
 					{
-						Player.SendMessage($"Başarılı! Toplamda {RipeNum} bitkinin büyüme süresini 30 dakika azalttınız.");
+						Player.SendMessage($"Başarılı! Bitkinin büyüme süresini 30 dakika azalttınız.");
 						Player.Farm.GropFastforward(isAllField, fieldId);
 					}
 				}
@@ -32,7 +32,7 @@ namespace Game.Server.Farm.Handle
 			{
 				if (Player.RemoveMoney(FastGrowNeedMoney) > 0)
 				{
-					Player.SendMessage($"Başarılı! Toplamda {RipeNum} bitkinin büyüme süresini 30 dakika azalttınız.");
+					Player.SendMessage($"Başarılı! Bitkinin büyüme süresini 30 dakika azalttınız.");
 					Player.Farm.GropFastforward(isAllField, fieldId);
 				}
 			}
@@ -40,7 +40,7 @@ namespace Game.Server.Farm.Handle
             {
                 if (Player.RemoveMoneyLock(FastGrowNeedMoney) > 0)
                 {
-                    Player.SendMessage($"Başarılı! Toplamda {RipeNum} bitkinin büyüme süresini 30 dakika azalttınız.");
+                    Player.SendMessage($"Başarılı! Bitkinin büyüme süresini 30 dakika azalttınız.");
                     Player.Farm.GropFastforward(isAllField, fieldId);
                 }
             }

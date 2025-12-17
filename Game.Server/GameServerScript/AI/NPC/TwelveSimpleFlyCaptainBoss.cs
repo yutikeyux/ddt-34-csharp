@@ -1,114 +1,102 @@
+using Game.Logic;
 using Game.Logic.AI;
+using Game.Logic.Effects;
 using Game.Logic.Phy.Object;
-using System;
 
 namespace GameServerScript.AI.NPC
 {
-	public class TwelveSimpleFlyCaptainBoss : ABrain
-	{
-		private int m_attackTurn = 0;
+    public class TwelveSimpleFlyCaptainBoss : ABrain
+    {
+        int turnIndex = 0;
 
-		public int currentCount = 0;
+        int count = 0;
 
-		public int Dander = 0;
+        int beatCount = 0;
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        private SimpleNpc chicken = null;
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			base.Body.CurrentDamagePlus = 1f;
-			base.Body.CurrentShootMinus = 1f;
-			base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			if (base.Body.Direction == -1)
-			{
-				base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
-			else
-			{
-				base.Body.SetRect(-((SimpleBoss)base.Body).NpcInfo.X - ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
-		}
+        private int RemovedBlood = 200;
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        private void Beat()
+        {
+            chicken = ((PVEGame)Game).FindHealthyHelper();
+            if (chicken == null)
+                return;
+            chicken.Config.CanHeal = true;
+            Body.PlayMovie("beat", 1000, 3000);
+            Body.CallFuction(CreateEffectDamage, 5000);
+        }
 
-		public override void OnStartAttacking()
-		{
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			bool flag = false;
-			int num = 0;
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				if (current.IsLiving && current.X > 480 && current.X < 1000)
-				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
-					{
-						num = num2;
-					}
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				this.KillAttack(base.Body.X - 10000, base.Body.X + 10000);
-			}
-			else if (this.m_attackTurn == 0)
-			{
-				this.PersonalAttack();
-				this.m_attackTurn++;
-			}
-			else
-			{
-				this.AllAttack();
-				this.m_attackTurn = 0;
-			}
-		}
+        private void SuperBeat()
+        {
+            Body.PlayMovie("beat", 1000, 3000);
+            Body.CallFuction(NextChicken, 4300);
+            beatCount = Game.Random.Next(2, 5);
+        }
+        private void NextChicken()
+        {
+            count++;
+            if (count <= beatCount)
+            {
+                chicken = ((PVEGame)Game).FindHealthyHelper();
+                if (chicken == null)
+                    return;
+                chicken.Config.CanHeal = true;
+                Body.CallFuction(CreateEffectDamage, 700);
+            }
+            else
+                count = 0;
+        }
 
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-		}
+        private void CreateEffectDamage()
+        {
+            ((PVEGame)Game).SendFreeFocus(chicken.X, chicken.Y, 1, 1, 1);
+            ((PVEGame)base.Game).Createlayer(chicken.X, chicken.Y, "", "asset.game.nine.duqidd", "", 1, 1);
+            Body.CallFuction(CreateGreenReduce, 1300);
+        }
 
-		private void KillAttack(int fx, int tx)
-		{
-			this.ChangeDirection(3);
-			base.Body.CurrentDamagePlus = 10f;
-			base.Body.PlayMovie("stand", 3000, 0);
-			base.Body.RangeAttacking(fx, tx, "cry", 5000, null);
-		}
+        private void CreateGreenReduce()
+        {
+            chicken.AddEffect(new ContinueReduceGreenBloodEffect(10, RemovedBlood, chicken), 0);
+            chicken.AddBlood(-RemovedBlood, 1);
+            chicken.Config.CanHeal = true;
+            if (count > 0)
+                Body.CallFuction(NextChicken, 1);
+        }
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+        }
 
-		private void AllAttack()
-		{
-			this.ChangeDirection(3);
-			base.Body.CurrentDamagePlus = 0.5f;
-			base.Body.PlayMovie("stand", 1000, 0);
-			base.Body.RangeAttacking(base.Body.X - 1000, base.Body.X + 1000, "cry", 4000, null);
-		}
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		private void PersonalAttack()
-		{
-			this.ChangeDirection(3);
-			int x = base.Game.Random.Next(550, 1200);
-			int direction = base.Body.Direction;
-			base.Body.MoveTo(x, base.Body.Y, "walk", 1000, "", ((SimpleBoss)base.Body).NpcInfo.speed);
-			base.Body.ChangeDirection(base.Game.FindlivingbyDir(base.Body), 9000);
-		}
+        public override void OnCreated()
+        {
+            base.OnCreated();
+        }
 
-		private void ChangeDirection(int count)
-		{
-			int direction = base.Body.Direction;
-			for (int i = 0; i < count; i++)
-			{
-				base.Body.ChangeDirection(-direction, i * 200 + 100);
-				base.Body.ChangeDirection(direction, (i + 1) * 100 + i * 200);
-			}
-		}
-	}
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            ((PVEGame)Game).SendFreeFocus(Body.X, Body.Y, 1, 1, 1);
+            if (turnIndex != 1)
+            {
+                Beat();
+                turnIndex++;
+            }
+            else
+            {
+                SuperBeat();
+                turnIndex = 0;
+            }
+        }
+
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
+    }
 }

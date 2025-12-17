@@ -19,7 +19,7 @@ namespace Game.Logic.Spells.FightingSpell
 					player.BallCount = 1;
 					return;
 				}
-				player.CurrentDamagePlus *= 0.5f;
+				player.CurrentDamagePlus *= 0.5f; //gidiþata göre bunu bi ayarlayalým rulz gereksiz fazla vuruyor dedi buna . not:yuti
 				player.BallCount = item.Property2;
 			}
 			else if (game.CurrentLiving != null && game.CurrentLiving is Player && game.CurrentLiving.Team == player.Team)
@@ -29,8 +29,8 @@ namespace Game.Logic.Spells.FightingSpell
 					(game.CurrentLiving as Player).BallCount = 1;
 					return;
 				}
-				game.CurrentLiving.CurrentDamagePlus *= 0.5f;
-				(game.CurrentLiving as Player).BallCount = item.Property2;
+				game.CurrentLiving.CurrentDamagePlus *= 0.5f; //gidiþata göre bunu bi ayarlayalým rulz gereksiz fazla vuruyor dedi buna . not:yuti
+                (game.CurrentLiving as Player).BallCount = item.Property2;
 			}
         }
     }

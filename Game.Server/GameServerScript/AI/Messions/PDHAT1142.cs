@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Effects;
@@ -7,17 +8,47 @@ namespace GameServerScript.AI.Messions
 {
     public class PDHAT1142 : AMissionControl
     {
-        private SimpleBoss _dragonBoss;
+        private List<SimpleNpc> NpcListesi;
 
-        private SimpleBoss _barrelHelperBoss;
+        private SimpleBoss KALEDUVARI;
 
-        private const int BarrelNpcId = 4101;
+        private SimpleBoss FIÇIBOMBA;
 
-        private const int NpcId = 4103;
+        private int FýçýBomba;
 
-        private const int BossId = 4104;
+        private int ZombiGoblin;
 
-        private readonly int _mBloodReduce = 1200;
+        private int KALE;
+
+        private int YANMACANI;
+
+        private int DOÐACAKZOMBÝGOBLÝNSAYISI;
+
+        private int KIRILANDUVAR;
+
+        public int DuvarBoþluðu
+        {
+            get
+            {
+                return KIRILANDUVAR;
+            }
+            set
+            {
+                KIRILANDUVAR = value;
+            }
+        }
+
+        public SimpleBoss DuvarBombasý
+        {
+            get
+            {
+                return FIÇIBOMBA;
+            }
+            set
+            {
+                FIÇIBOMBA = value;
+            }
+        }
 
         public override int CalculateScoreGrade(int score)
         {
@@ -26,84 +57,134 @@ namespace GameServerScript.AI.Messions
             {
                 return 3;
             }
-            else if (score > 1675)
+            if (score > 1675)
             {
                 return 2;
             }
-            else if (score > 1600)
+            if (score > 1600)
             {
                 return 1;
             }
-            else
-            {
-                return 0;
-            }
+            return 0;
         }
 
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-            int[] resources = { BossId, NpcId, BarrelNpcId };
-            Game.LoadResources(resources);
-            Game.LoadNpcGameOverResources(resources);
-            Game.AddLoadingFile(2, "image/game/effect/4/gate.swf", "game.asset.Gate");
-            Game.SetMap(1142);
+            int[] npcIDleri = new int[3]
+            {
+                KALE,
+                ZombiGoblin,
+                FýçýBomba
+            };
+            base.Game.LoadResources(npcIDleri);
+            base.Game.LoadNpcGameOverResources(npcIDleri);
+            base.Game.AddLoadingFile(2, "image/game/effect/4/gate.swf", "game.asset.Gate");
+            base.Game.SetMap(1142);
         }
-        public override void OnPrepareStartGame()
-        {
-            base.OnPrepareStartGame();
-            LivingConfig config = Game.BaseLivingConfig();
-            config.CanTakeDamage = false;
 
-            _dragonBoss = Game.CreateBoss(BossId, 1520, 350, -1, 0, "", config);
-            Game.SendHideBlood(_dragonBoss, 0);
-            _dragonBoss.OnSmallMap(false);
-
-        }
         public override void OnStartGame()
         {
             base.OnStartGame();
-            Game.SendFreeFocus(_dragonBoss.X, _dragonBoss.Y, 1, 1000, 1500);
-            Game.SendFreeFocus(335, 630, 1, 3000, 3500);
-            _dragonBoss.CallFuction(CreateHelper, 4500);
+            LivingConfig livingConfig = base.Game.BaseLivingConfig();
+            livingConfig.CanTakeDamage = false;
+            KALEDUVARI = base.Game.CreateBoss(KALE, 1520, 350, -1, 1, "", livingConfig);
+            base.Game.SendHideBlood(KALEDUVARI, 0);
+            BombayýÇaðýr();
+            base.Game.SendFreeFocus(1500, 250, 1, 2000, 3000);
+        }
+
+        public override void OnNewTurnStarted()
+        {
+            base.OnNewTurnStarted();
         }
 
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-
-            if (_barrelHelperBoss == null || _barrelHelperBoss.IsLiving) return;
-            Game.RemoveLiving(_barrelHelperBoss, true);
-            CreateHelper();
-
+            if (FIÇIBOMBA != null && FIÇIBOMBA.IsLiving && FIÇIBOMBA.X >= 600 && base.Game.FindAllNpcLiving().Length == 0 && base.Game.CurrentTurnLiving is Player)
+            {
+                GobliniÇaðýr();
+            }
+            if (FIÇIBOMBA != null && !FIÇIBOMBA.IsLiving)
+            {
+                base.Game.RemoveLiving(FIÇIBOMBA, sendToClient: true);
+                BombayýÇaðýr();
+            }
+            if (base.Game.CurrentTurnLiving is Player && FIÇIBOMBA != null && FIÇIBOMBA.IsLiving && (int)KALEDUVARI.Properties1 == 1)
+            {
+                FIÇIBOMBA.PlayMovie("standB", 1200, 0);
+            }
         }
 
-        private void CreateHelper()
+        private void BombayýÇaðýr()
         {
-            LivingConfig config = Game.BaseLivingConfig();
-            config.IsHelper = true;
-            config.CanFrost = true;
-            _barrelHelperBoss = Game.CreateBoss(BarrelNpcId, 321, 746, 1, 0, "", config);
-            _barrelHelperBoss.AddEffect(new ContinueReduceBloodEffect(3, _mBloodReduce, _barrelHelperBoss), 3000);
-            _barrelHelperBoss.Delay++;
+            LivingConfig livingConfig = base.Game.BaseLivingConfig();
+            livingConfig.IsHelper = true;
+            FIÇIBOMBA = base.Game.CreateBoss(FýçýBomba, 321, 746, 1, 0, "", livingConfig);
+            FIÇIBOMBA.AddEffect(new ContinueReduceBloodEffect(2, YANMACANI, FIÇIBOMBA), 0);
+        }
+
+        private void GobliniÇaðýr()
+        {
+            int num = 0;
+            NpcListesi = new List<SimpleNpc>();
+            for (int i = 0; i < DOÐACAKZOMBÝGOBLÝNSAYISI; i++)
+            {
+                if (num > 0)
+                {
+                    int num2 = base.Game.Random.Next(5, 110);
+                    NpcListesi.Add(base.Game.CreateNpc(ZombiGoblin, FIÇIBOMBA.X - num2, FIÇIBOMBA.Y, 0));
+                }
+                else
+                {
+                    NpcListesi.Add(base.Game.CreateNpc(ZombiGoblin, FIÇIBOMBA.X - 20, FIÇIBOMBA.Y, 0));
+                }
+                num++;
+            }
         }
 
         public override bool CanGameOver()
         {
             base.CanGameOver();
-            return Game.TotalKillCount >= Game.MissionInfo.TotalCount || Game.TurnIndex >= Game.MissionInfo.TotalTurn;
+            if (KIRILANDUVAR >= base.Game.MissionInfo.TotalCount)
+            {
+                return true;
+            }
+            if (base.Game.TotalTurn > base.Game.MissionInfo.TotalTurn)
+            {
+                return true;
+            }
+            return false;
         }
 
         public override int UpdateUIData()
         {
             base.UpdateUIData();
-            return Game.TotalKillCount;
+            return KIRILANDUVAR;
         }
 
         public override void OnGameOver()
         {
             base.OnGameOver();
-            Game.IsWin = Game.TotalKillCount >= Game.MissionInfo.TotalCount;
+            if (KIRILANDUVAR >= base.Game.MissionInfo.TotalCount)
+            {
+                base.Game.IsWin = true;
+            }
+            else
+            {
+                base.Game.IsWin = false;
+            }
+        }
+
+        public PDHAT1142()
+        {
+            NpcListesi = new List<SimpleNpc>();
+            FýçýBomba = 4101;
+            ZombiGoblin = 4103;
+            KALE = 4104;
+            YANMACANI = 500;
+            DOÐACAKZOMBÝGOBLÝNSAYISI = 1;
         }
     }
 }

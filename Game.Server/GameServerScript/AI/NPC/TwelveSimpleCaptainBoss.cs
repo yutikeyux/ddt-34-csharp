@@ -1,3 +1,4 @@
+using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
 using System;
@@ -5,110 +6,107 @@ using System;
 namespace GameServerScript.AI.NPC
 {
 	public class TwelveSimpleCaptainBoss : ABrain
-	{
-		private int m_attackTurn = 0;
+    {
+        private int m_attackTurn = 0;
 
-		public int currentCount = 0;
+        private Player m_target;
 
-		public int Dander = 0;
+        private int m_dis;
+        private int BuzAtma = 12003;
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			base.Body.CurrentDamagePlus = 1f;
-			base.Body.CurrentShootMinus = 1f;
-			base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			if (base.Body.Direction == -1)
-			{
-				base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
-			else
-			{
-				base.Body.SetRect(-((SimpleBoss)base.Body).NpcInfo.X - ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
-		}
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+        }
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            Body.MaxBeatDis = 190;
+            foreach (SimpleNpc npc in Game.GetNPCLivingWithID(BuzAtma))
+            {
+                ((PVEGame)Game).SendHideBlood(npc, 0);
+                npc.OnSmallMap(false);
+            }
+        }
 
-		public override void OnStartAttacking()
-		{
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			bool flag = false;
-			int num = 0;
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				if (current.IsLiving && current.X > 480 && current.X < 1000)
-				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
-					{
-						num = num2;
-					}
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				this.KillAttack(base.Body.X - 10000, base.Body.X + 10000);
-			}
-			else if (this.m_attackTurn == 0)
-			{
-				this.PersonalAttack();
-				this.m_attackTurn++;
-			}
-			else
-			{
-				this.AllAttack();
-				this.m_attackTurn = 0;
-			}
-		}
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            if (Body.Properties1 > 0)
+            {
+                Body.Properties1--;
+                return;
+            }
+            if (m_attackTurn == 0)
+            {
+                SayToPlayer();
+                m_attackTurn = 1;
+            }
+            else
+            {
+                MoveToPlayerAndAttack();
+            }
+            //Body.Direction = Game.FindlivingbyDir(Body);
+        }
 
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-		}
+        private void SayToPlayer()
+        {
+            (Game as PVEGame).SendObjectFocus(Body, 0, 1000, 0);
+            Body.FallFrom(Body.X, Body.Y, "", 2000, 0, 0, null);
+            Body.Say("Benden kaçamazsýn!", 0, 2500, 2000);
+        }
 
-		private void KillAttack(int fx, int tx)
-		{
-			this.ChangeDirection(3);
-			base.Body.CurrentDamagePlus = 10f;
-			base.Body.PlayMovie("stand", 3000, 0);
-			base.Body.RangeAttacking(fx, tx, "cry", 5000, null);
-		}
+        private void MoveToPlayerAndAttack()
+        {
+            m_target = Game.FindNearestPlayer(Body.X, Body.Y);
 
-		private void AllAttack()
-		{
-			this.ChangeDirection(3);
-			base.Body.CurrentDamagePlus = 0.5f;
-			base.Body.PlayMovie("stand", 1000, 0);
-			base.Body.RangeAttacking(base.Body.X - 1000, base.Body.X + 1000, "cry", 4000, null);
-		}
+            if (m_target != null && m_target.IsLiving)
+            {
+                m_dis = (int)m_target.Distance(Body.X, Body.Y);
 
-		private void PersonalAttack()
-		{
-			this.ChangeDirection(3);
-			int x = base.Game.Random.Next(550, 1200);
-			int direction = base.Body.Direction;
-			base.Body.MoveTo(x, base.Body.Y, "walk", 1000, "", ((SimpleBoss)base.Body).NpcInfo.speed);
-			base.Body.ChangeDirection(base.Game.FindlivingbyDir(base.Body), 9000);
-		}
+                if (m_dis > Body.MaxBeatDis)
+                {
+                    Body.CallFuction(MoveToTarget, 1000);
+                }
+                else
+                {
+                    Body.CallFuction(Beat, 1000);
+                }
+            }
+        }
 
-		private void ChangeDirection(int count)
-		{
-			int direction = base.Body.Direction;
-			for (int i = 0; i < count; i++)
-			{
-				base.Body.ChangeDirection(-direction, i * 200 + 100);
-				base.Body.ChangeDirection(direction, (i + 1) * 100 + i * 200);
-			}
-		}
-	}
+        private void MoveToTarget()
+        {
+            int ramdis = Game.Random.Next(((SimpleBoss)Body).NpcInfo.MoveMax, ((SimpleBoss)Body).NpcInfo.MoveMax);
+
+            if (m_dis < ramdis)
+                ramdis = m_dis;
+
+            int moveX = Body.Direction == -1 ? Body.X - ramdis : Body.X + ramdis;
+            int delay = Game.GetDelayDistance(Body.X, moveX, 3) + 1000;
+            Body.MoveTo(moveX, Body.Y, "walk", ((SimpleBoss)Body).NpcInfo.speed, "", 1200, new LivingCallBack(Beat), delay);
+        }
+
+        public override void OnAfterTakedFrozen()
+        {
+            base.OnAfterTakedFrozen();
+            Body.Properties1 = 2;
+        }
+
+        private void Beat()
+        {
+            Body.Beat(m_target, "beatA", 100, 0, 500, 1, 1);
+        }
+
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
+    }
 }

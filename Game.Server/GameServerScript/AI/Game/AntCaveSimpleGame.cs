@@ -2,19 +2,19 @@ using Game.Logic.AI;
 
 namespace GameServerScript.AI.Game
 {
-    public class AntCaveSimpleGame : APVEGameControl
+    public class AntCaveSimpleGame : APVEGameControl //karýnca kolay
     {
         public override void OnCreated()
         {
 			base.OnCreated();
-			base.Game.SetupMissions("2001,2002");
-			base.Game.TotalMissionCount = 2;
+			base.Game.SetupMissions("2001,2002"); //karýnca kolay misson id leri etap 1 ve etap 2
+			base.Game.TotalMissionCount = 2; //etap sayýsý 2
         }
 
         public override void OnPrepated()
         {
 			base.OnPrepated();
-			////base.Game.SessionId = 0;
+			
         }
 
         public override int CalculateScoreGrade(int score)

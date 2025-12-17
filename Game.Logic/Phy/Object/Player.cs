@@ -2157,7 +2157,7 @@ namespace Game.Logic.Phy.Object
             base.PickBox(box);
         }
 
-        public override void PrepareNewTurn()
+        public override void PrepareNewTurn() //buradaki pet olaylarını iyice bi incelememiz lazım. not:yuti
         {
             ItemFightBag.Clear();
             if (CurrentIsHitTarget)

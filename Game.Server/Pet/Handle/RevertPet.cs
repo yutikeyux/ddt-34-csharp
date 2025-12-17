@@ -26,7 +26,7 @@ namespace Game.Server.Pet.Handle
 				UsersPetInfo ogrPet = JsonConvert.DeserializeObject<UsersPetInfo>(currentPet.BaseProp);
 				if (ogrPet == null)
 				{
-					player.SendMessage(LanguageMgr.GetTranslation("PetHandler.Msg7"));
+					player.SendMessage(LanguageMgr.GetTranslation("Sende olmayan peti geri alamazsýn ki :D"));
 					return false;
 				}
 				ItemTemplateInfo Item = ItemMgr.FindItemTemplate(334100);

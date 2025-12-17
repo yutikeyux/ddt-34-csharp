@@ -1,103 +1,91 @@
+using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
 using System;
 
 namespace GameServerScript.AI.NPC
 {
-	public class TwelveSimpleBombNpc : ABrain
-	{
-		private int m_attackTurn = 0;
+    public class TwelveSimpleBombNpc : ABrain
+    {
 
-		public int currentCount = 0;
+        private int int_1 = 0;
 
-		public int Dander = 0;
+        protected Player m_player;
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        private int HelperNPCID = 12006;
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-		}
+        private void MoveBeat()
+        {
+            this.m_player = base.Game.FindNearestPlayer(base.Body.X, base.Body.Y);
+            base.Body.ChangeDirection(this.m_player, 500);
+            if (this.m_player != null && this.m_player.IsLiving)
+            {
+                this.int_1 = (int)this.m_player.Distance(base.Body.X, base.Body.Y);
+                base.Body.CallFuction(new LivingCallBack(this.MoveToPlayer), 1000);
+            }
+        }
+        public override void OnDie()
+        {
+            base.OnDie();
+            SimpleBoss chicken = ((PVEGame)Game).FindBossWithID(HelperNPCID);
+            if (Convert.ToInt32(Body.Properties1) == 1)
+                chicken.ShootCount += 1;
+        }
+        public void SetState()
+        {
+            Body.Properties1 = 0;
+            Body.Die();
+        }
+        public void Beat()
+        {
+            if (Body.Beat(this.m_player, "beatA", 100, 0, 0, 1, 1))
+            {
+                Body.CallFuction(SetState, 2000);
+            }
+        }
+        public void MoveToPlayer()
+        {
+            int int1 = ((SimpleNpc)base.Body).NpcInfo.MoveMax;
+            if (this.int_1 < int1)
+            {
+                int1 = this.int_1;
+            }
+            int num = (base.Body.Direction == -1 ? base.Body.X - int1 : base.Body.X + int1);
+            base.Body.MoveTo(num, base.Body.Y, "walk", 1200, "", ((SimpleNpc)base.Body).NpcInfo.speed, new LivingCallBack(this.Beat));
+        }
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            this.m_body.CurrentDamagePlus = 1f;
+            this.m_body.CurrentShootMinus = 1f;
+        }
 
-		public override void OnStartAttacking()
-		{
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			bool flag = false;
-			int num = 0;
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				if (current.IsLiving && current.X > 480 && current.X < 1000)
-				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
-					{
-						num = num2;
-					}
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				this.KillAttack(base.Body.X - 10000, base.Body.X + 10000);
-			}
-			else if (this.m_attackTurn == 0)
-			{
-				this.PersonalAttack();
-				this.m_attackTurn++;
-			}
-			else
-			{
-				this.AllAttack();
-				this.m_attackTurn = 0;
-			}
-		}
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-		}
+        public override void OnCreated()
+        {
+            base.OnCreated();
+        }
 
-		private void KillAttack(int fx, int tx)
-		{
-			this.ChangeDirection(3);
-			base.Body.CurrentDamagePlus = 10f;
-			base.Body.PlayMovie("stand", 3000, 0);
-			base.Body.RangeAttacking(fx, tx, "cry", 5000, null);
-		}
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            if ((int)Body.Properties2 > 0)
+            {
+                Body.Properties2 = int.Parse(Body.Properties2.ToString()) - 1;
+                return;
+            }
+            this.m_player = base.Game.FindNearestPlayer(base.Body.X, base.Body.Y);
+            this.MoveBeat();
+        }
 
-		private void AllAttack()
-		{
-			this.ChangeDirection(3);
-			base.Body.CurrentDamagePlus = 0.5f;
-			base.Body.PlayMovie("stand", 1000, 0);
-			base.Body.RangeAttacking(base.Body.X - 1000, base.Body.X + 1000, "cry", 4000, null);
-		}
-
-		private void PersonalAttack()
-		{
-			this.ChangeDirection(3);
-			int x = base.Game.Random.Next(550, 1200);
-			int direction = base.Body.Direction;
-			base.Body.MoveTo(x, base.Body.Y, "walk", 1000, "", ((SimpleBoss)base.Body).NpcInfo.speed);
-			base.Body.ChangeDirection(base.Game.FindlivingbyDir(base.Body), 9000);
-		}
-
-		private void ChangeDirection(int count)
-		{
-			int direction = base.Body.Direction;
-			for (int i = 0; i < count; i++)
-			{
-				base.Body.ChangeDirection(-direction, i * 200 + 100);
-				base.Body.ChangeDirection(direction, (i + 1) * 100 + i * 200);
-			}
-		}
-	}
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
+    }
 }

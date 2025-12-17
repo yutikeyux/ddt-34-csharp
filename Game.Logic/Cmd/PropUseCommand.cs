@@ -114,7 +114,7 @@ namespace Game.Logic.Cmd
 				}
 				else
 				{
-					player.PlayerDetail.SendMessage("Vật phẩm lỗi hoặc không thể sử dụng.");
+					player.PlayerDetail.SendMessage("Etme eyleme be dost.");
 				}			
 			}
 			//if (templateId == 10015 || item.CategoryID == 17)

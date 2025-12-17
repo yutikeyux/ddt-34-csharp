@@ -1,279 +1,189 @@
+using System;
+using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using System;
-using System.Collections.Generic;
 
 namespace GameServerScript.AI.NPC
 {
-	public class FourNormalWolfNpc : ABrain
-	{
-		private int m_attackTurn = 0;
+    public class FourNormalWolfNpc : ABrain
+    {
+        private Player player_0;
 
-		private int m_run = 0;
+        private int int_0;
 
-		protected Player m_targer;
+        private SimpleBoss simpleBoss_0;
 
-		private int Dander = 0;
+        private bool bool_0;
 
-		private List<SimpleNpc> Children = new List<SimpleNpc>();
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		private static string[] AllAttackChat = new string[]
-		{
-			"你们这是自寻死路！",
-			"你惹毛我了!",
-			"超级无敌大地震……<br/>震……震…… "
-		};
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            base.Body.CurrentDamagePlus = 1f;
+            base.Body.CurrentShootMinus = 1f;
+            if (bool_0)
+            {
+                base.Body.Config.HaveShield = true;
+            }
+            else
+            {
+                base.Body.Config.HaveShield = false;
+            }
+        }
 
-		private static string[] ShootChat = new string[]
-		{
-			"砸你家玻璃。",
-			"看哥打的可比你们准多了"
-		};
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            if (simpleBoss_0 == null)
+            {
+                SimpleBoss[] array = base.Game.FindLivingTurnBossWithID(int_0);
+                int num = 0;
+                if (array.Length != 0)
+                {
+                    SimpleBoss simpleBoss = (simpleBoss_0 = array[num]);
+                }
+            }
+        }
 
-		private static string[] KillPlayerChat = new string[]
-		{
-			"送你回老家！",
-			"就凭你还妄想能够打败我？"
-		};
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            if ((int)simpleBoss_0.Properties1 == 0 && bool_0)
+            {
+                base.Body.PlayMovie("BtoA", 1000, 4000);
+                base.Body.CallFuction(method_3, 5000);
+                bool_0 = false;
+            }
+            else if ((int)simpleBoss_0.Properties1 == 1 && !bool_0)
+            {
+                base.Body.PlayMovie("AtoB", 2000, 4000);
+                base.Body.CallFuction(method_2, 4000);
+                bool_0 = true;
+            }
+            else if (bool_0 && player_0 != null)
+            {
+                if (base.Game.Random.Next(100) < 50 && base.Body.Distance(player_0.X, player_0.Y) > 600.0)
+                {
+                    method_5();
+                }
+                else
+                {
+                    method_4();
+                }
+            }
+            else if (!bool_0)
+            {
+                method_0();
+            }
+            else
+            {
+                Console.WriteLine("eye: " + bool_0.ToString() + " - friendBoss.Properties1: " + simpleBoss_0.Properties1);
+            }
+        }
 
-		private static string[] CallChat = new string[]
-		{
-			"卫兵！ <br/>卫兵！！ ",
-			"啵咕们！！<br/>给我些帮助！"
-		};
+        private void method_0()
+        {
+            base.Body.ChangeDirection(-1, 1200);
+            base.Body.ChangeDirection(1, 1800);
+            base.Body.ChangeDirection(-1, 2300);
+            int num = base.Game.Random.Next(-300, 300);
+            base.Body.MoveTo(base.Body.X + num, base.Body.Y, "walkA", 3500, method_1);
+        }
 
-		private static string[] ShootedChat = new string[]
-		{
-			"哎呦！很痛…",
-			"我还顶的住…"
-		};
+        private void method_1()
+        {
+            base.Body.ChangeDirection(1, 500);
+            base.Body.ChangeDirection(-1, 1000);
+            base.Body.PlayMovie("beatA", 1000, 2000, method_7);
+        }
 
-		private static string[] JumpChat = new string[]
-		{
-			"为了你们的胜利，<br/>向我开炮！",
-			"你再往前半步我就把你给杀了！",
-			"高！<br/>实在是高！"
-		};
+        private void method_2()
+        {
+            player_0 = base.Game.FindRandomPlayer();
+            if (player_0 != null)
+            {
+                base.Body.ChangeDirection(player_0, 500);
+                ((PVEGame)base.Game).SendPlayersPicture(player_0, 7, state: true);
+                base.Body.Say("Selam <p class=\"red\">" + player_0.PlayerDetail.PlayerCharacter.NickName + "</p>Naber...?", 0, 2000, 0);
+                base.Body.CallFuction(method_7, 5000);
+            }
+        }
 
-		private static string[] KillAttackChat = new string[]
-		{
-			"超级肉弹！！"
-		};
+        private void method_3()
+        {
+            if (player_0 != null)
+            {
+                ((PVEGame)base.Game).SendPlayersPicture(player_0, 7, state: false);
+                player_0 = null;
+            }
+            base.Body.CallFuction(method_7, 1000);
+        }
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        private void method_4()
+        {
+            base.Body.ChangeDirection(player_0, 200);
+            if (base.Body.Distance(player_0.X, player_0.Y) > 600.0)
+            {
+                base.Body.MoveTo(player_0.X, player_0.Y, "walkB", 2200, method_6, 10);
+            }
+            else
+            {
+                base.Body.MoveTo(player_0.X, player_0.Y, "walkC", 2200, method_6, 5);
+            }
+        }
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			base.Body.CurrentDamagePlus = 1f;
-			base.Body.CurrentShootMinus = 1f;
-			base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			if (base.Body.Direction == -1)
-			{
-				base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
-			else
-			{
-				base.Body.SetRect(-((SimpleBoss)base.Body).NpcInfo.X - ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
-		}
+        private void method_5()
+        {
+            base.Body.ChangeDirection(player_0, 200);
+            base.Body.PlayMovie("jump", 2000, 0);
+            ((PVEGame)base.Game).SendObjectFocus(player_0, 1, 5000, 0);
+            base.Body.BoltMove(player_0.X, player_0.Y, 6000);
+            base.Body.PlayMovie("fall", 7000, 0);
+            base.Body.RangeAttacking(player_0.X - 100, player_0.X + 100, "cry", 8000, null);
+            base.Body.CallFuction(method_6, 8500);
+        }
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        private void method_6()
+        {
+            base.Body.CurrentDamagePlus = 2f;
+            base.Body.Beat(player_0, "beatB", 0, 0, 0);
+            base.Body.CallFuction(method_7, 4000);
+        }
 
-		public override void OnStartAttacking()
-		{
-			if (this.m_attackTurn == 0)
-			{
-				this.WalkA();
-				this.Angger();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 1)
-			{
-				this.WalkA();
-				this.Angger();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 2)
-			{
-				this.Jump();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 3)
-			{
-				this.WalkB();
-				this.m_attackTurn++;
-			}
-			else
-			{
-				this.WalkB();
-				this.m_attackTurn = 0;
-			}
-		}
+        public override void OnAfterTakedBomb()
+        {
+            base.OnAfterTakedBomb();
+            if (!bool_0)
+            {
+                int num = simpleBoss_0.Blood - base.Body.Blood;
+                simpleBoss_0.AddBlood(-num, 1);
+            }
+        }
 
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-		}
+        private void method_7()
+        {
+            if (bool_0)
+            {
+                ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "standB");
+            }
+            else
+            {
+                ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "standA");
+            }
+        }
 
-		public void Jump()
-		{
-			Player player = base.Game.FindRandomPlayer();
-			base.Body.JumpToSpeed(player.X, player.Y, "jump", 1000, 1, 1000, new LivingCallBack(this.Fall));
-			((SimpleBoss)base.Body).SetRelateDemagemRect(-41, -100, 83, 70);
-		}
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
 
-		public void Fall()
-		{
-			base.Body.PlayMovie("fall", 1000, 0);
-			base.Body.RangeAttacking(base.Body.X - 100, base.Body.X + 100, "cry", 1000, null);
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			base.Body.SetRelateDemagemRect(-41, -100, 83, 70);
-		}
-
-		private void WalkA()
-		{
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			int num = base.Game.Random.Next(100, 170);
-			foreach (Player current in base.Game.GetAllLivingPlayers())
-			{
-				base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			}
-			if (base.Body.X < 400)
-			{
-				base.Body.MoveTo(base.Body.X + num, base.Body.Y, "walkA", 1000, "", 4);
-			}
-			else
-			{
-				base.Body.MoveTo(base.Body.X - num, base.Body.Y, "walkA", 1000, "", 4);
-			}
-			base.Body.CallFuction(new LivingCallBack(this.AllAttack), 2600);
-		}
-
-		private void AllAttack()
-		{
-			this.ChangeDirection(1);
-			base.Body.CurrentDamagePlus = 0.5f;
-			base.Body.PlayMovie("beatA", 0, 0);
-			this.ChangeDirection(3);
-		}
-
-		private void AllAttack2()
-		{
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			base.Body.CurrentDamagePlus = 0.5f;
-			base.Body.PlayMovie("beatB", 0, 0);
-			base.Body.RangeAttacking(base.Body.X - 1000, base.Body.X + 1000, "cry", 1000, null);
-			((SimpleBoss)base.Body).SetRelateDemagemRect(-41, -100, 83, 70);
-		}
-
-		private void WalkB()
-		{
-			this.m_targer = base.Game.FindNearestPlayer(base.Body.X, base.Body.Y);
-			if (this.m_run == 0)
-			{
-				this.Beat(this.m_targer);
-				this.m_run = 1;
-			}
-			else
-			{
-				this.Beat2(this.m_targer);
-				this.m_run = 0;
-			}
-		}
-
-		private void Beat(Player player)
-		{
-			this.m_targer = base.Game.FindNearestPlayer(base.Body.X, base.Body.Y);
-			int num = (int)player.Distance(base.Body.X, base.Body.Y);
-			if (num > 200)
-			{
-				if (player.X > base.Body.X)
-				{
-					base.Body.MoveTo(base.Body.X + num - 150, base.Body.Y, "walkB", 0, "", 12);
-				}
-				else
-				{
-					base.Body.MoveTo(base.Body.X - num + 150, base.Body.Y, "walkB", 0, "", 12);
-				}
-			}
-			if (num < 200)
-			{
-				base.Body.PlayMovie("beatB", 2000, 0);
-				base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-				base.Body.CallFuction(new LivingCallBack(this.RangeAttacking), 2100);
-			}
-			else
-			{
-				base.Body.PlayMovie("beatB", num * 3 + 200, 0);
-				base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-				base.Body.CallFuction(new LivingCallBack(this.RangeAttacking), num * 4);
-			}
-		}
-
-		private void Beat2(Player player)
-		{
-			int num = (int)player.Distance(base.Body.X, base.Body.Y);
-			this.m_targer = base.Game.FindNearestPlayer(base.Body.X, base.Body.Y);
-			if (num > 200)
-			{
-				if (player.X > base.Body.X)
-				{
-					base.Body.MoveTo(base.Body.X + num - 150, base.Body.Y, "walkB", 0, "", 12);
-				}
-				else
-				{
-					base.Body.MoveTo(base.Body.X - num + 150, base.Body.Y, "walkB", 0, "", 12);
-				}
-			}
-			if (num < 200)
-			{
-				base.Body.PlayMovie("beatB", 2000, 0);
-				base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-				base.Body.CallFuction(new LivingCallBack(this.RangeAttacking), 2100);
-			}
-			else
-			{
-				base.Body.PlayMovie("beatB", num * 3 + 200, 0);
-				base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-				base.Body.CallFuction(new LivingCallBack(this.RangeAttacking), num * 4);
-			}
-		}
-
-		private void RangeAttacking()
-		{
-			base.Body.RangeAttacking(base.Body.X - 200, base.Body.X + 200, "", 0, null);
-		}
-
-		public void Angger()
-		{
-			base.Body.State = 1;
-			this.Dander += 100;
-			((SimpleBoss)base.Body).SetDander(this.Dander);
-			if (base.Body.Direction == -1)
-			{
-				((SimpleBoss)base.Body).SetRelateDemagemRect(8, -252, 74, 50);
-			}
-			else
-			{
-				((SimpleBoss)base.Body).SetRelateDemagemRect(-8, -252, 74, 50);
-			}
-		}
-
-		private void ChangeDirection(int count)
-		{
-			int direction = base.Body.Direction;
-			for (int i = 0; i < count; i++)
-			{
-				base.Body.ChangeDirection(-direction, i * 200 + 100);
-				base.Body.ChangeDirection(direction, (i + 1) * 100 + i * 200);
-			}
-		}
-	}
+        public FourNormalWolfNpc()
+        {
+            int_0 = 4105;
+        }
+    }
 }

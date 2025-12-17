@@ -3,18 +3,20 @@ using Game.Base.Packets;
 using Game.Server.Managers;
 using SqlDataProvider.Data;
 using System;
+using Game.Server.Api;
 
 namespace Game.Server.Packets.Client
 {
     [PacketHandler(73, "大喇叭")]
     public class CBugleHandler : IPacketHandler
     {
+
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             int templateId = 11100;
             int clientId = packet.ReadInt();
             ItemInfo itemByTemplateID = client.Player.PropBag.GetItemByTemplateID(0, templateId);
-            if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(300.0), DateTime.Now) > 0)
+            if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(0.0), DateTime.Now) > 0)
             {
                 client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("5 dakikada 1 sunucular arası mesaj gönderebilirsin!"));
                 return 1;
@@ -24,6 +26,16 @@ namespace Game.Server.Packets.Client
             {
                 packet.ReadString();
                 string str = packet.ReadString();
+                if (!string.IsNullOrWhiteSpace(str) && !str.StartsWith("!"))
+                {
+                    PythonChatBridge.Send(
+                        client.Player.PlayerCharacter.NickName,
+                        client.Player.PlayerCharacter.Grade,
+                        $"[Bugle] {str}",
+                        0,
+                        null
+                    );
+                }
                 client.Player.PropBag.RemoveCountFromStack(itemByTemplateID, 1);
                 gSPacketIn.WriteInt(client.Player.ZoneId);
                 gSPacketIn.WriteInt(client.Player.PlayerCharacter.ID);

@@ -196,5 +196,8 @@ namespace Game.Logic.Phy.Object
         {
 			m_isMoving = false;
         }
+    public void TakedDameAction()
+    {
+    }
     }
 }

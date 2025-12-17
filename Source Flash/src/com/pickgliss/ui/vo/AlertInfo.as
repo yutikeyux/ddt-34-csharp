@@ -8,9 +8,9 @@ package com.pickgliss.ui.vo
    public class AlertInfo extends EventDispatcher
    {
       
-      public static const CANCEL_LABEL:String = "Hủy bỏ";
+      public static const CANCEL_LABEL:String = "İptal Et";
       
-      public static const SUBMIT_LABEL:String = "Đồng ý";
+      public static const SUBMIT_LABEL:String = "Onayla";
        
       
       private var _type:int;
@@ -25,7 +25,7 @@ package com.pickgliss.ui.vo
       
       private var _buttonGape:int;
       
-      private var _cancelLabel:String = "Hủy bỏ";
+      private var _cancelLabel:String = "İptal Et";
       
       private var _data:Object;
       
@@ -49,7 +49,7 @@ package com.pickgliss.ui.vo
       
       private var _cancelEnabled:Boolean = true;
       
-      private var _submitLabel:String = "Đồng ý";
+      private var _submitLabel:String = "Onayla";
       
       private var _textShowHeight:int;
       
@@ -61,7 +61,7 @@ package com.pickgliss.ui.vo
 	  
 	  private var _selectBtnY:int;
       
-      public function AlertInfo(param1:String = "", param2:String = "Đồng ý", param3:String = "Hủy bỏ", param4:Boolean = true, param5:Boolean = true, param6:Object = null, param7:Boolean = true, param8:Boolean = true, param9:Boolean = true, param10:Boolean = true, param11:int = 20, param12:int = 30, param13:Boolean = false, param14:int = 0)
+      public function AlertInfo(param1:String = "", param2:String = "Onayla", param3:String = "İptal Et", param4:Boolean = true, param5:Boolean = true, param6:Object = null, param7:Boolean = true, param8:Boolean = true, param9:Boolean = true, param10:Boolean = true, param11:int = 20, param12:int = 30, param13:Boolean = false, param14:int = 0)
       {
          this._buttonGape = ComponentSetting.ALERT_BUTTON_GAPE;
          super();

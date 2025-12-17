@@ -27,10 +27,10 @@ namespace Game.Server.Pet.Handle
 					ItemInfo info = ItemInfo.CreateFromTemplate(ItemMgr.FindItemTemplate(12656), petinfo.WashGetCount, 105);
 					info.IsBinds = true;
 					player.SendItemToMail(info, "", "", eMailType.Default);
-					player.SendMessage("Nhận được: " + info.Template.Name + "x" + info.Count.ToString());
+					player.SendMessage("Kazandınız: " + info.Template.Name + "x" + info.Count.ToString());
 				}
 			}
-			player.SendMessage(LanguageMgr.GetTranslation("PetHandler.Msg19"));
+			player.SendMessage(LanguageMgr.GetTranslation("Petin sana baybay dedi!"));
 			player.PetBag.SaveToDatabase(saveAdopt: false);
 			return false;
         }

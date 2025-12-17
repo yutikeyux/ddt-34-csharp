@@ -1,128 +1,222 @@
-using Game.Logic.AI;
-using Game.Logic.Phy.Object;
+﻿// Gerekli kütüphaneler ve sistem sınıfları
 using System;
+using System.Collections.Generic;
+using Game.Logic;
+using Game.Logic.AI;
+using Game.Logic.Effects;
+using Game.Logic.Phy.Object;
 
+// AI kodunun bulunduğu namespace
 namespace GameServerScript.AI.NPC
 {
-	public class TwelveSimpleFlyThirdBoss : ABrain
-	{
-		private int m_attackTurn = 0;
+    /// <summary>
+    /// Bu sınıf, "TwelveSimpleFlyThirdBoss" adlı NPC'nin yapay zekasını ve davranışlarını kontrol eder.
+    /// ABrain sınıfından miras alır.
+    /// </summary>
+    public class TwelveSimpleFlyThirdBoss : ABrain
+    {
+        #region Constants (Sabitler)
 
-		public int currentCount = 0;
+        // Oyuncuların ışınlanacağı X koordinatları
+        private static readonly int[] TELEPORT_X_POSITIONS = new int[] { 725, 840, 1065, 1200 };
 
-		public int Dander = 0;
+        // Oyuncuların ışınlanacağı ilk Y koordinatı
+        private const int INITIAL_TELEPORT_Y = 600;
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        // Oyuncuların saldırı sonrası ışınlanacağı son Y koordinatı
+        private const int FINAL_ATTACK_Y_POS = 910;
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			base.Body.CurrentDamagePlus = 1f;
-			base.Body.CurrentShootMinus = 1f;
-			base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			if (base.Body.Direction == -1)
-			{
-				base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
-			else
-			{
-				base.Body.SetRect(-((SimpleBoss)base.Body).NpcInfo.X - ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
-		}
+        // Döndürme için toplam açı (5 tur x 360 derece)
+        private const int TOTAL_ROTATION_DEGREES = 200;
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        // Döndürme hızı
+        private const int ROTATION_SPEED = 30;
 
-		public override void OnStartAttacking()
-		{
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			int num = 0;
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				if (current.IsLiving && current.X > 480 && current.X < 1000)
-				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
-					{
-						num = num2;
-					}
-				}
-			}
-			if (this.m_attackTurn == 0)
-			{
-				this.AttackA();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 1)
-			{
-				this.AttackB();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 2)
-			{
-				this.AttackD();
-				this.m_attackTurn++;
-			}
-			else
-			{
-				this.AttackC();
-				this.m_attackTurn = 0;
-			}
-		}
+        // Zamanlama gecikmeleri (milisaniye cinsinden)
+        private const int PREPARE_ATTACK_DELAY = 100;
+        private const int CREATE_EFFECTS_DELAY = 500;
+        private const int SPIN_DELAY = 100;
 
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-		}
+        #endregion
 
-		private void KillAttack(int fx, int tx)
-		{
-			base.Body.CurrentDamagePlus = 1000f;
-			base.Body.PlayMovie("beatA", 1000, 0);
-			base.Body.RangeAttacking(fx, tx, "cry", 4000, null);
-		}
+        #region Fields (Alanlar)
 
-		private void MoveBeatA()
-		{
-			base.Body.MoveTo(base.Game.Random.Next(641, 1110), 781, "walk", 500, "", 12, new LivingCallBack(this.AttackA));
-		}
+        // Boss'un konuşma metinleri
+        private static readonly string[] BOSS_QUOTES = new string[]
+        {
+            "Anafor! Sonsuzluk sizi yutar!"
+        };
 
-		private void AttackA()
-		{
-			base.Body.CurrentDamagePlus = 0.5f;
-			base.Body.PlayMovie("beatA", 1000, 0);
-			base.Body.CallFuction(new LivingCallBack(this.RangeAttacking), 2000);
-		}
+        #endregion
 
-		private void AttackB()
-		{
-			base.Body.CurrentDamagePlus = 0.8f;
-			base.Body.PlayMovie("beatB", 1000, 0);
-			base.Body.CallFuction(new LivingCallBack(this.RangeAttacking), 4000);
-		}
+        #region ABrain Override Methods (Geçersiz Kılınan Metotlar)
 
-		private void AttackD()
-		{
-			base.Body.CurrentDamagePlus = 1.1f;
-			base.Body.PlayMovie("beatD", 1000, 0);
-			base.Body.CallFuction(new LivingCallBack(this.RangeAttacking), 3500);
-		}
+        /// <summary>
+        /// Her yeni tur başladığında çağrılır. Boss'un temel saldırı değerlerini sıfırlar.
+        /// </summary>
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            // Saldırı ve savunma bonuslarını normal seviyeye getir
+            base.Body.CurrentDamagePlus = 1.0f;
+            base.Body.CurrentShootMinus = 1.0f;
+        }
 
-		private void AttackC()
-		{
-			base.Body.CurrentDamagePlus = 1.1f;
-			base.Body.PlayMovie("beatC", 1000, 0);
-			base.Body.CallFuction(new LivingCallBack(this.RangeAttacking), 3500);
-		}
+        /// <summary>
+        /// Boss'un kendi turu başladığında çağrılır.
+        /// </summary>
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		private void RangeAttacking()
-		{
-			base.Body.RangeAttacking(base.Body.X - 10000, base.Body.X + 10000, "cry", 0, null);
-		}
-	}
+        /// <summary>
+        /// Boss nesnesi oluşturulduğunda çağrılır.
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+        }
+
+        /// <summary>
+        /// Boss saldırıyı bıraktığında çağrılır.
+        /// </summary>
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
+
+        /// <summary>
+        /// Boss saldırmaya başladığında ana saldırı dizisini tetikler.
+        /// </summary>
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            // Saldırı dizisini başlat
+            this.StartTeleportSequence();
+        }
+
+        #endregion
+
+        #region Private Methods (Özel Metotlar - Saldırı Dizisi)
+
+        /// <summary>
+        /// Saldırı dizisinin ilk adımı: Boss rastgele bir konuma hareket eder.
+        /// </summary>
+        private void StartTeleportSequence()
+        {
+            // Boss için harita üzerinde rastgele bir X ve Y konumu belirle
+            int randomX = Game.Random.Next(600, 1300);
+            int randomY = Game.Random.Next(300, 400);
+
+            // Boss'u belirtilen konuma "fly" animasyonuyla hareket ettir
+            Body.MoveTo(randomX, randomY, "fly", 1000, "fly", 8);
+
+            // Hareket bittikten sonra bir sonraki adımı (saldırıyı hazırlama) çağır
+            Body.CallFuction(new LivingCallBack(this.PrepareAttack), 0);
+        }
+
+        /// <summary>
+        /// Saldırıyı hazırlama adımı: Boss animasyon oynatır ve bir şeyler söyler.
+        /// </summary>
+        private void PrepareAttack()
+        {
+            // "beatD" animasyonunu oynat
+            Body.PlayMovie("beatD", 0, 1);
+
+            // Belirlenmiş konuşma metinlerinden rastgele birini söyle
+            Body.Say(BOSS_QUOTES[Game.Random.Next(0, BOSS_QUOTES.Length)], 1000, 0);
+
+            // Bir sonraki adımı (ışınlanma efektlerini oluşturma) gecikmeli olarak çağır
+            Body.CallFuction(new LivingCallBack(this.CreateTeleportEffects), PREPARE_ATTACK_DELAY);
+        }
+
+        /// <summary>
+        /// Işınlanma efektlerini oluşturma adımı: Oyuncuların gideceği yerlere kara delik efektleri ekler.
+        /// </summary>
+        private void CreateTeleportEffects()
+        {
+            // Önceden belirlenmiş tüm X konumları için döngü oluştur
+            foreach (int x in TELEPORT_X_POSITIONS)
+            {
+                // Her konuma "heidong" (kara delik) efektini oluştur
+                ((PVEGame)Game).Createlayer(x, INITIAL_TELEPORT_Y, "moive", "asset.game.nine.heidong", "in", 1, 0, true);
+            }
+
+            // Bir sonraki adımı (oyuncuları asıl ışınlatma) gecikmeli olarak çağır
+            Body.CallFuction(new LivingCallBack(this.ExecutePlayerTeleport), CREATE_EFFECTS_DELAY);
+        }
+
+        /// <summary>
+        /// Oyuncuları ışınlatma adımı: Tüm oyuncuları rastgele konumlara anında ışınlar.
+        /// </summary>
+        private void ExecutePlayerTeleport()
+        {
+            // Tüm canlı oyuncuları al
+            List<Player> allPlayers = Game.GetAllLivingPlayers();
+
+            // Her oyuncu için
+            foreach (Player player in allPlayers)
+            {
+                // Oyuncuyu rastgele bir ışınlanma noktasına gönder
+                int targetX = TELEPORT_X_POSITIONS[Game.Random.Next(0, TELEPORT_X_POSITIONS.Length)];
+                player.BoltMove(targetX, INITIAL_TELEPORT_Y, 100);
+            }
+
+            // Kamerayı rastgele bir ışınlanma noktasına odakla
+            int randomFocusX = TELEPORT_X_POSITIONS[Game.Random.Next(0, TELEPORT_X_POSITIONS.Length)];
+            ((PVEGame)Game).SendFreeFocus(randomFocusX, INITIAL_TELEPORT_Y, 1, 0, 2000);
+
+            // Bir sonraki adımı (oyuncuları döndürme) gecikmeli olarak çağır
+            Body.CallFuction(new LivingCallBack(this.SpinPlayers), SPIN_DELAY);
+        }
+
+        /// <summary>
+        /// Oyuncuları döndürme adımı: Tüm oyuncuları kendi etraflarında 5 kez döndürür.
+        /// </summary>
+        private void SpinPlayers()
+        {
+            // Tüm canlı oyuncuları al
+            List<Player> allPlayers = Game.GetAllLivingPlayers();
+
+            // Her oyuncu için
+            foreach (Player player in allPlayers)
+            {
+                // Oyuncuyu 1800 derece (5 tam tur) döndür
+                Game.SendLivingTurnRotation(player, TOTAL_ROTATION_DEGREES, ROTATION_SPEED, "");
+            }
+
+            // Döndürme işlemi bittikten sonra son adımı (saldıyı bitirme) çağır
+            Body.CallFuction(new LivingCallBack(this.FinalizeAttack), 0);
+        }
+
+        /// <summary>
+        /// Saldırı dizisinin son adımı: Oyuncuları son konumlarına ışınlar ve saldırır.
+        /// </summary>
+        private void FinalizeAttack()
+        {
+            // Tüm canlı oyuncuları al
+            List<Player> allPlayers = Game.GetAllLivingPlayers();
+
+            // Her oyuncu için
+            foreach (Player player in allPlayers)
+            {
+                // NOT: Bu satır, döndürme animasyonu sonrası oyuncunun yönünü sıfırlamak için olabilir.
+                // Görsel olarak ani bir "sekme" yaratabilir.
+                Game.SendLivingTurnRotation(player, 0, 0, "");
+
+                // Oyuncuyu yeni bir rastgele X konumuna ve sabit bir Y konumuna ışınla
+                int targetX = TELEPORT_X_POSITIONS[Game.Random.Next(0, TELEPORT_X_POSITIONS.Length)];
+                player.BoltMove(targetX, FINAL_ATTACK_Y_POS, 2000);
+
+                // Oyuncunun yeni konumuna alan saldırısı yap
+                Body.RangeAttacking(player.X - 100, player.X + 100, "cryA", 0, null);
+
+                // Kamerayı saldırılan oyuncunun üzerine odakla
+                ((PVEGame)Game).SendFreeFocus(player.X, FINAL_ATTACK_Y_POS, 1, 0, 2000);
+            }
+        }
+
+        #endregion
+    }
 }

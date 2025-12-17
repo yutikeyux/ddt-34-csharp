@@ -1,12 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 using Game.Logic.Actions;
 using Game.Logic.Effects;
 using Game.Logic.Phy.Actions;
 using Game.Logic.Phy.Maps;
 using Game.Logic.Phy.Maths;
 using SqlDataProvider.Data;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 
 namespace Game.Logic.Phy.Object
 {
@@ -89,19 +89,19 @@ namespace Game.Logic.Phy.Object
         private void BombImp()
         {
             List<Living> playersAround = m_map.FindHitByHitPiont(GetCollidePoint(), m_radius);
+            List<Player> listPlayerAround = m_map.FindPlayerByHitPoint(GetCollidePoint(), m_radius);
             foreach (Living p3 in playersAround)
             {
                 if (p3 is Player)
                 {
                     (p3 as Player).OnBeforeBomb((int)(m_lifeTime * 1000f) + 1000);
                 }
-                // Çukur oluþturmayý engelleme ve çukur sýrasýný iþaretleme
                 if (p3.IsNoHole || p3.NoHoleTurn)
                 {
                     p3.NoHoleTurn = true;
                     if (!m_info.IsSpecial())
                     {
-                        digMap = false; // Haraca kazýlmayý iptal et
+                        digMap = false;
                     }
                 }
                 p3.SyncAtTime = false;
@@ -117,50 +117,55 @@ namespace Game.Logic.Phy.Object
                 switch (m_type)
                 {
                     case BombType.FORZEN:
-                        foreach (Living item2 in playersAround)
+                        foreach (Living item4 in playersAround)
                         {
-                            if (m_owner is SimpleBoss && new IceFronzeEffect(100).Start(item2))
+                            if (m_owner is SimpleBoss && new IceFronzeEffect(100).Start(item4))
                             {
-                                m_actions.Add(new BombAction(m_lifeTime, ActionType.FORZEN, item2.Id, 0, 0, 0));
+                                m_actions.Add(new BombAction(m_lifeTime, ActionType.FORZEN, item4.Id, 0, 0, 0));
                             }
-                            else if (m_owner is Player && !(item2 is Player) && item2.Config.DamageForzen)
+                            else if (m_owner is Player && (item4 is Player) == false && item4.Config.DamageForzen)
                             {
-                                item2.Properties2 = (int)item2.Properties2 - 1;
-                                if ((int)item2.Properties2 <= 0)
+                                item4.Properties2 = (int)item4.Properties2 - 1;
+                                if ((int)item4.Properties2 <= 0)
                                 {
-                                    item2.PlayMovie("die", (int)Math.Round((m_lifeTime + 1f) * 1000f), 0);
-                                    item2.Die((int)Math.Round((m_lifeTime + 1f) * 1000f));
+                                    item4.PlayMovie("die", (int)Math.Round((m_lifeTime + 1) * 1000), 0);
+                                    //item4.Die((int)Math.Round((m_lifeTime + 1) * 1000));
+                                    item4.Die((int)Math.Round((m_lifeTime + 1) * 1000));
                                 }
                                 else
                                 {
-                                    item2.PlayMovie("cry", (int)Math.Round((m_lifeTime + 1f) * 1000f), 0);
+                                    item4.PlayMovie("cry", (int)Math.Round((m_lifeTime + 1) * 1000), 0);
                                 }
                             }
-                            else if (item2 is SimpleNpc || item2 is Player || (item2 is SimpleBoss && item2.Config.IsHelper) || (item2 is SimpleBoss && item2.Config.CanFrost))
+                            else if (item4 is SimpleNpc || item4 is Player || (item4 is SimpleBoss && item4.Config.IsHelper) || (item4 is SimpleBoss && item4.Config.CanFrost))
                             {
-                                if (item2 is SimpleNpc && item2.Config.CanFrost)
+                                if (item4 is SimpleNpc && item4.Config.CanFrost)
                                 {
-                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.DO_ACTION, item2.Id, 0, 0, item2.DoAction));
-                                    item2.IsFrost = true;
-                                }
-                                else if (new IceFronzeEffect(2).Start(item2))
-                                {
-                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.FORZEN, item2.Id, 0, 0, 0));
+                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.DO_ACTION, item4.Id, 0, 0, 4));
+                                    item4.IsFrost = true;
                                 }
                                 else
                                 {
-                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.FORZEN, -1, 0, 0, 0));
-                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.UNANGLE, item2.Id, 0, 0, 0));
+                                    if (new IceFronzeEffect(2).Start(item4))
+                                    {
+                                        m_actions.Add(new BombAction(m_lifeTime, ActionType.FORZEN, item4.Id, 0, 0, 0));
+                                    }
+                                    else
+                                    {
+                                        m_actions.Add(new BombAction(m_lifeTime, ActionType.FORZEN, -1, 0, 0, 0));
+                                        m_actions.Add(new BombAction(m_lifeTime, ActionType.UNANGLE, item4.Id, 0, 0, 0));
+                                    }
                                 }
                             }
-                            if ((item2 is SimpleBoss || item2 is SimpleNpc))
+
+                            if ((item4 is SimpleBoss || item4 is SimpleNpc) && TakeDamageFrozen(item4))
                             {
-                                m_game.AddAction(new LivingAfterShootedFrozen(item2, (int)((m_lifeTime + 1f) * 1000f)));
+                                m_game.AddAction(new LivingAfterShootedFrozen(item4, (int)((m_lifeTime + 1) * 1000)));
                             }
-                            if (item2.State == 1)
+                            if (item4.State == 1)
                             {
-                                item2.SyncAtTime = true;
-                                item2.State = 0;
+                                item4.SyncAtTime = true;
+                                item4.State = 0;
                             }
                         }
                         break;
@@ -178,11 +183,11 @@ namespace Game.Logic.Phy.Object
                             m_owner.StartMoving();
                             m_actions.Add(new BombAction(m_lifeTime, ActionType.TRANSLATE, m_x, m_y, 0, 0));
                             m_actions.Add(new BombAction(m_lifeTime, ActionType.START_MOVE, m_owner.Id, m_owner.X, m_owner.Y, m_owner.IsLiving ? 1 : 0));
-                            (m_owner as Player)?.OnPlayerAnyShellThrow();
+                            (m_owner as Player).OnPlayerAnyShellThrow();
                         }
                         break;
                     case BombType.CURE:
-                        foreach (Living item3 in playersAround)
+                        foreach (Living item5 in playersAround)
                         {
                             double num = 0.0;
                             if (m_map.FindPlayers(GetCollidePoint(), m_radius))
@@ -193,91 +198,87 @@ namespace Game.Logic.Phy.Object
                             {
                                 num = 1.0;
                             }
+                            num = 1.0;
                             int num2 = 0;
                             if (m_info.ID == 10009)
                             {
                                 int num3 = (int)Math.Round(m_lifeTime);
-                                num2 = m_owner.PetEffects.AddBloodPercent * item3.MaxBlood / 100;
+                                num2 = m_owner.PetEffects.AddBloodPercent + item5.MaxBlood / 100;
                                 if (num3 > 1)
                                 {
                                     num2 *= num3;
                                 }
-                                if (m_owner.Team == item3.Team)
+                                if (m_owner.Team == item5.Team)
                                 {
-                                    item3.AddBlood(num2);
-                                    ((Player)item3).TotalCure += num2;
-                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.CURE, item3.Id, item3.Blood, num2, 0));
+                                    item5.AddBlood(num2);
+                                    ((Player)item5).TotalCure += num2;
+                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.CURE, item5.Id, item5.Blood, num2, 0));
                                 }
                                 else
                                 {
-                                    item3.AddBlood(-num2, 1);
-                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.KILL_PLAYER, item3.Id, num2, 1, item3.Blood));
+                                    if (item5.Game is PVPGame)
+                                    {
+                                        item5.AddBlood(-num2, 1);
+                                        m_actions.Add(new BombAction(m_lifeTime, ActionType.KILL_PLAYER, item5.Id, num2, 1, item5.Blood));
+                                    }
                                 }
                             }
                             else
                             {
-                                // DÜZELTME: Ýyileþtirme skill'inin hangi silahtan geldiðini kontrol et
-                                Player playerOwner = m_owner as Player;
-                                if (playerOwner != null)
+                                num2 = (int)((double)((Player)m_owner).PlayerDetail.SecondWeapon.Template.Property7 * Math.Pow(1.1, ((Player)m_owner).PlayerDetail.SecondWeapon.StrengthenLevel) * num);
+                                if (listPlayerAround.Count > 1)
                                 {
-                                    // Eðer atýlan top ana silahtan ise
-                                    if (m_info.ID == playerOwner.PlayerDetail.MainWeapon.TemplateID)
-                                    {
-                                        num2 = (int)((double)playerOwner.PlayerDetail.MainWeapon.Template.Property7 * Math.Pow(1.1, playerOwner.PlayerDetail.MainWeapon.StrengthenLevel) * num);
-                                    }
-                                    // Eðer atýlan top ikinci silahtan ise
-                                    else if (m_info.ID == playerOwner.PlayerDetail.SecondWeapon.TemplateID)
-                                    {
-                                        num2 = (int)((double)playerOwner.PlayerDetail.SecondWeapon.Template.Property7 * Math.Pow(1.1, playerOwner.PlayerDetail.SecondWeapon.StrengthenLevel) * num);
-                                    }
-                                    else // Varsayýlan durum (belki bir skill veya özel mermi)
-                                    {
-                                        num2 = (int)((double)playerOwner.PlayerDetail.SecondWeapon.Template.Property7 * Math.Pow(1.1, playerOwner.PlayerDetail.SecondWeapon.StrengthenLevel) * num);
-                                    }
+                                    num2 /= listPlayerAround.Count;
                                 }
-
                                 num2 += m_owner.FightBuffers.ConsortionAddBloodGunCount;
                                 num2 += m_owner.PetEffects.IncreaseAngelicPoint;
-
-                                if (item3 is Player)
+                                if (item5 is Player)
                                 {
-                                    ((Player)item3).TotalCure += num2;
-                                    item3.AddBlood(num2);
-                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.CURE, item3.Id, item3.Blood, num2, 0));
+                                    ((Player)item5).TotalCure += num2;
+                                    item5.AddBlood(num2);
+                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.CURE, item5.Id, item5.Blood, num2, 0));
                                 }
-                                if ((item3 is SimpleBoss || item3 is SimpleNpc) && item3.Config.IsHelper)
+                                if ((item5 is SimpleBoss || item5 is SimpleNpc) && item5.Config.IsHelper)
                                 {
-                                    if (m_game.BloodBuff > 0)
-                                        num2 = m_game.BloodBuff;
-                                    item3.AddBlood(num2);
-                                    item3.TotalCure += num2;
-                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.CURE, item3.Id, item3.Blood, num2, 0));
-                                    m_game.AddAction(new LivingAfterHealAction(m_owner, item3, num2, (int)((m_lifeTime + 1f) * 1000f)));
+                                    item5.AddBlood(num2);
+                                    //item5.OnHeal(num2);
+                                    item5.TotalCure += num2;
+                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.CURE, item5.Id, item5.Blood, num2, 0));
+                                    m_game.AddAction(new LivingAfterHealAction(m_owner, item5, num2, (int)((m_lifeTime + 1f) * 1000f)));
                                 }
                             }
                             if (m_info.ID != 10009)
                             {
-                                (m_owner as Player)?.OnPlayerShootCure();
+                                (m_owner as Player).OnPlayerShootCure();
                             }
-                            (m_owner as Player)?.OnPlayerAnyShellThrow();
+                            (m_owner as Player).OnPlayerAnyShellThrow();
                         }
                         break;
                     default:
                         {
-                            SimpleBoss friendlyBoss = null;
                             int damage = 0;
                             int critical = 0;
                             foreach (Living p2 in playersAround)
                             {
+                                if (!p2.CanAttack)
+                                {
+                                    p2.Say(p2.strWrongAttack, 0, 0, 3000);
+                                    ((PVEGame)p2.Game).ListNpcTakeDamage.Add(5);
+                                }
                                 if (m_owner.IsFriendly(p2) || (m_owner is Player && p2.Config.IsHelper) || (!(p2 is Player) && !p2.Config.CanTakeDamage))
                                 {
                                     continue;
+                                }
+
+                                if (m_owner.ClearBuff)
+                                {
+                                    p2.EffectList.StopAllEffect();
                                 }
                                 if ((p2 is SimpleBoss || p2 is SimpleNpc) && (p2.Config.HaveShield || (p2.Config.BallCanDamage > 0 && p2.Config.BallCanDamage != m_info.ID)))
                                 {
                                     damage = 0;
                                 }
-                                m_game.AddAction(new LivingBeforeShootedAction(m_owner, p2, (int)((m_lifeTime + 0.5f) * 700f)));
+                                p2.TakedDameAction();
                                 p2.OnMakeDamage(p2);
                                 damage = MakeDamage(p2);
                                 if (damage != 0)
@@ -287,16 +288,6 @@ namespace Game.Logic.Phy.Object
                                     if (p2.TakeDamage(m_owner, ref damage, ref critical, "Fire"))
                                     {
                                         m_actions.Add(new BombAction(m_lifeTime, ActionType.KILL_PLAYER, p2.Id, damage + critical, (critical == 0) ? 1 : 2, p2.Blood));
-                                        if (p2 is SimpleBoss && (p2.Config.FriendlyBoss.ID != 0 && p2.Config.FriendlyBoss.CanShareDamage))
-                                        {
-                                            friendlyBoss = m_game.FindBossWithID(p2.Config.FriendlyBoss.ID);
-                                            if (p2.Config.FriendlyBoss.ActionStr != "")
-                                                p2.Config.FriendlyBoss.SetActionStr(friendlyBoss);
-                                            if (friendlyBoss != null && friendlyBoss.ShareDamage(m_owner, ref damage, ref critical, "QuyDepTrai"))
-                                            {
-                                                m_actions.Add(new BombAction(m_lifeTime, ActionType.KILL_PLAYER, friendlyBoss.Id, damage + critical, (critical == 0) ? 1 : 2, friendlyBoss.Blood));
-                                            }
-                                        }
                                     }
                                     else
                                     {
@@ -305,6 +296,10 @@ namespace Game.Logic.Phy.Object
                                     if (m_owner is Player && p2 is SimpleBoss)
                                     {
                                         m_owner.TotalDameLiving += critical + damage;
+                                    }
+                                    else if (m_owner is Player && p2 is Player)
+                                    {
+                                        m_owner.TotalDamagePlayer += critical + damage;
                                     }
                                     if (p2 is Player)
                                     {
@@ -320,103 +315,72 @@ namespace Game.Logic.Phy.Object
                                     {
                                         ((PVEGame)m_game).OnShooted();
                                         m_game.AddAction(new LivingAfterShootedAction(m_owner, p2, (int)((m_lifeTime + 1f) * 1000f)));
-                                    }
-                                    if (m_owner is Player && p2 is Player)
-                                    {
-                                        m_owner.TotalDamagePlayer += critical + damage;
+                                        if (p2.DoAction > -1)
+                                        {
+                                            m_actions.Add(new BombAction(m_lifeTime, ActionType.DO_ACTION, p2.Id, 0, 0, p2.DoAction));
+                                        }
                                     }
                                 }
-                                else if (damage == 0 && critical == 0)
+                                else if (p2 is SimpleBoss)
                                 {
-                                    if (p2 is SimpleBoss)
-                                    {
-                                        if (p2.DoAction > -1)
-                                            m_actions.Add(new BombAction(m_lifeTime, ActionType.DO_ACTION, p2.Id, 0, 0, p2.DoAction));
-                                    }
+                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.DO_ACTION, p2.Id, 0, 0, 2));
                                 }
                                 if (p2.IsLiving)
                                 {
                                     p2.StartMoving((int)((m_lifeTime + 1f) * 1000f), 12);
                                     m_actions.Add(new BombAction(m_lifeTime, ActionType.START_MOVE, p2.Id, p2.X, p2.Y, p2.IsLiving ? 1 : 0));
                                 }
-                                if (friendlyBoss != null && friendlyBoss.IsLiving)
-                                {
-                                    friendlyBoss.StartMoving((int)((m_lifeTime + 1f) * 1000f), 12);
-                                    m_actions.Add(new BombAction(m_lifeTime, ActionType.START_MOVE, friendlyBoss.Id, friendlyBoss.X, friendlyBoss.Y, friendlyBoss.IsLiving ? 1 : 0));
-                                }
                                 p2.SendAfterShootedAction((int)(((double)m_lifeTime + 1.0) * 1000.0));
                             }
-
-                            // --- PET MANTIÐI BAÞLANGICI ---
                             List<Living> playerAroundForPet = m_map.FindHitByHitPiont(GetCollidePoint(), m_petRadius);
-                            if (!(m_owner is Player) || ((Player)m_owner).ShootCount != 1 || m_owner.PetEffects.PetBaseAtt == 0)
+                            if (m_owner is Player && ((Player)m_owner).ShootCount == 1 && m_owner.PetEffects.PetBaseAtt != 0)
                             {
-                                // Eðer pet saldýrýsý yapamayacak durumdaysa, pet mantýðýný atla
-                                // DÜZELTME: Buradaki break; default case'inden çýkmasýna neden oluyordu.
-                                // Ancak pet saldýrýsý yapýlmasa bile bombanýn yok edilmesi (Die()) gerekir.
-                                // Bu yüzden bu bloðu sadece pet mantýðýný atlamak için kullanýyoruz.
-                            }
-                            else if (playerAroundForPet.Count == 0)
-                            {
-                                m_petActions.Add(new BombAction(0f, ActionType.NULLSHOOT, 0, 0, 0, 0));
-                            }
-                            else
-                            {
-                                foreach (Living p in playerAroundForPet)
+                                if (playerAroundForPet.Count == 0)
                                 {
-                                    if (p.Config.HaveShield || (p.Config.KeepLife && p.Blood == 1) || (!(p is Player) && !p.Config.CanTakeDamage))
+                                    m_petActions.Add(new BombAction(0f, ActionType.NULLSHOOT, 0, 0, 0, 0));
+                                }
+                                else
+                                {
+                                    foreach (Living p in playerAroundForPet)
                                     {
-                                        m_petActions.Add(new BombAction(m_lifeTime, ActionType.PET, p.Id, damage + critical, ((Player)p).Dander, p.Blood));
-                                        //m_petActions.Add(new BombAction(0f, ActionType.NULLSHOOT, 0, 0, 0, 0));
-                                    }
-                                    else
-                                    {
-                                        if (p == m_owner)
+                                        if (!(p is Player) && (!p.Config.CanTakeDamage || p.Config.MinBlood > 0 || p.Config.HaveShield || !p.Config.CanTakeDamage))
                                         {
-                                            continue;
+                                            m_petActions.Add(new BombAction(m_lifeTime, ActionType.PET, -1, 0, 0, 0));
                                         }
-                                        damage = MakePetDamage(p, GetCollidePoint());
-                                        if (damage <= 0)
+
+                                        else if (p != m_owner)
                                         {
-                                            continue;
-                                        }
-                                        damage = damage * m_owner.PetEffects.PetBaseAtt / 300;
-                                        critical = m_owner.MakeCriticalDamage(p, damage);
-                                        if (m_owner is Player)
-                                        {
-                                            m_owner.OnTakedPetDamage(m_owner, ref damage, ref critical);
-                                        }
-                                        m_owner.OnMakeDamage(m_owner, p, ref damage, ref critical);
-                                        if (p.PetTakeDamage(m_owner, ref damage, ref critical, "PetFire"))
-                                        {
-                                            if (p is Player)
+                                            damage = MakePetDamage(p, GetCollidePoint());
+                                            if (damage > 0)
                                             {
-                                                m_petActions.Add(new BombAction(m_lifeTime, ActionType.PET, p.Id, damage + critical, ((Player)p).Dander, p.Blood));
-                                            }
-                                            else
-                                            {
-                                                if (p is SimpleBoss && (p.Config.FriendlyBoss.ID != 0 && p.Config.FriendlyBoss.CanShareDamage))
+                                                damage = damage * m_owner.PetEffects.PetBaseAtt / 100;
+                                                critical = m_owner.MakeCriticalDamage(p, damage);
+                                                if (m_owner is Player)
                                                 {
-                                                    friendlyBoss = m_game.FindBossWithID(p.Config.FriendlyBoss.ID);
-                                                    if (friendlyBoss != null && friendlyBoss.PetShareDamage(m_owner, ref damage, ref critical, "QuyDepTrai"))
+                                                    m_owner.OnTakedPetDamage(m_owner, ref damage, ref critical);
+                                                }
+
+                                                if (p.PetTakeDamage(m_owner, ref damage, ref critical, "PetFire"))
+                                                {
+                                                    if (p is Player)
                                                     {
-                                                        m_petActions.Add(new BombAction(m_lifeTime, ActionType.PET, friendlyBoss.Id, damage + critical, 0, friendlyBoss.Blood));
+                                                        m_petActions.Add(new BombAction(m_lifeTime, ActionType.PET, p.Id, damage + critical, ((Player)p).Dander, p.Blood));
+                                                    }
+                                                    else
+                                                    {
+                                                        m_petActions.Add(new BombAction(m_lifeTime, ActionType.PET, p.Id, damage + critical, 0, p.Blood));
                                                     }
                                                 }
-                                                m_petActions.Add(new BombAction(m_lifeTime, ActionType.PET, p.Id, damage + critical, 0, p.Blood));
                                             }
                                         }
+
                                     }
+
                                 }
                             }
-                            // --- PET MANTIÐI SONU ---
-
-                            // DÜZELTME: Default case'inin sonundaki bu break; Die() metodunun çaðrýlmasýný engelliyordu.
-                            // Kaldýrýldý.
                         }
                         break;
                 }
-                // Bu metot, tüm bomba tipleri için patlama sonrasý çaðrýlmalýdýr.
                 Die();
             }
             finally
@@ -456,30 +420,37 @@ namespace Game.Logic.Phy.Object
             {
                 return 0;
             }
+            if (target.XuyenThau)
+                return 0;
+            if (target.Config.IsWorldBoss || m_owner.Game.RoomType == eRoomType.ActivityDungeon)
+                return 0;
             if (target.Config.IsChristmasBoss)
                 return 1;
             double baseDamage = m_owner.BaseDamage;
             double baseGuard = target.BaseGuard;
             double defend = target.Defence;
             double attack = m_owner.Attack;
+
             if (target.AddArmor && (target as Player).DeputyWeapon != null)
             {
                 int addPoint = (int)target.getHertAddition((target as Player).DeputyWeapon);
-                baseGuard += (double)addPoint;
-                defend += (double)addPoint;
+                baseGuard += addPoint;
+                defend += addPoint;
             }
+
             if (m_owner.IgnoreArmor)
             {
                 baseGuard = 0.0;
                 defend = 0.0;
             }
+
             float damagePlus = m_owner.CurrentDamagePlus;
             float shootMinus = m_owner.CurrentShootMinus;
-            double DR1 = 0.95 * (baseGuard - (double)(3 * m_owner.Grade)) / (500.0 + baseGuard - (double)(3 * m_owner.Grade));
-            double DR2 = ((defend - m_owner.Lucky >= 0.0) ? (0.95 * (defend - m_owner.Lucky) / (600.0 + defend - m_owner.Lucky)) : (0.357 + defend * 1E-05));
-            double DR3 = (double)m_owner.FightBuffers.WorldBossAddDamage * (1.0 - (baseGuard / 200.0 + defend * 0.003));
-            double damage = (DR3 + baseDamage * (1.0 + attack * 0.001) * (1.0 - (DR1 + DR2 - DR1 * DR2))) * (double)damagePlus * (double)shootMinus;
-            return (damage < 0.0) ? 1 : ((int)damage);
+            double DR1 = 0.95 * (baseGuard - 3 * m_owner.Grade) / (500 + baseGuard - 3 * m_owner.Grade);
+            double DR2 = defend - m_owner.Lucky >= 0.0 ? 0.95 * (defend - m_owner.Lucky) / (600.0 + defend - m_owner.Lucky) : 0.357 + (defend * 0.00001);
+            double DR3 = m_owner.FightBuffers.WorldBossAddDamage * (1 - (baseGuard / 200 + defend * 0.003));
+            double damage = (DR3 + (baseDamage * (1 + attack * 0.001) * (1 - (DR1 + DR2 - DR1 * DR2)))) * damagePlus * shootMinus;
+            return damage < 0 ? 1 : (int)damage;
         }
 
         protected bool TakeDamageFrozen(Living target)
@@ -495,75 +466,95 @@ namespace Game.Logic.Phy.Object
         protected int MakeDamage(Living target)
         {
             if ((!target.Config.CanTakeDamage || target.Config.HaveShield) && (target is SimpleBoss || target is SimpleNpc))
-            {
                 return 0;
-            }
             if (target.Config.IsChristmasBoss)
                 return 1;
+
             double baseDamage = m_owner.BaseDamage;
             double baseGuard = target.BaseGuard;
             double defence = target.Defence;
-            double attack = m_owner.Attack;
+            var RemoveAttack = m_owner.Attack * 40 / 100;
+            double attack = m_owner.Attack - RemoveAttack;
+
             if (target.AddArmor && (target as Player).DeputyWeapon != null)
             {
                 int addPoint = (int)target.getHertAddition((target as Player).DeputyWeapon);
-                baseGuard += (double)addPoint;
-                defence += (double)addPoint;
+                baseGuard += addPoint;
+                defence += addPoint;
             }
+
             if (m_owner.IgnoreArmor || target.Config.CancelGuard)
             {
                 baseGuard = 0.0;
                 defence = 0.0;
             }
+
             float damagePlus = m_owner.CurrentDamagePlus;
             float shootMinus = m_owner.CurrentShootMinus;
-            double DR1 = 0.95 * (baseGuard - (double)(3 * m_owner.Grade)) / (500.0 + baseGuard - (double)(3 * m_owner.Grade));
-            double DR2 = ((defence - m_owner.Lucky >= 0.0) ? (0.95 * (defence - m_owner.Lucky) / (600.0 + defence - m_owner.Lucky)) : 0.0);
-            double DR3 = (double)m_owner.FightBuffers.WorldBossAddDamage * (1.0 - (baseGuard / 200.0 + defence * 0.003));
-            double damage = (DR3 + baseDamage * (1.0 + attack * 0.001) * (1.0 - (DR1 + DR2 - DR1 * DR2))) * (double)damagePlus * (double)shootMinus;
+            double DR1 = 0.95 * (baseGuard - 3 * m_owner.Grade) / (500 + baseGuard - 3 * m_owner.Grade);
+            double DR2 = defence - m_owner.Lucky >= 0.0 ? 0.95 * (defence - m_owner.Lucky) / (600.0 + defence - m_owner.Lucky) : 0;
+            double DR3 = m_owner.FightBuffers.WorldBossAddDamage * (1 - (baseGuard / 200 + defence * 0.003));
+            double damage = (DR3 + (baseDamage * (1 + attack * 0.001) * (1 - (DR1 + DR2 - DR1 * DR2)))) * damagePlus * shootMinus;
             Point p = new Point(X, Y);
             double distance = target.Distance(p);
-            if (distance < (double)m_radius)
+            if (distance < m_radius)
             {
-                damage *= 1.0 - distance / (double)m_radius / 4.0;
+                damage = damage * (1 - distance / m_radius / 4);
+
+                if (m_owner is Player)
+                {
+                    damage += (damage + (m_owner as Player).PlayerDetail.PlayerCharacter.GoldenAddAttack) / 100;
+                }
                 if (m_owner is Player && target is Player && target != m_owner)
                 {
-                    int targetsDiferentes = 0;
-                    if ((m_owner.Direction == 1 && m_angle >= 91) || (m_owner.Direction == -1 && m_angle <= 89))
+                    if (target != m_owner)
                     {
-                        m_game.AddAction(new FightAchievementAction(m_owner, eFightAchievementType.EmperorOfPlayingBack, m_owner.AddedValueEffect++, 1200));
-                    }
-                    if (m_owner.lastShots.ContainsKey(target.Id))
-                    {
-                        m_owner.lastShots[target.Id]++;
-                    }
-                    else
-                    {
-                        m_owner.lastShots.Add(target.Id, 1);
-                    }
-                    if (m_owner.Prop1 >= 1 && m_owner.Prop2 >= 1 && m_owner.lastShots.ContainsKey(target.Id) && m_owner.lastShots[target.Id] >= 9)
-                    {
-                        m_game.AddAction(new FightAchievementAction(m_owner, eFightAchievementType.GodOfPrecision, m_owner.Direction, 1200));
-                    }
-                    foreach (int ids in m_owner.lastShots.Keys)
-                    {
-                        if (m_owner.lastShots[ids] >= 1)
+                        int targetsDiferentes = 0;
+                        if ((m_owner.Direction == 1 && m_angle >= 91) || (m_owner.Direction == -1 && m_angle <= 89))
                         {
-                            targetsDiferentes++;
+                            // Vua ph?n kích
+                            m_game.AddAction(new FightAchievementAction(m_owner, eFightAchievementType.EmperorOfPlayingBack, m_owner.AddedValueEffect++, 1200));
+                        }
+
+                        if (m_owner.lastShots.ContainsKey(target.Id))
+                        {
+                            m_owner.lastShots[target.Id]++;
+                        }
+                        else
+                        {
+                            m_owner.lastShots.Add(target.Id, 1);
+                        }
+
+                        if (m_owner.Prop1 >= 1 && m_owner.Prop2 >= 1)
+                        {
+                            if (m_owner.lastShots.ContainsKey(target.Id) && m_owner.lastShots[target.Id] >= 9)
+                            {
+                                m_game.AddAction(new FightAchievementAction(m_owner, eFightAchievementType.GodOfPrecision, m_owner.Direction, 1200));
+                            }
+                        }
+
+                        foreach (var ids in m_owner.lastShots.Keys)
+                        {
+                            if (m_owner.lastShots[ids] >= 1)
+                            {
+                                targetsDiferentes++;
+                            }
+                        }
+
+                        if (targetsDiferentes >= 2)// K? thu?t siêu phàm
+                        {
+                            m_game.AddAction(new FightAchievementAction(m_owner, eFightAchievementType.AcrobatMaster, m_owner.AddedValueEffect++, 1200));
                         }
                     }
-                    if (targetsDiferentes >= 2)
-                    {
-                        m_game.AddAction(new FightAchievementAction(m_owner, eFightAchievementType.AcrobatMaster, m_owner.AddedValueEffect++, 1200));
-                    }
                 }
-                if (damage < 0.0)
-                {
+
+                if (damage < 0)
                     return 1;
-                }
-                return (int)damage;
             }
-            return 0;
+            else
+                return 0;
+
+            return (int)damage;
         }
 
         public override void StartMoving()

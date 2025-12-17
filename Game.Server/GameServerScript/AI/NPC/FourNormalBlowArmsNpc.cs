@@ -1,122 +1,144 @@
+using System.Drawing;
 using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Effects;
 using Game.Logic.Phy.Object;
-using System;
+using GameServerScript.AI.Messions;
 
 namespace GameServerScript.AI.NPC
 {
-	public class FourNormalBlowArmsNpc : ABrain
-	{
-		private int m_attackTurn = 0;
+    public class FourNormalBlowArmsNpc : ABrain
+    {
+        private int yürümeyeri;
 
-		private PhysicalObj m_moive = null;
+        private PhysicalObj KapýyýKýr;
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        private SimpleNpc BOMBAFIÇI;
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			this.m_body.CurrentDamagePlus = 1f;
-			this.m_body.CurrentShootMinus = 1f;
-		}
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+            (base.Body.EffectList.GetOfType(eEffectType.IceFronzeEffect) as IceFronzeEffect)?.Stop();
+        }
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            m_body.CurrentDamagePlus = 1f;
+            m_body.CurrentShootMinus = 1f;
+        }
 
-		public override void OnStartAttacking()
-		{
-			base.OnStartAttacking();
-			if (this.m_attackTurn == 0)
-			{
-				this.MoveToGate();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 1)
-			{
-				this.MoveToGate();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 2)
-			{
-				this.MoveToGate();
-				this.m_attackTurn++;
-			}
-			else
-			{
-				this.MoveToExit();
-				this.m_attackTurn = 0;
-			}
-		}
+        public override void OnCreated()
+        {
+            base.OnCreated();
+        }
 
-		private void MoveToGate()
-		{
-			base.Body.MoveTo(base.Body.X + base.Game.Random.Next(250, 300), base.Body.Y, "walk", 2000, "", 4, new LivingCallBack(this.CanDie));
-		}
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            Point point = default(Point);
+            switch (yürümeyeri)
+            {
+                case 0:
+                    point = new Point(672, 746);
+                    break;
+                case 1:
+                    point = new Point(1059, 749);
+                    break;
+                case 2:
+                    point = new Point(1412, 751);
+                    break;
+            }
+            int num = int.MaxValue;
+            SimpleNpc[] array = base.Game.FindAllNpcLiving();
+            SimpleNpc[] array2 = array;
+            foreach (SimpleNpc simpleNpc in array2)
+            {
+                if (simpleNpc.IsLiving && simpleNpc.X >= base.Body.X && simpleNpc.X <= base.Body.X + point.X)
+                {
+                    int num2 = (int)base.Body.Distance(simpleNpc.X, simpleNpc.Y);
+                    if (num2 < num)
+                    {
+                        BOMBAFIÇI = simpleNpc;
+                        num = num2;
+                    }
+                }
+            }
+            if (BOMBAFIÇI != null)
+            {
+                yürü(BOMBAFIÇI.X - 20, BOMBAFIÇI.Y, FýçýÖldü);
+            }
+            else if (yürümeyeri < 2)
+            {
+                yürü(point.X, point.Y, null);
+            }
+            else
+            {
+                yürü(point.X, point.Y, zýpla);
+                yürümeyeri = 0;
+            }
+            yürümeyeri++;
+        }
 
-		private void MoveToExit()
-		{
-			base.Body.MoveTo(1415, base.Body.Y, "walk", 2000, "", 4, new LivingCallBack(this.BeatA));
-		}
+        private void yürü(int int_1, int int_2, LivingCallBack livingCallBack_0)
+        {
+            base.Body.MoveTo(int_1, int_2, "walk", 1000, livingCallBack_0, 5);
+        }
 
-		private void CanDie()
-		{
-			if (base.Body.Blood <= 50)
-			{
-				base.Body.PlayMovie("die", 100, 0);
-				base.Body.Die(1000);
-			}
-			else
-			{
-				base.Body.AddEffect(new ContinueReduceBloodEffect(2, base.Game.Random.Next(789, 1021), base.Body), 0);
-				base.Body.PlayMovie("standB", 100, 0);
-			}
-		}
+        public void FýçýÖldü()
+        {
+            base.Body.Beat(BOMBAFIÇI, "die", 5000, 5000, 800);
+            base.Body.Die(3000);
+        }
 
-		private void BeatA()
-		{
-			base.Body.PlayMovie("beatA", 100, 0);
-			if (base.Body.FindCount == 0)
-			{
-				base.Body.CallFuction(new LivingCallBack(this.CryA), 2900);
-			}
-			else if (base.Body.FindCount == 1)
-			{
-				base.Body.CallFuction(new LivingCallBack(this.CryB), 2900);
-			}
-			else
-			{
-				base.Body.CallFuction(new LivingCallBack(this.CryC), 2900);
-			}
-			base.Body.Die(3000);
-		}
+        private void zýpla()
+        {
+            base.Body.PlayMovie("beatA", 2000, 6000);
+            base.Body.CallFuction(kapýyýkýr, 4500);
+        }
 
-		private void CryA()
-		{
-			this.m_moive = ((PVEGame)base.Game).Createlayer(1590, 750, "moive", "game.asset.Gate", "cryA", 1, 0);
-			base.Body.FindCount = 3;
-		}
+        private void kapýyýkýr()
+        {
+            switch (((PVEGame)base.Game).MissionAI.UpdateUIData())
+            {
+                case 0:
+                    if (KapýyýKýr == null)
+                    {
+                        KapýyýKýr = ((PVEGame)base.Game).Createlayer(1590, 750, "", "game.asset.Gate", "cryA", 1, 0);
+                    }
+                    else
+                    {
+                        KapýyýKýr.PlayMovie("cryA", 0, 0);
+                    }
+                    break;
+                case 1:
+                    if (KapýyýKýr == null)
+                    {
+                        KapýyýKýr = ((PVEGame)base.Game).Createlayer(1590, 750, "", "game.asset.Gate", "cryB", 1, 0);
+                    }
+                    else
+                    {
+                        KapýyýKýr.PlayMovie("cryB", 0, 0);
+                    }
+                    break;
+                case 2:
+                    if (KapýyýKýr == null)
+                    {
+                        KapýyýKýr = ((PVEGame)base.Game).Createlayer(1590, 750, "", "game.asset.Gate", "cryC", 1, 0);
+                    }
+                    else
+                    {
+                        KapýyýKýr.PlayMovie("cryC", 0, 0);
+                    }
+                    break;
+            }
+            (((PVEGame)base.Game).MissionAI as PDHAT1142).DuvarBoþluðu++;
+            base.Body.Die();
+        }
 
-		private void CryB()
-		{
-			this.m_moive = ((PVEGame)base.Game).Createlayer(1590, 750, "moive", "game.asset.Gate", "cryB", 1, 0);
-			base.Body.FindCount = 2;
-		}
-
-		private void CryC()
-		{
-			this.m_moive = ((PVEGame)base.Game).Createlayer(1590, 750, "moive", "game.asset.Gate", "cryC", 1, 0);
-			base.Body.FindCount = 3;
-		}
-
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-		}
-	}
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
+    }
 }

@@ -18,7 +18,7 @@ namespace Game.Server.SceneMarryRooms.TankHandle
 			int num2 = GameProperties.LimitLevel(3);
 			if (player.PlayerCharacter.Grade < num2)
 			{
-				player.Out.SendMessage(eMessageType.GM_NOTICE, $"Cần đạt cấp độ tối thiểu là { num2 }.");
+				player.Out.SendMessage(eMessageType.GM_NOTICE, $"Seviyeniz yetersiz. Gereken seviye { num2 }.");
 				return false;
 			}
 			if (num <= 0)
@@ -35,7 +35,7 @@ namespace Game.Server.SceneMarryRooms.TankHandle
 			}
 			using (PlayerBussiness playerBussiness = new PlayerBussiness())
 			{
-				string translation = LanguageMgr.GetTranslation("LargessCommand.Content", player.PlayerCharacter.NickName, num / 2);
+				string translation = LanguageMgr.GetTranslation("LargessCommand.Content", player.PlayerCharacter.NickName, num);
 				string translation2 = LanguageMgr.GetTranslation("LargessCommand.Title", player.PlayerCharacter.NickName);
 				MailInfo mailInfo = new MailInfo
 				{
@@ -43,7 +43,7 @@ namespace Game.Server.SceneMarryRooms.TankHandle
 					Content = translation,
 					Gold = 0,
 					IsExist = true,
-					Money = num / 2,
+					Money = num,
 					Receiver = player.CurrentMarryRoom.Info.BrideName,
 					ReceiverID = player.CurrentMarryRoom.Info.BrideID,
 					Sender = LanguageMgr.GetTranslation("LargessCommand.Sender"),
@@ -59,7 +59,7 @@ namespace Game.Server.SceneMarryRooms.TankHandle
 					Content = translation,
 					Gold = 0,
 					IsExist = true,
-					Money = num / 2,
+					Money = num,
 					Receiver = player.CurrentMarryRoom.Info.GroomName,
 					ReceiverID = player.CurrentMarryRoom.Info.GroomID,
 					Sender = LanguageMgr.GetTranslation("LargessCommand.Sender"),

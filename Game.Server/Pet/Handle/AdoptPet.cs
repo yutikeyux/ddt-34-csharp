@@ -20,14 +20,14 @@ namespace Game.Server.Pet.Handle
             if (num2 == -1)
             {
                 player.Out.SendRefreshPet(player, petBag.GetAdoptPet(player.PlayerCharacter.VIPLevel), null, refreshBtn: false);
-                player.SendMessage(LanguageMgr.GetTranslation("Số lượng pet đã đạt giới hạn!"));
+                player.SendMessage(LanguageMgr.GetTranslation("Pet çantasında yer yok!"));
             }
             else
             {
                 if (num < 0)
                 {
                     player.Out.SendRefreshPet(player, petBag.GetAdoptPet(player.PlayerCharacter.VIPLevel), null, refreshBtn: false);
-                    player.SendMessage(LanguageMgr.GetTranslation("Không tìm thấy pet này!"));
+                    player.SendMessage(LanguageMgr.GetTranslation("Bu evcil hayvan bulunamadı!"));
                     return false;
                 }
                 UsersPetInfo adoptPetAt = petBag.GetAdoptPetAt(num);
@@ -48,11 +48,12 @@ namespace Game.Server.Pet.Handle
                     PetTemplateInfo petTemplateInfo = PetMgr.FindPetTemplate(adoptPetAt.TemplateID);
                     if (petTemplateInfo.StarLevel > 3 || petTemplateInfo.KindID >= 5)
                     {
-                        GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice($"[{player.ZoneName}] Người chơi [{player.PlayerCharacter.NickName}] may mắn bắt được {petTemplateInfo.Name} {petTemplateInfo.StarLevel} sao."));
+                        GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice($"[{player.ZoneName}] oyuncusu değerli [{player.PlayerCharacter.NickName}] çok şanslı! Evcil hayvan kabul merkezinden 1 adet {petTemplateInfo.Name} {petTemplateInfo.StarLevel} elde etti. Tebrik ederiz!"));
                     }
                     else
                     {
-                        player.SendMessage("Bắt thành công.");
+                        GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice($"[{player.ZoneName}] oyuncusu değerli [{player.PlayerCharacter.NickName}] çok şanslı! Evcil hayvan kabul merkezinden 1 adet {petTemplateInfo.Name} {petTemplateInfo.StarLevel} elde etti. Tebrik ederiz!"));
+                        player.SendMessage("Evcil hayvan elde etme başarılı!");
                     }
                     player.OnAdoptPetEvent();
                 }

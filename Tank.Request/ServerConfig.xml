@@ -24,7 +24,7 @@
   <Item Name="LimitCount" Value="10" />
   <Item Name="LimitMail" Value="3" />
   <Item Name="LimitMoney" Value="999000" />
-  <Item Name="NewChickenBeginTime" Value="2013/1/1 0:00:00" />
+  <Item Name="NewChickenBeginTime" Value="2010/1/1 0:00:00" />
   <Item Name="NewChickenEagleEyePrice" Value="300, 200, 100" />
   <Item Name="NewChickenEndTime" Value="2031/12/30 23:59:59" />
   <Item Name="NewChickenFlushPrice" Value="1000" />
@@ -38,7 +38,7 @@
   <Item Name="SpaPubRoomLoginPay" Value="10000,200" />
   <Item Name="TestActive" Value="False" />
   <Item Name="VIPExpForEachLv" Value="1|8000|30000|100000|250000|600000|1500000|4000000|10000000|25000000" />
-  <Item Name="VirtualName" Value="EceL,Balikci,s2mle100leş,xKralTr" />
+  <Item Name="VirtualName" Value="EceL,Balikci,Atayurt,Derinmavii" />
   <Item Name="TimeForLeague" Value="19:30|21:30" />
   <Item Name="GoldTimes" Value="00:00|23:59" />
   <Item Name="AcademyMasterFreezeHours" Value="48" />
@@ -48,8 +48,8 @@
   <Item Name="AcademyAppAwardComplete" Value="1401|5293,1301|5192" />
   <Item Name="AcademyMasAwardComplete" Value="1414|5409,1314|5306" />
   <Item Name="LeftRouterRateData" Value="0.1|0.2|0.3|0.4|0.5" />
-  <Item Name="LeftRouterMaxDay" Value="5" />
-  <Item Name="LeftRouterEndDate" Value="2055/12/30 23:59:58" />
+  <Item Name="LeftRouterMaxDay" Value="7" />
+  <Item Name="LeftRouterEndDate" Value="2055-12-30 23:59:58" />
   <Item Name="EliteGameBlockWeapon" Value="7144|71441|71442|71443|71444|7145|71451|71452|71453|71454" />
   <Item Name="InlayGoldPrice" Value="2000" />
   <Item Name="IsOpenPetScore" Value="True" />
@@ -57,7 +57,7 @@
   <Item Name="FastGrowSubTime" Value="30" />
   <Item Name="LittleGameBoguConfig" Value="200,1,1|100,4,1|3000,80,3|6000,125,5" />
   <Item Name="LittleGameMaxBoguCount" Value="40" />
-  <Item Name="LittleGameStartHourse" Value="24" />
+  <Item Name="LittleGameStartHourse" Value="1" />
   <Item Name="LittleGameTimeSpendingHours" Value="1" />
   <Item Name="DebugMode" Value="True" />
   <Item Name="VIPStrengthenEx" Value="0|0|1|1|1|2|2|2|3|3|3|3" />
@@ -157,8 +157,8 @@
   <Item Name="RandomPetScore" Value="3,7,100|8,12,15|13,15,5" />
   <Item Name="RuneLevelUpExp" Value="1|2|4|8|16|32|64|128|384|1152|3456|10368|31104|93312|279936|839808|1679616|6718464|16796160" />
   <Item Name="MultAreaBeginDate" Value="2010/1/1 0:00:00" />
-  <Item Name="MultAreaEndDate" Value="2055/12/30 23:59:58" />
-  <Item Name="MultAreaBeginTime" Value="2013/1/1 0:00:00" />
+  <Item Name="MultAreaEndDate" Value="2055-12-30 23:59:58" />
+  <Item Name="MultAreaBeginTime" Value="2010/1/1 0:00:00" />
   <Item Name="MultAreaEndTime" Value="2031/12/30 23:59:59" />
   <Item Name="WorldBossBattleMinPlayerLevel" Value="5" />
   <Item Name="WorldBossCD" Value="15" />
@@ -201,8 +201,8 @@
   <Item Name="NpcMainWeapon" Value="7008" />
   <Item Name="FairBattleDayPrestige" Value="2000" />
   <Item Name="HighTimeBoxLeve" Value="20" />
-  <Item Name="HighTimeBoxBegin" Value="2013/1/1 0:00:00" />
-  <Item Name="HighTimeBoxEnd" Value="2031/12/30 23:59:59" />
+  <Item Name="HighTimeBoxBegin" Value="2010/1/1 0:00:00" />
+  <Item Name="HighTimeBoxEnd" Value="2030-12-30 23:59:58" />
   <Item Name="FairBattleBaseProperty" Value="1650,1150,1310,1350,950,390,18000,230" />
   <Item Name="FairBattleLevelLimit" Value="15" />
   <Item Name="FairBattleTime" Value="00:00-10:00|10:00-23:59" />
@@ -212,7 +212,7 @@
   <Item Name="ConsortiaBossRichPER" Value="5" />
   <Item Name="ConsortiaBossFightTime" Value="1200" />
   <Item Name="ConsortiaBossProlongTime" Value="600" />
-  <Item Name="EncounterBeginTime" Value="2013/1/1 0:00:00" />
+  <Item Name="EncounterBeginTime" Value="2010/1/1 0:00:00" />
   <Item Name="EncounterEndTime" Value="2031/12/30 23:59:59" />
   <Item Name="HideNewRune" Value="True" />
   <Item Name="FarmActivityCount" Value="1|2|3|6|4" />
@@ -241,7 +241,7 @@
   <Item Name="LostScore" Value="1" />
   <Item Name="WinScore" Value="10" />
   <Item Name="BeginTime" Value="2000,1,1,9,0,0" />
-  <Item Name="EndTime" Value="2050,1,1,19,0,0" />
+  <Item Name="EndTime" Value="2031/12/30 23:59:59" />
   <Item Name="IsReConnet" Value="False" />
   <Item Name="SearchGoodsPayMoney" Value="20" />
   <Item Name="DragonBoatByMoney" Value="100:10,10" />
@@ -277,7 +277,7 @@
   <Item Name="Activity77RankRewardProb" Value="50,30,20,10,0" />
   <Item Name="Activity77BuffCD" Value="10,20,30" />
   <Item Name="Activity77BeginDate" Value="2010/1/1 0:00:00" />
-  <Item Name="Activity77EndDate" Value="2055/12/30 23:59:58" />
+  <Item Name="Activity77EndDate" Value="2030-12-30 23:59:58" />
   <Item Name="Activity77TotalTime" Value="1800" />
   <Item Name="Activity77AbilityMoney" Value="250,100,150" />
   <Item Name="Activity77CarMoneyAndSpeed" Value="0,3|700,4|1000,5" />
@@ -312,7 +312,7 @@
   <Item Name="RuneMultiAreaNoticeLevel" Value="17" />
   <Item Name="RuneSingleAreaNoticeLevel" Value="15" />
   <Item Name="ChristmasBeginDate" Value="2010/1/1 0:00:00" />
-  <Item Name="ChristmasEndDate" Value="2055/12/30 23:59:58" />
+  <Item Name="ChristmasEndDate" Value="2030-12-30 23:59:58" />
   <Item Name="ChristmasGifts" Value="201148,10|201149,35|201150,70|201151,120|201152,220|201153,370|201154,650|201155,1000|201156,100" />
   <Item Name="ChristmasGiftsMaxNum" Value="1000" />
   <Item Name="ChristmasBuildSnowmanDoubleMoney" Value="10" />
@@ -344,15 +344,15 @@
   <Item Name="ArenaRewardNumPerInterval" Value="50" />
   <Item Name="LightRiddleAnswerScore" Value="29|9" />
   <Item Name="LightRiddleBeginDate" Value="2010/1/1 0:00:00" />
-  <Item Name="LightRiddleEndDate" Value="2055/12/30 23:59:58" />
-  <Item Name="LightRiddleBeginTime" Value="2013/1/1 0:00:00" />
+  <Item Name="LightRiddleEndDate" Value="2030-12-30 23:59:58" />
+  <Item Name="LightRiddleBeginTime" Value="2010/1/1 0:00:00" />
   <Item Name="LightRiddleEndTime" Value="2031/12/30 23:59:59" />
   <Item Name="LightRiddleFreeHitNum" Value="2" />
   <Item Name="LightRiddleFreeComboNum" Value="2" />
   <Item Name="LightRiddleComboMoney" Value="30" />
   <Item Name="LightRiddleHitMoney" Value="30" />
   <Item Name="YearMonsterBeginDate" Value="2010/1/1 0:00:00" />
-  <Item Name="YearMonsterEndDate" Value="2055/12/30 23:59:58" />
+  <Item Name="YearMonsterEndDate" Value="2030-12-30 23:59:58" />
   <Item Name="YearMonsterHP" Value="3000000" />
   <Item Name="YearMonsterBoxInfo" Value="112370,5|112371,30|112372,90|112373,150|112374,300" />
   <Item Name="YearMonsterBuffMoney" Value="999999999" />
@@ -455,19 +455,19 @@
   <Item Name="LimitAuction" Value="3" />
   <Item Name="DragonBoatMinScore" Value="13000" />
   <Item Name="IsDDTMoneyActive" Value="True" />
-  <Item Name="DiceBeginTime" Value="2013/1/1 0:00:00" />
+  <Item Name="DiceBeginTime" Value="2010/1/1 0:00:00" />
   <Item Name="DiceEndTime" Value="2031/12/30 23:59:59" />
   <Item Name="DiceRefreshPrice" Value="200" />
   <Item Name="CommonDicePrice" Value="200" />
   <Item Name="DoubleDicePrice" Value="200" />
   <Item Name="BigDicePrice" Value="400" />
   <Item Name="SmallDicePrice" Value="400" />
-  <Item Name="PyramidBeginTime" Value="01/01/2020 0:00:00" />
+  <Item Name="PyramidBeginTime" Value="1/1/2010 00:00:00" />
   <Item Name="PyramidEndTime" Value="30/12/2027 23:59:59" />
   <Item Name="PyramidRevivePrice" Value="10000, 30000, 50000" />
   <Item Name="PyramydTurnCardPrice" Value="5000" />
   <Item Name="DragonBoatBeginDate" Value="2010/1/1 0:00:00" />
-  <Item Name="DragonBoatEndDate" Value="2055/12/30 23:59:58" />
+  <Item Name="DragonBoatEndDate" Value="2030-12-30 23:59:58" />
   <Item Name="BattleGoundTime" Value="18|60" />
   <Item Name="LeagueTime" Value="21|120" />
   <Item Name="FightFootballTime" Value="7|600" />
@@ -478,14 +478,14 @@
   <Item Name="OpenMagicStonePackageMoney" Value="0|150|350|650" />
   <Item Name="BoguAdventurePrice" Value="200, 500, 100" />
   <Item Name="DDPlayActivityBeginDate" Value="2010/1/1 0:00:00" />
-  <Item Name="DDPlayActivityEndDate" Value="2055/12/30 23:59:58" />
+  <Item Name="DDPlayActivityEndDate" Value="2030-12-30 23:59:58" />
   <Item Name="DDPlayActivityMoney" Value="100" />
   <Item Name="contasPorIp" Value="1" />
   <Item Name="StrengthGiftPrice" Value="4599" />
   <Item Name="WantTryAgainValues" Value="2002,100|2102,200|7002,100|7004,200|7102,100|7103,200|7104,300|7202,100|7203,200|7204,300" />
   <Item Name="EventStartDate" Value="2010/1/1 0:00:00" />
   <Item Name="EventEndDate" Value="2055/12/30 23:59:58" />
-  <Item Name="EventStartMoney" Value="2021-11-18 20:55:27.270" />
+  <Item Name="EventStartMoney" Value="2010/1/1 0:00:00" />
   <Item Name="EventEndMoney" Value="2031-11-22 20:55:27.270" />
   <Item Name="WorldBossStart" Value="12:30:00|00:30:00" />
   <Item Name="WorldBossEnd" Value="13:30:00|23:30:00" />
@@ -502,27 +502,27 @@
   <Item Name="ChickenActiveKeyLvAwardNeedPrestige" Value="0|0|0|1000|2000|10000|20000|40000|60000|80000|100000|120000" />
   <Item Name="FightSpiritLevelAddDamage" Value="6|2" />
   <Item Name="GoodsCollectMinLevel" Value="20" />
-  <Item Name="PRICE_COMPOSE_GOLD" Value="1600" />
+  <Item Name="PRICE_COMPOSE_GOLD" Value="500" />
   <Item Name="RateAdvance" Value="50000" />
   <Item Name="TimeX2" Value="2" />
   <Item Name="WorldBossID1" Value="4" />
   <Item Name="WorldBossID2" Value="1" />
   <Item Name="ItemDevelopPrice" Value="35" />
   <Item Name="WorldBossID" Value="1" />
-  <Item Name="GuildBattleStartTime" Value="2013/1/1 0:00:00" />
+  <Item Name="GuildBattleStartTime" Value="2010/1/1 0:00:00" />
   <Item Name="GuildBattleStartDay" Value="Saturday" />
-  <Item Name="StartEventOldPlayer" Value="2021-01-01 20:55:27.270" />
+  <Item Name="StartEventOldPlayer" Value="2010/1/1 0:00:00" />
   <Item Name="EndEventOldPlayer" Value="2031/09/25 0:00:00" />
   <Item Name="PRICE_STRENGHTN_GOLD" Value="10000" />
   <Item Name="DDPlayBeginDate" Value="2010/1/1 0:00:00" />
-  <Item Name="DDPlayEndDate" Value="2055/12/30 23:59:58" />
+  <Item Name="DDPlayEndDate" Value="2055/12/30 23:59:00" />
   <Item Name="DDPlayMoney" Value="100" />
   <Item Name="ExchangeFold" Value="1000" />
   <Item Name="VIPLevelGiftID" Value="0|1120965|1120966|1120967|1120968|1120969|1120970|1120971|1120972|1120973|1120974|1120975|1120976|1120977|1120978" />
   <Item Name="PetScoreHigherThan10k" Value="100301| 110301| 120301| 130301" />
   <Item Name="Timevongloai" Value="18|22" />
   <Item Name="GiaResetSmg" Value="500" />
-  <Item Name="LittleGameEndHourse" Value="2|4|6|8|10|12|14|16|18|20|22" />
+  <Item Name="LittleGameEndHourse" Value="2" />
   <Item Name="StrengBuyGiftBag" Value="2130" />
   <Item Name="WorshipTheMoonEndDate" Value="2055/12/30 23:59:58" />
   <Item Name="PriceMoonEvent" Value="1000" />

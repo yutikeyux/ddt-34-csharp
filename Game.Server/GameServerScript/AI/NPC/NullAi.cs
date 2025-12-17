@@ -1,4 +1,6 @@
+using Game.Logic;
 using Game.Logic.AI;
+using Game.Logic.Phy.Object;
 using System;
 
 namespace GameServerScript.AI.NPC
@@ -36,7 +38,7 @@ namespace GameServerScript.AI.NPC
 		public override void OnCreated()
 		{
 			base.OnCreated();
-		}
+        }
 
 		public override void OnStartAttacking()
 		{

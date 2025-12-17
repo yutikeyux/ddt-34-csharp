@@ -1,103 +1,91 @@
+using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
 using System;
 
 namespace GameServerScript.AI.NPC
 {
-	public class TwelveSimpleChickenNpc : ABrain
-	{
-		private int m_attackTurn = 0;
+    public class TwelveSimpleChickenNpc : ABrain
+    {
+      
+        private int BossID = 12010;
 
-		public int currentCount = 0;
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+        }
 
-		public int Dander = 0;
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        public override void OnCreated()
+        {
+            base.OnCreated();
+        }
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-		}
+        private void RandMove()
+        {
+            int num = base.Game.Random.Next(base.Body.X - base.Game.Random.Next(200, 400), base.Body.X + base.Game.Random.Next(200, 400));
+            SimpleBoss simpleBoss = base.Game.FindBossWithID(BossID);
+            int x = (base.Body.X <= 600) ? (base.Body.X + base.Game.Random.Next(200, 400)) : ((base.Body.X >= 1300) ? (base.Body.X - base.Game.Random.Next(200, 400)) : num);
+            int delay = 0;
+            if (base.Body.Config.CanHeal)
+            {
+                delay = Game.GetDelayDistance(Body.X, x, 7) + 1000;
+                base.Body.MoveTo(x, base.Body.Y, "walkA", 500, 7);
+                base.Body.PlayMovie("standC", delay, 1000);
+            }
+            else
+            {
+                delay = Game.GetDelayDistance(Body.X, x, 5) + 1000;
+                base.Body.MoveTo(x, base.Body.Y, "walk", 500, 5);
+                base.Body.Direction = ((simpleBoss.X >= base.Body.X) ? 1 : (-1));
+                base.Body.PlayMovie((num > 600 && num < 1300) ? "standB" : "standA", delay, 1000);
+            }
+        }
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            RandMove();
+        }
 
-		public override void OnStartAttacking()
-		{
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			bool flag = false;
-			int num = 0;
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				if (current.IsLiving && current.X > 480 && current.X < 1000)
-				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
-					{
-						num = num2;
-					}
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				this.KillAttack(base.Body.X - 10000, base.Body.X + 10000);
-			}
-			else if (this.m_attackTurn == 0)
-			{
-				this.PersonalAttack();
-				this.m_attackTurn++;
-			}
-			else
-			{
-				this.AllAttack();
-				this.m_attackTurn = 0;
-			}
-		}
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
 
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-		}
+        public override void OnDie()
+        {
+            base.OnDie();
+            if (base.Body.Properties1 == 1)
+            {
+                //((PVEGame)base.Game).TotalKillCount--;
+                ((PVEGame)base.Game).Param1++;
+            }
+            else
+            {
+                ((PVEGame)base.Game).TotalKillCount++;
+            }
+        }
 
-		private void KillAttack(int fx, int tx)
-		{
-			this.ChangeDirection(3);
-			base.Body.CurrentDamagePlus = 10f;
-			base.Body.PlayMovie("stand", 3000, 0);
-			base.Body.RangeAttacking(fx, tx, "cry", 5000, null);
-		}
+        public override void OnHeal(int blood)
+        {
+            base.OnHeal(blood);
+            if (base.Body.Config.CanHeal && base.Body.Blood >= base.Body.MaxBlood)
+            {
+                base.Body.Properties1 = 1;
+                base.Body.CallFuction(RemoveChicken, 1500);
+            }
+        }
 
-		private void AllAttack()
-		{
-			this.ChangeDirection(3);
-			base.Body.CurrentDamagePlus = 0.5f;
-			base.Body.PlayMovie("stand", 1000, 0);
-			base.Body.RangeAttacking(base.Body.X - 1000, base.Body.X + 1000, "cry", 4000, null);
-		}
-
-		private void PersonalAttack()
-		{
-			this.ChangeDirection(3);
-			int x = base.Game.Random.Next(550, 1200);
-			int direction = base.Body.Direction;
-			base.Body.MoveTo(x, base.Body.Y, "walk", 1000, "", ((SimpleBoss)base.Body).NpcInfo.speed);
-			base.Body.ChangeDirection(base.Game.FindlivingbyDir(base.Body), 9000);
-		}
-
-		private void ChangeDirection(int count)
-		{
-			int direction = base.Body.Direction;
-			for (int i = 0; i < count; i++)
-			{
-				base.Body.ChangeDirection(-direction, i * 200 + 100);
-				base.Body.ChangeDirection(direction, (i + 1) * 100 + i * 200);
-			}
-		}
-	}
+        private void RemoveChicken()
+        {
+            base.Body.PlayMovie("standD", 1000, 1000);
+            base.Body.Die(3000);
+            base.Body.Dispose();
+        }
+    }
 }

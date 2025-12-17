@@ -44,8 +44,9 @@ using System.Threading;
 //                                              GEREKEN YERLERDEKİ TÜM LANGUAGE MGR KODLARI TÜRKÇELEŞTİRİLDİ not: yuti
 public class GamePlayer : IGamePlayer
 {
-    public delegate void PlayerOwnSpaEventHandle(int onlineTimeSpa);
 
+    public delegate void PlayerOwnSpaEventHandle(int onlineTimeSpa);
+    
     public delegate void PlayerAddItemEventHandel(string type, int value);
     private PlayerGmActivity m_gmActivity;
 
@@ -3093,7 +3094,7 @@ public class GamePlayer : IGamePlayer
             if (m_character.CheckNewDay())
             {
                 TimeSpan diff = DateTime.Now - m_character.NewDay;
-                if ((int)Math.Ceiling(diff.TotalDays) >= 30)//15 gün girilmez sayan değer 30a yükseltildi eski oyuncu ödülü not: yuti
+                if ((int)Math.Ceiling(diff.TotalDays) >= 7)//15 gün girilmez sayan değer 7'ye düşürüldü eski oyuncu ödülü not: yuti
                 {
                     DateTime startDate = Convert.ToDateTime(GameProperties.StartEventOldPlayer);
                     DateTime stopDate = Convert.ToDateTime(GameProperties.EndEventOldPlayer);
@@ -3190,7 +3191,7 @@ public class GamePlayer : IGamePlayer
             AddExpVip(result * 2);
             this.Out.SendOpenVIP(this);
             this.m_character.VIPNextLevelDaysNeeded = this.GetVIPNextLevelDaysNeeded(this.m_character.VIPLevel, this.m_character.VIPExp);
-            this.SendMessage($"Tekrardan Hoş Geldiniz! Yeni güne giriş yaptığınızda {result * 2} kat VIP günlük tecrübe puanı kazandınız!"); //türkçeleştirildi not: yuti
+            this.SendMessage($"Tekrardan Hoş Geldiniz! Yeni güne giriş yaptığınızda {result * 2} adet VIP günlük tecrübe puanı kazanılır!"); //türkçeleştirildi not: yuti
         }
         else
         {
@@ -3291,7 +3292,7 @@ public class GamePlayer : IGamePlayer
             if (DropInventory.FightLabUserDrop(missionId, ref info) && info != null)
             {
                 bool flag = false;
-                text = LanguageMgr.GetTranslation("Phần thưởng từ phòng tập") + ": ";
+                text = LanguageMgr.GetTranslation("Eğitim Alanından Kazandığız Ödüller") + ": "; //türkçeleştirildi not: yuti
                 foreach (ItemInfo item in info)
                 {
                     text = text + LanguageMgr.GetTranslation("Game.Server.Quests.FinishQuest.RewardProp", item.Template.Name, item.Count) + " ";
@@ -3472,65 +3473,112 @@ public class GamePlayer : IGamePlayer
     /// <returns>Giriş işleminin başarılı olup olmadığını belirtir.</returns>
     public bool Login()
     {
-        // --- AŞAMA 1: ÖN KONTROLLER VE BAŞLANGIÇ ---
-        // Oyuncunun zaten sunucuda olup olmadığını kontrol et. Çift girişi engeller.
-        if (!WorldMgr.AddPlayer(m_character.ID, this))
+        if (WorldMgr.AddPlayer(m_character.ID, this))
         {
-            log.Warn($"Player with ID {m_character.ID} is already trying to log in or is already online. Login rejected.");
-            return false;
-        }
-
-        try
-        {
-            // Oyuncunun hesap durumu (yasaklı vs.) kontrolü.
-            if (!CheckPlayerStatus())
+            try
             {
-                return false; // CheckPlayerStatus içinde gerekli loglama ve temizleme yapılır.
-            }
+                if (LoadFromDatabase())
+                {
+                    if (PlayerCharacter.BoxGetDate.ToShortDateString() != DateTime.Now.ToShortDateString())
+                    {
+                        PlayerCharacter.AlreadyGetBox = 0;
+                        PlayerCharacter.BoxProgression = 0;
+                    }
+                    Out.SendLoginSuccess();
+                    if (LittleGameWorldMgr.IsOpen)
+                    {
+                        Actives.SendLittleGameActived();
+                    }
+                    Out.SendUpdatePublicPlayer(PlayerCharacter, MatchInfo, Extra.Info);
+                    Out.SendWeaklessGuildProgress(PlayerCharacter);
+                    ProcessConsortiaAndPet();
+                    Out.SendDateTime();
+                    Out.SendDailyAward(this);
+                    LoadMarryMessage();
+                    if (!m_showPP)
+                    {
+                        m_playerProp.ViewCurrent();
+                        m_showPP = true;
+                    }
+                    _ = PlayerCharacter.ID;
+                    Rank.SendUserRanks();
+                    if (this.m_character.honorId != 0)
+                        this.UpdateHonor(this.m_character.honorId);
+                    Farm.LoadFarmLand();
+                    Out.SendOpenVIP(this);
+                    EquipBag.UpdatePlayerProperties();
+                    PetBag.UpdateEatPets();
+                    SetupProcessor();
+                    Actives.SendEvent();
+                    Out.SendEnthrallLight();
+                    this.Out.SendAvatarCollect(this.AvatarCollect);
+                    this.AvatarCollect.ScanAvatarVaildDate();
 
-            // --- AŞAMA 2: VERİ YÜKLEME ---
-            // Veritabanından oyuncunun tüm temel verilerini yükle.
-            if (!LoadAllPlayerData())
-            {
-                log.Error($"Failed to load data for player ID {m_character.ID}. Disconnecting.");
-                return false; // LoadAllPlayerData içinde gerekli temizleme yapılır.
-            }
+                    Out.SendEdictumVersion();
+                    m_playerState = ePlayerState.Manual;
+                    Out.SendBufferList(this, m_bufferList.GetAllBufferByTemplate());
+                    Out.SendUpdateAchievementData(AchievementInventory.GetSuccessAchievement());
+                    BoxBeginTime = DateTime.Now;
+                    this.TimeCheckHack = (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                    OpenAllNoviceActive();
+                    if (this.PlayerCharacter.Grade >= 30)
+                    {
+                        this.Out.SendPlayerFigSpiritinit(this.PlayerCharacter.ID, this.GemStone);
+                    }
+                    WorldMgr.IsAccountLimit(this);
+                    Out.SendUpdateFirstRecharge(PlayerCharacter.IsRecharged, PlayerCharacter.IsGetAward);
+                    ChargeToUser();
+                    ConsortiaTaskMgr.AddPlayer(this);
+                    Out.SendOpenWorldBoss(X, Y);
+                    if (DateTime.Parse(GameProperties.LeftRouterEndDate) > DateTime.Now)
+                    {
+                        Out.SendLeftRouleteOpen(Extra.Info);
+                    }
+                    Extra.BeginPingOnlineTimer();
+                    if (userWonderFulActivityManager == null)
+                    {
+                        userWonderFulActivityManager = new UserWonderFulActivityManager(this);
+                    }
+                    userWonderFulActivityManager.SignToday();
+                    if (ActiveSystemMgr.IsLeagueOpen)
+                    {
+                        Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.maxCount, 1);
+                        SendMessage(eMessageType.GM_NOTICE, "Lig Başladı! Birlik savaşlarında kim kimi yenecek bakalım!"); //türkçeleştirildi not: yuti
+                    }
+                    else
+                    {
+                        Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.maxCount, 2);
+                    }
+                    if (ActiveSystemMgr.IsGoldTimeOpen)
+                    {
+                        SendMessage(eMessageType.GM_NOTICE, "Altın Saat Etkinliği başladı! Haydi Oyun salonunda buluşalım!"); //türkçeleştirildi not: yuti
+                    }
+                    ShowCheckCode();
+                    Out.SendUserSyncEquipGhost(this);
+                    Out.SendGuildMemberWeekOpenClose(Extra.Info);
+                    this.Dice.SendDiceActiveOpen();
+                    Out.SendNecklaceStrength(PlayerCharacter);
 
-            // --- AŞAMA 3: GÜNLÜK/HAFTALIK SIFIRLAMALAR VE KONTROLLER ---
-            ProcessDailyAndPeriodicResets();
+                    if (this.PlayerCharacter.Grade >= 13 && this.Actives.IsPyramidOpen())
+                    {
+                        this.Out.SendPyramidOpenClose(this.Actives.PyramidConfig);
+                        //if (!this.Actives.IsYearMonsterOpen()) bunlara bi bakalım ya not: yuti
+                        //// this.Out.SendCatchBeastOpen(id, true); bunlara bi bakalım ya not: yuti
+                        ///
+                    }
+                    WonderFulActivityManager.WonderFulActivityInit(this); //GEÇİCİ
 
-            // --- AŞAMA 4: İSTEMCİYE BAŞLANGIÇ VERİLERİNİ GÖNDER ---
-            // İstemciyi "giriş başarılı" konusunda bilgilendir ve temel oyun verilerini gönder.
-            SendInitialDataToClient();
-
-            // --- AŞAMA 5: GİRİŞ SONRASI SİSTEMLERİ BAŞLAT ---
-            // Zamanlayıcıları, etkinlikleri ve diğer arka plan süreçlerini başlat.
-            InitializePostLoginSystems();
-
-            // --- AŞAMA 6: SOSYAL BİLDİRİMLER ---
-            // Arkadaşlara ve birliğe giriş yapıldığını haber ver.
-            NotifySocialSystemsOfLogin();
-
-            // Oyuncu durumunu normal olarak ayarla ve işlemi başarıyla bitir.
-            m_playerState = ePlayerState.Online;
-            log.Info($"Player {PlayerCharacter.NickName} (ID: {PlayerCharacter.ID}) has successfully logged in.");
-            return true;
-        }
-        catch (Exception ex)
-        {
-            // Giriş sırasında beklenmedik bir hata olursa, logla ve oyuncuyu temizle.
-            log.Error($"An unexpected error occurred during login for player ID {m_character.ID}.", ex);
-            return false;
-        }
-        finally
-        {
-            // Eğer işlem herhangi bir nedenle başarısız olduysa, oyuncuyu sunucudan tamamen kaldır.
-            // Bu, "finally" bloğunda olduğundan, try'dan çıkış şekli (return, exception) fark etmeksizin çalışır.
-            if (m_playerState != ePlayerState.Online)
-            {
+                    return true;
+                }
                 WorldMgr.RemovePlayer(m_character.ID);
             }
+            catch (Exception exception)
+            {
+                log.Error("Error Login!", exception);
+            }
+            return false;
         }
+        return false;
     }
 
     #region YARDIMCI METOTLAR
@@ -5628,8 +5676,8 @@ public class GamePlayer : IGamePlayer
         num += PlayerCharacter.Defence;
         num += PlayerCharacter.Agility;
         num += PlayerCharacter.Luck;
-        double baseAttack = GetBaseAttack();
-        double baseDefence = GetBaseDefence();
+        double baseAttack = GetBaseAttack(); //hasar
+        double baseDefence = GetBaseDefence(); //zırh
         FightPower += (int)((double)(num + 1000) * (baseAttack * baseAttack * baseAttack + 3.5 * baseDefence * baseDefence * baseDefence) / 100000000.0 + (double)hp * 0.95);
         if (m_currentSecondWeapon != null)
         {

@@ -562,7 +562,7 @@ namespace Game.Server
         }
 
 
-        protected void WorldBossScan(object sender)
+        protected void WorldBossScan(object sender) //sadece game server rebuild attım otomatikmen roada işlemiyor o
         {
             try
             {
@@ -574,80 +574,86 @@ namespace Game.Server
                 }
 
                 Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-                GamePlayer[] players = WorldMgr.GetAllPlayers();
-                DateTime startTime = Convert.ToDateTime("00:00:00");//world boss başlama saatleri şimdilik 7/24 şekilde not: yuti
-                DateTime stopTime = Convert.ToDateTime("23:59:59");//world boss başlama saatleri şimdilik 7/24 şekilde not: yuti
-                DateTime closeTime = stopTime.AddMinutes(1.0);
-                int npcID = 1243;
-                int configblood = NPCInfoMgr.GetNpcInfoById(npcID).Blood;
-                string configname = NPCInfoMgr.GetNpcInfoById(npcID).Name;
-                List<DayOfWeek> opendays = new List<DayOfWeek>
+
+                // --- KİLİT BAŞLANGICI (WorldBossRoom nesnesinin kendisi kilitlendi) ---
+                lock (RoomMgr.WorldBossRoom)
                 {
-                    DayOfWeek.Monday,
-                    DayOfWeek.Tuesday,
-                    DayOfWeek.Wednesday,
-                    DayOfWeek.Thursday,
-                    DayOfWeek.Friday,
-                    DayOfWeek.Saturday,
-                    DayOfWeek.Sunday
-                };
-                if (opendays.Contains(DateTime.Now.DayOfWeek))
-                {
-                    if (!RoomMgr.WorldBossRoom.WorldOpen && DateTime.Now >= startTime && DateTime.Now < stopTime)
+                    GamePlayer[] players = WorldMgr.GetAllPlayers();
+                    DateTime startTime = Convert.ToDateTime("00:00:00");//world boss başlama saatleri şimdilik 7/24 şekilde not: yuti
+                    DateTime stopTime = Convert.ToDateTime("02:08:59");//world boss başlama saatleri şimdilik 7/24 şekilde not: yuti
+                    DateTime closeTime = stopTime.AddMinutes(1.0);
+                    int npcID = 1243;
+                    int configblood = NPCInfoMgr.GetNpcInfoById(npcID).Blood;
+                    string configname = NPCInfoMgr.GetNpcInfoById(npcID).Name;
+                    List<DayOfWeek> opendays = new List<DayOfWeek>
+            {
+                DayOfWeek.Monday,
+                DayOfWeek.Tuesday,
+                DayOfWeek.Wednesday,
+                DayOfWeek.Thursday,
+                DayOfWeek.Friday,
+                DayOfWeek.Saturday,
+                DayOfWeek.Sunday
+            };
+                    if (opendays.Contains(DateTime.Now.DayOfWeek))
                     {
-                        RoomMgr.WorldBossRoom.BeginTime = startTime;
-                        RoomMgr.WorldBossRoom.EndTime = stopTime;
-                        RoomMgr.WorldBossRoom.MaxBlood = configblood;
-                        RoomMgr.WorldBossRoom.Blood = configblood;
-                        RoomMgr.WorldBossRoom.Name = configname;
-                        RoomMgr.WorldBossRoom.BossResourceId = "1";
-                        RoomMgr.WorldBossRoom.CurrentPve = npcID;
-                        RoomMgr.WorldBossRoom.FightOver = false;
-                        RoomMgr.WorldBossRoom.RoomClose = false;
-                        RoomMgr.WorldBossRoom.WorldOpen = true;
-                        RoomMgr.WorldBossRoom.FightTime = (int)stopTime.Subtract(startTime).TotalMinutes;
-                        foreach (var xxx in players)
+                        if (!RoomMgr.WorldBossRoom.WorldOpen && DateTime.Now >= startTime && DateTime.Now < stopTime)
                         {
-                            xxx.Out.SendOpenWorldBoss(0, 0);
-                            xxx.Out.SendMessage(eMessageType.GM_NOTICE, "Dünya BOSS açıldı!");
+                            RoomMgr.WorldBossRoom.BeginTime = startTime;
+                            RoomMgr.WorldBossRoom.EndTime = stopTime;
+                            RoomMgr.WorldBossRoom.MaxBlood = configblood;
+                            RoomMgr.WorldBossRoom.Blood = configblood;
+                            RoomMgr.WorldBossRoom.Name = configname;
+                            RoomMgr.WorldBossRoom.BossResourceId = "1";
+                            RoomMgr.WorldBossRoom.CurrentPve = npcID;
+                            RoomMgr.WorldBossRoom.FightOver = false;
+                            RoomMgr.WorldBossRoom.RoomClose = false;
+                            RoomMgr.WorldBossRoom.WorldOpen = true;
+                            RoomMgr.WorldBossRoom.FightTime = (int)stopTime.Subtract(startTime).TotalMinutes;
+                            foreach (var xxx in players)
+                            {
+                                xxx.Out.SendOpenWorldBoss(0, 0);
+                                xxx.Out.SendMessage(eMessageType.GM_NOTICE, "Dünya BOSS açıldı!");
+                            }
                         }
-                    }
-                    else if (DateTime.Now >= stopTime && DateTime.Now < closeTime && RoomMgr.WorldBossRoom.WorldOpen)
-                    {
-                        RoomMgr.WorldBossRoom.FightOver = true;
-                        RoomMgr.WorldBossRoom.RoomClose = false;
-                        RoomMgr.WorldBossRoom.WorldOpen = true;
-                        RoomMgr.WorldBossRoom.SendFightOver();
-                        foreach (var xxx in players)
+                        else if (DateTime.Now >= stopTime && DateTime.Now < closeTime && RoomMgr.WorldBossRoom.WorldOpen)
                         {
-                            xxx.Out.SendOpenWorldBoss(0, 0);
-                            xxx.Out.SendMessage(eMessageType.GM_NOTICE, "Dünya BOSS sona erdi.");
+                            RoomMgr.WorldBossRoom.FightOver = true;
+                            RoomMgr.WorldBossRoom.RoomClose = false;
+                            RoomMgr.WorldBossRoom.WorldOpen = true;
+                            RoomMgr.WorldBossRoom.SendFightOver();
+                            foreach (var xxx in players)
+                            {
+                                xxx.Out.SendOpenWorldBoss(0, 0);
+                                xxx.Out.SendMessage(eMessageType.GM_NOTICE, "Dünya BOSS sona erdi.");
+                            }
+                            RoomMgr.WorldBossRoom.SendRoomClose();
+                            RoomMgr.WorldBossRoom.WorldBossClose();
+                            RoomMgr.WorldBossRoom.SendGiftForUserJoined();
                         }
-                        RoomMgr.WorldBossRoom.SendRoomClose();
-                        RoomMgr.WorldBossRoom.WorldBossClose();
-                        RoomMgr.WorldBossRoom.SendGiftForUserJoined();
-                    }
-                    else if (DateTime.Now >= closeTime && !RoomMgr.WorldBossRoom.RoomClose)
-                    {
-                        RoomMgr.WorldBossRoom.FightOver = true;
-                        RoomMgr.WorldBossRoom.RoomClose = true;
-                        RoomMgr.WorldBossRoom.WorldOpen = false;
-                        foreach (var xxx in players)
+                        else if (DateTime.Now >= closeTime && !RoomMgr.WorldBossRoom.RoomClose)
                         {
-                            xxx.Out.SendOpenWorldBoss(0, 0);
-                            xxx.Out.SendMessage(eMessageType.GM_NOTICE, "Dünya BOSS tamamen sona erdi");
-                            xxx.PlayerCharacter.damageScores = 0;
+                            RoomMgr.WorldBossRoom.FightOver = true;
+                            RoomMgr.WorldBossRoom.RoomClose = true;
+                            RoomMgr.WorldBossRoom.WorldOpen = false;
+                            foreach (var xxx in players)
+                            {
+                                xxx.Out.SendOpenWorldBoss(0, 0);
+                                xxx.Out.SendMessage(eMessageType.GM_NOTICE, "Dünya BOSS tamamen sona erdi");
+                                xxx.PlayerCharacter.damageScores = 0;
+                            }
+                            RoomMgr.WorldBossRoom.SendAllOver();
                         }
-                        RoomMgr.WorldBossRoom.SendAllOver();
-                    }
-                    else if (startTime.Subtract(DateTime.Now).TotalMinutes <= 5 && startTime.Subtract(DateTime.Now).TotalMinutes > 0 && !RoomMgr.WorldBossRoom.WorldOpen && DateTime.Now < closeTime)
-                    {
-                        foreach (var xxx in players)
+                        else if (startTime.Subtract(DateTime.Now).TotalMinutes <= 5 && startTime.Subtract(DateTime.Now).TotalMinutes > 0 && !RoomMgr.WorldBossRoom.WorldOpen && DateTime.Now < closeTime)
                         {
-                            xxx.Out.SendMessage(eMessageType.GM_NOTICE, $"Dünya Boss {(int)startTime.Subtract(DateTime.Now).TotalMinutes} dakika sonra başlayacaktır.");
+                            foreach (var xxx in players)
+                            {
+                                xxx.Out.SendMessage(eMessageType.GM_NOTICE, $"Dünya Boss {(int)startTime.Subtract(DateTime.Now).TotalMinutes} dakika sonra başlayacaktır.");
+                            }
                         }
                     }
                 }
+                // --- KİLİT BİTİŞİ ---
 
                 if (log.IsInfoEnabled)
                 {
@@ -714,6 +720,7 @@ namespace Game.Server
                 };
                 if (opendays.Contains(DateTime.Now.DayOfWeek))
                 {
+                   
                     int startTime = GameProperties.LittleGameStartHourse; //saçma sapan bi mantık değiştirebiliriz not: yuti
                     int stopTime = GameProperties.LittleGameStartHourse + GameProperties.LittleGameTimeSpending;
                     if (DateTime.Now.Hour == startTime && !LittleGameWorldMgr.IsOpen)
@@ -1419,10 +1426,10 @@ namespace Game.Server
                 {
                     return false;
                 }
-                if (!InitComponent(InitOtherLoginServer(), "Login To OtherCenterServer"))
-                {
-                    return false;
-                }
+                //if (!InitComponent(InitOtherLoginServer(), "Login To OtherCenterServer"))
+                //{
+                  //  return false;
+                //}
                 if (!InitComponent(HotSpringMgr.Init(), "HotSpringMgr Init"))
                 {
                     return false;
@@ -1480,7 +1487,7 @@ namespace Game.Server
                // if (!InitComponent(DailyLeagueAwardMgr.Init(), "DailyLeagueAwardMgr Init")) //kaldırıldı not: yuti
                    // return false;
                 if (!InitComponent(SpiritInfoMgr.Init(), "SpiritInfoMgr Int"))
-                    return false;
+                    return false; //buralarda ne geziyon la :D
                 if (!InitComponent(SetsBuildTempMgr.Init(), "SetsBuildTempMgr Init"))
                     return false;
                 if (!InitComponent(OldPlayerAwardMgr.Init(), "OldPlayerAwardMgr Init"))
@@ -1491,6 +1498,8 @@ namespace Game.Server
                     return false;
                 RoomMgr.Start();
                 GameMgr.Start();
+                Game.Server.API.GameApiServer.Start();
+                Console.WriteLine("Game Server API Başlatıldı!");
                 BattleMgr.Start();
                 MacroDropMgr.Start();
                 if (!InitComponent(base.Start(), "base.Start()"))

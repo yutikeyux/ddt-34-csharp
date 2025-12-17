@@ -200,26 +200,41 @@ namespace Game.Logic.Phy.Maps
 			}
 		}
 
-		public Point FindNextWalkPointDown(int x, int y, int direction, int stepX, int stepY)
-		{
-			if (direction != 1 && direction != -1)
-			{
-				return Point.Empty;
-			}
-			int x2 = x + direction * stepX;
-			if (x2 < 0 || x2 > _bound.Width)
-			{
-				return Point.Empty;
-			}
-			Point point = FindYLineNotEmptyPointDown(x2, y - stepY - 1);
-			if (point != Point.Empty && Math.Abs(point.Y - y) > stepY)
-			{
-				point = Point.Empty;
-			}
-			return point;
-		}
+        public Point FindNextWalkPointDown(int x, int y, int direction, int stepX, int stepY)
+        {
+            if (direction != 1 && direction != -1)
+            {
+                return Point.Empty;
+            }
+            int x2 = x + direction * stepX;
+            if (x2 < 0 || x2 > _bound.Width)
+            {
+                return Point.Empty;
+            }
+            Point point = FindYLineNotEmptyPointDown(x2, y - stepY - 1);
+            if (point != Point.Empty && Math.Abs(point.Y - y) > stepY)
+            {
+                point = Point.Empty;
+            }
+            return point;
+        }
 
-		public List<Living> FindRandomPlayer(int fx, int tx, List<Player> exceptPlayers)
+        public List<Player> FindPlayerByHitPoint(Point p, int radius)
+        {
+            List<Player> playerList = new List<Player>();
+            lock (hashSet_0)
+            {
+                foreach (Physics physics in hashSet_0)
+                {
+                    if (physics is Player && physics.IsLiving && (physics as Player).BoundDistance(p) < (double)radius)
+                    {
+                        playerList.Add(physics as Player);
+                    }
+                }
+                return playerList;
+            }
+        }
+        public List<Living> FindRandomPlayer(int fx, int tx, List<Player> exceptPlayers)
 		{
 			List<Living> livingList1 = new List<Living>();
 			lock (hashSet_0)

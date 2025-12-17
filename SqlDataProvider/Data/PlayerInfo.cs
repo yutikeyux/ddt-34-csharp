@@ -68,6 +68,8 @@ namespace SqlDataProvider.Data
 
         private int _inviter;
 
+        public int GoldenAddAttack { get; set; }
+
         private bool _isConsortia;
 
         private bool _isCreatedMarryRoom;

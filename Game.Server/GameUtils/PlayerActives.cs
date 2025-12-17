@@ -690,14 +690,14 @@ namespace Game.Server.GameUtils
                         CreateActiveSystemInfo(Player.PlayerCharacter.ID, Player.PlayerCharacter.NickName);
                     }
 
-                    //if (IsChristmasOpen())
+                   // if (IsChristmasOpen())
                     //{
-                    //    m_christmas = pb.GetSingleUserChristmas(Player.PlayerCharacter.ID);
-                    //    if (m_christmas == null)
-                    //    {
-                    //        CreateChristmasInfo(Player.PlayerCharacter.ID);
-                    //    }
-                    //}
+                      // m_christmas = pb.GetSingleUserChristmas(Player.PlayerCharacter.ID);
+                       // if (m_christmas == null)
+                      //  {
+                     //      CreateChristmasInfo(Player.PlayerCharacter.ID);
+                   //    }
+                 //   }
                 }
             }   
         }
@@ -1008,15 +1008,15 @@ namespace Game.Server.GameUtils
                         break;
                     }
                 }
-                //ind = rand.Next(temps.Count - 1);
-                //itemAward = temps[ind];
+                ind = rand.Next(temps.Count - 1);
+                itemAward = temps[ind];
             }
 
 
-            //if (itemAward.TemplateID == coinTemplateID && rand.Next(100) > 3 && rand.Next(100))
+           // if (itemAward.TemplateID == coinTemplateID && rand.Next(100) > 3 && rand.Next(100))
             //{
-            //    List<NewChickenBoxItemInfo> temps = new List<NewChickenBoxItemInfo>();
-            //    foreach (NewChickenBoxItemInfo item in m_LuckyStartRewards)
+              //  List<NewChickenBoxItemInfo> temps = new List<NewChickenBoxItemInfo>();
+              // foreach (NewChickenBoxItemInfo item in m_LuckyStartRewards)
             //    {
             //        if (item.TemplateID != coinTemplateID)
             //        {

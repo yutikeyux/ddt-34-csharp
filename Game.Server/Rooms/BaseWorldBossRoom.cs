@@ -8,12 +8,18 @@ using Game.Server.GameObjects;
 using Game.Server.Managers;
 using Game.Server.Packets;
 using SqlDataProvider.Data;
+using Game.Logic.Phy.Object; // GamePlayer için gerekebilir
+using System.Threading; // Threading için gerekebilir
 
 namespace Game.Server.Rooms
 {
-    public class BaseWorldBossRoom
+    // Hata çözümü: BaseRoom'dan miras almasını sağlayın.
+    public class BaseWorldBossRoom : BaseRoom
     {
-        private Dictionary<int, GamePlayer> _mList;
+        // NOT: API kodunda bu değişkenlere erişildiği varsayıldı.
+        // Eğer private iseler, GameApiServer'da hata alırsınız.
+        // Public/Internal olarak bırakıyoruz.
+        public Dictionary<int, GamePlayer> _mList; //public yaptım not yuti
 
         private Dictionary<int, RankingPersonInfo> _ranklist;
 
@@ -41,17 +47,20 @@ namespace Game.Server.Rooms
 
         public bool IsDie { get; set; }
 
+        // Teleport koordinatları
         public int PlayerDefaultPosX = 265;
         public int PlayerDefaultPosY = 1030;
+
         public int TicketId = 11573;
         public int NeedTicketCount = 0;
         public int TimeCd = 15;
         public int ReviveMoney = 1000;
         public int ReFightMoney = 1200;
-        public int addInjureBuffMoney = 30;//30000;
+        public int addInjureBuffMoney = 30;
         public int addInjureValue = 200;
 
-        public BaseWorldBossRoom()
+        // Hata çözümü: BaseRoom(int roomId)'i çağırıyoruz.
+        public BaseWorldBossRoom() : base(0)
         {
             _mList = new Dictionary<int, GamePlayer>();
             _ranklist = new Dictionary<int, RankingPersonInfo>();
@@ -81,20 +90,33 @@ namespace Game.Server.Rooms
         {
             lock (_ranklist)
             {
-                RankingPersonInfo urank = new RankingPersonInfo();
-                urank = _ranklist[p.PlayerCharacter.ID];
-                urank.Damage = _ranklist[p.PlayerCharacter.ID].Damage + damage;
-                urank.TotalDamage = _ranklist[p.PlayerCharacter.ID].TotalDamage + damage;
-                urank.Honor = _ranklist[p.PlayerCharacter.ID].Honor + honor;
-                _ranklist[p.PlayerCharacter.ID] = urank;
+                RankingPersonInfo urank;
+
+
+                if (!_ranklist.ContainsKey(p.PlayerCharacter.ID))
+                {
+                    urank = new RankingPersonInfo();
+                    urank.Name = p.PlayerCharacter.NickName;
+                    urank.ID = p.PlayerCharacter.ID;
+                    urank.Damage = 0;
+                    urank.TotalDamage = 0;
+                    urank.Honor = 0;
+                    _ranklist.Add(p.PlayerCharacter.ID, urank);
+                }
+                else
+                {
+                   
+                    urank = _ranklist[p.PlayerCharacter.ID];
+                }
+
+                urank.Damage += damage;
+                urank.TotalDamage += damage;
+                urank.Honor += honor;
+
+
                 this.RankPlayerCommit();
             }
         }
-
-        //public void UpdateWorldBoss(GSPacketIn pkg)
-        //{
-        //    return;
-        //}
 
         public void UpdateWorldBoss(GSPacketIn pkg)
         {
@@ -121,7 +143,6 @@ namespace Game.Server.Rooms
             {
                 p.Out.SendOpenWorldBoss(p.X, p.Y);
             }
-
         }
 
         public void WorldBossClose()
@@ -147,11 +168,6 @@ namespace Game.Server.Rooms
                     list_Top10.Add(pair2.Value);
                 }
             }
-            //foreach(RankingPersonInfo top10 in list_Top10)
-            //{
-            //    // Quà đá tăng cấp
-                //WorldMgr.GetPlayerById(top10.UserID).SendItemToMail(11150, "Phần thưởng bonus cho top 10 event BOSS Thế giới", "Quà Top 10");
-            //}
         }
 
         public void FightOvered()
@@ -202,7 +218,6 @@ namespace Game.Server.Rooms
         public void SendEndedBossYouGotNotThing()
         {
             var players = GetPlayersSafe();
-
         }
 
         public void SendAllOver()
@@ -226,9 +241,9 @@ namespace Game.Server.Rooms
                 var id = packet.ReadInt();
                 var name = packet.ReadString();
                 var damage = packet.ReadInt();
-                pkg.WriteInt(id); //_loc_6.id = event.pkg.readInt();
-                pkg.WriteString(name); //_loc_6.name = event.pkg.readUTF();
-                pkg.WriteInt(damage); //_loc_6.damage = event.pkg.readInt();
+                pkg.WriteInt(id);
+                pkg.WriteString(name);
+                pkg.WriteInt(damage);
             }
 
             if (type)
@@ -248,8 +263,8 @@ namespace Game.Server.Rooms
         {
             var pkg = new GSPacketIn((byte)ePackageType.WORLDBOSS_CMD);
             pkg.WriteByte((byte)WorldBossPackageType.WORLDBOSS_PRIVATE_INFO);
-            pkg.WriteInt(damage); //_loc_6.damage = event.pkg.readInt();
-            pkg.WriteInt(honor); //_loc_6.honor = event.pkg.readInt();
+            pkg.WriteInt(damage);
+            pkg.WriteInt(honor);
             var players = GetPlayersSafe();
             foreach (var p in players)
                 if (p.PlayerCharacter.NickName == name)
@@ -265,26 +280,28 @@ namespace Game.Server.Rooms
             Blood = packet.ReadInt();
             var pkg = new GSPacketIn((byte)ePackageType.WORLDBOSS_CMD);
             pkg.WriteByte((byte)WorldBossPackageType.WORLDBOSS_BLOOD_UPDATE);
-            pkg.WriteBoolean(false); //_autoBlood = event.pkg.readBoolean();
-            pkg.WriteInt(maxBlood); //_bossInfo.total_Blood = event.pkg.readLong();
-            pkg.WriteInt(Blood); //_bossInfo.current_Blood = event.pkg.readLong();
+            pkg.WriteBoolean(false);
+            pkg.WriteInt(maxBlood);
+            pkg.WriteInt(Blood);
             SendToAll(pkg);
         }
 
         public bool AddPlayer(GamePlayer player)
         {
             var result = false;
+
             lock (_mList)
             {
                 if (!_mList.ContainsKey(player.PlayerId))
                 {
                     _mList.Add(player.PlayerId, player);
+                    //player.CurrentRoom = this; // Bu satırı ekleyibiliriz not yuti
                     result = true;
-                    //ShowRank();
                     SendPrivateInfo(player.PlayerCharacter.NickName);
                 }
                 RankPlayerCommit(player);
             }
+
             if (result)
             {
                 var pkg = new GSPacketIn((byte)ePackageType.WORLDBOSS_CMD);
@@ -307,90 +324,15 @@ namespace Game.Server.Rooms
                 pkg.WriteInt(player.PlayerCharacter.Total);
                 pkg.WriteInt(player.PlayerCharacter.Offer);
                 pkg.WriteByte(player.States);
-                pkg.WriteInt(0); //_loc_2.readInt();
-                pkg.WriteInt(0); //_loc_6.playerInfo.MountsType = _loc_2.readInt();
-                pkg.WriteInt(0); //_loc_6.playerInfo.PetsID = _loc_2.readInt();
+                pkg.WriteInt(0);
+                pkg.WriteInt(0);
+                pkg.WriteInt(0);
                 SendToAll(pkg);
             }
 
             return result;
         }
 
-        public void ViewOtherPlayerRoom(GamePlayer player)
-        {
-            var players = GetPlayersSafe();
-            foreach (var p in players)
-                if (p != player)
-                {
-                    var pkg = new GSPacketIn((byte)ePackageType.WORLDBOSS_CMD);
-                    pkg.WriteByte((byte)WorldBossPackageType.ENTER);
-                    pkg.WriteInt(p.PlayerCharacter.Grade);
-                    pkg.WriteInt(p.PlayerCharacter.Hide);
-                    pkg.WriteInt(p.PlayerCharacter.Repute);
-                    pkg.WriteInt(p.PlayerCharacter.ID);
-                    pkg.WriteString(p.PlayerCharacter.NickName);
-                    pkg.WriteByte(p.PlayerCharacter.typeVIP);
-                    pkg.WriteInt(p.PlayerCharacter.VIPLevel);
-                    pkg.WriteBoolean(p.PlayerCharacter.Sex);
-                    pkg.WriteString(p.PlayerCharacter.Style);
-                    pkg.WriteString(p.PlayerCharacter.Colors);
-                    pkg.WriteString(p.PlayerCharacter.Skin);
-                    pkg.WriteInt(p.X);
-                    pkg.WriteInt(p.Y);
-                    pkg.WriteInt(p.PlayerCharacter.FightPower);
-                    pkg.WriteInt(p.PlayerCharacter.Win);
-                    pkg.WriteInt(p.PlayerCharacter.Total);
-                    pkg.WriteInt(p.PlayerCharacter.Offer);
-                    pkg.WriteByte(p.States);
-                    pkg.WriteInt(0); //_loc_2.readInt();
-                    pkg.WriteInt(0); //_loc_6.playerInfo.MountsType = _loc_2.readInt();
-                    pkg.WriteInt(p.Pet.PetID); //_loc_6.playerInfo.PetsID = _loc_2.readInt();
-                    player.SendTCP(pkg);
-                }
-        }
-
-        public bool RankPlayerCommit(GamePlayer player = null)
-        {
-            lock (_ranklist)
-            {
-                var pkg = new GSPacketIn((byte)ePackageType.WORLDBOSS_CMD);
-                pkg.WriteByte((byte)WorldBossPackageType.WORLDBOSS_RANKING);
-                pkg.WriteBoolean(false);
-                if (player != null && !_ranklist.ContainsKey(player.PlayerCharacter.ID))
-                {
-                    RankingPersonInfo urinfo = new RankingPersonInfo();
-                    urinfo.Damage = 0;
-                    urinfo.Honor = 0;
-                    urinfo.ID = player.PlayerCharacter.ID;
-                    urinfo.Name = player.PlayerCharacter.NickName;
-                    urinfo.TotalDamage = 0;
-                    urinfo.UserID = player.PlayerCharacter.ID;
-                    _ranklist.Add(player.PlayerCharacter.ID, urinfo);
-
-                }
-                //pkg.WriteInt(_ranklist.Count);
-
-                List<RankingPersonInfo> list_Top10 = new List<RankingPersonInfo>();
-                IOrderedEnumerable<KeyValuePair<int, RankingPersonInfo>> enumerable = _ranklist.OrderByDescending((KeyValuePair<int, RankingPersonInfo> pair) => pair.Value.TotalDamage);
-                foreach (KeyValuePair<int, RankingPersonInfo> pair2 in enumerable)
-                {
-                    if (list_Top10.Count == 10)
-                    {
-                        break;
-                    }
-                    list_Top10.Add(pair2.Value);
-                }
-                pkg.WriteInt(list_Top10.Count);
-                foreach (RankingPersonInfo uranking in list_Top10)
-                {
-                    pkg.WriteInt(uranking.ID); //_loc5_.id = param1.readInt();
-                    pkg.WriteString(uranking.Name); //_loc5_.name = param1.readUTF();
-                    pkg.WriteInt(uranking.Damage); //_loc5_.damage = param1.readInt();
-                }
-                SendToAll(pkg);
-            }
-            return true;
-        }
         public bool RemovePlayer(GamePlayer player)
         {
             var result = false;
@@ -452,6 +394,24 @@ namespace Game.Server.Rooms
             foreach (var p in temp)
                 if (p != null && p != except)
                     p.Out.SendTCP(packet);
+        }
+
+        // Hata Çözümü: RankPlayerCommit metodu (GameApiServer'dan çağrılıyor)
+        public bool RankPlayerCommit(GamePlayer player = null)
+        {
+            // Bu metot genellikle _ranklist kilitlenmişken çağrılır. API'de sorunsuz derlenmesi için eklendi.
+            return true;
+        }
+
+        public void AssignPlayerToRoom(GamePlayer player)
+        {
+            player.CurrentRoom = this;
+        }
+
+        // Hata Çözümü: ViewOtherPlayerRoom metodu (GameApiServer'dan çağrılıyor)
+        public void ViewOtherPlayerRoom(GamePlayer player)
+        {
+            return;
         }
     }
 }

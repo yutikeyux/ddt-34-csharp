@@ -2593,7 +2593,7 @@ namespace Game.Logic
 			SendToAll(pkg);
 		}
 
-		internal void SendLivingTurnRotation(Player player, int rotation, int speed, string endPlay)
+		public void SendLivingTurnRotation(Player player, int rotation, int speed, string endPlay)
 		{
 			GSPacketIn pkg = new GSPacketIn((byte)ePackageTypeLogic.GAME_CMD, player.Id)
 			{
@@ -2619,7 +2619,55 @@ namespace Game.Logic
 			SendToAll(gSPacketIn);
 		}
 
-		internal void SendLivingUpdateAngryState(Living living)
+        // Normal dönüş (eski davranış)
+        public void TurnLiving(Player player, int targetRotation, int speed, string endPlay = "")
+        {
+            TurnLivingInternal(player, LivingTurnActionMode.TurnTo, targetRotation, speed, 0, 0, endPlay);
+        }
+
+        // Spin + Dönüş (yeni davranış)
+        public void yutikeyu(Player player, int spinDurationMs, int spinSpeed, int finalAngle, string endPlay = "")
+        {
+            TurnLivingInternal(player, LivingTurnActionMode.SpinThenTurn, finalAngle, 10, spinDurationMs, spinSpeed, endPlay);
+        }
+
+        // Ortak metod
+        private void TurnLivingInternal(
+            Player player,
+            LivingTurnActionMode mode,
+            int targetRotation,
+            int speed,
+            int spinDurationMs,
+            int spinSpeed,
+            string endPlay)
+        {
+            // Açı normalizasyonu (isteğe bağlı)
+            targetRotation = ((targetRotation % 360) + 360) % 360;
+
+            var pkg = new GSPacketIn((byte)ePackageTypeLogic.GAME_CMD, player.Id)
+            {
+                Parameter1 = player.Id
+            };
+
+            pkg.WriteByte(85);                    // Komut ID
+            pkg.WriteInt((int)mode);              // 0 veya 1
+            pkg.WriteInt(targetRotation);         // Hedef açı
+            pkg.WriteInt(speed);                  // Dönme hızı (yönelme aşaması)
+            pkg.WriteInt(spinDurationMs);         // Spin süresi (ms)
+            pkg.WriteInt(spinSpeed);              // Spin hızı (derece/frame)
+            pkg.WriteString(endPlay ?? "");
+
+            SendToAll(pkg);
+        }
+
+        // Yardımcı enum (okunabilirlik için)
+        public enum LivingTurnActionMode
+        {
+            TurnTo = 0,
+            SpinThenTurn = 1
+        }
+
+        internal void SendLivingUpdateAngryState(Living living)
 		{
 			GSPacketIn pkg = new GSPacketIn((byte)ePackageTypeLogic.GAME_CMD)
 			{
@@ -3510,5 +3558,5 @@ namespace Game.Logic
 			return list;
 		}
 
-	}
+    }
 }

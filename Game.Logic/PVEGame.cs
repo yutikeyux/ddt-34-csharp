@@ -2318,6 +2318,8 @@ namespace Game.Logic
             CanEnterGate = isEnter;
         }
 
+        public List<int> ListNpcTakeDamage = new List<int>();
+
         public void TakeSnow()
         {
             ItemTemplateInfo info = ItemMgr.FindItemTemplate(201144);

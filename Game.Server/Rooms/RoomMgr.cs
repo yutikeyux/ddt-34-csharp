@@ -256,6 +256,7 @@ namespace Game.Server.Rooms
 			AddAction(new CancelPickupAction(server, room));
         }
 
+		//updateroomgame type biraz deðiþtirmemiz gerekebilir :D
         public static void UpdateRoomGameType(BaseRoom room, eRoomType roomType, byte timeMode, eHardLevel hardLevel, int levelLimits, int mapId, string password, string roomname, bool isCrosszone, bool isOpenBoss, string Pic, int currentFloor)
         {
 			AddAction(new RoomSetupChangeAction(room, roomType, timeMode, hardLevel, levelLimits, mapId, password, roomname, isCrosszone, isOpenBoss, Pic, currentFloor));

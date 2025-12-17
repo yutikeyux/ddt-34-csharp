@@ -29,7 +29,7 @@ namespace Game.Server.Pet.Handle
             {
                 if (HungBuCacCho(weaponLevel, clothesLevel, hatLevel) == player.PetBag.EatPets.weaponLevel)
                 {
-                    player.SendMessage(eMessageType.GM_NOTICE, "Vui lòng nâng cấp Áo hoặc Nón trước!");
+                    player.SendMessage(eMessageType.GM_NOTICE, "Lütfen öncelikle Kıyafetinizi veya Şapkanızı yükseltin!");
                     return false;
                 }
             }
@@ -37,7 +37,7 @@ namespace Game.Server.Pet.Handle
             {
                 if (HungBuCacCho(weaponLevel, clothesLevel, hatLevel) == player.PetBag.EatPets.clothesLevel)
                 {
-                    player.SendMessage(eMessageType.GM_NOTICE, "Vui lòng nâng cấp Vũ khí và Nón trước!");
+                    player.SendMessage(eMessageType.GM_NOTICE, "Lütfen öncelikle Silahınızı veya Şapkanızı yükseltin!");
                     return false;
                 }
             }
@@ -45,7 +45,7 @@ namespace Game.Server.Pet.Handle
             {
                 if (HungBuCacCho(weaponLevel, clothesLevel, hatLevel) == player.PetBag.EatPets.hatLevel)
                 {
-                    player.SendMessage(eMessageType.GM_NOTICE, "Vui lòng nâng cấp Vũ khí và Áo trước!");
+                    player.SendMessage(eMessageType.GM_NOTICE, "Lütfen öncelikle Silahınızı veya Kıyafetinizi yükseltin!");
                     return false;
                 }
             }
@@ -81,7 +81,7 @@ namespace Game.Server.Pet.Handle
                 totalPoint += count * info.Template.Property2;
                 if (info == null)
                 {
-                    player.SendMessage("Không đủ số lượng đá manh hóa!");
+                    player.SendMessage("Miktar yetersiz!");
                     return false;
                 }
 
@@ -97,7 +97,7 @@ namespace Game.Server.Pet.Handle
                         needEatExp = needHatExp;
                         break;
                     default:
-                        player.SendMessage("Loại manh hóa không hợp lệ!.");
+                        player.SendMessage("Geçersiz Tür!");
                         return false;
                 }
 
@@ -113,7 +113,7 @@ namespace Game.Server.Pet.Handle
                 }
                 else
                 {
-                    player.SendMessage("Không đủ số lượng đá manh hóa!");
+                    player.SendMessage("Filiz taşı yetersiz!");
                     return false;
                 }
             }

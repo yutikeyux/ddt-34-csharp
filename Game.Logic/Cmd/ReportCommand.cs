@@ -18,7 +18,7 @@ namespace Game.Logic.Cmd
             string reportCommand = packet.ReadString();
             if (reportCommand == "!report")
             {
-                player.PlayerDetail.SendMessage("Test report của Lâm Gay");
+                player.PlayerDetail.SendMessage("test edelim bunu yuti");
             }
             if (game is PVPGame)
             {

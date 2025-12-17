@@ -20,7 +20,7 @@ namespace Game.Server.Pet.Handle
                 return false;
             if (pet.Level > player.PetBag.MaxLevelByGrade && !pet.IsEquip)
             {
-                player.SendMessage(LanguageMgr.GetTranslation("PetHandler.Msg21"));
+                player.SendMessage(LanguageMgr.GetTranslation("Evcil hayvanýnýn seviyesi, donatma seviye sýnýrýný aþýyor."));
                 return false;
             }
             if (player.PetBag.EquipPet(place, isEquip))
@@ -29,7 +29,7 @@ namespace Game.Server.Pet.Handle
             }
             else
             {
-                player.SendMessage(LanguageMgr.GetTranslation("PetHandler.Msg22"));
+                player.SendMessage(LanguageMgr.GetTranslation("Evcil hayvaný donatma iþlemi baþarýsýz oldu."));
             }
 
             return false;

@@ -21,12 +21,12 @@ namespace Game.Server.Pet.Handle
 			int num = petBag.FindFirstEmptySlot();
 			if (player.PlayerCharacter.Grade < 25)
 			{
-				player.SendMessage(LanguageMgr.GetTranslation("PetHandler.Msg2"));
+				player.SendMessage(LanguageMgr.GetTranslation("Evcil hayvan sahiplenmek için en az 25. seviye olmalýsýnýz."));
 				return false;
 			}
 			if (num == -1)
 			{
-				player.SendMessage(LanguageMgr.GetTranslation("PetHandler.Msg3"));
+				player.SendMessage(LanguageMgr.GetTranslation("Evcil hayvan çantanýz dolu. Lütfen yer açýn."));
 			}
 			else
 			{
@@ -34,7 +34,7 @@ namespace Game.Server.Pet.Handle
 				PetTemplateInfo petTemplateInfo = PetMgr.FindPetTemplate(itemAt.Template.Property5);
 				if (petTemplateInfo == null)
 				{
-					player.SendMessage(LanguageMgr.GetTranslation("PetHandler.Msg4"));
+					player.SendMessage(LanguageMgr.GetTranslation("Bu eþya evcil hayvan sahiplenmek için kullanýlamaz."));
 					return false;
 				}
 				UsersPetInfo usersPetInfo = PetMgr.CreatePet(petTemplateInfo, iD, num, petBag.MaxLevelByGrade, player.PlayerCharacter.VIPLevel);
@@ -46,13 +46,13 @@ namespace Game.Server.Pet.Handle
 				player.RemoveCountFromStack(itemAt, 1);
 				if (petTemplateInfo.StarLevel > 4)
 				{
-					string translation = LanguageMgr.GetTranslation("PetHandler.Msg5", player.PlayerCharacter.NickName, petTemplateInfo.Name, petTemplateInfo.StarLevel);
+					string translation = LanguageMgr.GetTranslation("Tebrikler! {0} adlý oyuncu, {2} yýldýzlý {1} evcil hayvanýný sahiplendi!", player.PlayerCharacter.NickName, petTemplateInfo.Name, petTemplateInfo.StarLevel);
 					GSPacketIn packet2 = WorldMgr.SendSysNotice(translation);
 					GameServer.Instance.LoginServer.SendPacket(packet2);
 				}
 				else
 				{
-					player.SendMessage(LanguageMgr.GetTranslation("PetHandler.Msg6", petTemplateInfo.Name, petTemplateInfo.StarLevel));
+					player.SendMessage(LanguageMgr.GetTranslation("{1} yýldýzlý {0} evcil hayvanýný baþarýyla sahiplendiniz.", petTemplateInfo.Name, petTemplateInfo.StarLevel));
 				}
 				petBag.SaveToDatabase(saveAdopt: false);
 				GSPacketIn gSPacketIn = new GSPacketIn(68);

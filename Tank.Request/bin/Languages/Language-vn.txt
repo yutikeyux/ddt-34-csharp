@@ -149,7 +149,7 @@ ConsortiaDescriptionUpdateHandler.Long:Nội dung nhập vào quá dài.
 ConsortiaDutyUpdateHandler.Long:Chức danh thành viên nhập vào quá dài.
 ConsortiaPlacardUpdateHandler.Long:Nội dung nhập vào quá dài.
 ConsortiaUserRemarkHandler.Long:Nội dung nhập vào quá dài.
-ActivePullDownHandler.Fail:Ödül Alımı başarısız!
+ActivePullDownHandler.Fail:GiftCode Không chính xác.
 UserChangeRankHandler.Success:Đổi danh hiệu thành công.
 GameServer.VIP.ActiveSuccess:Kích hoạt VIP thành công.
 
@@ -165,7 +165,7 @@ Game.Server.GameObjects.NoEquip:Vật phẩm không thể trang bị.
 Game.Server.GameObjects.CanEquip:Bạn không thể dùng trang bị này.
 Game.Server.GameObjects.CanLevel:Đẳng cấp quá thấp, không thể sử dụng trang bị này.
 HotSpringRoomOutHandler.Success:Đã thoát khỏi phòng suối nước nóng.
-GameServer.VIP.ContinueSuccess:VIP yenileme başarılı!!
+GameServer.VIP.ContinueSuccess:Gia hạn VIP thành công!
 GameServer.Pet.LevelUpNotice:Thăng cấp Pet thành công !
 
 homeadorn.buy.success.msg:Mua trang phục thành công.
@@ -3081,7 +3081,7 @@ ItemEnchant.AddExpSuccess:Phụ ma thành công, nhận {0} exp.
 BuyBadgeHandler.Success:Mua huy hiệu thành công!
 PicCherishInfo.Msg2:Kích hoạt phụ kiện {0} thành công!
 GamePlayer.Msg20:Số lần tặng quà hôm nay đã hết. Tối đa là {0}.
-PetHandler.Msg10: Mutluluk düzeyi artar {0}
+PetHandler.Msg10:Ðộ vui vẻ tang thêm {0}
 PetHandler.EatPetNotEnoughtCount:Số lượng không đủ.
 CardDataHander.Msg2:Thẻ này đã trang bị!
 CardDataHander.Msg3:Trang bị thành công!
@@ -4078,6 +4078,7 @@ ConsortiaSkillSocketBuy.NoRichesOffer:你没有足够的贡献来激活该技能
 ConsortiaSkillSocketBuy.NoConsortiaRiches:公会没有足够的财富来激活该技能!
 ItemRefineryRingHandler.congrulation:恭喜玩家[{0}]通过进阶武器{1}升级到{2}战斗力再上一个台阶!
 
+
 DailyLeagueGetReward.Successfull:获得奖励成功,请检查你的邮件.
 DailyLeagueGetReward.Content:恭喜你获得物品:
 UserChangeItemPlaceHandler.maxcount:Không thể di chuyển, túi đã đầy vui lòng thử lại.
@@ -4096,9 +4097,11 @@ Game.Server.Managers.AcademyMgr.TitleGraduated:玩家
 LotteryRandomSelectHandler.Notice: [Hệ Thống]OMG! Tin được không [{0}] Quay tay nhận được
 LotteryRandomSelectHandler.NotKeysEnough:没有足够的钥匙打开道具!
 LotteryRandomSelectHandler.Error:尝试打开{0}出错, 请稍后再试。
-FightServer.MergeRoom.Match.Success: Arama İşlemi Başarılı! Takımınız savaşa başlayacak!
-FightServer.MergeRoom.Guild.Success: Arama İşlemi Başarılı! Ekibiniz birlik savaşına başlayacak!
-FightServer.MergeRoom.EliteGame.Success: Elit turnuvanın savaşı başarıyla bulundu, iyi şanslar.
+
+FightServer.MergeRoom.Match.Success: Đã tìm thấy đối thủ.
+FightServer.MergeRoom.Guild.Success:匹配成功,公会战斗开始啦~
+FightServer.MergeRoom.EliteGame.Success:匹配成功,联赛开始啦~
+
 GameServer.InlayItem.Msg1:Lỗ này không có ...!
 GameServer.FightBattle.NotReady.Msg:服务器不可用
 UserGiftSystem.MailTitle:你收到了礼物。
@@ -4110,7 +4113,7 @@ GameServer.ConsortiaTask.msg5: Không thể công bố sứ mệnh Guild
 GameServer.ConsortiaTask.msg6:使命失败，下次一定要叫玩家们再接再厉,继续努力!
 GameServer.ConsortiaTask.msg7:你不是会长,无法发布公会使命!
 GameServer.ConsortiaTask.msg8:财富不够,无法发布使命.
-FeedPet.Success: {0} {1}. seviyeye yükseldi!
+FeedPet.Success: {0} thăng cấp {1}!
 GameServer.PayBuff.ReLife.UseNotice:Người chơi đã sử dụng {0} để khôi phục {1} sức.
 UpdateLabyrinth.Exp:Bạn nhận được {0} kinh nghiệm
 UpdateLabyrinth.GoldLaby:, Vàng mê cung x

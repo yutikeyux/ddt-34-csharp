@@ -12,30 +12,30 @@ namespace Game.Server.WorldBoss
     [WorldBoss((byte)ePackageType.WORLDBOSS_CMD, "礼堂逻辑")]
     public class WorldBossLogicProcessor : AbstractWorldBossProcessor
     {
-        public WorldBossLogicProcessor()
-        {
-            _commandMgr = new WorldBossHandleMgr();
-        }
+        // 1. DEĞİŞTİ: Constructor ve _commandMgr alanı SİLİNDİ.
+        // Artık 'new WorldBossHandleMgr()' çağrılmıyor.
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private WorldBossHandleMgr _commandMgr;
 
         public override void OnGameData(GamePlayer player, GSPacketIn packet)
         {
-            var type = (WorldBossPackageType) packet.ReadByte();
+            var type = (WorldBossPackageType)packet.ReadByte();
             try
             {
-                var commandHandler = _commandMgr.LoadCommandHandler((int) type);
+                // 2. DEĞİŞTİ: Doğrudan static 'Instance' üzerinden çağrılıyor.
+                var commandHandler = WorldBossHandleMgr.Instance.LoadCommandHandler((int)type);
+
                 if (commandHandler != null)
                 {
                     commandHandler.CommandHandler(player, packet);
-                    if (GameProperties.DebugMode) //paket detaylarını görmek içinmiş anladım
+                    if (GameProperties.DebugMode)
                     {
                         Console.WriteLine(commandHandler);
                     }
                 }
                 else
                 {
+                    // Artık çökmeyecek, sadece bu logu basacak
                     Console.WriteLine("______________ERROR______________");
                     Console.WriteLine("WorldBossLogicProcessor WorldBossPackageType.{0} not found!", type);
                     Console.WriteLine("_______________END_______________");

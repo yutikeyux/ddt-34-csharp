@@ -21,9 +21,9 @@ namespace Game.Server.Packets.Client
                 client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
                 return 0;
             }
-            if (client.Player.PlayerCharacter.Grade < 25)
+            if (client.Player.PlayerCharacter.Grade < 20) //25 ti 20 yaptım moruk
             {
-                client.Player.SendMessage(LanguageMgr.GetTranslation("GameServer.LevelErrorUsing"));
+                client.Player.SendMessage(LanguageMgr.GetTranslation("Seviyeniz Yetersiz!"));
                 return 0;
             }
 

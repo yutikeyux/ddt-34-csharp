@@ -21,7 +21,7 @@ namespace Game.Server.Pet.Handle
 			{
 				if (Player.PetBag.CheckEqPetLevel(place, itemAt))
 				{
-					Player.SendMessage(LanguageMgr.GetTranslation("AddPetEquip.WrongLevel"));
+					Player.SendMessage(LanguageMgr.GetTranslation("Seviye Yetersiz!"));
 					return false;
 				}
 
@@ -35,17 +35,17 @@ namespace Game.Server.Pet.Handle
 					inventory.TakeOutItem(itemAt);
 					Player.PetBag.OnChangedPetEquip(place);
 					Player.PetBag.SaveToDatabase(false);
-					Player.SendMessage(LanguageMgr.GetTranslation("Trang bị vật phẩm PET thành công!"));
+					Player.SendMessage(LanguageMgr.GetTranslation("Kuşanma başarılı!"));
 
 				}
 				else
 				{
-					Player.SendMessage(LanguageMgr.GetTranslation("Đã có lỗi sảy ra vui lòng liên hệ BQT!"));
+					Player.SendMessage(LanguageMgr.GetTranslation("Bir hata oluştu, lütfen yöneticiyle iletişime geçin!"));
 				}
 			}
 			else
 			{
-				Player.SendMessage(LanguageMgr.GetTranslation("AddPetEquip.WrongItem"));
+				Player.SendMessage(LanguageMgr.GetTranslation("Ekipman Arızası!"));
 			}
 			return false;
         }

@@ -7,15 +7,24 @@ using System.Threading;
 using Bussiness;
 using Game.Base.Packets;
 using Game.Logic;
+
 using Game.Server.GameObjects;
+using Bussiness.Managers;
 using Game.Server.Managers;
 using Game.Server.Rooms;
+using Game.Server.Api; 
+using log4net;
+using System.Reflection;
 
 namespace Game.Server.Packets.Client
 {
     [PacketHandler(19, "用户场景聊天")]
     public class SceneChatHandler : IPacketHandler
     {
+
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             packet.ClientID = client.Player.PlayerCharacter.ID;
@@ -41,7 +50,7 @@ namespace Game.Server.Packets.Client
             }
             else
             {
-                if (client.Player.PlayerCharacter.GoXu == 445566)
+                if (client.Player.PlayerCharacter.GoXu == 445566 || client.Player.PlayerCharacter.IsBanChat)
                 {
                     client.Out.SendMessage(eMessageType.ChatERROR, "Konuşman yasaklandı.");
                     return 0;
@@ -63,6 +72,18 @@ namespace Game.Server.Packets.Client
                                 client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("ConsortiaChatHandler.IsBanChat"));
                                 return 1;
                             }
+
+                            if (!text.StartsWith("!"))
+                            {
+                                PythonChatBridge.Send(
+                                client.Player.PlayerCharacter.NickName,
+                                client.Player.PlayerCharacter.Grade,
+                                $"[{client.Player.PlayerCharacter.ConsortiaName}] {text}",
+                                0,
+                                null
+                            );
+                            }
+
                             gSPacketIn.WriteInt(client.Player.PlayerCharacter.ConsortiaID);
                             GamePlayer[] allPlayers2 = WorldMgr.GetAllPlayers();
                             foreach (GamePlayer gamePlayer2 in allPlayers2)
@@ -120,6 +141,18 @@ namespace Game.Server.Packets.Client
                                 client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("SceneChatHandler.Fast"));
                                 return 1;
                             }
+
+                            if (b == 0 && !text.StartsWith("!"))
+                            {
+                                PythonChatBridge.Send(
+                                client.Player.PlayerCharacter.NickName,
+                                client.Player.PlayerCharacter.Grade,
+                                $"[Lobi] {text}",
+                                0,
+                                null
+                            );
+                            }
+
                             client.Player.LastChatTime = DateTime.Now;
                             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
                             foreach (GamePlayer gamePlayer in allPlayers)
@@ -200,6 +233,7 @@ namespace Game.Server.Packets.Client
                                 "!onlineitem <itemid> <adet> -> Online oyunculara dilediğiniz item gönderir.\n" +
                                 "!item <itemid> <adet> -> Kendinize istediğiniz itemi atabilirsiniz.\n" +
                                 "!herkes -> Çevrimiçi oyuncuları isimleriyle beraber gösterir.");
+                            result = true;
                         }
 
                         if (array3[0].Equals("!onlinekupon"))
@@ -330,9 +364,11 @@ namespace Game.Server.Packets.Client
                                 num7++;
                                 client.Player.SendMessage(num7 + ". " + gamePlayer11.PlayerCharacter.NickName + " Çevrimiçi");
                             }
+                            result = true;
                         }
                     }
                 }
+
 
                 // Oyuncu Komutları
                 if (str.StartsWith("!"))
@@ -342,6 +378,7 @@ namespace Game.Server.Packets.Client
                     {
                         case "komutlar":
                             client.Out.SendMessage(eMessageType.ALERT, "***BomBomRia Oyuncu Komutları***\n" +
+                                "!discord -> Discord hesabını bağlamak için, Discord'da `!bagla {code}` yaz.\n" +
                                 "!ekip -> Oyun Görevlilerini Gösterir.\n" +
                                 "!güncelle -> Hesabınızı Günceller.\n" +
                                 "!bugdankurtar -> Hesabınızı Bugdan Kurtarır.\n" +
@@ -352,6 +389,36 @@ namespace Game.Server.Packets.Client
                                 "!bilgi -> Bilgilerinizi gösterir.");
                             result = true;
                             break;
+
+                        case "discord":
+                            {
+                                int userId = client.Player.PlayerCharacter.ID;
+                                string code = DiscordLinkMgr.GenerateCodeForUser(userId);
+
+                                if (string.IsNullOrEmpty(code))
+                                {
+                                    // Hesap zaten bir Discord hesabına bağlı
+                                    client.Out.SendMessage(
+                                        eMessageType.ALERT,
+                                        "Bu oyun hesabı zaten bir Discord hesabına bağlı. Bağlantıyı kaldırmak için Discord üzerinden komutu kullan."
+                                    );
+                                    return true;
+                                }
+
+                                // Popup
+                                client.Out.SendMessage(
+                                    eMessageType.ALERT,
+                                    $"Discord hesabını bağlamak için Discord'da `!bagla {code}` yaz."
+                                );
+
+                                // Chat (Genel)
+                                client.Out.SendMessage(
+                                    eMessageType.Normal,
+                                    $"[Discord Bağlama] Discord'da `!bagla {code}` yaz."
+                                );
+
+                                return true;
+                            }
 
                         case "bilgi":
                             GSPacketIn pkg = new GSPacketIn((short)37, client.Player.PlayerCharacter.ID);
@@ -389,7 +456,7 @@ namespace Game.Server.Packets.Client
                             break;
 
                         case "ekip":
-                            client.Player.SendMessage("Admin: TeamoCengo \nModeratör: yutikeyu");
+                            client.Player.SendMessage("Admin: element \nModeratör: yutikeyu");
                             result = true;
                             break;
 
@@ -425,12 +492,14 @@ namespace Game.Server.Packets.Client
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                log.Error("Komutlar metodunda hata: ", ex);
                 client.Player.SendMessage("Hatalı Komut");
             }
 
             return result;
         }
+
     }
 }

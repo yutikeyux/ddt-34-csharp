@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using Game.Logic;
-using SqlDataProvider.Data;
+using System;
+using System.Collections.Generic;
 
 namespace GameServerScript.AI.Messions
 {
@@ -154,7 +152,7 @@ namespace GameServerScript.AI.Messions
             {
                 Game.SendObjectFocus(m_boss, 1, 1, 1);
                 m_boss.PlayMovie("die", 500, 500);
-                m_boss.Say("Không thể nào...", 0, 500);
+                m_boss.Say("Olamazzz!", 0, 500);
                 m_boss.CallFuction(Ending, 2000);
                 return;
             }

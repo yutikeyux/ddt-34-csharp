@@ -17,12 +17,12 @@ namespace GameServerScript.AI.NPC
 
 		private Point[] brithPoint = new Point[]
 		{
-			new Point(979, 630),
-			new Point(1013, 630),
-			new Point(1052, 630),
-			new Point(1088, 630),
-			new Point(1142, 630)
-		};
+            new Point(1125, 600),
+            new Point(1120, 600),
+            new Point(1115, 600),
+            new Point(1110, 600),
+            new Point(1105, 600)
+        };
 
 		private static string[] AllAttackChat = new string[]
 		{

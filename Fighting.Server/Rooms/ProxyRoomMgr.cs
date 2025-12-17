@@ -17,7 +17,7 @@ namespace Fighting.Server.Rooms
 
         public static readonly int THREAD_INTERVAL = 20;
 
-        public static readonly int PICK_UP_INTERVAL = 1000;
+        public static readonly int PICK_UP_INTERVAL = 1000; //oyun salonu savaş eşleştirme süre düşürme şeyi. 
 
         public static readonly int CLEAR_ROOM_INTERVAL = 250;
 

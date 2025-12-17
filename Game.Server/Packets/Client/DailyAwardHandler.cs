@@ -47,13 +47,13 @@ namespace Game.Server.Packets.Client
                     {
                         if (DateTime.Now.Date == client.Player.PlayerCharacter.LastGetEgg.Date)
                         {
-                            stringBuilder.Append($"Bugün 1 kez aldınız!");
+                            stringBuilder.Append($"Bugün zaten 1 kez aldınız!");
                             break;
                         }
                         AwardMgr.AddEggAward(client.Player);
                         ItemInfo cloneItem = ItemInfo.CreateFromTemplate(ItemMgr.FindItemTemplate(112059), 1, 113);
                         client.Player.PropBag.AddTemplate(cloneItem, 1);
-                        stringBuilder.Append(LanguageMgr.GetTranslation("GameServer.DailyEggReceive.Success"));
+                        stringBuilder.Append(LanguageMgr.GetTranslation("Günlük Sürpriz Yumurta Alımı Başarılı!"));
                         string translation = LanguageMgr.GetTranslation("GameServer.DailyEgg.Notice.Msg", client.Player.PlayerCharacter.NickName, 112059);
                         //GSPacketIn packet2 = WorldMgr.SendSysNotice(eMessageType.ChatNormal, translation, 0, 112059, null);
                         //GameServer.Instance.LoginServer.SendPacket(packet2);

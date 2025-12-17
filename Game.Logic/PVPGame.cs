@@ -504,8 +504,8 @@ namespace Game.Logic
                         if (DateTime.Now >= GoldTimeStart && DateTime.Now <= GoldTimeEnd)
                         {
                             timex2 = GameProperties.TimeX2;
-                            p.PlayerDetail.SendHideMessage($"Altın Saat Etkinliği içerisinde savaşta bulunduğunuz için x{timex2} Kat Tecrübe kazandınız!");
-                        }
+                            p.PlayerDetail.SendHideMessage($"Altın Saat Etkinliği içerisinde savaşta bulunduğunuz için x{timex2} Kat Tecrübe kazandınız!"); //kupon ve hediye altın da veriyor amına koduğum
+                        }                                                                                                                                   //buna bi komple ayar çekecem bi ara
                         if (DateTime.Now >= GoldTimeStart1 && DateTime.Now <= GoldTimeEnd1)
                         {
                             timex2 = GameProperties.TimeX2;

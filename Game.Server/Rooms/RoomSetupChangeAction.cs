@@ -31,39 +31,75 @@ namespace Game.Server.Rooms
 
 		private bool m_isOpenBoss;
 
-		public RoomSetupChangeAction(BaseRoom room, eRoomType roomType, byte timeMode, eHardLevel hardLevel, int levelLimits, int mapId, string password, string roomname, bool isCrosszone, bool isOpenBoss, string Pic, int currentFloor)
+     
+
+        public RoomSetupChangeAction(BaseRoom room, eRoomType roomType, byte timeMode, eHardLevel hardLevel, int levelLimits, int mapId, string password, string roomname, bool isCrosszone, bool isOpenBoss, string Pic, int currentFloor)
         {
-			m_room = room;
-			m_roomType = roomType;
-			m_timeMode = timeMode;
-			m_hardLevel = hardLevel;
-			m_levelLimits = levelLimits;
-			m_mapId = mapId;
-			m_password = password;
-			m_roomName = roomname;
-			m_isCrosszone = isCrosszone;
-			m_isOpenBoss = isOpenBoss;
-			m_pic = Pic;
-			m_currentFloor = currentFloor;
+            m_room = room;
+            m_roomType = roomType;
+            m_timeMode = timeMode;
+            m_hardLevel = hardLevel;
+            m_levelLimits = levelLimits;
+            m_mapId = mapId;
+            m_password = password;
+            m_roomName = roomname;
+            m_isCrosszone = isCrosszone;
+            m_isOpenBoss = isOpenBoss;
+            m_pic = Pic;
+            m_currentFloor = currentFloor;
+
             if (isOpenBoss)
             {
                 
-                m_currentFloor = GetLastFloor(mapId, (int)hardLevel)[0];
-                m_pic = "show" + GetLastFloor(mapId, (int)hardLevel)[1] + ".jpg";
+                if (mapId == 10000)
+                {
+                   //oyun seçili deðilse yani direkt keþif seçme ekranýndaysa not: yuti
+                    m_currentFloor = 1;
+                    m_pic = "show1" + ".jpg"; //map resource id si 10000 yani keþif seçme ekraný olarak direkt gözüküyor not: yuti
+                }
+                else // Eðer oyun seçiliyse direkt son etabýna eriþilir ve o show gösteriliyo zaten normal her þey burada not: yuti
+                {
+                    List<int> lastFloorData = GetLastFloor(mapId, (int)hardLevel);
+
+                    if (lastFloorData != null && lastFloorData.Count >= 2)
+                    {
+                        m_currentFloor = lastFloorData[0];
+                        m_pic = "show" + lastFloorData[1] + ".jpg";
+                    }
+                    else
+                    {
+                        // Eðer keþifin son etabý yoksa ve oyuncu boss açmaya çalýþýyosa da konsola böyle bi log yazdýrýp kontrol edebiliriz not: yuti
+                        Console.WriteLine("HATA: Boss odasý için geçerli 'LastFloor' verisi bulunamadý. MapId: " + mapId + ", HardLevel: " + hardLevel);
+                        m_currentFloor = 1;
+                        m_pic = "show1.jpg"; // Varsayýlan etap resmi not: yuti
+                    }
+                }
+                
             }
         }
 
+        
         public List<int> GetLastFloor(int mapID, int hardLevel)
         {
             List<int> floor = new List<int>();
             PveInfo pve = PveInfoMgr.GetPveInfoById(mapID);
-            if (pve != null)
+            if (pve != null && !string.IsNullOrEmpty(pve.LastFloor))
             {
-                if (pve.LastFloor != null)
+                string[] splitLastFloor = pve.LastFloor.Split(',');
+
+                // hardLevel indeksinin dizi sýnýrlarý içinde olup olmadýðýný kontrol et not: yuti
+                if (hardLevel >= 0 && hardLevel < splitLastFloor.Length)
                 {
-                    string[] splitLastFloor = pve.LastFloor.Split(',');
-                    floor.Add(Convert.ToInt32(splitLastFloor[hardLevel]));
-                    floor.Add(floor[0]);//mac dinh
+                    int result;
+                    if (int.TryParse(splitLastFloor[hardLevel], out result))
+                    {
+                        floor.Add(result);
+                        floor.Add(result); 
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("HATA: PveInfo LastFloor verisi hardLevel için yetersiz. MapId: " + mapID + ", HardLevel: " + hardLevel);
                 }
             }
             return floor;

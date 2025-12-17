@@ -39,7 +39,7 @@ namespace Game.Server.Packets.Client
 
             if (Items.Count >= 4 && (Items[0].TemplateID != Items[1].TemplateID || Items[0].TemplateID != Items[2].TemplateID || Items[0].TemplateID != Items[3].TemplateID))
             {
-                client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("Tồn tại vật phẩm không cùng loại!"));
+                client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("Farklı tipte ürünler mevcut!"));
                 return 0;
             }
 
@@ -105,7 +105,7 @@ namespace Game.Server.Packets.Client
                     {
                         if (!client.Player.StackItemToAnother(itemAt) && !client.Player.AddItem(itemAt))
                         {
-                            client.Player.SendItemsToMail(itemAt, "Vật phẩm từ dung luyện thành công trả về thư do túi đầy", "Vật phẩm dung luyện", eMailType.StoreCanel);
+                            client.Player.SendItemsToMail(itemAt, "İade öğeleri", "Sırt çantası dolu", eMailType.StoreCanel);
                         }
                         storeBag.TakeOutItemAt(0);
                     }
@@ -126,7 +126,7 @@ namespace Game.Server.Packets.Client
                         {
                             if (isWeapon)
                             {
-                                MinValid = 7;
+                                MinValid = 3; //silah füzyonlayan 3 gün füzyonlasın not: yuti
                                 isBind = true;
                             }
                             else

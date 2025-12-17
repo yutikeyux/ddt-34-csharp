@@ -1,181 +1,154 @@
+using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace GameServerScript.AI.NPC
 {
 	public class FourNormalFrantCattleBoss : ABrain
-	{
-		public int attackingTurn = 1;
-
-		public int orchinIndex = 1;
-
-		public int currentCount = 0;
-
-		public int Dander = 0;
-
-		public List<SimpleNpc> orchins = new List<SimpleNpc>();
-
-		private static string[] AllAttackChat = new string[]
 		{
-			"看我的绝技！",
-			"这招酷吧，<br/>想学不？",
-			"消失吧！！！<br/>卑微的灰尘！",
-			"你们会为此付出代价的！ "
-		};
+		private int int_0;
 
-		private static string[] ShootChat = new string[]
-		{
-			"你是在给我挠痒痒吗？",
-			"我可不会像刚才那个废物一样被你打败！",
-			"哎哟，你打的我好疼啊，<br/>哈哈哈哈！",
-			"啧啧啧，就这样的攻击力！",
-			"看到我是你们的荣幸！"
-		};
+        private Point point_0;
 
-		private static string[] CallChat = new string[]
-		{
-			"来啊，<br/>让他们尝尝炸弹的厉害！"
-		};
+        private bool bool_0;
 
-		private static string[] AngryChat = new string[]
-		{
-			"是你们逼我使出绝招的！"
-		};
+        protected Player m_targer;
 
-		private static string[] KillAttackChat = new string[]
-		{
-			"你来找死吗？"
-		};
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		private static string[] SealChat = new string[]
-		{
-			"异次元放逐！"
-		};
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            m_body.CurrentDamagePlus = 1f;
+            m_body.CurrentShootMinus = 1f;
+        }
 
-		private static string[] KillPlayerChat = new string[]
-		{
-			"灭亡是你唯一的归宿！",
-			"太不堪一击了！"
-		};
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            bool_0 = false;
+        }
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            int_0++;
+            switch (int_0)
+            {
+                default:
+                    base.Body.CallFuction(method_1, 1000);
+                    break;
+                case 10:
+                    base.Body.CallFuction(method_0, 1000);
+                    int_0 = 0;
+                    break;
+                case 1:
+                    base.Body.CallFuction(method_0, 4000);
+                    break;
+            }
+        }
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			base.Body.CurrentDamagePlus = 1f;
-			base.Body.CurrentShootMinus = 1f;
-		}
+        private void method_0()
+        {
+            m_targer = base.Game.FindRandomPlayer();
+            if (m_targer != null)
+            {
+                int num = base.Game.Random.Next(100);
+                base.Body.PlayMovie("jump", 1000, 0);
+                base.Body.BoltMove(m_targer.X, m_targer.Y, 3000);
+                ((PVEGame)base.Game).SendObjectFocus(m_targer, 1, 3000, 0);
+                base.Body.CurrentDamagePlus = 2.5f;
+                if (num < 50)
+                {
+                    base.Body.PlayMovie("fallB", 4000, 0);
+                }
+                else
+                {
+                    base.Body.PlayMovie("fall", 4000, 0);
+                }
+                base.Body.RangeAttacking(m_targer.X - 50, m_targer.X + 50, "cry", 5000, directDamage: true);
+            }
+        }
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        private void method_1()
+        {
+            m_targer = base.Game.FindFarPlayer(base.Body.X, base.Body.Y);
+            if (m_targer == null)
+            {
+                return;
+            }
+            base.Body.ChangeDirection(m_targer, 100);
+            if (m_targer.X + 200 < base.Game.Map.Info.DeadWidth && m_targer.X - 200 > 0)
+            {
+                if (base.Body.Distance(m_targer.X, m_targer.Y) <= 100.0)
+                {
+                    base.Body.CallFuction(method_3, 1000);
+                }
+                else
+                {
+                    base.Body.CallFuction(method_2, 500);
+                }
+            }
+            else
+            {
+                base.Body.CallFuction(method_0, 1000);
+            }
+        }
 
-		public override void OnStartAttacking()
-		{
-			bool flag = false;
-			int num = 0;
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				if (current.IsLiving && current.X > 0 && current.X < 0)
-				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
-					{
-						num = num2;
-					}
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				this.KillAttack(0, 0);
-			}
-			else if (!flag)
-			{
-				if (this.attackingTurn == 1)
-				{
-					this.Jump();
-				}
-				else if (this.attackingTurn == 2)
-				{
-					this.PersonalAttack();
-				}
-				else
-				{
-					this.attackingTurn = 0;
-				}
-				this.attackingTurn++;
-			}
-		}
+        private void method_2()
+        {
+            point_0 = new Point(base.Body.X, base.Body.Y);
+            if (base.Body.Direction == -1)
+            {
+                base.Body.MoveTo(m_targer.X - 100, m_targer.Y, "walk", 1000, method_4, 12);
+            }
+            else
+            {
+                base.Body.MoveTo(m_targer.X + 100, m_targer.Y, "walk", 1000, method_4, 12);
+            }
+        }
 
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-		}
+        private void method_3()
+        {
+            point_0 = new Point(base.Body.X, base.Body.Y);
+            if (base.Body.Direction == -1)
+            {
+                base.Body.MoveTo(m_targer.X - 200, m_targer.Y, "walk", 500, method_4, 12);
+            }
+            else
+            {
+                base.Body.MoveTo(m_targer.X + 200, m_targer.Y, "walk", 500, method_4, 12);
+            }
+        }
 
-		public void Jump()
-		{
-			base.Body.PlayMovie("jump", 1000, 6000);
-			Player player = base.Game.FindRandomPlayer();
-			base.Body.JumpToSpeed(player.X, base.Body.Y - 1000, "", 2500, 1, 10, new LivingCallBack(this.Fall));
-		}
+        private void method_4()
+        {
+            base.Body.ChangeDirection(m_targer, 100);
+            base.Body.CurrentDamagePlus = 2f;
+            if (base.Body.X < point_0.X)
+            {
+                base.Body.RangeAttacking(base.Body.X, point_0.X, "cry", 0, directDamage: true);
+            }
+            else
+            {
+                base.Body.RangeAttacking(point_0.X, base.Body.X, "cry", 0, directDamage: true);
+            }
+        }
 
-		public void Fall()
-		{
-			base.Body.PlayMovie("fall", 0, 0);
-			base.Body.RangeAttacking(base.Body.X - 2000, base.Body.X + 2000, "cry", 0, null);
-		}
+        public override void OnDie()
+        {
+            base.OnDie();
+        }
 
-		private void PersonalAttack()
-		{
-			if (base.Body.X > base.Game.Map.Info.ForegroundWidth / 2)
-			{
-				base.Body.MoveTo(1, base.Body.Y, "walk", 1000, "", 24, new LivingCallBack(this.FallTo));
-			}
-			if (base.Body.X < base.Game.Map.Info.ForegroundWidth / 2)
-			{
-				base.Body.MoveTo(1600, base.Body.Y, "walk", 1000, "", 24, new LivingCallBack(this.FallTo));
-			}
-			base.Body.RangeAttacking(base.Body.X - 2000, base.Body.X + 2000, "cry", 1200, null);
-		}
-
-		private void KillAttack(int fx, int tx)
-		{
-			base.Body.CurrentDamagePlus = 10f;
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			int num = base.Game.Random.Next(0, FourNormalFrantCattleBoss.KillAttackChat.Length);
-			base.Body.Say(FourNormalFrantCattleBoss.KillAttackChat[num], 1, 1000);
-			base.Body.PlayMovie("beat", 3000, 0);
-			base.Body.RangeAttacking(fx, tx, "cry", 4000, null);
-		}
-
-		public void AllAttack()
-		{
-			base.Body.RangeAttacking(base.Body.X - 2000, base.Body.X + 2000, "cry", 0, null);
-		}
-
-		public void FallTo()
-		{
-			if (base.Body.X > 700)
-			{
-				base.Body.ChangeDirection(-1, 0);
-				base.Body.FallFrom(1599, 900, "fallB", 10, 10, 10);
-				base.Body.PlayMovie("fallB", 20, 0);
-			}
-			else
-			{
-				base.Body.ChangeDirection(1, 0);
-				base.Body.FallFrom(1, 900, "fallB", 10, 10, 10);
-				base.Body.PlayMovie("fallB", 20, 0);
-			}
-		}
-	}
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
+    }
 }

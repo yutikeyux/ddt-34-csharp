@@ -17,6 +17,8 @@ namespace Game.Server.Managers
 {
     public sealed class WorldMgr
     {
+
+
         private static readonly ILog ilog_0;
 
         private static ReaderWriterLock m_clientLocker;
@@ -274,7 +276,7 @@ namespace Game.Server.Managers
                         foreach (GamePlayer gamePlayer2 in array3)
                         {
                             gamePlayer2.BlockReceiveMoney = true;
-                            gamePlayer2.Out.SendMessage(eMessageType.ALERT, "Đạt giới hạn số tài khoản cho phép là " + GameProperties.CountIPLimit + ", bạn có thể không nhận được xu");
+                            gamePlayer2.Out.SendMessage(eMessageType.ALERT, "Mevcut hesap sınırı sayısı " + GameProperties.CountIPLimit + ", lütfen daha sonra tekrar deneyin.");
                         }
                         string text3 = "";
                         GamePlayer[] array4 = allPlayerWithIP;

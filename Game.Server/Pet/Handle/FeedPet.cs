@@ -20,7 +20,7 @@ namespace Game.Server.Pet.Handle
             ItemInfo item = player.GetItemAt(BagType, itemPlace);
             if (item == null)
             {
-                player.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("PetHandler.Msg9"));
+                player.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Belirtilen yem bulunamadý!"));
                 return false;
             }
 
@@ -109,14 +109,14 @@ namespace Game.Server.Pet.Handle
                     }
                     neededFoodAmount = 1;
                     player.StoreBag.RemoveCountFromStack(item, neededFoodAmount);
-                    msg = LanguageMgr.GetTranslation("PetHandler.Msg10", hungerAdd);
+                    msg = LanguageMgr.GetTranslation("Evcil hayvanýnýzýn açlýðý {0} kadar geri doldu.", hungerAdd);
                     player.PetBag.UpdatePet(currentPet);
                     player.PetBag.SaveToDatabase(false);
                     player.EquipBag.UpdatePlayerProperties();
                 }
                 else
                 {
-                    msg = LanguageMgr.GetTranslation("PetHandler.Msg11");
+                    msg = LanguageMgr.GetTranslation("Evcil hayvanýnýz zaten tok ve maksimum seviyede.");
                 }
             }
             if (!string.IsNullOrEmpty(msg))

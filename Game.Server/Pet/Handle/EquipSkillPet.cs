@@ -19,7 +19,7 @@ namespace Game.Server.Pet.Handle
             if (killindex == 4 && player.UserVIPInfo.VIPLevel < 7)
             {
                 //player.SendMessage(eMessageType.ALERT, "Chưa thể sử dụng ô này!");
-                player.SendMessage(LanguageMgr.GetTranslation("PetHandler.Msg181"));
+                player.SendMessage(LanguageMgr.GetTranslation("VIP leveli yetersiz!"));
                 return true;
             }
             player.PetBag.EquipSkillPet(place, killId, killindex, ref msg);

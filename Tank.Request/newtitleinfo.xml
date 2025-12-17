@@ -124,15 +124,15 @@
   <Item ID="710" Order="181" Show="1" Name="Arena Kralı" Pic="1103" Att="100" Def="100" Agi="100" Luck="100" Desc="Çimen Savaşından elde edilir." />
   <Item ID="822" Order="224" Show="1" Name="Bir Numaralı Traftar" Pic="2148" Att="50" Def="50" Agi="50" Luck="50" Desc="Etkinlikten elde et" />
   <Item ID="957" Order="225" Show="1" Name="2020 Özel Oyuncusu" Pic="2149" Att="30" Def="30" Agi="30" Luck="30" Desc="Etkinlikten elde et" />
-  <Item ID="1000" Order="20" Show="1" Name="Ejderha Şövalye" Pic="2000" Att="10" Def="0" Agi="0" Luck="0" Desc="Dünya Boss" />
-  <Item ID="1001" Order="21" Show="1" Name="İyi Futbol Oyuncusu" Pic="2001" Att="10" Def="0" Agi="0" Luck="0" Desc="Dünya Boss" />
+  <Item ID="1000" Order="20" Show="1" Name="Ejder Derebey" Pic="2000" Att="10" Def="0" Agi="0" Luck="0" Desc="Dünya Boss" />
+  <Item ID="1001" Order="21" Show="1" Name="Profesyonel Futbol" Pic="2001" Att="10" Def="0" Agi="0" Luck="0" Desc="Dünya Boss" />
   <Item ID="1002" Order="22" Show="1" Name="Küçük Arı" Pic="2002" Att="5" Def="5" Agi="0" Luck="0" Desc="28 gün Oyuna Giriş" />
-  <Item ID="1003" Order="23" Show="1" Name="Kurucucular" Pic="2003" Att="1" Def="5" Agi="1" Luck="5" Desc="Sürüm 6.3 Etkinliği" />
-  <Item ID="1004" Order="24" Show="1" Name="Alışverişkolik" Pic="2004" Att="30" Def="30" Agi="30" Luck="30" Desc="Harcama Ustası" />
-  <Item ID="1005" Order="25" Show="1" Name="Dünyada tek" Pic="2005" Att="7" Def="5" Agi="7" Luck="5" Desc="Etkinlik Olsun" />
-  <Item ID="1006" Order="26" Show="1" Name="❀Honey Sevgili" Pic="2006" Att="0" Def="0" Agi="0" Luck="60" Desc="Hediye Kutusu ve Ücretsiz Çicek" />
-  <Item ID="1007" Order="27" Show="1" Name="Çiçek Gardiyanı" Pic="2007" Att="0" Def="5" Agi="0" Luck="20" Desc="Çiçek Kokusu Deposu" />
-  <Item ID="1008" Order="28" Show="1" Name="Bekçi Sevgili" Pic="2008" Att="0" Def="13" Agi="0" Luck="14" Desc="Çiçek Kokusu Deposu" />
+  <Item ID="1003" Order="23" Show="1" Name="4 Karşı Gazi" Pic="2003" Att="1" Def="5" Agi="1" Luck="5" Desc="Sürüm 6.3 Etkinliği" />
+  <Item ID="1004" Order="24" Show="1" Name="Alışveriş Kolik" Pic="2004" Att="30" Def="30" Agi="30" Luck="30" Desc="Harcama Ustası" />
+  <Item ID="1005" Order="25" Show="1" Name="Doğuştan♥Bir Çift" Pic="2005" Att="7" Def="5" Agi="7" Luck="5" Desc="Etkinlik Olsun" />
+  <Item ID="1006" Order="26" Show="1" Name="Tatlı Sevgi" Pic="2006" Att="0" Def="0" Agi="0" Luck="60" Desc="Hediye Kutusu ve Ücretsiz Çicek" />
+  <Item ID="1007" Order="27" Show="1" Name="Çiçek Koruma" Pic="2007" Att="0" Def="5" Agi="0" Luck="20" Desc="Çiçek Kokusu Deposu" />
+  <Item ID="1008" Order="28" Show="1" Name="Sevgi Muhafızı" Pic="2008" Att="0" Def="13" Agi="0" Luck="14" Desc="Çiçek Kokusu Deposu" />
   <Item ID="1009" Order="29" Show="1" Name="Futbol Beyi" Pic="2009" Att="70" Def="20" Agi="30" Luck="70" Desc="2014 Dünya Kupası Etkinliği" />
   <Item ID="1010" Order="186" Show="1" Name="Acemi Büyücü" Pic="2010" Att="0" Def="10" Agi="5" Luck="0" Desc="Etkinlikten elde et" />
   <Item ID="1011" Order="187" Show="1" Name="Kıdemli Büyücü" Pic="2011" Att="10" Def="0" Agi="5" Luck="0" Desc="Etkinlikten elde et" />

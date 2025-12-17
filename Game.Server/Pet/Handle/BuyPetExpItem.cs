@@ -53,7 +53,7 @@ namespace Game.Server.Pet.Handle
             }
             if (!isContinue)
             {
-                player.SendMessage(LanguageMgr.GetTranslation("PetHandler.Msg14"));
+                player.SendMessage(LanguageMgr.GetTranslation("Kupon Yetersiz!"));
                 return false;
             }
             ItemTemplateInfo item = ItemMgr.FindItemTemplate(334102);
