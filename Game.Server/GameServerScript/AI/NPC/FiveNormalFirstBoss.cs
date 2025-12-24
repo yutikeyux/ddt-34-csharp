@@ -1,256 +1,394 @@
+using System.Collections.Generic;
 using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Effects;
 using Game.Logic.Phy.Object;
-using System;
-using System.Collections.Generic;
 
 namespace GameServerScript.AI.NPC
 {
-	public class FiveNormalFirstBoss : ABrain
-	{
-		private int m_attackTurn = 0;
+    public class FiveNormalFirstBoss : ABrain
+    {
+        private int int_0;
 
-		private PhysicalObj m_moive;
+        private SimpleNpc simpleNpc_0;
 
-		private PhysicalObj m_wallRight = null;
+        protected Player m_targer;
 
-		private static string[] AllAttackChat = new string[]
-		{
-			"要地震喽！！<br/>各位请扶好哦",
-			"把你武器震下来！",
-			"看你们能还经得起几下！！"
-		};
+        private List<PhysicalObj> list_0;
 
-		private static string[] ShootChat = new string[]
-		{
-			"让你知道什么叫百发百中！",
-			"送你一个球~你可要接好啦",
-			"你们这群无知的低等庶民"
-		};
+        private int int_1;
 
-		private static string[] ShootedChat = new string[]
-		{
-			"哎呀~~你们为什么要攻击我？<br/>我在干什么？",
-			"噢~~好痛!我为什么要战斗？<br/>我必须战斗…"
-		};
+        private int int_2;
 
-		private static string[] AddBooldChat = new string[]
-		{
-			"扭啊扭~<br/>扭啊扭~~",
-			"哈利路亚~<br/>路亚路亚~~",
-			"呀呀呀，<br/>好舒服啊！"
-		};
+        private int int_3;
 
-		private static string[] KillAttackChat = new string[]
-		{
-			"君临天下！！"
-		};
+        private int int_4;
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        private int int_5;
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			this.m_body.CurrentDamagePlus = 1f;
-			this.m_body.CurrentShootMinus = 1f;
-		}
+        private static string[] string_0;
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+            if (simpleNpc_0 == null)
+            {
+                SimpleNpc[] nPCLivingWithID = ((PVEGame)base.Game).GetNPCLivingWithID(int_3);
+                if (nPCLivingWithID.Length != 0)
+                {
+                    simpleNpc_0 = nPCLivingWithID[0];
+                }
+            }
+        }
 
-		public override void OnStartAttacking()
-		{
-			base.OnStartAttacking();
-			bool flag = false;
-			int num = 0;
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				if (current.IsLiving && current.X > 0 && current.X < 0)
-				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
-					{
-						num = num2;
-					}
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				this.KillAttack(1400, 1600);
-			}
-			else if (this.m_attackTurn == 0)
-			{
-				this.BeatA();
-				base.Body.SetXY(base.Body.X, 659);
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 1)
-			{
-				base.Body.SetXY(base.Body.X, 559);
-				this.BeatB();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 2)
-			{
-				base.Body.SetXY(base.Body.X, 459);
-				this.BeatC();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 3)
-			{
-				base.Body.SetXY(base.Body.X, 359);
-				this.BeatD();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 4)
-			{
-				if (base.Body.Y == 758)
-				{
-					this.m_attackTurn = 0;
-				}
-				else
-				{
-					this.BeatE();
-					base.Body.SetXY(base.Body.X, 259);
-					this.m_attackTurn++;
-				}
-			}
-			else if (this.m_attackTurn == 5)
-			{
-				if (base.Body.Y == 758)
-				{
-					this.m_attackTurn = 0;
-				}
-				else
-				{
-					this.BeatG();
-					base.Body.SetXY(base.Body.X, 259);
-				}
-			}
-		}
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            method_14();
+            m_body.CurrentDamagePlus = 1f;
+            m_body.CurrentShootMinus = 1f;
+        }
 
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-		}
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            int_1 = 0;
+        }
 
-		private void KillAttack(int fx, int tx)
-		{
-			int num = base.Game.Random.Next(0, FiveNormalFirstBoss.KillAttackChat.Length);
-			base.Body.Say(FiveNormalFirstBoss.KillAttackChat[num], 1, 1000);
-			base.Body.CurrentDamagePlus = 10f;
-			base.Body.PlayMovie("beat", 3000, 10000);
-			base.Body.RangeAttacking(fx, tx, "cry", 5000, null);
-		}
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            int_0++;
+            List<Player> list = new List<Player>();
+            foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
+            {
+                if (allLivingPlayer.IsActive && allLivingPlayer.IsLiving && allLivingPlayer.X > 1199)
+                {
+                    list.Add(allLivingPlayer);
+                }
+                else if (allLivingPlayer.IsActive && allLivingPlayer.IsLiving && allLivingPlayer.X < 290 && allLivingPlayer.Y < 555)
+                {
+                    list.Add(allLivingPlayer);
+                }
+            }
+            if (list.Count > 0)
+            {
+                method_0(list);
+                return;
+            }
+            switch (int_1)
+            {
+                case 0:
+                    method_1();
+                    break;
+                case 1:
+                    method_2();
+                    break;
+                case 2:
+                    method_3();
+                    break;
+                case 3:
+                    method_4();
+                    break;
+                case 4:
+                    // --- DÜZELTME 1: simpleNpc_0'ın null olup olmadığını kontrol et ---
+                    if (simpleNpc_0 != null && simpleNpc_0.IsLiving)
+                    {
+                        method_5();
+                    }
+                    else
+                    {
+                        method_6();
+                    }
+                    break;
+                case 5:
+                    // --- DÜZELTME 2: simpleNpc_0'ın null olup olmadığını kontrol et ---
+                    if (simpleNpc_0 != null && simpleNpc_0.IsLiving)
+                    {
+                        method_9();
+                    }
+                    else
+                    {
+                        method_7();
+                    }
+                    break;
+            }
+        }
 
-		private void BeatA()
-		{
-			base.Body.PlayMovie("beatA", 3000, 11000);
-			base.Body.CallFuction(new LivingCallBack(this.CallBeatA), 11000);
-		}
+        private void method_0(List<Player> oaHrHVJtU45G7OGssD)
+        {
+            base.Body.CurrentDamagePlus = 1000f;
+            foreach (Player item in oaHrHVJtU45G7OGssD)
+            {
+                base.Body.BeatDirect(item, "", 2000, 1, 1);
+            }
+        }
 
-		private void CallBeatA()
-		{
-			base.Body.PlayMovie("standA", 2000, 0);
-			List<Player> allLivingPlayers = base.Game.GetAllLivingPlayers();
-			int blood = base.Game.Random.Next(1000, 2510);
-			foreach (Player current in allLivingPlayers)
-			{
-				current.AddEffect(new ContinueReduceBloodEffect(2, blood, current), 0);
-			}
-		}
+        private void method_1()
+        {
+            int_1 = 1;
+            base.Body.PlayMovie("beatA", 1000, 10000);
+            base.Body.RangeAttacking(base.Body.X - 10000, base.Body.X + 10000, "cry", 10000, directDamage: false);
+            base.Body.CallFuction(method_13, 10000);
+        }
 
-		private void BeatB()
-		{
-			base.Body.PlayMovie("beatB", 3000, 10000);
-			Player player = base.Game.FindRandomPlayer();
-			((SimpleBoss)base.Body).NpcInfo.FireY = 0;
-			if (player != null)
-			{
-				base.Body.ShootPoint(player.X, player.Y, 56, 1000, 10000, 1, 2f, 10000);
-			}
-			base.Body.CallFuction(new LivingCallBack(this.CallBeatB), 11000);
-		}
+        private void method_2()
+        {
+            int_1 = 2;
+            method_8();
+            m_targer = base.Game.FindRandomPlayer();
+            if (base.Body.ShootPoint(m_targer.X, m_targer.Y, 56, 1000, 10000, 1, 1.5f, 8000))
+            {
+                base.Body.PlayMovie("beatB", 1000, 10000);
+            }
+        }
 
-		private void CallBeatB()
-		{
-			base.Body.PlayMovie("standB", 3000, 0);
-		}
+        private void method_3()
+        {
+            int_1 = 3;
+            method_8();
+            base.Body.CurrentDamagePlus = 1.2f;
+            base.Body.PlayMovie("beatC", 1000, 11000);
+            if (base.Game.Random.Next(50) < 50)
+            {
+                base.Body.CallFuction(method_12, 9000);
+            }
+            else
+            {
+                base.Body.CallFuction(method_11, 9000);
+            }
+        }
 
-		private void BeatC()
-		{
-			base.Body.PlayMovie("beatC", 3000, 10000);
-			base.Body.CallFuction(new LivingCallBack(this.CallBeatC), 11000);
-		}
+        private void method_4()
+        {
+            int_1 = 4;
+            base.Body.CurrentDamagePlus = 1.5f;
+            // --- DÜZELTME 3: simpleNpc_0'a erişimden önce null kontrolü yap ---
+            if (simpleNpc_0 != null)
+            {
+                ((PVEGame)base.Game).SendObjectFocus(simpleNpc_0, 1, 1000, 500);
+                ((PVEGame)base.Game).SendLivingActionMapping(simpleNpc_0, "stand", "standB");
+                simpleNpc_0.PlayMovie("AtoB", 2000, 0);
+                simpleNpc_0.PlayMovie("walkB", 6000, 0);
+                simpleNpc_0.Config.CanTakeDamage = true;
+            }
+            ((PVEGame)base.Game).SendObjectFocus(base.Body, 1, 9000, 500);
+            base.Body.PlayMovie("beatD", 10000, 10000);
+            base.Body.CallFuction(method_10, 18000);
+        }
 
-		private void CallBeatC()
-		{
-			base.Body.PlayMovie("standC", 3000, 0);
-			List<Player> allFightPlayers = base.Game.GetAllFightPlayers();
-			foreach (Player current in allFightPlayers)
-			{
-				int num = base.Game.Random.Next(200, 510);
-				this.m_wallRight = ((PVEGame)base.Game).CreatePhysicalObj(current.X, current.Y, "wallLeft", "asset.game.4.zap", "1", 1, 1);
-				current.AddEffect(new ReduceStrengthEffect(2, 5), 0);
-				current.AddBlood(-num, 1);
-			}
-			List<Player> list = new List<Player>();
-			foreach (Player current in allFightPlayers)
-			{
-				if (!current.IsFrost)
-				{
-					list.Add(current);
-				}
-			}
-		}
+        private void method_5()
+        {
+            int_1 = 5;
+            method_8();
+            base.Body.PlayMovie("DtoE", 1000, 8000);
+            base.Body.CallFuction(method_9, 8000);
+        }
 
-		private void BeatD()
-		{
-			base.Body.PlayMovie("beatD", 3000, 10000);
-			base.Body.CallFuction(new LivingCallBack(this.CallBeatD), 11000);
-		}
+        private void method_6()
+        {
+            int_1 = 0;
+            method_14();
+            base.Body.PlayMovie("fallingA", 800, 3000);
+            ((PVEGame)base.Game).SendFreeFocus(1441, 681, 1, 1000, 0);
+            base.Body.CallFuction(tycwNcXmLpu, 3000);
+        }
 
-		private void CallBeatD()
-		{
-			base.Body.PlayMovie("standD", 3000, 0);
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				int num = base.Game.Random.Next(100, 515);
-				this.m_moive = ((PVEGame)base.Game).Createlayer(current.X, current.Y, "moive", "asset.game.4.minigun", "", 1, 1);
-				current.AddBlood(-num, 1);
-				current.AddBlood(-num, 1);
-				current.AddBlood(-num, 1);
-				current.AddBlood(-num, 1);
-				current.AddBlood(-num, 1);
-				current.AddBlood(-num, 1);
-			}
-		}
+        private void method_7()
+        {
+            int_1 = 0;
+            method_14();
+            base.Body.PlayMovie("fallingB", 800, 3000);
+            ((PVEGame)base.Game).SendFreeFocus(1441, 681, 1, 1000, 0);
+            base.Body.CallFuction(tycwNcXmLpu, 3000);
+        }
 
-		private void BeatE()
-		{
-			base.Body.PlayMovie("DtoE", 3000, 10000);
-			base.Body.CallFuction(new LivingCallBack(this.BeatG), 10000);
-		}
+        private void tycwNcXmLpu()
+        {
+            // --- DÜZELTME 4: Eski NPC'nin pozisyonunu almadan önce null kontrolü yap ---
+            if (simpleNpc_0 != null)
+            {
+                LivingConfig livingConfig = ((PVEGame)base.Game).BaseLivingConfig();
+                livingConfig.IsTurn = false;
+                livingConfig.CanTakeDamage = false;
+                // Eski NPC'nin pozisyonunu al
+                int spawnX = simpleNpc_0.X;
+                int spawnY = simpleNpc_0.Y;
+                
+                // Eski NPC'yi kaldır
+                base.Game.RemoveLiving(simpleNpc_0.Id);
+                
+                // Yeni NPC'yi eski NPC'nin pozisyonunda oluştur
+                SimpleNpc simpleNpc = ((PVEGame)base.Game).CreateNpc(int_3, spawnX, spawnY, 1, 1, livingConfig);
+                simpleNpc_0 = simpleNpc;
+                ((PVEGame)base.Game).SendLivingActionMapping(simpleNpc_0, "stand", "standA");
+                ((PVEGame)base.Game).SendObjectFocus(simpleNpc_0, 1, 2000, 0);
+                simpleNpc_0.PlayMovie("in", 3000, 10000);
+                base.Body.CallFuction(method_8, 11000);
+                ((PVEGame)base.Game).SendObjectFocus(base.Body, 1, 14000, 500);
+                base.Body.CallFuction(method_1, 15000);
+            }
+        }
 
-		private void CallBeatE()
-		{
-			base.Body.PlayMovie("standE", 3000, 0);
-		}
+        private void method_8()
+        {
+            // --- DÜZELTME 5: simpleNpc_0'a erişimden önce null kontrolü yap ---
+            if (simpleNpc_0 != null)
+            {
+                if (simpleNpc_0.Config.CanTakeDamage)
+                {
+                    simpleNpc_0.PlayMovie("walkB", 1000, 3000);
+                }
+                else
+                {
+                    simpleNpc_0.PlayMovie("walkA", 1000, 3000);
+                }
+            }
+        }
 
-		private void BeatG()
-		{
-			Player player = base.Game.FindRandomPlayer();
-			base.Body.PlayMovie("beatE", 3000, 10000);
-			((SimpleBoss)base.Body).NpcInfo.FireY = 20;
-			base.Body.ShootPoint(player.X, player.Y, 72, 1000, 10000, 1, 1f, 5500);
-			base.Body.CallFuction(new LivingCallBack(this.CallBeatE), 10000);
-		}
-	}
+        private void method_9()
+        {
+            method_14();
+            base.Body.CurrentDamagePlus = 3f;
+            m_targer = base.Game.FindRandomPlayer();
+            if (base.Body.ShootPoint(m_targer.X - 20, m_targer.Y, 72, 1000, 10000, 1, 0.1f, 3300))
+            {
+                base.Body.PlayMovie("beatE", 1000, 0);
+            }
+        }
+
+        private void method_10()
+        {
+            foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
+            {
+                if (allLivingPlayer.IsActive && allLivingPlayer.IsLiving)
+                {
+                    list_0.Add(((PVEGame)base.Game).Createlayer(allLivingPlayer.X, allLivingPlayer.Y, "", "asset.game.4.minigun", "", 1, 1));
+                    allLivingPlayer.AddEffect(new ReduceStrengthEffect(2, int_4), 1000);
+                    base.Body.BeatDirect(allLivingPlayer, "", 1000, 3, 1);
+                }
+            }
+        }
+
+        private void method_11()
+        {
+            foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
+            {
+                if (allLivingPlayer.IsActive && allLivingPlayer.IsLiving)
+                {
+                    list_0.Add(((PVEGame)base.Game).Createlayer(allLivingPlayer.X, allLivingPlayer.Y - 10, "", "asset.game.4.zap", "", 1, 1));
+                    allLivingPlayer.AddEffect(new ReduceStrengthEffect(2, int_4), 1000);
+                    base.Body.BeatDirect(allLivingPlayer, "", 1000, 3, 1);
+                }
+            }
+        }
+
+        private void method_12()
+        {
+            foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
+            {
+                if (allLivingPlayer.IsActive && allLivingPlayer.IsLiving)
+                {
+                    list_0.Add(((PVEGame)base.Game).Createlayer(allLivingPlayer.X, allLivingPlayer.Y - 10, "", "asset.game.4.zap2", "", 1, 1));
+                    allLivingPlayer.AddEffect(new ReduceStrengthEffect(2, int_4), 1000);
+                    base.Body.BeatDirect(allLivingPlayer, "", 1000, 4, 1);
+                }
+            }
+        }
+
+        private void method_13()
+        {
+            foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
+            {
+                if (allLivingPlayer.IsActive && allLivingPlayer.IsLiving)
+                {
+                    allLivingPlayer.AddEffect(new ContinueReduceBloodEffect(2, int_5, base.Body), 500);
+                }
+            }
+        }
+
+        public override void OnDie()
+        {
+            base.OnDie();
+        }
+
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
+
+        private void method_14()
+        {
+            switch (int_1)
+            {
+                default:
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "cry", "cry");
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "die", "die");
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "stand");
+                    base.Body.FireX = ((SimpleBoss)base.Body).NpcInfo.FireX;
+                    base.Body.FireY = ((SimpleBoss)base.Body).NpcInfo.FireY;
+                    break;
+                case 1:
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "cry", "cryA");
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "die", "dieA");
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "standA");
+                    base.Body.SetOffsetY(-75);
+                    base.Body.SetRect(-110, -144, 230, 149);
+                    base.Body.SetRelateDemagemRect(-110, -144, 230, 149);
+                    break;
+                case 2:
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "cry", "cryB");
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "die", "dieB");
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "standB");
+                    base.Body.SetOffsetY(-150);
+                    base.Body.FireY = -268;
+                    base.Body.SetRect(-110, -268, 230, 149);
+                    base.Body.SetRelateDemagemRect(-110, -268, 230, 149);
+                    break;
+                case 3:
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "cry", "cryC");
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "die", "dieC");
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "standC");
+                    base.Body.SetOffsetY(-225);
+                    base.Body.SetRect(-110, -391, 230, 149);
+                    base.Body.SetRelateDemagemRect(-110, -391, 230, 149);
+                    break;
+                case 4:
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "cry", "cryD");
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "die", "dieD");
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "standD");
+                    base.Body.SetOffsetY(-300);
+                    base.Body.SetRect(-110, -500, 230, 149);
+                    base.Body.SetRelateDemagemRect(-110, -500, 230, 149);
+                    break;
+                case 5:
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "cry", "cryE");
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "die", "dieE");
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "standE");
+                    base.Body.SetOffsetY(-420);
+                    base.Body.FireX = -120;
+                    base.Body.FireY = -500;
+                    base.Body.SetRect(-110, -630, 230, 149);
+                    base.Body.SetRelateDemagemRect(-110, -630, 230, 149);
+                    break;
+            }
+        }
+
+        public FiveNormalFirstBoss()
+        {
+            list_0 = new List<PhysicalObj>();
+            int_2 = 5101;
+            int_3 = 5102;
+            int_4 = 50;
+            int_5 = 200;
+        }
+
+        static FiveNormalFirstBoss()
+        {
+            string_0 = new string[1]
+            {
+                ""
+            };
+        }
+    }
 }

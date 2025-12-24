@@ -59,7 +59,7 @@ namespace GameServerScript.AI.Messions
             Game.AddLoadingFile(2, "image/game/effect/5/heip.swf", "asset.game.4.heip"); //global attacking
 
             Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
-            Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.dadangAsset");
+          //  Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.dadangAsset");
 
             Game.LoadResources(resources);
             Game.LoadNpcGameOverResources(resources);
@@ -71,7 +71,7 @@ namespace GameServerScript.AI.Messions
             base.OnStartGame();
 
             m_moive = Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
-            m_front = Game.Createlayer(1200, 700, "front", "game.asset.living.dadangAsset", "out", 1, 0);
+            //m_front = Game.Createlayer(1200, 700, "front", "game.asset.living.dadangAsset", "out", 1, 0);
 
             LivingConfig config = Game.BaseLivingConfig();
             config.KeepLife = true;
@@ -96,9 +96,9 @@ namespace GameServerScript.AI.Messions
             Game.SendObjectFocus(bossHelp, 0, 0, 0);
 
             m_moive.PlayMovie("in", 3000, 0);
-            m_front.PlayMovie("in", 3200, 0);
+         //   m_front.PlayMovie("in", 3200, 0);
             m_moive.PlayMovie("out", 6000, 0);
-            m_front.PlayMovie("out", 6200, 0);
+         //   m_front.PlayMovie("out", 6200, 0);
 
         }
 

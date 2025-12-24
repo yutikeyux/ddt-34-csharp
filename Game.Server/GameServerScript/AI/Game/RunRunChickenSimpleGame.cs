@@ -7,8 +7,8 @@ namespace GameServerScript.AI.Game
         public override void OnCreated()
         {
 			base.OnCreated();
-			base.Game.SetupMissions("7001,7002,7004");
-			base.Game.TotalMissionCount = 3;
+			base.Game.SetupMissions("7001,7004");
+			base.Game.TotalMissionCount = 2;
         }
 
         public override void OnPrepated()

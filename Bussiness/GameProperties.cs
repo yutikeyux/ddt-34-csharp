@@ -21,6 +21,8 @@ namespace Bussiness
 
         [ConfigProperty("Cess", "½»Ò×¿ÛË°", 0.1)]
 		public static readonly double Cess;
+        [ConfigProperty("HappyRechargeOpenClose", "HappyRechargeOpenClose", true)]
+        public static bool HappyRechargeOpenClose;
 
         [ConfigProperty("CustomLimit", "sendattackmail|addaution|PresentGoods|PresentMoney|unknow", "20|20|20|20|20")]
 		public static readonly string CustomLimit;
@@ -116,6 +118,9 @@ namespace Bussiness
 
         [ConfigProperty("NewChickenEagleEyePrice", "NewChickenEagleEyePrice", "3000, 2000, 1000")]
 		public static readonly string NewChickenEagleEyePrice;
+
+        [ConfigProperty("YearMonsterEndDate", "YearMonsterEndDate", "2033/12/25 0:00:00")]
+		public static readonly string YearMonsterEndDate;
 
         [ConfigProperty("NewChickenEndTime", "NewChickenEndTime", "2013/12/25 0:00:00")]
 		public static readonly string NewChickenEndTime;
@@ -420,7 +425,7 @@ namespace Bussiness
 
         public static void Refresh()
         {
-            log.Info("Refreshing game properties!");
+            log.Info("Server Config başlatılıyor!");
             Load(typeof(GameProperties));
         }
         public static List<int> getProp(string prop)

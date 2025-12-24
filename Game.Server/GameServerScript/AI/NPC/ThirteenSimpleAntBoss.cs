@@ -204,10 +204,10 @@ namespace GameServerScript.AI.NPC
 			for (int i = 0; i < array.Length; i++)
 			{
 				Player player = array[i];
-				this.moive = ((PVEGame)base.Game).Createlayer(player.X, player.Y, "moive", "asset.game.ten.jianyu", "out", 1, 1);
+				this.moive = ((PVEGame)base.Game).Createlayer(player.X, player.Y, "moive", "asset.game.ten.jianyu", "in", 1, 0);
 				base.Body.RangeAttacking(base.Body.X - 10000, base.Body.X + 10000, "cry", 1000, null);
 			}
-			base.Body.CallFuction(new LivingCallBack(this.GoOut), 2000);
+			base.Body.CallFuction(new LivingCallBack(this.GoOut), 1000);
 		}
 
 		private void GoOut()

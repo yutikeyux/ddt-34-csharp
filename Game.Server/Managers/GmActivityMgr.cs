@@ -145,8 +145,13 @@ namespace Game.Server.Managers
 			using ProduceBussiness produceBussiness = new ProduceBussiness();
 			GmActiveRewardInfos = produceBussiness.GetAllGmActiveReward().ToList();
 		}
-
-		public static bool ReLoad()
+        public delegate void PlayerEventHandle(GamePlayer player, int value);
+        public static event PlayerEventHandle PlayerVIPLevel;
+        public static void OnPlayerUpgradeVIP(GamePlayer player, int VIPLevel)
+        {
+            PlayerVIPLevel?.Invoke(player, VIPLevel);
+        }
+        public static bool ReLoad()
 		{
 			try
 			{

@@ -65,7 +65,8 @@ namespace GameServerScript.AI.NPC
 			base.OnBeginNewTurn();
 			base.Body.CurrentDamagePlus = 1f;
 			base.Body.CurrentShootMinus = 1f;
-		}
+            base.Body.Config.CanTakeDamage = true;
+        }
 
 		public override void OnCreated()
 		{
@@ -128,7 +129,8 @@ namespace GameServerScript.AI.NPC
 		public override void OnStopAttacking()
 		{
 			base.OnStopAttacking();
-		}
+            base.Body.Config.CanTakeDamage = true;
+        }
 
 		private void KillAttack(int fx, int tx)
 		{
@@ -191,7 +193,8 @@ namespace GameServerScript.AI.NPC
 		{
 			base.Body.State = 1;
 			base.Body.PlayMovie("toA", 2700, 0);
-			((SimpleBoss)base.Body).SetRelateDemagemRect(0, 0, 124, 129);
+			base.Body.Config.CanTakeDamage = false;
+			((SimpleBoss)base.Body).SetRelateDemagemRect(0, 0, 0, 0);
 		}
 
 		private void PersonalAttackDame()

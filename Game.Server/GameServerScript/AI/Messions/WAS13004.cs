@@ -68,7 +68,7 @@ namespace GameServerScript.AI.Messions
             Game.AddLoadingFile(2, "image/game/effect/10/tedabiaoji.swf", "asset.game.ten.tedabiaoji"); // vach ke duong
 
             Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
-            Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.shuangwangAsset");
+//            Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.shuangwangAsset");
 
             Game.LoadResources(resources);
             Game.LoadNpcGameOverResources(resources);
@@ -80,7 +80,7 @@ namespace GameServerScript.AI.Messions
             base.OnStartGame();
 
             m_moive = Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
-            m_front = Game.Createlayer(810, 750, "front", "game.asset.living.shuangwangAsset", "out", 1, 0);
+           // m_front = Game.Createlayer(810, 750, "front", "game.asset.living.shuangwangAsset", "out", 1, 0);
 
             LivingConfig config = Game.BaseLivingConfig();
             config.IsShowBloodBar = true;
@@ -111,15 +111,15 @@ namespace GameServerScript.AI.Messions
             Game.SendFreeFocus(1000, 900, 1, 2000, 0);
 
             m_moive.PlayMovie("in", 3000, 0);
-            m_front.PlayMovie("in", 3200, 0);
+        //    m_front.PlayMovie("in", 3200, 0);
             m_moive.PlayMovie("out", 6000, 0);
-            m_front.PlayMovie("out", 6200, 0);
+          //  m_front.PlayMovie("out", 6200, 0);
 
         }
 
         private void ReadyToBomb(SimpleBoss simpleBoss)
         {
-            simpleBoss.Say("Tưởng vậy là xong rồi ư? Bọn ta sẽ tiễn các ngươi xuống địa ngục!", 1, 1000);
+            simpleBoss.Say("havaryuuu!", 1, 1000);
             simpleBoss.PlayMovie("die", 1900, 0);
             simpleBoss.Die(2800);
 

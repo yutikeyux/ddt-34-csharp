@@ -1,33 +1,33 @@
+using System.Collections.Generic;
 using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using System.Collections.Generic;
 
 namespace GameServerScript.AI.Messions
 {
     public class DCR5104 : AMissionControl
     {
-        private List<PhysicalObj> phyObjects = new List<PhysicalObj>();
+        private List<PhysicalObj> list_0;
 
-        private SimpleBoss m_boss = null;
+        private SimpleBoss simpleBoss_0;
 
-        private SimpleBoss m_npcHelper = null;
+        private SimpleBoss simpleBoss_1;
 
-        private PhysicalObj m_kingMoive;
+        private PhysicalObj wkewqTbKeDI;
 
-        private PhysicalObj m_kingFront;
+        private PhysicalObj physicalObj_0;
 
-        private int m_kill = 0;
+        private int int_0;
 
-        private int bossId = 5131;
+        private int int_1;
 
-        private int npcId = 5132;
+        private int int_2;
 
-        private int npcHelperId1 = 5133; // nha tham hiem
+        private int yilwqqJdso0;
 
-        private int npcHelperId2 = 5134; // pha le
+        private int int_3;
 
-        private int m_map = 1154;
+        private int int_4;
 
         public override int CalculateScoreGrade(int score)
         {
@@ -57,55 +57,64 @@ namespace GameServerScript.AI.Messions
             base.Game.AddLoadingFile(2, "image/game/effect/5/guang.swf", "asset.game.4.guang");
             base.Game.AddLoadingFile(2, "image/game/effect/5/da.swf", "asset.game.4.da");
             base.Game.AddLoadingFile(2, "image/game/effect/5/mubiao.swf", "asset.game.4.mubiao");
-            int[] resources = { bossId, npcHelperId1, npcHelperId2, npcId };
-            base.Game.LoadResources(resources);
-            int[] gameOverResources = { bossId };
-            base.Game.LoadNpcGameOverResources(gameOverResources);
-            base.Game.SetMap(m_map);
+            int[] npcIds = new int[4]
+            {
+                int_1,
+                yilwqqJdso0,
+                int_3,
+                int_2
+            };
+            base.Game.LoadResources(npcIds);
+            int[] npcIds2 = new int[1]
+            {
+                int_1
+            };
+            base.Game.LoadNpcGameOverResources(npcIds2);
+            base.Game.SetMap(int_4);
         }
 
         public override void OnStartGame()
         {
             base.OnStartGame();
-            m_kingMoive = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 1);
-            m_kingFront = base.Game.Createlayer(1291, 257, "top", "game.asset.living.xieyanjulongAsset", "out", 1, 1);
+            wkewqTbKeDI = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 1);
+            physicalObj_0 = base.Game.Createlayer(1291, 257, "top", "game.asset.living.xieyanjulongAsset", "out", 1, 1);
             LivingConfig livingConfig = base.Game.BaseLivingConfig();
             livingConfig.IsFly = true;
-            m_boss = base.Game.CreateBoss(bossId, 1700, 480, -1, 1, "", livingConfig);
-            m_boss.SetRect(-180, -90, 300, 100);
-            m_boss.SetRelateDemagemRect(-60, -200, 116, 100);
-            base.Game.SendHideBlood(m_boss, 0);
-            m_boss.CallFuction(EffectCuiPao, 3300);
-            m_boss.CallFuction(MoveAllPlayer, 3300);
-            m_boss.CallFuction(SetDefaultSpeedMult, 6000);
-            m_kingMoive.PlayMovie("in", 7000, 0);
-            m_kingFront.PlayMovie("in", 7000, 0);
-            m_kingMoive.PlayMovie("out", 10000, 0);
-            m_kingFront.PlayMovie("out", 10000, 0);
-            m_boss.CallFuction(CreateHelperNpc, 11000);
+            simpleBoss_0 = base.Game.CreateBoss(int_1, 1700, 480, -1, 1, "", livingConfig);
+            simpleBoss_0.SetRect(-180, -90, 300, 100);
+            simpleBoss_0.SetRelateDemagemRect(-60, -200, 116, 100);
+            base.Game.SendHideBlood(simpleBoss_0, 0);
+            simpleBoss_0.CallFuction(method_1, 3300);
+            simpleBoss_0.CallFuction(method_2, 3300);
+            simpleBoss_0.CallFuction(method_3, 6000);
+            wkewqTbKeDI.PlayMovie("in", 7000, 0);
+            physicalObj_0.PlayMovie("in", 7000, 0);
+            wkewqTbKeDI.PlayMovie("out", 10000, 0);
+            physicalObj_0.PlayMovie("out", 10000, 0);
+            simpleBoss_0.CallFuction(method_0, 11000);
         }
 
-        private void CreateHelperNpc()
+        private void method_0()
         {
-            LivingConfig config = base.Game.BaseLivingConfig();
-            config.IsFly = true;
-            config.CanTakeDamage = false;
-            config.IsHelper = true;
-            m_npcHelper = base.Game.CreateBoss(npcHelperId1, 190, 250, 1, 2, "", config);
-            m_npcHelper.Delay++;
-            base.Game.SendHideBlood(m_npcHelper, 0);
-            m_npcHelper.Say("Đừng sợ. Đã có ta ở đây.", 0, 3000, 2000);
+            LivingConfig livingConfig = base.Game.BaseLivingConfig();
+            livingConfig.IsFly = true;
+            livingConfig.CanTakeDamage = false;
+            livingConfig.IsHelper = true;
+            simpleBoss_1 = base.Game.CreateBoss(yilwqqJdso0, 190, 250, 1, 2, "", livingConfig);
+            simpleBoss_1.Delay++;
+            base.Game.SendHideBlood(simpleBoss_1, 0);
+            simpleBoss_1.Say("Korkma. Tony Amcan daima yanında.", 0, 3000, 2000);
         }
 
-        private void EffectCuiPao()
+        private void method_1()
         {
             foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
             {
-                phyObjects.Add(base.Game.CreatePhysicalObj(0, 0, "top", "asset.game.4.cuipao", "", 1, 1, allLivingPlayer.Id + 1));
+                list_0.Add(base.Game.CreatePhysicalObj(0, 0, "top", "asset.game.4.cuipao", "", 1, 1, allLivingPlayer.Id + 1));
             }
         }
 
-        private void MoveAllPlayer()
+        private void method_2()
         {
             foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
             {
@@ -114,7 +123,7 @@ namespace GameServerScript.AI.Messions
             }
         }
 
-        private void SetDefaultSpeedMult()
+        private void method_3()
         {
             foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
             {
@@ -130,29 +139,29 @@ namespace GameServerScript.AI.Messions
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-            if (m_kingMoive != null)
+            if (wkewqTbKeDI != null)
             {
-                base.Game.RemovePhysicalObj(m_kingMoive, sendToClient: true);
-                m_kingMoive = null;
+                base.Game.RemovePhysicalObj(wkewqTbKeDI, true);
+                wkewqTbKeDI = null;
             }
-            if (m_kingFront != null)
+            if (physicalObj_0 != null)
             {
-                base.Game.RemovePhysicalObj(m_kingFront, sendToClient: true);
-                m_kingFront = null;
+                base.Game.RemovePhysicalObj(physicalObj_0, true);
+                physicalObj_0 = null;
             }
-            foreach (PhysicalObj item in phyObjects)
+            foreach (PhysicalObj item in list_0)
             {
-                base.Game.RemovePhysicalObj(item, sendToClient: true);
+                base.Game.RemovePhysicalObj(item, true);
             }
-            phyObjects = new List<PhysicalObj>();
+            list_0 = new List<PhysicalObj>();
         }
 
         public override bool CanGameOver()
         {
             base.CanGameOver();
-            if (m_boss != null && !m_boss.IsLiving)
+            if (simpleBoss_0 != null && !simpleBoss_0.IsLiving)
             {
-                m_kill++;
+                int_0++;
                 return true;
             }
             if (base.Game.TurnIndex > 200)
@@ -165,13 +174,13 @@ namespace GameServerScript.AI.Messions
         public override int UpdateUIData()
         {
             base.UpdateUIData();
-            return m_kill;
+            return int_0;
         }
 
         public override void OnGameOver()
         {
             base.OnGameOver();
-            if (m_boss != null && !m_boss.IsLiving)
+            if (simpleBoss_0 != null && !simpleBoss_0.IsLiving)
             {
                 base.Game.IsWin = true;
             }
@@ -194,6 +203,16 @@ namespace GameServerScript.AI.Messions
         public override void OnDied()
         {
             base.OnDied();
+        }
+
+        public DCR5104()
+        {
+            list_0 = new List<PhysicalObj>();
+            int_1 = 5131;
+            int_2 = 5132;
+            yilwqqJdso0 = 5133;
+            int_3 = 5134;
+            int_4 = 1154;
         }
     }
 }

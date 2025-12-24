@@ -6,16 +6,17 @@ using Game.Logic.Phy.Object;
 using Game.Logic;
 using Bussiness;
 namespace GameServerScript.AI.Messions
+//civciv normal etap 2
 {
     public class GCGCT1162 : AMissionControl
     {
-        private SimpleBoss boss = null;
+        private SimpleBoss OrtadakiTavuk = null;
 
-        private SimpleBoss m_king = null;
+        private SimpleBoss ÜsttekiTavuk = null;
 
-        private SimpleBoss king = null;
+        private SimpleBoss AlttakiTavuk = null;
 
-        private int bossID = 7111;
+        private int SismanTavukID = 7111;
 
         private int CountBossTurn = 0;
 
@@ -43,8 +44,8 @@ namespace GameServerScript.AI.Messions
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-            int[] resources = { bossID };
-            int[] gameOverResource = { bossID };
+            int[] resources = { SismanTavukID };
+            int[] gameOverResource = { SismanTavukID };
             Game.LoadResources(resources);
             Game.LoadNpcGameOverResources(gameOverResource);
             Game.AddLoadingFile(1, "bombs/84.swf", "tank.resource.bombs.Bomb84");
@@ -65,34 +66,34 @@ namespace GameServerScript.AI.Messions
             LivingConfig config2 = Game.BaseLivingConfig();
             config2.IsTurn = true;
             config2.HaveShield = false;
-            m_king = Game.CreateBoss(bossID, 1680, 315, -1, 1, "", config);
-            boss = Game.CreateBoss(bossID, 1615, 565, -1, 1, "", config1);
-            king = Game.CreateBoss(bossID, 1600, 849, -1, 1, "", config2);
-            boss.FallFrom(boss.X, boss.Y, "", 0, 0, 2000);
-            king.FallFrom(king.X, king.Y, "", 0, 0, 2000);
-            m_king.FallFrom(m_king.X, m_king.Y, "", 0, 0, 2000);
-            m_king.SetRelateDemagemRect(m_king.NpcInfo.X, m_king.NpcInfo.Y, m_king.NpcInfo.Width, m_king.NpcInfo.Height);
-            king.SetRelateDemagemRect(king.NpcInfo.X, king.NpcInfo.Y, king.NpcInfo.Width, king.NpcInfo.Height);
-            boss.SetRelateDemagemRect(boss.NpcInfo.X, boss.NpcInfo.Y, boss.NpcInfo.Width, boss.NpcInfo.Height);
-            m_king.Properties1 = 0;
-            boss.Properties1 = 0;
-            king.Properties1 = 2;
-            //king.Delay += 2;
-            //boss.Delay += 1;
-            CreateEffectSaying();
+            ÜsttekiTavuk = Game.CreateBoss(SismanTavukID, 1680, 315, -1, 1, "", config);
+            OrtadakiTavuk = Game.CreateBoss(SismanTavukID, 1615, 565, -1, 1, "", config1);
+            AlttakiTavuk = Game.CreateBoss(SismanTavukID, 1600, 849, -1, 1, "", config2);
+            OrtadakiTavuk.FallFrom(OrtadakiTavuk.X, OrtadakiTavuk.Y, "", 0, 0, 2000);
+            AlttakiTavuk.FallFrom(AlttakiTavuk.X, AlttakiTavuk.Y, "", 0, 0, 2000);
+            ÜsttekiTavuk.FallFrom(ÜsttekiTavuk.X, ÜsttekiTavuk.Y, "", 0, 0, 2000);
+            ÜsttekiTavuk.SetRelateDemagemRect(ÜsttekiTavuk.NpcInfo.X, ÜsttekiTavuk.NpcInfo.Y, ÜsttekiTavuk.NpcInfo.Width, ÜsttekiTavuk.NpcInfo.Height);
+            AlttakiTavuk.SetRelateDemagemRect(AlttakiTavuk.NpcInfo.X, AlttakiTavuk.NpcInfo.Y, AlttakiTavuk.NpcInfo.Width, AlttakiTavuk.NpcInfo.Height);
+            OrtadakiTavuk.SetRelateDemagemRect(OrtadakiTavuk.NpcInfo.X, OrtadakiTavuk.NpcInfo.Y, OrtadakiTavuk.NpcInfo.Width, OrtadakiTavuk.NpcInfo.Height);
+            ÜsttekiTavuk.Properties1 = 0;
+            OrtadakiTavuk.Properties1 = 0;
+            AlttakiTavuk.Properties1 = 2;
+            //AlttakiTavuk.Delay += 2;
+            //OrtadakiTavuk.Delay += 1;
+            GirişKonuşmaları();
         }
 
-        private void CreateEffectSaying()
+        private void GirişKonuşmaları()
         {
-            Game.SendObjectFocus(m_king, 1, 1000, 0);
-            m_king.PlayMovie("speak", 1500, 0);
-            m_king.Say("Loài người sao lại mò tới đây?", 0, 1500);
-            Game.SendObjectFocus(boss, 1, 4000, 0);
-            boss.PlayMovie("speak", 4500, 0);
-            boss.Say("Không cần biết. Tiêu diệt bọn chúng!", 0, 4500);
-            Game.SendObjectFocus(king, 1, 8000, 0);
-            king.PlayMovie("speak", 8500, 0);
-            king.Say("Bây giờ bọn ngươi bỏ chạy còn kịp đó.", 0, 8500, 1500);
+            Game.SendObjectFocus(ÜsttekiTavuk, 1, 1000, 0);
+            ÜsttekiTavuk.PlayMovie("speak", 1500, 0);
+            ÜsttekiTavuk.Say("Bunlar neden buraya geldi?", 0, 1500);
+            Game.SendObjectFocus(OrtadakiTavuk, 1, 4000, 0);
+            OrtadakiTavuk.PlayMovie("speak", 4500, 0);
+            OrtadakiTavuk.Say("Boşver onları. Yok edelim!", 0, 4500);
+            Game.SendObjectFocus(AlttakiTavuk, 1, 8000, 0);
+            AlttakiTavuk.PlayMovie("speak", 8500, 0);
+            AlttakiTavuk.Say("Hâlâ kaçmak için vaktin var.", 0, 8500, 1500);
         }
 
         public override void OnNewTurnStarted()
@@ -108,7 +109,7 @@ namespace GameServerScript.AI.Messions
 
         public override bool CanGameOver()
         {
-            if (m_king != null && m_king.IsLiving == false && boss != null && boss.IsLiving == false && king != null && king.IsLiving == false)
+            if (ÜsttekiTavuk != null && ÜsttekiTavuk.IsLiving == false && OrtadakiTavuk != null && OrtadakiTavuk.IsLiving == false && AlttakiTavuk != null && AlttakiTavuk.IsLiving == false)
                 return true;
 
             if (Game.TotalTurn > Game.MissionInfo.TotalTurn)
@@ -126,7 +127,7 @@ namespace GameServerScript.AI.Messions
         public override void OnGameOver()
         {
             base.OnGameOver();
-            if (m_king != null && m_king.IsLiving == false && boss != null && boss.IsLiving == false && king != null && king.IsLiving == false)
+            if (ÜsttekiTavuk != null && ÜsttekiTavuk.IsLiving == false && OrtadakiTavuk != null && OrtadakiTavuk.IsLiving == false && AlttakiTavuk != null && AlttakiTavuk.IsLiving == false)
             {
                 Game.IsWin = true;
                 //Game.SessionId++;

@@ -1,168 +1,137 @@
+using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using System;
 
 namespace GameServerScript.AI.NPC
 {
-	public class FiveNormalFourNpc1 : ABrain
-	{
-		private int m_attackTurn = 0;
+    public class FiveNormalFourNpc1 : ABrain
+    {
+        private int int_0;
 
-		private int npcID2 = 5134;
+        protected Player m_targer;
 
-		protected Living targer;
+        private SimpleBoss simpleBoss_0;
 
-		private static string[] AllAttackChat = new string[]
-		{
-			"Trận động đất, bản thân mình! ! <br/> bạn vui lòng Ay giúp đỡ",
-			"Hạ vũ khí xuống!",
-			"Xem nếu bạn có thể đủ khả năng, một số ít!！"
-		};
+        private int int_1;
 
-		private static string[] ShootChat = new string[]
-		{
-			"Cho bạn biết những gì một cú sút vết nứt!",
-			"Gửi cho bạn một quả bóng - bạn phải chọn Vâng",
-			"Nhóm của bạn của những người dân thường ngu dốt và thấp"
-		};
+        private int int_2;
 
-		private static string[] ShootedChat = new string[]
-		{
-			"Ah ~ ~ Tại sao bạn tấn công? <br/> tôi đang làm gì?",
-			"Oh ~ ~ nó thực sự đau khổ! Tại sao tôi phải chiến đấu? <br/> tôi phải chiến đấu ..."
-		};
+        private static string[] string_0;
 
-		private static string[] AddBooldChat = new string[]
-		{
-			"Xoắn ah xoay ~ <br/>xoắn ah xoay ~ ~ ~",
-			"~ Hallelujah <br/>Luyaluya ~ ~ ~",
-			"Yeah Yeah Yeah, <br/> để thoải mái!"
-		};
+        private static string[] string_1;
 
-		private static string[] KillAttackChat = new string[]
-		{
-			"Con rồng trong thế giới! !"
-		};
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            m_body.CurrentDamagePlus = 1f;
+            m_body.CurrentShootMinus = 1f;
+            if (simpleBoss_0 == null)
+            {
+                SimpleBoss[] array = ((PVEGame)base.Game).FindLivingTurnBossWithID(int_1);
+                if (array.Length != 0)
+                {
+                    simpleBoss_0 = array[0];
+                }
+            }
+        }
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			this.m_body.CurrentDamagePlus = 1f;
-			this.m_body.CurrentShootMinus = 1f;
-		}
+        public override void OnCreated()
+        {
+            base.OnCreated();
+        }
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            if (simpleBoss_0 != null && (int)simpleBoss_0.Properties1 == 1 && (int)simpleBoss_0.Properties2 == 0)
+            {
+                if (((PVEGame)base.Game).GetNPCLivingWithID(int_2).Length == 0)
+                {
+                    ((SimpleBoss)base.Body).RandomSay(string_0, 0, 1000, 0);
+                    if (base.Body.ShootPoint(1390, 709, 56, 1000, 10000, 1, 1.5f, 2700, method_2))
+                    {
+                        base.Body.PlayMovie("beatA", 1500, 0);
+                    }
+                }
+            }
+            else if (simpleBoss_0 != null && (int)simpleBoss_0.Properties2 == 1)
+            {
+                method_0();
+            }
+            else if (simpleBoss_0 != null && (int)simpleBoss_0.Properties1 > 0 && (int)simpleBoss_0.Properties2 > 0)
+            {
+                method_0();
+            }
+        }
 
-		public override void OnStartAttacking()
-		{
-			base.OnStartAttacking();
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			bool flag = false;
-			int num = 0;
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				if (current.IsLiving && current.X > 0 && current.X < 0)
-				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
-					{
-						num = num2;
-					}
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				this.KillAttack(0, 0);
-			}
-			else if (this.m_attackTurn == 0)
-			{
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 1)
-			{
-				this.NextAttack();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 2)
-			{
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 3)
-			{
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 4)
-			{
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 5)
-			{
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 6)
-			{
-				this.DameBoss();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 7)
-			{
-				this.DameBoss();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 8)
-			{
-				this.m_attackTurn++;
-			}
-			else
-			{
-				this.m_attackTurn = 0;
-			}
-		}
+        private void method_0()
+        {
+            ((SimpleBoss)base.Body).RandomSay(string_1, 0, 1000, 0);
+            base.Body.PlayMovie("beatC", 1500, 4000);
+            base.Body.BeatDirect(simpleBoss_0, "", 3500, 3, 1);
+            int_0++;
+            if (int_0 >= 2)
+            {
+                int_0 = 0;
+                simpleBoss_0.Properties2 = 3;
+                simpleBoss_0.BlockTurn = false;
+                base.Body.CallFuction(method_1, 5000);
+            }
+        }
 
-		private void KillAttack(int fx, int tx)
-		{
-			base.Body.CurrentDamagePlus = 10f;
-			int num = base.Game.Random.Next(0, FiveNormalFourNpc1.KillAttackChat.Length);
-			base.Body.Say(FiveNormalFourNpc1.KillAttackChat[num], 1, 1000);
-			base.Body.PlayMovie("beat", 3000, 0);
-			base.Body.RangeAttacking(fx, tx, "cry", 4000, null);
-		}
+        private void method_1()
+        {
+            if (simpleBoss_0.IsLiving)
+            {
+                simpleBoss_0.PlayMovie("dao", 0, 6000);
+            }
+        }
 
-		private void DameBoss()
-		{
-			if (base.Body.Shoot(4, 1732, 380, 45, 7, 1, 15000))
-			{
-				base.Body.PlayMovie("beatC", 0, 0);
-			}
-			if (base.Body.Shoot(4, 1732, 380, 45, 7, 1, 15000))
-			{
-			}
-			if (base.Body.Shoot(4, 1732, 380, 45, 7, 1, 15000))
-			{
-			}
-		}
+        private void method_2()
+        {
+            LivingConfig livingConfig = ((PVEGame)base.Game).BaseLivingConfig();
+            livingConfig.IsHelper = true;
+            livingConfig.IsTurn = false;
+            livingConfig.CanTakeDamage = false;
+            ((SimpleBoss)base.Body).CreateChild(int_2, 1340, 709, true, livingConfig);
+        }
 
-		private void NextAttack()
-		{
-			if (base.Body.ShootPoint(920, base.Body.Y, 56, 1000, 10000, 1, 1f, 2300))
-			{
-				base.Body.PlayMovie("beat2", 1500, 0);
-				base.Body.CallFuction(new LivingCallBack(this.CreateChild), 4000);
-			}
-		}
+        public override void OnDie()
+        {
+            base.OnDie();
+        }
 
-		private void CreateChild()
-		{
-			((SimpleBoss)base.Body).CreateChild(this.npcID2, 1320, 700, 700, 1, -1);
-		}
-	}
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
+
+        public FiveNormalFourNpc1()
+        {
+            int_1 = 5131;
+            int_2 = 5134;
+        }
+
+        static FiveNormalFourNpc1()
+        {
+            string_0 = new string[3]
+            {
+                "Chú ý tường băng sắp vỡ rồi.",
+                "Hãy giúp ta xây tường băng nào.",
+                "Xây lại tường băng nhanh lên."
+            };
+            string_1 = new string[4]
+            {
+                "Thử cái này xem.",
+                "Con rồng ngu hãy coi đây.",
+                "Ta bắn chít ngươi.",
+                "Sống sao với dàn đạn của ta?"
+            };
+        }
+    }
 }

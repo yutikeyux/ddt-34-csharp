@@ -66,7 +66,7 @@ namespace Game.Server.ConsortiaTask
             pkg.WriteByte(20); // CrazyTankSocketEvent.CONSORTIA_CHAT
             pkg.WriteByte(3);
             pkg.WriteString(""); //_loc4_.sender
-            pkg.WriteString(LanguageMgr.GetTranslation(@"Consortia.Task.Complete")); //_loc4_.msg
+            pkg.WriteString(LanguageMgr.GetTranslation(@"Misyon sona erdi!")); //_loc4_.msg
             player.SendTCP(pkg);
         }
 

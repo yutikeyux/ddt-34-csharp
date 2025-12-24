@@ -10,6 +10,7 @@ namespace Game.Logic.Actions
 
         private string m_endPlay;
 
+
         public LivingRotateTurnAction(Living living, int angle, int speed, string endPlay, int delay)
 			: base(0, delay)
         {

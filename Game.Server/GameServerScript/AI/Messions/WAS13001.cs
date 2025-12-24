@@ -52,9 +52,9 @@ namespace GameServerScript.AI.Messions
             bossAnt.Delay = 1;
             base.Game.SendObjectFocus(bossAnt, 0, 0, 0);
             m_moive.PlayMovie("in", 2000, 0);
-            m_front.PlayMovie("in", 2200, 0);
+        //    m_front.PlayMovie("in", 2200, 0);
             m_moive.PlayMovie("out", 6000, 0);
-            m_front.PlayMovie("out", 6200, 0);
+          //  m_front.PlayMovie("out", 6200, 0);
         }
 
         public override void OnBeginNewTurn()
@@ -89,7 +89,7 @@ namespace GameServerScript.AI.Messions
             base.Game.AddLoadingFile(1, "bombs/99.swf", "tank.resource.bombs.Bomb99");
             base.Game.AddLoadingFile(2, "image/game/effect/10/jianyu.swf", "asset.game.ten.jianyu");
             base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
-            base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.canbaoAsset");
+       //     base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.canbaoAsset");
             base.Game.LoadResources(resources);
             base.Game.LoadNpcGameOverResources(resources);
             base.Game.SetMap(1214);
@@ -99,7 +99,7 @@ namespace GameServerScript.AI.Messions
         {
             base.OnStartGame();
             m_moive = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
-            m_front = base.Game.Createlayer(820, 400, "front", "game.asset.living.canbaoAsset", "out", 1, 0);
+           // m_front = base.Game.Createlayer(820, 400, "front", "game.asset.living.canbaoAsset", "out", 1, 0);
             bossChicken = base.Game.CreateBoss(bossChickenID, 1290, 1013, -1, 1, "");
             bossChicken.SetRelateDemagemRect(bossChicken.NpcInfo.X, bossChicken.NpcInfo.Y, bossChicken.NpcInfo.Width, bossChicken.NpcInfo.Height);
             base.Game.SendObjectFocus(bossChicken, 0, 0, 0);

@@ -21,6 +21,18 @@ namespace Game.Server.Packets.Server
         {
 			throw new NotImplementedException();
         }
+        public void SendOpenHappyRecharge(int playerID)
+        {
+            throw new NotImplementedException();
+        }
+        public void SendUpdateChickActivation(UserChickActiveInfo chickInfo)
+        {
+            throw new NotImplementedException();
+        }
+        public void SendCatchBeastOpen(int playerID, bool isOpen)
+        {
+            throw new NotImplementedException();
+        }
 
         public void SendAcademyGradute(GamePlayer app, int type)
         {

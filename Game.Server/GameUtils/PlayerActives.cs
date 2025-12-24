@@ -755,7 +755,11 @@ namespace Game.Server.GameUtils
             }
         
         }
-
+        public bool IsYearMonsterOpen()
+        {
+            DateTime end = Convert.ToDateTime(GameProperties.YearMonsterEndDate);
+            return DateTime.Now.Date < end.Date;
+        }
         public void SendLittleGameActived()
         {
             GSPacketIn gSPacketIn = new GSPacketIn(80);

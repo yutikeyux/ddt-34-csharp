@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Reflection;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Threading;
 
@@ -580,7 +579,7 @@ namespace Game.Server
                 {
                     GamePlayer[] players = WorldMgr.GetAllPlayers();
                     DateTime startTime = Convert.ToDateTime("00:00:00");//world boss başlama saatleri şimdilik 7/24 şekilde not: yuti
-                    DateTime stopTime = Convert.ToDateTime("02:08:59");//world boss başlama saatleri şimdilik 7/24 şekilde not: yuti
+                    DateTime stopTime = Convert.ToDateTime("23:59:59");//world boss başlama saatleri şimdilik 7/24 şekilde not: yuti
                     DateTime closeTime = stopTime.AddMinutes(1.0);
                     int npcID = 1243;
                     int configblood = NPCInfoMgr.GetNpcInfoById(npcID).Blood;
@@ -720,7 +719,7 @@ namespace Game.Server
                 };
                 if (opendays.Contains(DateTime.Now.DayOfWeek))
                 {
-                   
+
                     int startTime = GameProperties.LittleGameStartHourse; //saçma sapan bi mantık değiştirebiliriz not: yuti
                     int stopTime = GameProperties.LittleGameStartHourse + GameProperties.LittleGameTimeSpending;
                     if (DateTime.Now.Hour == startTime && !LittleGameWorldMgr.IsOpen)
@@ -744,7 +743,7 @@ namespace Game.Server
                         foreach (var player in WorldMgr.GetAllPlayers())
                         {
                             player.Actives.SendLittleGameActived();
-                            player.Out.SendMessage(eMessageType.Normal, $"Bogo Savaşı {(int)(60 - DateTime.Now.Minute)} sona erdi!");
+                            player.Out.SendMessage(eMessageType.Normal, $"Bogo Savaşı {(int)(60 - DateTime.Now.Minute)} dakika sonra sona erecek!");
                         }
                     }
                     if (log.IsInfoEnabled)
@@ -1209,15 +1208,17 @@ namespace Game.Server
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
                 Thread.CurrentThread.Priority = ThreadPriority.Normal;
                 GameProperties.Refresh();
-                if (!InitComponent(RecompileScripts(), "Recompile Scripts"))
-                {
-                    bool flag = false;
-                }
-                if (!InitComponent(ConsortiaLevelMgr.Init(), "ConsortiaLevelMgr Init"))
+                if (!InitComponent(RecompileScripts(), "Kodlar Derleniyor"))
                 {
                     return false;
                 }
-                if (!InitComponent(StartScriptComponents(), "Script components"))
+#pragma warning disable CS0436 // Type conflicts with imported type
+                if (!InitComponent(ConsortiaLevelMgr.Init(), "Birlik Bilgileri"))
+                {
+                    return false;
+                }
+#pragma warning restore CS0436 // Type conflicts with imported type
+                if (!InitComponent(StartScriptComponents(), "Kod Özellikleri"))
                 {
                     return false;
                 }
@@ -1225,199 +1226,199 @@ namespace Game.Server
                 {
                     return false;
                 }
-                if (!InitComponent(InitSocket(IPAddress.Parse(Configuration.Ip), Configuration.Port), "InitSocket Port: " + Configuration.Port))
+                if (!InitComponent(InitSocket(IPAddress.Parse(Configuration.Ip), Configuration.Port), "Oluşturulan Port: " + Configuration.Port))
                 {
                     return false;
                 }
-                if (!InitComponent(AllocatePacketBuffers(), "AllocatePacketBuffers()"))
+                if (!InitComponent(AllocatePacketBuffers(), "Paket Buffları"))
                 {
                     return false;
                 }
-                if (!InitComponent(LogMgr.Setup(Configuration.GAME_TYPE, Configuration.ServerID, Configuration.AreaID), "LogMgr Init"))
+                if (!InitComponent(LogMgr.Setup(Configuration.GAME_TYPE, Configuration.ServerID, Configuration.AreaID), "Log Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(WorldMgr.Init(), "WorldMgr Init"))
+                if (!InitComponent(WorldMgr.Init(), "Salon Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(MapMgr.Init(), "MapMgr Init"))
+                if (!InitComponent(MapMgr.Init(), "Harita Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(ItemMgr.Init(), "ItemMgr Init"))
+                if (!InitComponent(ItemMgr.Init(), "İtem Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(ItemBoxMgr.Init(), "ItemBox Init"))
+                if (!InitComponent(ItemBoxMgr.Init(), "Kutu İtem Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(BallMgr.Init(), "BallMgr Init"))
+                if (!InitComponent(BallMgr.Init(), "Atış Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(ExerciseMgr.Init(), "ExerciseMgr Init"))
+                if (!InitComponent(ExerciseMgr.Init(), "Eğitim Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(LevelMgr.Init(), "levelMgr Init"))
+                if (!InitComponent(LevelMgr.Init(), "Level Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(BallConfigMgr.Init(), "BallConfigMgr Init"))
+                if (!InitComponent(BallConfigMgr.Init(), "Vurşu Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(FusionMgr.Init(), "FusionMgr Init"))
+                if (!InitComponent(FusionMgr.Init(), "Füzyon Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(UserBoxMgr.Init(), "UserBoxMgr Init"))
+                if (!InitComponent(UserBoxMgr.Init(), "Kullanıcı Box Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(AwardMgr.Init(), "AwardMgr Init"))
+                if (!InitComponent(AwardMgr.Init(), "Ödül Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(AchievementMgr.Init(), "AchievementMgr Init"))
+                if (!InitComponent(AchievementMgr.Init(), "Başarım Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(NPCInfoMgr.Init(), "NPCInfoMgr Init"))
+                if (!InitComponent(NPCInfoMgr.Init(), "NPC Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(MissionInfoMgr.Init(), "MissionInfoMgr Init"))
+                if (!InitComponent(MissionInfoMgr.Init(), "Keşif Kod Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(PveInfoMgr.Init(), "PveInfoMgr Init"))
+                if (!InitComponent(PveInfoMgr.Init(), "Keşif Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(DropMgr.Init(), "Drop Init"))
+                if (!InitComponent(DropMgr.Init(), "Drop Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(FightRateMgr.Init(), "FightRateMgr Init"))
+                if (!InitComponent(FightRateMgr.Init(), "Savaş Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(RefineryMgr.Init(), "RefineryMgr Init"))
+                if (!InitComponent(RefineryMgr.Init(), "Demirci Rafine Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(StrengthenMgr.Init(), "StrengthenMgr Init"))
+                if (!InitComponent(StrengthenMgr.Init(), "Demirci Güçlendirme Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(PropItemMgr.Init(), "PropItemMgr Init"))
+                if (!InitComponent(PropItemMgr.Init(), "Özellikli İtem Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(ShopMgr.Init(), "ShopMgr Init"))
+                if (!InitComponent(ShopMgr.Init(), "Market Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(QuestMgr.Init(), "QuestMgr Init"))
+                if (!InitComponent(QuestMgr.Init(), "Görev Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(RoomMgr.Setup(Configuration.MaxRoomCount), "RoomMgr.Setup"))
+                if (!InitComponent(RoomMgr.Setup(Configuration.MaxRoomCount), "Oda Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(GameMgr.Setup(Configuration.ServerID, GameProperties.BOX_APPEAR_CONDITION), "GameMgr.Start()"))
+                if (!InitComponent(GameMgr.Setup(Configuration.ServerID, GameProperties.BOX_APPEAR_CONDITION), "Oyun Yönetim!"))
                 {
                     return false;
                 }
-                if (!InitComponent(ConsortiaMgr.Init(), "ConsortiaMgr Init"))
+                if (!InitComponent(ConsortiaMgr.Init(), "Birlik Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(ConsortiaExtraMgr.Init(), "ConsortiaExtraMgr Init"))
+                if (!InitComponent(ConsortiaExtraMgr.Init(), "Birliklerin Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(LanguageMgr.Setup(""), "LanguageMgr Init"))
+                if (!InitComponent(LanguageMgr.Setup(""), "Oyun Dili Paketi"))
                 {
                     return false;
                 }
-                if (!InitComponent(RateMgr.Init(Configuration), "ExperienceRateMgr Init"))
+                if (!InitComponent(RateMgr.Init(Configuration), "Tecrübe Deneyim Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(WindMgr.Init(), "WindMgr Init"))
+                if (!InitComponent(WindMgr.Init(), "Rüzgar Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(CardMgr.Init(), "CardMgr Init"))
+                if (!InitComponent(CardMgr.Init(), "Kartların Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(CardBuffMgr.Init(), "CardBuffMgr Init"))
+                if (!InitComponent(CardBuffMgr.Init(), "Kart Buff Özellikleri"))
                 {
                     return false;
                 }
-                if (!InitComponent(FairBattleRewardMgr.Init(), "FairBattleRewardMgr Init"))
+                if (!InitComponent(FairBattleRewardMgr.Init(), "Lig Savaşı Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(PetMgr.Init(), "PetMgr Setup"))
+                if (!InitComponent(PetMgr.Init(), "Pet Özellikleri Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(MacroDropMgr.Init(), "MacroDropMgr Init"))
+                if (!InitComponent(MacroDropMgr.Init(), "Makro Drop Veritabanı Birlikleri"))
                 {
                     return false;
                 }
-                if (!InitComponent(MarryRoomMgr.Init(), "MarryRoomMgr Init"))
+                if (!InitComponent(MarryRoomMgr.Init(), "Düğün Odası Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(RankMgr.Init(), "RankMgr Init"))
+                if (!InitComponent(RankMgr.Init(), "Sıralama Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(CommunalActiveMgr.Init(), "CommunalActiveMgr Setup"))
+                if (!InitComponent(CommunalActiveMgr.Init(), "Aktiv Özellikler"))
                 {
                     return false;
                 }
-                if (!InitComponent(QQTipsMgr.Init(), "QQTipsMgr Init"))
+                if (!InitComponent(QQTipsMgr.Init(), "Oyun Bildirim Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(SubActiveMgr.Init(), "SubActiveMgr Setup"))
+                if (!InitComponent(SubActiveMgr.Init(), "EventLive Condition Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(EventAwardMgr.Init(), "EventAwardMgr Setup"))
+                if (!InitComponent(EventAwardMgr.Init(), "Event Award Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(EventLiveMgr.Init(), "EventLiveMgr Setup"))
+                if (!InitComponent(EventLiveMgr.Init(), "Event Live Veritabanı Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(AcademyMgr.Init(), "AcademyMgr Setup"))
+                if (!InitComponent(AcademyMgr.Init(), "Üstat Çırak Yönetimi"))
                 {
                     return false;
                 }
-                if (!InitComponent(BattleMgr.Setup(), "BattleMgr Setup"))
+                if (!InitComponent(BattleMgr.Setup(), "Savaş Yönetimi"))
                 {
                     return false;
                 }
-                if (!this.InitComponent(DiceLevelAwardMgr.Init(), "DiceLevelMgr Setup"))
+                if (!this.InitComponent(DiceLevelAwardMgr.Init(), "Zar Adam Bilgileri"))
                 {
                     return false;
                 }
-                if (!InitComponent(InitGlobalTimer(), "Init Global Timers"))
+                if (!InitComponent(InitGlobalTimer(), "Global Timer Özellikleri"))
                 {
                     return false;
                 }
-                if (!InitComponent(LogMgr.Setup(1, Configuration.ServerID, Configuration.AreaID), "LogMgr Setup"))
+                if (!InitComponent(LogMgr.Setup(1, Configuration.ServerID, Configuration.AreaID), "Sunucu ID Area ID"))
                 {
                     return false;
                 }
@@ -1428,7 +1429,7 @@ namespace Game.Server
                 }
                 //if (!InitComponent(InitOtherLoginServer(), "Login To OtherCenterServer"))
                 //{
-                  //  return false;
+                //  return false;
                 //}
                 if (!InitComponent(HotSpringMgr.Init(), "HotSpringMgr Init"))
                 {
@@ -1462,9 +1463,9 @@ namespace Game.Server
                 {
                     return false;
                 }
-                 if (!this.InitComponent(DiceLevelAwardMgr.Init(), "DiceLevelMgr Setup"))
-                { 
-                    return  false;
+                if (!this.InitComponent(DiceLevelAwardMgr.Init(), "DiceLevelMgr Setup"))
+                {
+                    return false;
                 }
                 if (!InitComponent(ConsortiaTaskMgr.Init(), "ConsortiaTaskMgr.Init"))
                     return false;
@@ -1484,8 +1485,8 @@ namespace Game.Server
                     return false;
                 if (!InitComponent(TotemHonorMgr.Init(), "TotemHonorMgr Init"))
                     return false;
-               // if (!InitComponent(DailyLeagueAwardMgr.Init(), "DailyLeagueAwardMgr Init")) //kaldırıldı not: yuti
-                   // return false;
+                // if (!InitComponent(DailyLeagueAwardMgr.Init(), "DailyLeagueAwardMgr Init")) //kaldırıldı not: yuti
+                // return false;
                 if (!InitComponent(SpiritInfoMgr.Init(), "SpiritInfoMgr Int"))
                     return false; //buralarda ne geziyon la :D
                 if (!InitComponent(SetsBuildTempMgr.Init(), "SetsBuildTempMgr Init"))

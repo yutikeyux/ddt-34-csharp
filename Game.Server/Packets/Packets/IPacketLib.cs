@@ -17,6 +17,8 @@ namespace Game.Base.Packets
         void SendLeftRouleteOpen(UsersExtraInfo info);
 
         void SendAcademyGradute(GamePlayer app, int type);
+        void SendOpenHappyRecharge(int playerID);
+        void SendUpdateChickActivation(UserChickActiveInfo chickInfo);
 
         GSPacketIn SendAcademyAppState(PlayerInfo player, int removeUserId);
 
@@ -43,6 +45,7 @@ namespace Game.Base.Packets
         GSPacketIn sendBuyBadge(int consortiaID, int BadgeID, int ValidDate, bool result, string BadgeBuyTime, int playerid);
 
         void SendEdictumVersion();
+        void SendCatchBeastOpen(int playerID, bool isOpen);
 
         void SendEnthrallLight();
 

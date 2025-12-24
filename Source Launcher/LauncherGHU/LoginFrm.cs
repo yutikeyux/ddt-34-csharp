@@ -886,8 +886,8 @@ namespace LauncherGHU
             this.forgotbtn.Size = new System.Drawing.Size(261, 49);
             this.forgotbtn.TabIndex = 4;
             this.forgotbtn.TabStop = false;
-            this.forgotbtn.Text = "     QUÊN MẬT KHẨU";
-            this.toolTip_0.SetToolTip(this.forgotbtn, "Quên mật khẩu");
+            this.forgotbtn.Text = "     ŞİFREMİ UNUTTUM";
+            this.toolTip_0.SetToolTip(this.forgotbtn, "ŞİFREMİ UNUTTUM");
             this.forgotbtn.UseVisualStyleBackColor = false;
             this.forgotbtn.Click += new System.EventHandler(this.forgotbtn_Click);
             // 
@@ -911,7 +911,7 @@ namespace LauncherGHU
             this.regBtn.Size = new System.Drawing.Size(261, 49);
             this.regBtn.TabIndex = 3;
             this.regBtn.TabStop = false;
-            this.regBtn.Text = "     ĐĂNG KÝ";
+            this.regBtn.Text = "     KAYIT OL";
             this.toolTip_0.SetToolTip(this.regBtn, "Đăng ký");
             this.regBtn.UseVisualStyleBackColor = false;
             this.regBtn.Click += new System.EventHandler(this.regBtn_Click);
@@ -936,7 +936,7 @@ namespace LauncherGHU
             this.loginBtn.Size = new System.Drawing.Size(261, 49);
             this.loginBtn.TabIndex = 2;
             this.loginBtn.TabStop = false;
-            this.loginBtn.Text = "     ĐĂNG NHẬP";
+            this.loginBtn.Text = "     GİRİŞ YAP";
             this.toolTip_0.SetToolTip(this.loginBtn, "Đăng nhập");
             this.loginBtn.UseVisualStyleBackColor = false;
             this.loginBtn.Click += new System.EventHandler(this.loginBtn_Click);
@@ -1185,7 +1185,7 @@ namespace LauncherGHU
             this.usernameTxt.Depth = 0;
             this.usernameTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.usernameTxt.ForeColor = System.Drawing.Color.DarkSlateGray;
-            this.usernameTxt.Hint = "Tài khoản";
+            this.usernameTxt.Hint = "Kullanıcı Adı";
             this.usernameTxt.Location = new System.Drawing.Point(45, 133);
             this.usernameTxt.Margin = new System.Windows.Forms.Padding(2);
             this.usernameTxt.MaxLength = 32767;
@@ -1224,7 +1224,7 @@ namespace LauncherGHU
             this.matkhauTxt.Depth = 0;
             this.matkhauTxt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.matkhauTxt.ForeColor = System.Drawing.Color.White;
-            this.matkhauTxt.Hint = "Mật khẩu";
+            this.matkhauTxt.Hint = "Şifre";
             this.matkhauTxt.Location = new System.Drawing.Point(45, 164);
             this.matkhauTxt.Margin = new System.Windows.Forms.Padding(2);
             this.matkhauTxt.MaxLength = 32767;
@@ -1257,7 +1257,7 @@ namespace LauncherGHU
             this.dangnhapBtn.Primary = true;
             this.dangnhapBtn.Size = new System.Drawing.Size(448, 45);
             this.dangnhapBtn.TabIndex = 2;
-            this.dangnhapBtn.Text = "ĐĂNG NHẬP";
+            this.dangnhapBtn.Text = "GİRİŞ YAP";
             this.dangnhapBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.dangnhapBtn.UseVisualStyleBackColor = false;
             this.dangnhapBtn.Click += new System.EventHandler(this.dangnhapBtn_Click);

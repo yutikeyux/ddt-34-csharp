@@ -1639,7 +1639,7 @@ namespace Game.Logic.Phy.Object
                         CardInfo cardNotice = CardBuffMgr.FindCard(key);
                         if (cardNotice != null && CheckCondition(buff5.PropertiesDscripID))
                         {
-                            msg = "Kích hoạt <" + cardNotice.Name + "> hiệu ứng " + buff5.Condition + " thẻ!";
+                            msg = "<" + cardNotice.Name + "> Kart Seti kuşanımı başarılı! Tam olarak " + buff5.Condition + " adet kart özelliği aktive edildi!";
                             finalBuff = buff5;
                         }
                     }

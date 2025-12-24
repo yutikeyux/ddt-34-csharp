@@ -1,133 +1,91 @@
+using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using System;
 
 namespace GameServerScript.AI.NPC
 {
-	public class FiveNormalFourNpc2 : ABrain
-	{
-		private int m_attackTurn = 0;
+    public class FiveNormalFourNpc2 : ABrain
+    {
+        private int int_0;
 
-		private int npcID2 = 5134;
+        protected Player m_targer;
 
-		protected Living targer;
+        private int int_1;
 
-		private static string[] AllAttackChat = new string[]
-		{
-			"Trận động đất, bản thân mình! ! <br/> bạn vui lòng Ay giúp đỡ",
-			"Hạ vũ khí xuống!",
-			"Xem nếu bạn có thể đủ khả năng, một số ít!！"
-		};
+        private int int_2;
 
-		private static string[] ShootChat = new string[]
-		{
-			"Cho bạn biết những gì một cú sút vết nứt!",
-			"Gửi cho bạn một quả bóng - bạn phải chọn Vâng",
-			"Nhóm của bạn của những người dân thường ngu dốt và thấp"
-		};
+        private static string[] string_0;
 
-		private static string[] ShootedChat = new string[]
-		{
-			"Ah ~ ~ Tại sao bạn tấn công? <br/> tôi đang làm gì?",
-			"Oh ~ ~ nó thực sự đau khổ! Tại sao tôi phải chiến đấu? <br/> tôi phải chiến đấu ..."
-		};
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		private static string[] AddBooldChat = new string[]
-		{
-			"Xoắn ah xoay ~ <br/>xoắn ah xoay ~ ~ ~",
-			"~ Hallelujah <br/>Luyaluya ~ ~ ~",
-			"Yeah Yeah Yeah, <br/> để thoải mái!"
-		};
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            m_body.CurrentDamagePlus = 1f;
+            m_body.CurrentShootMinus = 1f;
+        }
 
-		private static string[] KillAttackChat = new string[]
-		{
-			"Con rồng trong thế giới! !"
-		};
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            base.Body.Properties1 = 0;
+        }
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+        }
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			this.m_body.CurrentDamagePlus = 1f;
-			this.m_body.CurrentShootMinus = 1f;
-		}
+        public override void OnDie()
+        {
+            base.OnDie();
+        }
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
 
-		public override void OnStartAttacking()
-		{
-			base.OnStartAttacking();
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			bool flag = false;
-			int num = 0;
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				if (current.IsLiving && current.X > 0 && current.X < 0)
-				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
-					{
-						num = num2;
-					}
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				this.KillAttack(0, 0);
-			}
-			else if (this.m_attackTurn == 0)
-			{
-				this.StandB();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 1)
-			{
-				this.StandC();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 2)
-			{
-				this.Die();
-				this.m_attackTurn++;
-			}
-		}
+        public override void OnAfterTakedFrozen()
+        {
+            base.Body.Properties1 = (int)base.Body.Properties1 + 1;
+            method_0();
+            switch ((int)base.Body.Properties1)
+            {
+                case 2:
+                    base.Body.PlayMovie("standC", 100, 2000);
+                    break;
+                case 1:
+                    base.Body.PlayMovie("standB", 100, 2000);
+                    break;
+            }
+        }
 
-		private void KillAttack(int fx, int tx)
-		{
-			base.Body.CurrentDamagePlus = 10f;
-			int num = base.Game.Random.Next(0, FiveNormalFourNpc2.KillAttackChat.Length);
-			base.Body.Say(FiveNormalFourNpc2.KillAttackChat[num], 1, 1000);
-			base.Body.PlayMovie("beat", 3000, 0);
-			base.Body.RangeAttacking(fx, tx, "cry", 4000, null);
-		}
+        private void method_0()
+        {
+            switch ((int)base.Body.Properties1)
+            {
+                case 0:
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "stand");
+                    break;
+                case 1:
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "standB");
+                    break;
+                case 2:
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "standC");
+                    break;
+            }
+        }
 
-		private void Die()
-		{
-			base.Body.PlayMovie("dieB", 3000, 0);
-			base.Body.Die(1000);
-		}
-
-		private void StandB()
-		{
-			base.Body.PlayMovie("standB", 1500, 0);
-		}
-
-		private void StandC()
-		{
-			base.Body.PlayMovie("standC", 1500, 0);
-		}
-
-		private void CreateChild()
-		{
-			((SimpleBoss)base.Body).CreateChild(this.npcID2, 1350, 700, 700, 1, -1);
-		}
-	}
+        static FiveNormalFourNpc2()
+        {
+            string_0 = new string[1]
+            {
+                ""
+            };
+        }
+    }
 }

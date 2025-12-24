@@ -10,7 +10,7 @@ namespace Game.Logic.Spells.FightingSpell
         {
 			if (player.IsLiving)
 			{
-				if ((player.CurrentBall.ID != 3 && player.CurrentBall.ID != 5 && player.CurrentBall.ID != 1) || (item.TemplateID != 10001 && item.TemplateID != 10002))
+				if ((player.CurrentBall.ID != 3 && player.CurrentBall.ID != 5 && player.CurrentBall.ID != 1) || (item.TemplateID != 10001 && item.TemplateID != 10002 && item.TemplateID != 10016))
 				{
 					player.ShootCount += item.Property2;
 					if (item.Property2 == 2)

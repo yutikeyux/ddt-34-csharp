@@ -30,9 +30,9 @@ namespace GameServerScript.AI.Messions
 
         private SimpleBoss Boss3;
 
-        private PhysicalObj m_KingMove;
+      //  private PhysicalObj m_KingMove;
 
-        private PhysicalObj m_Boss_Present;
+       // private PhysicalObj m_Boss_Present;
 
         public override int CalculateScoreGrade(int score)
         {

@@ -1,50 +1,50 @@
+using System.Collections.Generic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using System.Collections.Generic;
 
 namespace GameServerScript.AI.Messions
 {
     public class DCR5102 : AMissionControl
     {
-        private SimpleBoss m_boss = null;
+        private SimpleBoss simpleBoss_0;
 
-        private SimpleNpc m_helper = null;
+        private SimpleNpc simpleNpc_0;
 
-        private SimpleBoss m_npcRight = null;
+        private SimpleBoss simpleBoss_1;
 
-        private SimpleBoss m_npcLeft = null;
+        private SimpleBoss simpleBoss_2;
 
-        private SimpleNpc m_npcBottom = null;
+        private SimpleNpc simpleNpc_1;
 
-        private SimpleNpc m_npcCenter = null;
+        private SimpleNpc simpleNpc_2;
 
-        private SimpleNpc m_npc = null;
+        private SimpleNpc NyEwqiAevPR;
 
-        private PhysicalObj m_kingMoive;
+        private PhysicalObj physicalObj_0;
 
-        private PhysicalObj m_kingFront;
+        private PhysicalObj physicalObj_1;
 
-        private List<PhysicalObj> m_targetEffect = new List<PhysicalObj>();
+        private List<PhysicalObj> list_0;
 
-        private PhysicalObj m_wallBlock;
+        private PhysicalObj physicalObj_2;
 
-        private int m_kill = 0;
+        private int int_0;
 
-        private int bossId = 5114;
+        private int int_1;
 
-        private int npcId = 5111;
+        private int KjHwqphlTta;
 
-        private int npcLeftId = 5112;
+        private int int_2;
 
-        private int npcRightId = 5113;
+        private int int_3;
 
-        private int npcBottomId = 5116;
+        private int int_4;
 
-        private int npcCenterId = 5117;
+        private int int_5;
 
-        private int npcHelperId = 5104;
+        private int int_6;
 
-        private int m_map = 1152;
+        private int int_7;
 
         public override int CalculateScoreGrade(int score)
         {
@@ -74,83 +74,94 @@ namespace GameServerScript.AI.Messions
             base.Game.AddLoadingFile(2, "image/game/effect/5/xiaopao.swf", "asset.game.4.xiaopao");
             base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
             base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.gebulinzhihuiguanAsset");
-            int[] resources = { bossId, npcLeftId, npcRightId, npcBottomId, npcCenterId, npcHelperId, npcId };
-            base.Game.LoadResources(resources);
-            int[] gameOverResources = { bossId };
-            base.Game.LoadNpcGameOverResources(gameOverResources);
-            base.Game.SetMap(m_map);
+            int[] npcIds = new int[7]
+            {
+                int_1,
+                int_2,
+                int_3,
+                int_4,
+                int_5,
+                int_6,
+                KjHwqphlTta
+            };
+            base.Game.LoadResources(npcIds);
+            int[] npcIds2 = new int[1]
+            {
+                int_1
+            };
+            base.Game.LoadNpcGameOverResources(npcIds2);
+            base.Game.SetMap(int_7);
         }
 
         public override void OnStartGame()
         {
             base.OnStartGame();
-            CreateBossAndNpc();
-            CreateEffectBegin();
+            method_0();
+            method_1();
         }
 
-        private void CreateBossAndNpc()
+        private void method_0()
         {
-            m_kingMoive = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 1);
-            m_kingFront = base.Game.Createlayer(1300, 413, "front", "game.asset.living.gebulinzhihuiguanAsset", "out", 1, 1);
-            //m_boss = base.Game.CreateBoss(bossId, 1478, 596, -1, 1, "born", base.Game.BaseLivingConfig());
-            m_boss = base.Game.CreateBoss(bossId, 1478, 596, -1, 1, "born", base.Game.BaseLivingConfig());
-            m_boss.SetRelateDemagemRect(m_boss.NpcInfo.X, m_boss.NpcInfo.Y, m_boss.NpcInfo.Width, m_boss.NpcInfo.Height);
-            m_boss.Config.CanTakeDamage = false;
-            base.Game.SendHideBlood(m_boss, 0);
-            m_wallBlock = base.Game.Createlayer(m_boss.X, m_boss.Y, "", "asset.game.4.zao", "stand", 1, 1);
-            m_npcLeft = base.Game.CreateBoss(npcLeftId, 1323, 663, -1, 0, "", base.Game.BaseLivingConfig());
-            m_npcLeft.SetRelateDemagemRect(m_npcLeft.NpcInfo.X, m_npcLeft.NpcInfo.Y, m_npcLeft.NpcInfo.Width, m_npcLeft.NpcInfo.Height);
-            m_npcLeft.Config.IsTurn = false;
-            m_npcRight = base.Game.CreateBoss(npcRightId, 1664, 532, -1, 0, "", base.Game.BaseLivingConfig());
-            m_npcRight.SetRelateDemagemRect(m_npcRight.NpcInfo.X, m_npcRight.NpcInfo.Y, m_npcRight.NpcInfo.Width, m_npcRight.NpcInfo.Height);
-            m_npcRight.Config.IsTurn = false;
-            m_npcBottom = base.Game.CreateNpc(npcBottomId, 1360, 840, 1, -1, base.Game.BaseLivingConfig());
-            m_npcBottom.Config.IsTurn = false;
-            m_npcBottom.OnSmallMap(state: false);
-            base.Game.SendHideBlood(m_npcBottom, 0);
-            m_npcCenter = base.Game.CreateNpc(npcCenterId, 1546, 650, 1, -1, base.Game.BaseLivingConfig());
-            m_npcCenter.Config.IsTurn = false;
-            m_npcCenter.OnSmallMap(state: false);
-            base.Game.SendHideBlood(m_npcCenter, 0);
-            m_npc = base.Game.CreateNpc(npcId, 503, 831, 1, 1, base.Game.BaseLivingConfig());
-            m_npc.Config.IsTurn = true;
-            m_npc.Config.CanTakeDamage = false;
-            m_npc.OnSmallMap(state: false);
-            base.Game.SendHideBlood(m_npc, 0);
+            physicalObj_0 = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 1);
+            physicalObj_1 = base.Game.Createlayer(1300, 413, "front", "game.asset.living.gebulinzhihuiguanAsset", "out", 1, 1);
+            simpleBoss_0 = base.Game.CreateBoss(int_1, 1478, 596, -1, 1, "born", base.Game.BaseLivingConfig());
+            simpleBoss_0.SetRelateDemagemRect(simpleBoss_0.NpcInfo.X, simpleBoss_0.NpcInfo.Y, simpleBoss_0.NpcInfo.Width, simpleBoss_0.NpcInfo.Height);
+            simpleBoss_0.Config.CanTakeDamage = false;
+            base.Game.SendHideBlood(simpleBoss_0, 0);
+            physicalObj_2 = base.Game.Createlayer(simpleBoss_0.X, simpleBoss_0.Y, "", "asset.game.4.zao", "stand", 1, 1);
+            simpleBoss_2 = base.Game.CreateBoss(int_2, 1323, 663, -1, 1, "", base.Game.BaseLivingConfig());
+            simpleBoss_2.SetRelateDemagemRect(simpleBoss_2.NpcInfo.X, simpleBoss_2.NpcInfo.Y, simpleBoss_2.NpcInfo.Width, simpleBoss_2.NpcInfo.Height);
+            simpleBoss_2.Config.IsTurn = false;
+            simpleBoss_1 = base.Game.CreateBoss(int_3, 1664, 532, -1, 1, "", base.Game.BaseLivingConfig());
+            simpleBoss_1.SetRelateDemagemRect(simpleBoss_1.NpcInfo.X, simpleBoss_1.NpcInfo.Y, simpleBoss_1.NpcInfo.Width, simpleBoss_1.NpcInfo.Height);
+            simpleBoss_1.Config.IsTurn = false;
+            simpleNpc_1 = base.Game.CreateNpc(int_4, 1360, 840, 1, -1, base.Game.BaseLivingConfig());
+            simpleNpc_1.Config.IsTurn = false;
+            simpleNpc_1.OnSmallMap(state: false);
+            base.Game.SendHideBlood(simpleNpc_1, 0);
+            simpleNpc_2 = base.Game.CreateNpc(int_5, 1546, 650, 1, -1, base.Game.BaseLivingConfig());
+            simpleNpc_2.Config.IsTurn = false;
+            simpleNpc_2.OnSmallMap(state: false);
+            base.Game.SendHideBlood(simpleNpc_2, 0);
+            NyEwqiAevPR = base.Game.CreateNpc(KjHwqphlTta, 503, 831, 1, 1, base.Game.BaseLivingConfig());
+            NyEwqiAevPR.Config.IsTurn = true;
+            NyEwqiAevPR.Config.CanTakeDamage = false;
+            NyEwqiAevPR.OnSmallMap(state: false);
+            base.Game.SendHideBlood(NyEwqiAevPR, 0);
         }
 
-        private void CreateEffectBegin()
+        private void method_1()
         {
-            m_helper = base.Game.CreateNpc(npcHelperId, 1022, 828, 0, 1, "standB", null);
-            base.Game.SendObjectFocus(m_helper, 1, 1000, 0);
-            m_helper.Say("Ê, hãy nếm thử sức mạnh này!", 0, 2000);
-            m_helper.PlayMovie("beatA", 2000, 0);
-            base.Game.SendObjectFocus(m_npcBottom, 1, 4000, 0);
-            m_npcBottom.PlayMovie("beatA", 5000, 0);
-            m_helper.PlayMovie("outB", 7000, 0);
-            m_helper.Die(10000);
-            base.Game.SendObjectFocus(m_boss, 1, 10000, 0);
-            m_boss.PlayMovie("beatC", 10500, 0);
-            m_kingMoive.PlayMovie("in", 11000, 0);
-            m_kingFront.PlayMovie("in", 11000, 0);
-            m_kingMoive.PlayMovie("out", 16000, 6000);
-            m_kingFront.PlayMovie("out", 16000, 6000);
-            m_boss.CallFuction(CreateTargetEffect, 17000);
+            simpleNpc_0 = base.Game.CreateNpc(int_6, 1022, 828, 0, 1, "standB", null);
+            base.Game.SendObjectFocus(simpleNpc_0, 1, 1000, 0);
+            simpleNpc_0.Say("Bakalım bu elektrikli alet ne işe yarıyormuş!!", 0, 2000);
+            simpleNpc_0.PlayMovie("beatA", 2000, 0);
+            base.Game.SendObjectFocus(simpleNpc_1, 1, 4000, 0);
+            simpleNpc_1.PlayMovie("beatA", 5000, 0);
+            simpleNpc_0.PlayMovie("outB", 7000, 0);
+            simpleNpc_0.Die(10000);
+            base.Game.SendObjectFocus(simpleBoss_0, 1, 10000, 0);
+            simpleBoss_0.PlayMovie("beatC", 10500, 0);
+            physicalObj_0.PlayMovie("in", 11000, 0);
+            physicalObj_1.PlayMovie("in", 11000, 0);
+            physicalObj_0.PlayMovie("out", 16000, 6000);
+            physicalObj_1.PlayMovie("out", 16000, 6000);
+            simpleBoss_0.CallFuction(method_2, 17000);
         }
 
-        private void CreateTargetEffect()
+        private void method_2()
         {
-            m_targetEffect.Add(base.Game.Createlayer(m_boss.X, m_boss.Y, "", "asset.game.4.mubiao", "", 1, 1));
-            m_targetEffect.Add(base.Game.Createlayer(m_npcLeft.X, m_npcLeft.Y, "", "asset.game.4.mubiao", "", 1, 1));
-            m_targetEffect.Add(base.Game.Createlayer(m_npcRight.X, m_npcRight.Y, "", "asset.game.4.mubiao", "", 1, 1));
+            list_0.Add(base.Game.Createlayer(simpleBoss_0.X, simpleBoss_0.Y, "", "asset.game.4.mubiao", "", 1, 1));
+            list_0.Add(base.Game.Createlayer(simpleBoss_2.X, simpleBoss_2.Y, "", "asset.game.4.mubiao", "", 1, 1));
+            list_0.Add(base.Game.Createlayer(simpleBoss_1.X, simpleBoss_1.Y, "", "asset.game.4.mubiao", "", 1, 1));
         }
 
-        private void RemoveShield()
+        private void pZjwqsucKkq()
         {
-            if (m_wallBlock != null)
+            if (physicalObj_2 != null)
             {
-                base.Game.RemovePhysicalObj(m_wallBlock, sendToClient: true);
-                m_wallBlock = null;
+                base.Game.RemovePhysicalObj(physicalObj_2, true);
+                physicalObj_2 = null;
             }
         }
 
@@ -162,45 +173,45 @@ namespace GameServerScript.AI.Messions
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-            if (m_kingMoive != null)
+            if (physicalObj_0 != null)
             {
-                base.Game.RemovePhysicalObj(m_kingMoive, sendToClient: true);
-                m_kingMoive = null;
+                base.Game.RemovePhysicalObj(physicalObj_0, true);
+                physicalObj_0 = null;
             }
-            if (m_kingFront != null)
+            if (physicalObj_1 != null)
             {
-                base.Game.RemovePhysicalObj(m_kingFront, sendToClient: true);
-                m_kingFront = null;
+                base.Game.RemovePhysicalObj(physicalObj_1, true);
+                physicalObj_1 = null;
             }
-            if (m_targetEffect.Count <= 0)
+            if (list_0.Count <= 0)
             {
                 return;
             }
-            foreach (PhysicalObj item in m_targetEffect)
+            foreach (PhysicalObj item in list_0)
             {
-                base.Game.RemovePhysicalObj(item, sendToClient: true);
+                base.Game.RemovePhysicalObj(item, true);
             }
-            m_targetEffect = new List<PhysicalObj>();
+            list_0 = new List<PhysicalObj>();
         }
 
         public override bool CanGameOver()
         {
             base.CanGameOver();
-            if (m_boss != null && !m_boss.IsLiving)
+            if (simpleBoss_0 != null && !simpleBoss_0.IsLiving)
             {
-                m_kill++;
+                int_0++;
                 return true;
             }
             if (base.Game.TurnIndex > 200)
             {
                 return true;
             }
-            if (!m_npcLeft.IsLiving && !m_npcRight.IsLiving && m_wallBlock != null)
+            if (!simpleBoss_2.IsLiving && !simpleBoss_1.IsLiving && physicalObj_2 != null)
             {
-                base.Game.SendObjectFocus(m_wallBlock, 1, 1000, 0);
-                m_wallBlock.PlayMovie("die", 2000, 2000);
-                m_boss.Config.CanTakeDamage = true;
-                m_boss.CallFuction(RemoveShield, 5000);
+                base.Game.SendObjectFocus(physicalObj_2, 1, 1000, 0);
+                physicalObj_2.PlayMovie("die", 2000, 2000);
+                simpleBoss_0.Config.CanTakeDamage = true;
+                simpleBoss_0.CallFuction(pZjwqsucKkq, 5000);
             }
             return false;
         }
@@ -208,13 +219,13 @@ namespace GameServerScript.AI.Messions
         public override int UpdateUIData()
         {
             base.UpdateUIData();
-            return m_kill;
+            return int_0;
         }
 
         public override void OnGameOver()
         {
             base.OnGameOver();
-            if (m_boss != null && !m_boss.IsLiving)
+            if (simpleBoss_0 != null && !simpleBoss_0.IsLiving)
             {
                 base.Game.IsWin = true;
             }
@@ -237,6 +248,19 @@ namespace GameServerScript.AI.Messions
         public override void OnDied()
         {
             base.OnDied();
+        }
+
+        public DCR5102()
+        {
+            list_0 = new List<PhysicalObj>();
+            int_1 = 5114;
+            KjHwqphlTta = 5111;
+            int_2 = 5112;
+            int_3 = 5113;
+            int_4 = 5116;
+            int_5 = 5117;
+            int_6 = 5104;
+            int_7 = 1152;
         }
     }
 }

@@ -398,7 +398,7 @@
   <Item Name="AcademyMasterExpPlus" Value="10|15" />
   <Item Name="AdvanceRateValue" Value="2" />
   <Item Name="WishBeadRate" Value="0.5" />
-  <Item Name="EliteGameDayOpening" Value="0,6" />
+  <Item Name="EliteGameDayOpening" Value="0,1,2,3,4,5,6" />
   <Item Name="FightLibAwardGift" Value="100,300,500" />
   <Item Name="FightLibAwardExp" Value="2000,5000,8000" />
   <Item Name="MustComposeGold" Value="0" />
@@ -528,4 +528,5 @@
   <Item Name="PriceMoonEvent" Value="1000" />
   <Item Name="WorshipTheMoonStartDate" Value="2010/1/1 0:00:00" />
   <Item Name="FreeMoonCount" Value="3" />
+  <Item Name="HappyRechargeOpenClose" Value="True" />
 </Result>

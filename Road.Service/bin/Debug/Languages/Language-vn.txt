@@ -608,7 +608,7 @@ friendnotinthesameserver.Sameroom:Arkadaşınız aynı odada.
 GameUserDailyAward.Fail1:Günde sadece bir kere ödül toplanabilir, ödülünüzü almışsınız. 
 
 #2009-11-19 
-ItemFusionHandler.Notice:Tebrikler [{0}] füzyonlama başarılı|, yeni bir aşamaya geçiliyor. 
+ItemFusionHandler.Notice:Tebrikler {0} oyuncusu [{1}],  {2} öğesini başarıyla füzyonladı! Kendisini tebrik ederiz!
 
 #2009-12-05 
 UserBuyItemHandler.NoGold:Yetersiz altın. 

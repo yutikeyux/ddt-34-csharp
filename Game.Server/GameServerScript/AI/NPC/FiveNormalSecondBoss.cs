@@ -1,262 +1,302 @@
+using System.Collections.Generic;
 using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using System;
 
 namespace GameServerScript.AI.NPC
 {
-	public class FiveNormalSecondBoss : ABrain
-	{
-		private int m_attackTurn = 0;
+    public class FiveNormalSecondBoss : ABrain
+    {
+        private int int_0;
 
-		private int m_turn = 0;
+        protected Player m_targer;
 
-		private PhysicalObj m_moive;
+        private SimpleBoss simpleBoss_0;
 
-		private PhysicalObj m_wallLeft = null;
+        private SimpleBoss simpleBoss_1;
 
-		private PhysicalObj m_wallRight = null;
+        private SimpleNpc simpleNpc_0;
 
-		private int IsEixt = 0;
+        private SimpleNpc simpleNpc_1;
 
-		private PhysicalObj m_NPC;
+        private List<PhysicalObj> list_0;
 
-		private PhysicalObj n_NPC;
+        private bool bool_0;
 
-		private static string[] AllAttackChat = new string[]
-		{
-			"要地震喽！！<br/>各位请扶好哦",
-			"把你武器震下来！",
-			"看你们能还经得起几下！！"
-		};
+        private int int_1;
 
-		private static string[] ShootChat = new string[]
-		{
-			"让你知道什么叫百发百中！",
-			"送你一个球~你可要接好啦",
-			"你们这群无知的低等庶民"
-		};
+        private int int_2;
 
-		private static string[] ShootedChat = new string[]
-		{
-			"哎呀~~你们为什么要攻击我？<br/>我在干什么？",
-			"噢~~好痛!我为什么要战斗？<br/>我必须战斗…"
-		};
+        private int int_3;
 
-		private static string[] KillPlayerChat = new string[]
-		{
-			"马迪亚斯不要再控制我！",
-			"这就是挑战我的下场！",
-			"不！！这不是我的意愿… "
-		};
+        private int int_4;
 
-		private static string[] AddBooldChat = new string[]
-		{
-			"扭啊扭~<br/>扭啊扭~~",
-			"哈利路亚~<br/>路亚路亚~~",
-			"呀呀呀，<br/>好舒服啊！"
-		};
+        private int int_5;
 
-		private static string[] KillAttackChat = new string[]
-		{
-			"君临天下！！"
-		};
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		private static string[] FrostChat = new string[]
-		{
-			"来尝尝这个吧",
-			"让你冷静一下",
-			"你们激怒了我"
-		};
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            m_body.CurrentDamagePlus = 1f;
+            m_body.CurrentShootMinus = 1f;
+            if (simpleBoss_0 == null || simpleBoss_1 == null)
+            {
+                foreach (Living item in base.Game.FindAllTurnBossLiving())
+                {
+                    if (((SimpleBoss)item).NpcInfo.ID == int_1)
+                    {
+                        simpleBoss_0 = item as SimpleBoss;
+                    }
+                    else if (((SimpleBoss)item).NpcInfo.ID == int_2)
+                    {
+                        simpleBoss_1 = item as SimpleBoss;
+                    }
+                }
+            }
+            if (simpleNpc_0 == null || simpleNpc_1 == null)
+            {
+                SimpleNpc[] array = base.Game.FindAllNpc();
+                SimpleNpc[] array2 = array;
+                foreach (SimpleNpc simpleNpc in array2)
+                {
+                    if (simpleNpc.NpcInfo.ID == int_3)
+                    {
+                        simpleNpc_0 = simpleNpc;
+                    }
+                    else if (simpleNpc.NpcInfo.ID == int_4)
+                    {
+                        simpleNpc_1 = simpleNpc;
+                    }
+                }
+                simpleNpc_0.Properties1 = 0;
+                simpleNpc_1.Properties1 = 0;
+            }
+            if (list_0.Count <= 0)
+            {
+                return;
+            }
+            foreach (PhysicalObj item2 in list_0)
+            {
+                base.Game.RemovePhysicalObj(item2, true);
+            }
+            list_0 = new List<PhysicalObj>();
+        }
 
-		private static string[] WallChat = new string[]
-		{
-			"神啊，赐予我力量吧！",
-			"绝望吧，看我的水晶防护墙！"
-		};
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            bool_0 = true;
+        }
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            bool flag = false;
+            foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
+            {
+                if (allLivingPlayer.X > 1138)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                method_0();
+                return;
+            }
+            int_0++;
+            switch (int_0)
+            {
+                case 1:
+                    if (simpleBoss_0.IsLiving)
+                    {
+                        method_2();
+                    }
+                    else
+                    {
+                        method_1(null);
+                    }
+                    break;
+                case 2:
+                    {
+                        LivingCallBack livingCallBack = null;
+                        livingCallBack = ((!bool_0) ? new LivingCallBack(method_4) : new LivingCallBack(method_6));
+                        if (simpleBoss_1.IsLiving)
+                        {
+                            method_3(livingCallBack);
+                        }
+                        else
+                        {
+                            method_1(livingCallBack);
+                        }
+                        break;
+                    }
+                case 3:
+                    if (bool_0)
+                    {
+                        bool_0 = false;
+                        method_7();
+                    }
+                    else
+                    {
+                        bool_0 = true;
+                        method_5();
+                    }
+                    int_0 = 0;
+                    break;
+            }
+        }
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			this.m_body.CurrentDamagePlus = 1f;
-			this.m_body.CurrentShootMinus = 1f;
-		}
+        private void method_0()
+        {
+            base.Body.CurrentDamagePlus = 1000f;
+            base.Body.PlayMovie("beatA", 1000, 0);
+            base.Body.RangeAttacking(1138, 2000, "cry", 4000, directDamage: true);
+        }
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        private void method_1(LivingCallBack livingCallBack_0)
+        {
+            m_targer = base.Game.FindRandomPlayer();
+            base.Body.PlayMovie("beatA", 1000, 0);
+            base.Body.CallFuction(method_10, 3600);
+            base.Body.BeatDirect(m_targer, "", 4000, 1, 1);
+            if (livingCallBack_0 != null)
+            {
+                base.Body.CallFuction(livingCallBack_0, 5000);
+            }
+        }
 
-		public override void OnStartAttacking()
-		{
-			base.OnStartAttacking();
-			bool flag = false;
-			int num = 0;
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				if (current.IsLiving && current.X > 1200 && current.X < 1984)
-				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
-					{
-						num = num2;
-					}
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				this.KillAttack(1200, 1984);
-			}
-			else if (this.m_attackTurn == 0)
-			{
-				this.m_NPC = ((PVEGame)base.Game).Createlayer(1550, 650, "NPC", "game.living.Living154", "stand", 1, 0);
-				this.n_NPC = ((PVEGame)base.Game).Createlayer(1367, 845, "NPC", "game.living.Living147", "stand", 1, 0);
-				this.Goblinhunghan();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 1)
-			{
-				this.BeatA();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 2)
-			{
-				this.Goblinxaotra();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 3)
-			{
-				this.BeatB();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 4)
-			{
-				this.Goblinhunghan();
-				this.m_attackTurn++;
-			}
-			else
-			{
-				this.BeatD();
-				this.m_attackTurn = 0;
-			}
-		}
+        private void method_2()
+        {
+            base.Body.PlayMovie("beatD", 1000, 0);
+            simpleBoss_0.PlayMovie("failB", 1900, 0);
+            simpleBoss_0.PlayMovie("beatA", 3000, 4500);
+            ((PVEGame)base.Game).SendFreeFocus(618, 585, 1, 5000, 0);
+            simpleBoss_0.CallFuction(method_9, 5800);
+            simpleBoss_0.RangeAttacking(simpleBoss_0.X - 10000, simpleBoss_0.X + 10000, "cry", 6300, null);
+        }
 
-		private void BeatD()
-		{
-			base.Body.PlayMovie("beatC", 1000, 1000);
-			base.Body.CallFuction(new LivingCallBack(this.NpcDame2), 3000);
-		}
+        private void method_3(LivingCallBack livingCallBack_0)
+        {
+            m_targer = base.Game.FindRandomPlayer();
+            if (m_targer != null)
+            {
+                base.Body.PlayMovie("beatC", 1000, 0);
+                base.Body.CallFuction(method_11, 4000);
+                if (simpleBoss_1.ShootPoint(m_targer.X - 15, m_targer.Y - 15, 56, 1000, 10000, 1, 2.5f, 6200))
+                {
+                    simpleBoss_1.PlayMovie("beatA", 3500, 0);
+                }
+                if (livingCallBack_0 != null)
+                {
+                    base.Body.CallFuction(livingCallBack_0, 10000);
+                }
+            }
+        }
 
-		private void NpcDame2()
-		{
-			if (this.n_NPC != null)
-			{
-				base.Game.RemovePhysicalObj(this.n_NPC, true);
-				this.n_NPC = null;
-			}
-			this.n_NPC = ((PVEGame)base.Game).Createlayer(1367, 845, "NPC", "game.living.Living147", "beatA", 1, 0);
-			((PVEGame)base.Game).SendGameFocus(this.n_NPC, 0, 4000);
-		}
+        private void method_4()
+        {
+            simpleNpc_0.Properties1 = 1;
+            ((PVEGame)base.Game).SendObjectFocus(simpleNpc_0, 1, 1000, 0);
+            simpleNpc_0.PlayMovie("toA", 2000, 3000);
+            method_8();
+        }
 
-		private void KillAttack(int fx, int tx)
-		{
-			int num = base.Game.Random.Next(0, FiveNormalSecondBoss.KillAttackChat.Length);
-			if (this.m_turn == 0)
-			{
-				base.Body.CurrentDamagePlus = 10f;
-				base.Body.Say(FiveNormalSecondBoss.KillAttackChat[num], 1, 13000);
-				base.Body.PlayMovie("beat1", 15000, 0);
-				base.Body.RangeAttacking(fx, tx, "cry", 17000, null);
-				this.m_turn++;
-			}
-			else
-			{
-				base.Body.CurrentDamagePlus = 10f;
-				base.Body.Say(FiveNormalSecondBoss.KillAttackChat[num], 1, 0);
-				base.Body.PlayMovie("beat1", 2000, 0);
-				base.Body.RangeAttacking(fx, tx, "cry", 4000, null);
-			}
-		}
+        private void method_5()
+        {
+            simpleNpc_0.Properties1 = 0;
+            simpleNpc_0.CurrentDamagePlus = 5f;
+            ((PVEGame)base.Game).SendObjectFocus(base.Body, 1, 1000, 0);
+            base.Body.PlayMovie("beatC", 2000, 0);
+            ((PVEGame)base.Game).SendObjectFocus(simpleNpc_0, 1, 5000, 0);
+            simpleNpc_0.PlayMovie("beatA", 6000, 5000);
+            foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
+            {
+                if (allLivingPlayer.Y > 760)
+                {
+                    simpleNpc_0.BeatDirect(allLivingPlayer, "", 8000, 1, 1);
+                }
+            }
+            method_8();
+        }
 
-		private void Goblinhunghan()
-		{
-			int num = base.Game.Random.Next(0, FiveNormalSecondBoss.AllAttackChat.Length);
-			base.Body.Say(FiveNormalSecondBoss.AllAttackChat[num], 1, 0);
-			base.Body.PlayMovie("beatD", 1000, 1000);
-		}
+        private void method_6()
+        {
+            simpleNpc_1.Properties1 = 1;
+            simpleNpc_0.CurrentDamagePlus = 2f;
+            ((PVEGame)base.Game).SendObjectFocus(simpleNpc_1, 1, 1000, 0);
+            simpleNpc_1.PlayMovie("toA", 2000, 3000);
+        }
 
-		private void BeatB()
-		{
-			base.Body.PlayMovie("beatB", 1000, 1000);
-			base.Body.CallFuction(new LivingCallBack(this.NpcDame), 3000);
-		}
+        private void method_7()
+        {
+            simpleNpc_1.Properties1 = 0;
+            ((PVEGame)base.Game).SendObjectFocus(base.Body, 1, 1000, 0);
+            base.Body.PlayMovie("beatB", 2000, 0);
+            simpleNpc_1.PlayMovie("beatA", 5000, 6000);
+            foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
+            {
+                if ((allLivingPlayer.X <= 166 && allLivingPlayer.Y <= 760) || (allLivingPlayer.X >= 342 && allLivingPlayer.X <= 637 && allLivingPlayer.Y <= 760) || (allLivingPlayer.X >= 820 && allLivingPlayer.X <= 1116 && allLivingPlayer.Y <= 760) || (allLivingPlayer.X > 166 && allLivingPlayer.X < 342 && allLivingPlayer.Y > 760) || (allLivingPlayer.X > 637 && allLivingPlayer.X < 820 && allLivingPlayer.Y > 760))
+                {
+                    simpleNpc_1.BeatDirect(allLivingPlayer, "", 11000, 1, 1);
+                }
+            }
+        }
 
-		private void NpcDame()
-		{
-			if (this.m_NPC != null)
-			{
-				base.Game.RemovePhysicalObj(this.m_NPC, true);
-				this.m_NPC = null;
-			}
-			this.m_NPC = ((PVEGame)base.Game).Createlayer(1550, 650, "NPC", "game.living.Living154", "beatA", 1, 0);
-			base.Body.CallFuction(new LivingCallBack(this.DameBlood), 4000);
-		}
+        private void method_8()
+        {
+            if ((int)simpleNpc_0.Properties1 == 1)
+            {
+                ((PVEGame)base.Game).SendLivingActionMapping(simpleNpc_0, "stand", "standA");
+            }
+            else
+            {
+                ((PVEGame)base.Game).SendLivingActionMapping(simpleNpc_0, "stand", "stand");
+            }
+        }
 
-		private void DameBlood()
-		{
-			base.Body.CallFuction(new LivingCallBack(this.GoAtck), 1000);
-		}
+        private void method_9()
+        {
+            foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
+            {
+                list_0.Add(((PVEGame)base.Game).Createlayer(allLivingPlayer.X, allLivingPlayer.Y, "", "asset.game.4.xiaopao", "", 1, 1));
+            }
+        }
 
-		private void GoAtck()
-		{
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				int num = base.Game.Random.Next(321, 515);
-				current.AddBlood(-num, 1);
-				current.AddBlood(-num, 1);
-				current.AddBlood(-num, 1);
-				current.AddBlood(-num, 1);
-				current.AddBlood(-num, 1);
-				current.AddBlood(-num, 1);
-			}
-		}
+        private void method_10()
+        {
+            if (m_targer != null)
+            {
+                list_0.Add(((PVEGame)base.Game).Createlayer(m_targer.X, m_targer.Y, "", "asset.game.4.jinqudan", "", 1, 1));
+            }
+        }
 
-		private void Goblinxaotra()
-		{
-			int num = base.Game.Random.Next(0, FiveNormalSecondBoss.AllAttackChat.Length);
-			base.Body.Say(FiveNormalSecondBoss.AllAttackChat[num], 1, 0);
-			base.Body.PlayMovie("beatC", 1000, 1000);
-		}
+        private void method_11()
+        {
+            base.Body.AddBlood(int_5);
+            simpleBoss_0.AddBlood(int_5);
+            simpleBoss_1.AddBlood(int_5);
+        }
 
-		private void BeatA()
-		{
-			base.Body.PlayMovie("beatA", 1000, 4000);
-			base.Body.CallFuction(new LivingCallBack(this.GoAttack), 3000);
-		}
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
 
-		private void GoAttack()
-		{
-			Player player = base.Game.FindRandomPlayer();
-			((PVEGame)base.Game).SendGameFocus(player, 0, 1500);
-			int num = base.Game.Random.Next(321, 515);
-			player.AddBlood(-num, 1);
-			this.m_moive = ((PVEGame)base.Game).Createlayer(player.X, player.Y, "wallLeft", "asset.game.4.xiaopao", "1", 1, 0);
-		}
-
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-			if (this.m_moive != null)
-			{
-				base.Game.RemovePhysicalObj(this.m_moive, true);
-				this.m_moive = null;
-			}
-		}
-	}
+        public FiveNormalSecondBoss()
+        {
+            list_0 = new List<PhysicalObj>();
+            bool_0 = true;
+            int_1 = 5112;
+            int_2 = 5113;
+            int_3 = 5116;
+            int_4 = 5117;
+            int_5 = 5000;
+        }
+    }
 }

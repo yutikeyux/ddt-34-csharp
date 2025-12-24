@@ -4,176 +4,177 @@ using Game.Logic.Phy.Object;
 
 namespace GameServerScript.AI.Messions
 {
+    //civciv zor etap 4
     public class GCGCK1164 : AMissionControl
     {
-        private PhysicalObj physicalObj_0;
+        private PhysicalObj PisBenBenKaynak1;
 
-        private PhysicalObj physicalObj_1;
+        private PhysicalObj PisBenBenKaynak2;
 
-        private PhysicalObj physicalObj_2;
+        private PhysicalObj PisBenBenKaynak3;
 
-        private SimpleBoss simpleBoss_0;
+        private SimpleBoss PisBenBenKaynak;
 
-        private SimpleNpc kfxcRiKmuYJ;
+        private SimpleNpc KafestekiCivcivler;
 
         private int int_0;
 
-        private int int_1;
+        private int PisBenBen;
 
-        private int int_2;
+        private int Kafes;
 
-        private int int_3;
+        private int ZehirliYumurtalar;
 
         public override int CalculateScoreGrade(int score)
         {
-			base.CalculateScoreGrade(score);
-			if (score > 1150)
-			{
-				return 3;
-			}
-			if (score > 925)
-			{
-				return 2;
-			}
-			if (score > 700)
-			{
-				return 1;
-			}
-			return 0;
+            base.CalculateScoreGrade(score);
+            if (score > 1150)
+            {
+                return 3;
+            }
+            if (score > 925)
+            {
+                return 2;
+            }
+            if (score > 700)
+            {
+                return 1;
+            }
+            return 0;
         }
 
         public override void OnPrepareNewSession()
         {
-			base.OnPrepareNewSession();
-			base.Game.AddLoadingFile(1, "bombs/83.swf", "tank.resource.bombs.Bomb83");
-			base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
-			base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.choudanbenbenAsset");
-			base.Game.AddLoadingFile(2, "image/game/effect/7/choud.swf", "asset.game.seven.choud");
-			base.Game.AddLoadingFile(2, "image/game/effect/7/jinqucd.swf", "asset.game.seven.jinqucd");
-			base.Game.AddLoadingFile(2, "image/game/effect/7/du.swf", "asset.game.seven.du");
-			int[] npcIds = new int[3]
-			{
-				int_1,
-				int_2,
-				int_3
-			};
-			base.Game.LoadResources(npcIds);
-			int[] npcIds2 = new int[1]
-			{
-				int_1
-			};
-			base.Game.LoadNpcGameOverResources(npcIds2);
-			base.Game.SetMap(1164);
+            base.OnPrepareNewSession();
+            base.Game.AddLoadingFile(1, "bombs/83.swf", "tank.resource.bombs.Bomb83");
+            base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
+            base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.choudanbenbenAsset");
+            base.Game.AddLoadingFile(2, "image/game/effect/7/choud.swf", "asset.game.seven.choud");
+            base.Game.AddLoadingFile(2, "image/game/effect/7/jinqucd.swf", "asset.game.seven.jinqucd");
+            base.Game.AddLoadingFile(2, "image/game/effect/7/du.swf", "asset.game.seven.du");
+            int[] npcIds = new int[3]
+            {
+                PisBenBen,
+                Kafes,
+                ZehirliYumurtalar
+            };
+            base.Game.LoadResources(npcIds);
+            int[] npcIds2 = new int[1]
+            {
+                PisBenBen
+            };
+            base.Game.LoadNpcGameOverResources(npcIds2);
+            base.Game.SetMap(1164);
         }
 
         public override void OnStartGame()
         {
-			base.OnStartGame();
-			physicalObj_0 = base.Game.Createlayer(0, 0, "kingmoive", "game.asset.living.BossBgAsset", "out", 1, 1);
-			physicalObj_1 = base.Game.Createlayer(300, 595, "font", "game.asset.living.choudanbenbenAsset", "out", 1, 1);
-			physicalObj_2 = base.Game.Createlayer(2170, 636, "", "game.living.Living178", "stand", 1, 1);
-			LivingConfig livingConfig = base.Game.BaseLivingConfig();
-			livingConfig.IsTurn = false;
-			livingConfig.IsFly = true;
-			kfxcRiKmuYJ = base.Game.CreateNpc(int_2, 1920, 900, 1, -1, livingConfig);
-			kfxcRiKmuYJ.PlayMovie("stand", 1000, 0);
-			kfxcRiKmuYJ.Say("Chúng mình không muốn bị lây bệnh. Cứu!! Cứu!!", 0, 2000);
-			kfxcRiKmuYJ.CallFuction(method_0, 4000);
+            base.OnStartGame();
+            PisBenBenKaynak1 = base.Game.Createlayer(0, 0, "kingmoive", "game.asset.living.BossBgAsset", "out", 1, 1);
+            PisBenBenKaynak2 = base.Game.Createlayer(300, 595, "font", "game.asset.living.choudanbenbenAsset", "out", 1, 1);
+            PisBenBenKaynak3 = base.Game.Createlayer(2170, 636, "", "game.living.Living178", "stand", 1, 1);
+            LivingConfig livingConfig = base.Game.BaseLivingConfig();
+            livingConfig.IsTurn = false;
+            livingConfig.IsFly = true;
+            KafestekiCivcivler = base.Game.CreateNpc(Kafes, 1920, 900, 1, -1, livingConfig);
+            KafestekiCivcivler.PlayMovie("stand", 1000, 0);
+            KafestekiCivcivler.Say("Zehirlenmek istemiyoruz. Yardım edin!! Yardım edin!!", 0, 2000);
+            KafestekiCivcivler.CallFuction(PisBenBenİlkAtak, 4000);
         }
 
-        private void method_0()
+        private void PisBenBenİlkAtak()
         {
-			simpleBoss_0 = base.Game.CreateBoss(int_1, 200, 590, 1, 1, "born");
-			simpleBoss_0.SetRelateDemagemRect(simpleBoss_0.NpcInfo.X, simpleBoss_0.NpcInfo.Y, simpleBoss_0.NpcInfo.Width, simpleBoss_0.NpcInfo.Height);
-			physicalObj_0.PlayMovie("in", 1000, 0);
-			physicalObj_1.PlayMovie("in", 2000, 0);
-			physicalObj_0.PlayMovie("out", 5000, 0);
-			physicalObj_1.PlayMovie("out", 5400, 0);
-			simpleBoss_0.Say("Định cứu gà con cuối cùng à? Không dễ vậy đâu.", 0, 6000);
-			simpleBoss_0.PlayMovie("skill", 8000, 0);
-			simpleBoss_0.Say("Giỏi thì phá lá chắn bảo vệ của ta.", 0, 8000);
-			base.Game.SendObjectFocus(kfxcRiKmuYJ, 1, 9000, 0);
-			kfxcRiKmuYJ.PlayMovie("standB", 10000, 0);
-			kfxcRiKmuYJ.Config.CanTakeDamage = false;
-			kfxcRiKmuYJ.Say("Chết phải hạ những quả trứng thối mới phá vỡ được lá chắn", 0, 11000);
-			base.Game.SendObjectFocus(simpleBoss_0, 1, 13000, 0);
-			simpleBoss_0.Say("Đã đến thì đừng hòng đi. Ta sẽ nhốt hết vào lồng.", 0, 14000, 3000);
+            PisBenBenKaynak = base.Game.CreateBoss(PisBenBen, 200, 590, 1, 1, "born");
+            PisBenBenKaynak.SetRelateDemagemRect(PisBenBenKaynak.NpcInfo.X, PisBenBenKaynak.NpcInfo.Y, PisBenBenKaynak.NpcInfo.Width, PisBenBenKaynak.NpcInfo.Height);
+            PisBenBenKaynak1.PlayMovie("in", 1000, 0);
+            PisBenBenKaynak2.PlayMovie("in", 2000, 0);
+            PisBenBenKaynak1.PlayMovie("out", 5000, 0);
+            PisBenBenKaynak2.PlayMovie("out", 5400, 0);
+            PisBenBenKaynak.Say("Civcivleri kurtarmaya mı çalışıyorsunuz? O kadar kolay değil.", 0, 6000);
+            PisBenBenKaynak.PlayMovie("skill", 8000, 0);
+            PisBenBenKaynak.Say("Madem bu kadar yeteneklisin, kalkanı kır da görelim!", 0, 8000);
+            base.Game.SendObjectFocus(KafestekiCivcivler, 1, 9000, 0);
+            KafestekiCivcivler.PlayMovie("standB", 10000, 0);
+            KafestekiCivcivler.Config.CanTakeDamage = false;
+            KafestekiCivcivler.Say("Kalkanı kırmak için Pis Benben'in ölmesi gerekiyor!", 0, 11000);
+            base.Game.SendObjectFocus(PisBenBenKaynak, 1, 13000, 0);
+            PisBenBenKaynak.Say("Hepinizi kafesime koyup zehirleyeceğim!", 0, 14000, 3000);
         }
 
         public override void OnNewTurnStarted()
         {
-			base.OnNewTurnStarted();
+            base.OnNewTurnStarted();
         }
 
         public override void OnBeginNewTurn()
         {
-			base.OnBeginNewTurn();
-			if (base.Game.TurnIndex > 1)
-			{
-				if (physicalObj_0 != null)
-				{
-					base.Game.RemovePhysicalObj(physicalObj_0, sendToClient: true);
-					physicalObj_0 = null;
-				}
-				if (physicalObj_1 != null)
-				{
-					base.Game.RemovePhysicalObj(physicalObj_1, sendToClient: true);
-					physicalObj_1 = null;
-				}
-			}
+            base.OnBeginNewTurn();
+            if (base.Game.TurnIndex > 1)
+            {
+                if (PisBenBenKaynak1 != null)
+                {
+                    base.Game.RemovePhysicalObj(PisBenBenKaynak1, sendToClient: true);
+                    PisBenBenKaynak1 = null;
+                }
+                if (PisBenBenKaynak2 != null)
+                {
+                    base.Game.RemovePhysicalObj(PisBenBenKaynak2, sendToClient: true);
+                    PisBenBenKaynak2 = null;
+                }
+            }
         }
 
         public override bool CanGameOver()
         {
-			if (simpleBoss_0 != null && !simpleBoss_0.IsLiving && kfxcRiKmuYJ != null && !kfxcRiKmuYJ.IsLiving)
-			{
-				int_0++;
-				return true;
-			}
-			if (base.Game.TotalTurn > base.Game.MissionInfo.TotalTurn)
-			{
-				return true;
-			}
-			return false;
+            if (PisBenBenKaynak != null && !PisBenBenKaynak.IsLiving && KafestekiCivcivler != null && !KafestekiCivcivler.IsLiving)
+            {
+                int_0++;
+                return true;
+            }
+            if (base.Game.TotalTurn > base.Game.MissionInfo.TotalTurn)
+            {
+                return true;
+            }
+            return false;
         }
 
         public override void OnDied()
         {
-			base.OnDied();
-			if (simpleBoss_0 != null && !simpleBoss_0.IsLiving && kfxcRiKmuYJ.IsLiving)
-			{
-				int waitTimerLeft = base.Game.GetWaitTimerLeft();
-				base.Game.SendObjectFocus(kfxcRiKmuYJ, 1, waitTimerLeft + 500, 500);
-				kfxcRiKmuYJ.PlayMovie("out", waitTimerLeft + 1000, 0);
-				kfxcRiKmuYJ.Say("Nhanh phá lồng cứu chúng tôi với...", 0, waitTimerLeft + 1500, 3500);
-				kfxcRiKmuYJ.Config.CanTakeDamage = true;
-			}
+            base.OnDied();
+            if (PisBenBenKaynak != null && !PisBenBenKaynak.IsLiving && KafestekiCivcivler.IsLiving)
+            {
+                int waitTimerLeft = base.Game.GetWaitTimerLeft();
+                base.Game.SendObjectFocus(KafestekiCivcivler, 1, waitTimerLeft + 500, 500);
+                KafestekiCivcivler.PlayMovie("out", waitTimerLeft + 1000, 0);
+                KafestekiCivcivler.Say("Hadi bizi kurtarınn!!!", 0, waitTimerLeft + 1500, 3500);
+                KafestekiCivcivler.Config.CanTakeDamage = true;
+            }
         }
 
         public override int UpdateUIData()
         {
-			base.UpdateUIData();
-			return int_0;
+            base.UpdateUIData();
+            return int_0;
         }
 
         public override void OnGameOver()
         {
-			base.OnGameOver();
-			if (simpleBoss_0 != null && !simpleBoss_0.IsLiving && kfxcRiKmuYJ != null && !kfxcRiKmuYJ.IsLiving)
-			{
-				base.Game.IsWin = true;
-			}
-			else
-			{
-				base.Game.IsWin = false;
-			}
+            base.OnGameOver();
+            if (PisBenBenKaynak != null && !PisBenBenKaynak.IsLiving && KafestekiCivcivler != null && !KafestekiCivcivler.IsLiving)
+            {
+                base.Game.IsWin = true;
+            }
+            else
+            {
+                base.Game.IsWin = false;
+            }
         }
 
         public GCGCK1164()
         {
-			int_1 = 7231;
-			int_2 = 7232;
-			int_3 = 7233;
+            PisBenBen = 7231;
+            Kafes = 7232;
+            ZehirliYumurtalar = 7233;
         }
     }
 }

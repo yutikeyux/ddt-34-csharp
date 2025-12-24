@@ -2593,15 +2593,15 @@ namespace Game.Logic
 			SendToAll(pkg);
 		}
 
-		public void SendLivingTurnRotation(Player player, int rotation, int speed, string endPlay)
+		public void yutikeyu(Player player, int rotation, int speed, string endPlay)
 		{
 			GSPacketIn pkg = new GSPacketIn((byte)ePackageTypeLogic.GAME_CMD, player.Id)
 			{
 				Parameter1 = player.Id
 			};
 			pkg.WriteByte(85);
-			pkg.WriteInt(rotation);
 			pkg.WriteInt(speed);
+			pkg.WriteInt(rotation);
 			pkg.WriteString(endPlay);
 			SendToAll(pkg);
 		}

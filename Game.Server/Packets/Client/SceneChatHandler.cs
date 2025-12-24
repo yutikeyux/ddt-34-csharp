@@ -50,7 +50,7 @@ namespace Game.Server.Packets.Client
             }
             else
             {
-                if (client.Player.PlayerCharacter.GoXu == 445566 || client.Player.PlayerCharacter.IsBanChat)
+                if (client.Player.PlayerCharacter.GoXu == 313131 || client.Player.PlayerCharacter.IsBanChat)
                 {
                     client.Out.SendMessage(eMessageType.ChatERROR, "Konuşman yasaklandı.");
                     return 0;
@@ -215,11 +215,11 @@ namespace Game.Server.Packets.Client
 
                 if (flag)
                 {
-                    if (client.Player.PlayerCharacter.UserName == "yutikeyu")
+                    if (client.Player.PlayerCharacter.UserName == "yutikeyu" || client.Player.PlayerCharacter.UserName == "element")
                     {
                         if (str.Equals("!yetkili") || str.Equals("!Yetkili"))
                         {
-                            client.Out.SendMessage(eMessageType.ALERT, "***BomBomRia Yönetici Komutları***\n" +
+                            client.Out.SendMessage(eMessageType.ALERT, "***TrBombom Yönetici Komutları***\n" +
                                 "!mesaj <mesaj> -> Oyun içine mesaj gönderir.\n" +
                                 "!mormesaj <mesaj> -> Oyun içine uyarı mesaj gönderir.\n" +
                                 "!banat <nick> -> Dilediğiniz oyuncuyu banlar.\n" +
@@ -290,7 +290,7 @@ namespace Game.Server.Packets.Client
                             GamePlayer[] allPlayers6 = WorldMgr.GetAllPlayers();
                             foreach (GamePlayer gamePlayer6 in allPlayers6)
                             {
-                                playerBussiness.SendMailAndItem("BomBomRia Etkinlik", "BomBomRia", gamePlayer6.PlayerCharacter.ID, int.Parse(array4[1]), int.Parse(array4[2]), 0, 0, 0, 0, 0, 0, 0, 0, isBinds: true);
+                                playerBussiness.SendMailAndItem("TrBombom Etkinlik", "TrBombom", gamePlayer6.PlayerCharacter.ID, int.Parse(array4[1]), int.Parse(array4[2]), 0, 0, 0, 0, 0, 0, 0, 0, isBinds: true);
                                 gamePlayer6.SendMessage("Tüm Online Oyunculara Hediye Yollanmıştır.");
                             }
                             result = true;
@@ -299,7 +299,7 @@ namespace Game.Server.Packets.Client
                         if (array4[0].Equals("!item"))
                         {
                             PlayerBussiness playerBussiness2 = new PlayerBussiness();
-                            playerBussiness2.SendMailAndItem("BomBomRia Yönetim", "BomBomRia", client.Player.PlayerCharacter.ID, int.Parse(array4[1]), int.Parse(array4[2]), 0, 0, 0, 0, 0, 0, 0, 0, isBinds: true);
+                            playerBussiness2.SendMailAndItem("TrBombom Yönetim", "TrBombom", client.Player.PlayerCharacter.ID, int.Parse(array4[1]), int.Parse(array4[2]), 0, 0, 0, 0, 0, 0, 0, 0, isBinds: true);
                             result = true;
                         }
 
@@ -377,7 +377,7 @@ namespace Game.Server.Packets.Client
                     switch (command)
                     {
                         case "komutlar":
-                            client.Out.SendMessage(eMessageType.ALERT, "***BomBomRia Oyuncu Komutları***\n" +
+                            client.Out.SendMessage(eMessageType.ALERT, "***TrBombom Oyuncu Komutları***\n" +
                                 "!discord -> Discord hesabını bağlamak için, Discord'da `!bagla {code}` yaz.\n" +
                                 "!ekip -> Oyun Görevlilerini Gösterir.\n" +
                                 "!güncelle -> Hesabınızı Günceller.\n" +
@@ -448,7 +448,7 @@ namespace Game.Server.Packets.Client
 
                         case "cevir":
                             int offer = client.Player.PlayerCharacter.Offer;
-                            int num11 = offer * 1;
+                            int num11 = offer % 1000;
                             client.Player.AddMoney(num11);
                             client.Player.RemoveOffer(offer);
                             client.Player.SendMessage(offer + " Mükafat Başarıyla " + num11 + " Kupona Çevrilmiştir ^_^");

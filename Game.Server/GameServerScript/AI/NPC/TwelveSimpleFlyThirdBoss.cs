@@ -1,222 +1,198 @@
-﻿// Gerekli kütüphaneler ve sistem sınıfları
-using System;
-using System.Collections.Generic;
-using Game.Logic;
+﻿using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Effects;
 using Game.Logic.Phy.Object;
+using System;
+using System.Collections.Generic;
 
-// AI kodunun bulunduğu namespace
 namespace GameServerScript.AI.NPC
 {
-    /// <summary>
-    /// Bu sınıf, "TwelveSimpleFlyThirdBoss" adlı NPC'nin yapay zekasını ve davranışlarını kontrol eder.
-    /// ABrain sınıfından miras alır.
-    /// </summary>
     public class TwelveSimpleFlyThirdBoss : ABrain
     {
-        #region Constants (Sabitler)
+        private int turn = 1;
 
-        // Oyuncuların ışınlanacağı X koordinatları
-        private static readonly int[] TELEPORT_X_POSITIONS = new int[] { 725, 840, 1065, 1200 };
+        private int reduceBlood = 1000;
 
-        // Oyuncuların ışınlanacağı ilk Y koordinatı
-        private const int INITIAL_TELEPORT_Y = 600;
+        int[] boltMoveXs = new int[4] { 588, 695, 1076, 1118 };
+        int[] boltMoveYs = new int[1] { 910 };
 
-        // Oyuncuların saldırı sonrası ışınlanacağı son Y koordinatı
-        private const int FINAL_ATTACK_Y_POS = 910;
-
-        // Döndürme için toplam açı (5 tur x 360 derece)
-        private const int TOTAL_ROTATION_DEGREES = 200;
-
-        // Döndürme hızı
-        private const int ROTATION_SPEED = 30;
-
-        // Zamanlama gecikmeleri (milisaniye cinsinden)
-        private const int PREPARE_ATTACK_DELAY = 100;
-        private const int CREATE_EFFECTS_DELAY = 500;
-        private const int SPIN_DELAY = 100;
-
-        #endregion
-
-        #region Fields (Alanlar)
-
-        // Boss'un konuşma metinleri
-        private static readonly string[] BOSS_QUOTES = new string[]
-        {
-            "Anafor! Sonsuzluk sizi yutar!"
-        };
-
-        #endregion
-
-        #region ABrain Override Methods (Geçersiz Kılınan Metotlar)
-
-        /// <summary>
-        /// Her yeni tur başladığında çağrılır. Boss'un temel saldırı değerlerini sıfırlar.
-        /// </summary>
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-            // Saldırı ve savunma bonuslarını normal seviyeye getir
-            base.Body.CurrentDamagePlus = 1.0f;
-            base.Body.CurrentShootMinus = 1.0f;
+            base.Body.CurrentDamagePlus = 1f;
+            base.Body.CurrentShootMinus = 1f;
         }
 
-        /// <summary>
-        /// Boss'un kendi turu başladığında çağrılır.
-        /// </summary>
         public override void OnBeginSelfTurn()
         {
             base.OnBeginSelfTurn();
         }
 
-        /// <summary>
-        /// Boss nesnesi oluşturulduğunda çağrılır.
-        /// </summary>
         public override void OnCreated()
         {
             base.OnCreated();
         }
+        private void MoveBeatD()
+        {
+            Body.MoveTo(Game.Random.Next(675, 1415), Game.Random.Next(415, 450), "fly", 100, "", 6, BeatD, 100);
+        }
 
-        /// <summary>
-        /// Boss saldırıyı bıraktığında çağrılır.
-        /// </summary>
+        private void BeatD()
+        {
+            Body.Say("Anafor!", 0, 100, 2000);
+            Body.PlayMovie("beatD", 100, 6000);
+            Body.CallFuction(RotatePlayers, 2900);
+        }
+
+        private void MoveBeatB()
+        {
+            Body.MoveTo(Game.Random.Next(675, 1415), Game.Random.Next(415, 450), "fly", 100, "", 6, PreBeatB, 100);
+        }
+
+        private void PreBeatB()
+        {
+            Player randomPlayer = Game.FindRandomPlayer();
+            Body.Say("Anafor!", 0, 100, 2000);
+
+            Body.MoveTo(randomPlayer.X, 570, "fly", 100, "", 6, new LivingCallBack(() => BeatB(randomPlayer)), 100);
+        }
+
+        private void MoveBeatC()
+        {
+            Body.MoveTo(Game.Random.Next(675, 1415), Game.Random.Next(415, 450), "fly", 100, "", 6, BeatC, 100);
+        }
+
+        private void BeatC()
+        {
+            Body.Say("Anafor!", 0, 100, 2000);
+            Body.PlayMovie("beatC", 100, 6000);
+           ((PVEGame)Game).SendObjectFocus(Game.FindRandomPlayer(), 1, 1500, 100);
+            Body.CallFuction(CreateFengyinffect, 3000);
+        }
+
+        private void MoveBeatA()
+        {
+            Body.MoveTo(Game.Random.Next(675, 1415), Game.Random.Next(415, 450), "fly", 100, "", 6, BeatA, 100);
+     }
+
+        private void BeatA()
+        {
+            Body.Say("Anafor!!!", 0, 100, 2000);
+           Body.PlayMovie("beatA", 100, 6000);
+            ((PVEGame)Game).SendObjectFocus(Game.FindRandomPlayer(), 1, 3000, 100);
+            Body.CallFuction(BeatPlayers, 3000);
+       }
+
+        private void BeatPlayers()
+        {
+     
+            foreach (Player player in Game.GetAllLivingPlayersByProperties(2))
+            {
+                Body.BeatDirect(player, "", 1, 1, 1);
+                player.Properties1 = 0;
+                ((PVEGame)Game).SendPlayersPicture(player, 7, false);
+                player.SetSeal(false);
+            }
+        }
+
+        private void CreateFengyinffect()
+        {
+            List<Player> players = Game.GetAllLivingPlayers();
+            if (players.Count == 1)
+            {
+                ((PVEGame)Game).Createlayer(players[0].X, players[0].Y, "", "asset.game.nine.fengyin", "", 1, 0, false);
+
+                players[0].Seal(players[0], 0, 0);
+            }
+            else
+            {
+                foreach (Player player in Game.GetAllLivingPlayers())
+                {
+                    if (Game.Random.Next(100) > 50)
+                    {
+                        ((PVEGame)Game).Createlayer(player.X, player.Y, "", "asset.game.nine.fengyin", "", 1, 0, false);
+                        ((PVEGame)Game).SendPlayersPicture(player, 7, true);
+                        player.Seal(player, 0, 0);
+                        player.Properties1 = 2;
+                    }
+                }
+            }
+        }
+
+        private void BeatB(Player player)
+        {
+            Body.PlayMovie("beatB", 100, 6000);
+            ((PVEGame)Game).SendFreeFocus(player.X, player.Y - 100, 1, 1, 1);
+            Body.CallFuction(new LivingCallBack(() => CreateDiancipaoEffect(player)), 4600);
+        }
+
+        private void CreateDiancipaoEffect(Player player)
+        { 
+            Body.CurrentDamagePlus = 10f;
+            ((PVEGame)Game).Createlayer(player.X, player.Y, "", "asset.game.nine.diancipao", "", 1, 0, false);
+            Body.BeatDirect(player, "", 1, 1, 1);
+            player.AddEffect(new ContinueReduceBloodEffect(2, reduceBlood, Body), 100);
+        }
+        private void RotatePlayers()
+        {
+            
+            Body.CurrentDamagePlus = 1f;
+            for (int i = 0; i < boltMoveXs.Length; i++)
+                ((PVEGame)Game).Createlayer(boltMoveXs[i], 600, "", "asset.game.nine.heidong", "in", 1, 0, true);
+            foreach (Player player in Game.GetAllLivingPlayers())
+            {
+                Body.RangeAttacking(500, 1500, "", 1, null);
+                int x = boltMoveXs[Game.Random.Next(boltMoveXs.Length)];
+                player.BoltMove(x, 600, 0);
+                Game.yutikeyu(player, 0, 0, "");
+                player.Say("Ahh! Karadelikk!", 0, 0, 1500);
+                player.AddEffect(new LockDirectionEffect(1), 0);
+                ((PVEGame)Game).SendFreeFocus(x, 600, 1, 0, 1);
+            }  
+            Body.CallFuction(StopRotatePlayers, 1700);
+        }
+
+        private void StopRotatePlayers()
+        {
+         
+            List<Player> players = Game.GetAllLivingPlayers();
+            foreach (Player player in players)
+            {
+                int y = boltMoveYs[Game.Random.Next(boltMoveYs.Length)];
+                player.BoltMove(player.X, y, 0);
+                Game.yutikeyu(player, 0, 0, "");
+                ((PVEGame)Game).SendFreeFocus(player.X, y, 1, 500, 1);
+            }
+        }
+
+        public override void OnStartAttacking()
+        {
+            Body.Direction = base.Game.FindlivingbyDir(base.Body);
+            switch (turn)
+            {
+ 
+                case 1:
+                    MoveBeatD();
+                    break;
+                case 2:
+                    MoveBeatB();
+                    break;
+                case 3:
+                    MoveBeatC();
+                    break;
+                case 4:
+                    MoveBeatA();
+                    break;
+                default:
+                    turn = 1;
+                    goto case 1;
+            }
+            turn++;
+        }
+
         public override void OnStopAttacking()
         {
             base.OnStopAttacking();
         }
-
-        /// <summary>
-        /// Boss saldırmaya başladığında ana saldırı dizisini tetikler.
-        /// </summary>
-        public override void OnStartAttacking()
-        {
-            base.OnStartAttacking();
-            // Saldırı dizisini başlat
-            this.StartTeleportSequence();
-        }
-
-        #endregion
-
-        #region Private Methods (Özel Metotlar - Saldırı Dizisi)
-
-        /// <summary>
-        /// Saldırı dizisinin ilk adımı: Boss rastgele bir konuma hareket eder.
-        /// </summary>
-        private void StartTeleportSequence()
-        {
-            // Boss için harita üzerinde rastgele bir X ve Y konumu belirle
-            int randomX = Game.Random.Next(600, 1300);
-            int randomY = Game.Random.Next(300, 400);
-
-            // Boss'u belirtilen konuma "fly" animasyonuyla hareket ettir
-            Body.MoveTo(randomX, randomY, "fly", 1000, "fly", 8);
-
-            // Hareket bittikten sonra bir sonraki adımı (saldırıyı hazırlama) çağır
-            Body.CallFuction(new LivingCallBack(this.PrepareAttack), 0);
-        }
-
-        /// <summary>
-        /// Saldırıyı hazırlama adımı: Boss animasyon oynatır ve bir şeyler söyler.
-        /// </summary>
-        private void PrepareAttack()
-        {
-            // "beatD" animasyonunu oynat
-            Body.PlayMovie("beatD", 0, 1);
-
-            // Belirlenmiş konuşma metinlerinden rastgele birini söyle
-            Body.Say(BOSS_QUOTES[Game.Random.Next(0, BOSS_QUOTES.Length)], 1000, 0);
-
-            // Bir sonraki adımı (ışınlanma efektlerini oluşturma) gecikmeli olarak çağır
-            Body.CallFuction(new LivingCallBack(this.CreateTeleportEffects), PREPARE_ATTACK_DELAY);
-        }
-
-        /// <summary>
-        /// Işınlanma efektlerini oluşturma adımı: Oyuncuların gideceği yerlere kara delik efektleri ekler.
-        /// </summary>
-        private void CreateTeleportEffects()
-        {
-            // Önceden belirlenmiş tüm X konumları için döngü oluştur
-            foreach (int x in TELEPORT_X_POSITIONS)
-            {
-                // Her konuma "heidong" (kara delik) efektini oluştur
-                ((PVEGame)Game).Createlayer(x, INITIAL_TELEPORT_Y, "moive", "asset.game.nine.heidong", "in", 1, 0, true);
-            }
-
-            // Bir sonraki adımı (oyuncuları asıl ışınlatma) gecikmeli olarak çağır
-            Body.CallFuction(new LivingCallBack(this.ExecutePlayerTeleport), CREATE_EFFECTS_DELAY);
-        }
-
-        /// <summary>
-        /// Oyuncuları ışınlatma adımı: Tüm oyuncuları rastgele konumlara anında ışınlar.
-        /// </summary>
-        private void ExecutePlayerTeleport()
-        {
-            // Tüm canlı oyuncuları al
-            List<Player> allPlayers = Game.GetAllLivingPlayers();
-
-            // Her oyuncu için
-            foreach (Player player in allPlayers)
-            {
-                // Oyuncuyu rastgele bir ışınlanma noktasına gönder
-                int targetX = TELEPORT_X_POSITIONS[Game.Random.Next(0, TELEPORT_X_POSITIONS.Length)];
-                player.BoltMove(targetX, INITIAL_TELEPORT_Y, 100);
-            }
-
-            // Kamerayı rastgele bir ışınlanma noktasına odakla
-            int randomFocusX = TELEPORT_X_POSITIONS[Game.Random.Next(0, TELEPORT_X_POSITIONS.Length)];
-            ((PVEGame)Game).SendFreeFocus(randomFocusX, INITIAL_TELEPORT_Y, 1, 0, 2000);
-
-            // Bir sonraki adımı (oyuncuları döndürme) gecikmeli olarak çağır
-            Body.CallFuction(new LivingCallBack(this.SpinPlayers), SPIN_DELAY);
-        }
-
-        /// <summary>
-        /// Oyuncuları döndürme adımı: Tüm oyuncuları kendi etraflarında 5 kez döndürür.
-        /// </summary>
-        private void SpinPlayers()
-        {
-            // Tüm canlı oyuncuları al
-            List<Player> allPlayers = Game.GetAllLivingPlayers();
-
-            // Her oyuncu için
-            foreach (Player player in allPlayers)
-            {
-                // Oyuncuyu 1800 derece (5 tam tur) döndür
-                Game.SendLivingTurnRotation(player, TOTAL_ROTATION_DEGREES, ROTATION_SPEED, "");
-            }
-
-            // Döndürme işlemi bittikten sonra son adımı (saldıyı bitirme) çağır
-            Body.CallFuction(new LivingCallBack(this.FinalizeAttack), 0);
-        }
-
-        /// <summary>
-        /// Saldırı dizisinin son adımı: Oyuncuları son konumlarına ışınlar ve saldırır.
-        /// </summary>
-        private void FinalizeAttack()
-        {
-            // Tüm canlı oyuncuları al
-            List<Player> allPlayers = Game.GetAllLivingPlayers();
-
-            // Her oyuncu için
-            foreach (Player player in allPlayers)
-            {
-                // NOT: Bu satır, döndürme animasyonu sonrası oyuncunun yönünü sıfırlamak için olabilir.
-                // Görsel olarak ani bir "sekme" yaratabilir.
-                Game.SendLivingTurnRotation(player, 0, 0, "");
-
-                // Oyuncuyu yeni bir rastgele X konumuna ve sabit bir Y konumuna ışınla
-                int targetX = TELEPORT_X_POSITIONS[Game.Random.Next(0, TELEPORT_X_POSITIONS.Length)];
-                player.BoltMove(targetX, FINAL_ATTACK_Y_POS, 2000);
-
-                // Oyuncunun yeni konumuna alan saldırısı yap
-                Body.RangeAttacking(player.X - 100, player.X + 100, "cryA", 0, null);
-
-                // Kamerayı saldırılan oyuncunun üzerine odakla
-                ((PVEGame)Game).SendFreeFocus(player.X, FINAL_ATTACK_Y_POS, 1, 0, 2000);
-            }
-        }
-
-        #endregion
     }
 }

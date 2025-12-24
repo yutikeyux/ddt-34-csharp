@@ -833,6 +833,21 @@ namespace Game.Server.Managers
             };
         }
 
+        public static void Test()
+        {
+            using (PlayerBussiness pb = new PlayerBussiness())
+            {
+
+            }
+        }
+        public static GSPacketIn SendOnlineNotice(string msg)
+        {
+            GSPacketIn pkg = new GSPacketIn(10);
+            pkg.WriteInt(0);
+            pkg.WriteString(msg);
+            SendToAll(pkg);
+            return pkg;
+        }
         public static GamePlayer[] GetAllConsortiaPlayers(int consortiaId)
         {
             List<GamePlayer> gamePlayers = new List<GamePlayer>();

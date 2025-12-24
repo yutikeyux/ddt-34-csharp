@@ -51,10 +51,10 @@ namespace Game.Server.ActiveSystem.Handle
                 int templateId = award.TemplateID;
                 isPyramidDie = templateId == 201083;
                 isUp = templateId == 201082;
-                msg = LanguageMgr.GetTranslation("ActiveSystemHandler.Msg11", award.Template.Name, award.Count);
+                msg = LanguageMgr.GetTranslation("Kutu açma başarılı!", award.Template.Name, award.Count);
                 if (isUp)
                 {
-                    msg = LanguageMgr.GetTranslation("ActiveSystemHandler.Msg12");
+                    msg = LanguageMgr.GetTranslation("Kat atlama başarılı!");
                     pyramid.currentLayer++;
                     if (pyramid.currentLayer > pyramid.maxLayer)
                     {
@@ -69,34 +69,34 @@ namespace Game.Server.ActiveSystem.Handle
                 {
                     case 201079:
                         pyramid.turnPoint += 10;
-                        msg = LanguageMgr.GetTranslation("ActiveSystemHandler.Msg13");
+                        msg = LanguageMgr.GetTranslation("10 Puan Eklendi!");
                         canAddToBag = false;
                         break;
                     case 201080:
                         pyramid.turnPoint += 30;
-                        msg = LanguageMgr.GetTranslation("ActiveSystemHandler.Msg14");
+                        msg = LanguageMgr.GetTranslation("30 Puan Eklendi!");
                         canAddToBag = false;
                         break;
                     case 201081:
                         pyramid.turnPoint += 50;
-                        msg = LanguageMgr.GetTranslation("ActiveSystemHandler.Msg15");
+                        msg = LanguageMgr.GetTranslation("50 Puan Eklendi!");
                         canAddToBag = false;
                         break;
                     case 201077:
                         pyramid.pointRatio += 5;
-                        msg = LanguageMgr.GetTranslation("ActiveSystemHandler.Msg16");
+                        msg = LanguageMgr.GetTranslation("%5 Bonus Puan Eklendi!");
                         canAddToBag = false;
                         break;
                     case 201078:
                         pyramid.pointRatio += 10;
-                        msg = LanguageMgr.GetTranslation("ActiveSystemHandler.Msg17");
+                        msg = LanguageMgr.GetTranslation("%10 Bonus Puan Eklendi!");
                         canAddToBag = false;
                         break;
                 }
 
                 if (canAddToBag)
                 {
-                    Player.AddTemplate(award, LanguageMgr.GetTranslation("ActiveSystemHandler.Msg18"));
+                    Player.AddTemplate(award, LanguageMgr.GetTranslation("Piramit"));
                 }
 
                 string layerItems = string.Format("{0}-{1}-{2}", layer, templateId, place);
@@ -127,7 +127,7 @@ namespace Game.Server.ActiveSystem.Handle
                 int point = random.Next(49, 501);
                 pyramid.turnPoint += point;
                 pyramid.turnPoint += (pyramid.turnPoint * pyramid.pointRatio) / 100;
-                msg = LanguageMgr.GetTranslation("ActiveSystemHandler.Msg19", point);
+                msg = LanguageMgr.GetTranslation("{0} puan kazandınız!", point);
                 pyramid.isPyramidStart = false;
                 pyramid.currentLayer = 1;
                 pyramid.currentReviveCount = 0;

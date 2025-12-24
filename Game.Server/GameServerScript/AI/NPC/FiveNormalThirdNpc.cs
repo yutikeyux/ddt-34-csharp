@@ -1,179 +1,167 @@
+using Game.Logic;
 using Game.Logic.AI;
+using Game.Logic.Effects;
 using Game.Logic.Phy.Object;
-using System;
-using System.Collections.Generic;
 
 namespace GameServerScript.AI.NPC
 {
-	public class FiveNormalThirdNpc : ABrain
-	{
-		protected Player m_targer;
+    public class FiveNormalThirdNpc : ABrain
+    {
+        private int int_0;
 
-		private static Random random = new Random();
+        protected Player m_targer;
 
-		private static string[] listChat = new string[]
-		{
-			"为了荣誉！为了胜利！！",
-			"握紧手中的武器，不要发抖呀～",
-			"为了国王而战！",
-			"敌人就在眼前，大家做好战斗准备！",
-			"感觉最近国王的行为举止越来越反常......",
-			"为了啵咕的胜利！！兄弟们冲啊！",
-			"快消灭敌人！",
-			"大家一起上,人多力量大！",
-			"大家一起速战速决！",
-			"包围敌人，歼灭他们。",
-			"增援！增援！我们需要更多的增援！！",
-			"就算牺牲自己，也不会让你们轻易得逞。",
-			"不要轻视啵咕的力量，否则你会为此付出代价。"
-		};
+        private PhysicalObj physicalObj_0;
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        private int int_1;
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			this.m_body.CurrentDamagePlus = 1f;
-			this.m_body.CurrentShootMinus = 1f;
-			if (this.m_body.IsSay)
-			{
-				string oneChat = FiveNormalThirdNpc.GetOneChat();
-				int delay = base.Game.Random.Next(0, 5000);
-				this.m_body.Say(oneChat, 0, delay);
-			}
-		}
+        private static string[] string_0;
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		public override void OnStartAttacking()
-		{
-			base.OnStartAttacking();
-			this.m_targer = base.Game.FindNearestPlayer(base.Body.X, base.Body.Y);
-			this.Beating();
-		}
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            m_body.CurrentDamagePlus = 1f;
+            m_body.CurrentShootMinus = 1f;
+            if (physicalObj_0 != null)
+            {
+                base.Game.RemovePhysicalObj(physicalObj_0, true);
+            }
+            physicalObj_0 = null;
+            if (m_targer != null)
+            {
+                m_targer.SpeedMultX(3);
+            }
+        }
 
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-		}
+        public override void OnCreated()
+        {
+            base.OnCreated();
+        }
 
-		public void MoveToPlayer(Player player)
-		{
-			int num = (int)player.Distance(base.Body.X, base.Body.Y);
-			int num2 = base.Game.Random.Next(((SimpleNpc)base.Body).NpcInfo.MoveMin, ((SimpleNpc)base.Body).NpcInfo.MoveMax);
-			if (num > 97)
-			{
-				if (num > ((SimpleNpc)base.Body).NpcInfo.MoveMax)
-				{
-					num = num2;
-				}
-				else
-				{
-					num -= 90;
-				}
-				if (player.Y < 420 && player.X < 210)
-				{
-					if (base.Body.Y > 420)
-					{
-						if (base.Body.X - num < 50)
-						{
-						}
-					}
-					else if (player.X > base.Body.X)
-					{
-					}
-				}
-				else if (base.Body.Y < 420)
-				{
-					if (base.Body.X + num > 200)
-					{
-					}
-				}
-				else if (player.X > base.Body.X)
-				{
-				}
-			}
-		}
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            method_0();
+        }
 
-		public void MoveBeat()
-		{
-			base.Body.Beat(this.m_targer, "beatA", 100, 0, 0, 1, 1);
-		}
+        private void method_0()
+        {
+            int num = int.MaxValue;
+            int num2 = int.MinValue;
+            Player player = null;
+            Player player2 = null;
+            foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
+            {
+                if (allLivingPlayer.X > 1000 && allLivingPlayer.X > num2)
+                {
+                    num2 = allLivingPlayer.X;
+                    player2 = allLivingPlayer;
+                }
+                else if (allLivingPlayer.X <= 1000 && allLivingPlayer.X < num)
+                {
+                    num = allLivingPlayer.X;
+                    player = allLivingPlayer;
+                }
+            }
+            if (player == null && player2 != null)
+            {
+                m_targer = player2;
+            }
+            else if (player2 == null && player != null)
+            {
+                m_targer = player;
+            }
+            else if (player2 != null && player != null)
+            {
+                double num3 = base.Body.Distance(player.X, player.Y);
+                double num4 = base.Body.Distance(player2.X, player2.Y);
+                if (num3 < num4)
+                {
+                    m_targer = player;
+                }
+                else
+                {
+                    m_targer = player2;
+                }
+            }
+            else
+            {
+                m_targer = base.Game.FindRandomPlayer();
+            }
+            method_1();
+        }
 
-		public void FallBeat()
-		{
-			base.Body.Beat(this.m_targer, "beatA", 100, 0, 2000, 1, 1);
-		}
+        private void method_1()
+        {
+            if (m_targer != null && m_targer.IsLiving)
+            {
+                base.Body.MoveTo(m_targer.X, m_targer.Y, "fly", 1000, method_2, 6);
+            }
+        }
 
-		public void Jump()
-		{
-			base.Body.Direction = 1;
-			base.Body.JumpTo(base.Body.X, base.Body.Y - 240, "Jump", 0, 2, 3, new LivingCallBack(this.Beating));
-		}
+        private void method_2()
+        {
+            if (m_targer.IsLiving)
+            {
+                base.Body.MaxBeatDis = 500;
+                m_targer.SpeedMultX(18);
+                base.Body.PlayMovie("beatA", 500, 0);
+                base.Body.CallFuction(method_5, 1500);
+                base.Body.BeatDirect(m_targer, "", 1600, 1, 1);
+                base.Body.CallFuction(method_4, 1700);
+                m_targer.AddEffect(new ContinueReduceBloodEffect(1, int_1, base.Body), 3200);
+                base.Body.CallFuction(method_3, 2500);
+            }
+        }
 
-		public void Beating()
-		{
-			if (this.m_targer != null && !base.Body.Beat(this.m_targer, "beatA", 100, 0, 0, 1, 1))
-			{
-				this.MoveToPlayer(this.m_targer);
-			}
-		}
+        private void method_3()
+        {
+            base.Body.MoveTo(base.Body.X, base.Body.Y - 50, "fly", 0, 6);
+        }
 
-		public void Fall()
-		{
-			base.Body.FallFrom(base.Body.X, base.Body.Y + 240, null, 0, 0, 12, new LivingCallBack(this.Beating));
-		}
+        private void method_4()
+        {
+            if (m_targer.X > 1000)
+            {
+                m_targer.StartSpeedMult(m_targer.X + 150, m_targer.Y, 0);
+            }
+            else
+            {
+                m_targer.StartSpeedMult(m_targer.X - 150, m_targer.Y, 0);
+            }
+        }
 
-		public static string GetOneChat()
-		{
-			int num = FiveNormalThirdNpc.random.Next(0, FiveNormalThirdNpc.listChat.Length);
-			return FiveNormalThirdNpc.listChat[num];
-		}
+        private void method_5()
+        {
+            physicalObj_0 = ((PVEGame)base.Game).Createlayer(m_targer.X, m_targer.Y, "", "asset.game.4.tang", "", 1, 1);
+        }
 
-		public static void LivingSay(List<Living> livings)
-		{
-			if (livings != null && livings.Count != 0)
-			{
-				int count = livings.Count;
-				foreach (Living current in livings)
-				{
-					current.IsSay = false;
-				}
-				int num;
-				if (count <= 5)
-				{
-					num = FiveNormalThirdNpc.random.Next(0, 2);
-				}
-				else if (count > 5 && count <= 10)
-				{
-					num = FiveNormalThirdNpc.random.Next(1, 3);
-				}
-				else
-				{
-					num = FiveNormalThirdNpc.random.Next(1, 4);
-				}
-				if (num > 0)
-				{
-					int[] array = new int[num];
-					int i = 0;
-					while (i < num)
-					{
-						int index = FiveNormalThirdNpc.random.Next(0, count);
-						if (!livings[index].IsSay)
-						{
-							livings[index].IsSay = true;
-							int num2 = FiveNormalThirdNpc.random.Next(0, 5000);
-							i++;
-						}
-					}
-				}
-			}
-		}
-	}
+        public override void OnDie()
+        {
+            base.OnDie();
+        }
+
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
+
+        public FiveNormalThirdNpc()
+        {
+            int_1 = 200;
+        }
+
+        static FiveNormalThirdNpc()
+        {
+            string_0 = new string[1]
+            {
+                ""
+            };
+        }
+    }
 }

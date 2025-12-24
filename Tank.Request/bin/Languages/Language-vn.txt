@@ -149,7 +149,7 @@ ConsortiaDescriptionUpdateHandler.Long:Nội dung nhập vào quá dài.
 ConsortiaDutyUpdateHandler.Long:Chức danh thành viên nhập vào quá dài.
 ConsortiaPlacardUpdateHandler.Long:Nội dung nhập vào quá dài.
 ConsortiaUserRemarkHandler.Long:Nội dung nhập vào quá dài.
-ActivePullDownHandler.Fail:GiftCode Không chính xác.
+ActivePullDownHandler.Fail:Yanlış Hediye Kodu.
 UserChangeRankHandler.Success:Đổi danh hiệu thành công.
 GameServer.VIP.ActiveSuccess:Kích hoạt VIP thành công.
 
@@ -392,9 +392,9 @@ CheckCodeHandler.Msg2: Đáp đúng, túi đầy, nhận thưởng thất bại
 CheckCodeHandler.Msg3: Đáp sai
 
 
-Tank.Request.NickNameCheck.Long:Tối đa nhập 14 ký tự!
-Tank.Request.NickNameCheck.Right:Chúc mừng! tên nhân vật có thể sử dụng.
-Tank.Request.NickNameCheck.Exist:Tên nhân vật đã được sử dụng
+Tank.Request.NickNameCheck.Long:İsim çok uzun!
+Tank.Request.NickNameCheck.Right:Tebrikler! İsmi kullanabilirsiniz!
+Tank.Request.NickNameCheck.Exist:İsim kullanılıyor!
 Tank.Request.ConsortiaCheck.Right:Chúc mừng! Tên hội đã có thể sử dụng.
 
 
@@ -3826,7 +3826,7 @@ DDTKingGradeUp.Success:Tái tạo thành công!
 MailGetAttachHandler.LimitAttachMoney:Cấp {0} mới có thể nhận thư đính kèm xu.
 LargessCommand.TankHandle.Msg:Cấp {0} mới có thể tặng xu.
 AddTemplate.Notice:Bạn nhận được {0}x{1}.
-UseReworkNameHandler.HasSpecialCharacters:Nickname mới có chứa ký tự không hợp lệ.
+UseReworkNameHandler.HasSpecialCharacters:Geçersiz karakter mevcut.
 OpenOneTotemHandler.Maxlevel: Đã đặt cấp tối đa.
 OpenOneTotemHandler.ErrorData:lỗi dữ liệu. Không thể nâng cấp
 GoodsExchangeHandler.ItemsExchangeNotEnought:Nguyên liệu không đủ.

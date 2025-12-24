@@ -20,12 +20,14 @@ namespace Game.Server.GameObjects
             {
                 Nothing();
             }
+            public void SendUpdateChickActivation(UserChickActiveInfo chickInfo) => Nothing();
+            public void SendOpenHappyRecharge(int playerID) => Nothing();
 
             public void SendLeftRouleteOpen(UsersExtraInfo info)
             {
                 Nothing();
             }
-
+            public void SendCatchBeastOpen(int playerID, bool isOpen) => Nothing();
             public void SendAcademyGradute(GamePlayer app, int type)
             {
                 Nothing();

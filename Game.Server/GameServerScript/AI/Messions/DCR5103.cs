@@ -6,27 +6,27 @@ namespace GameServerScript.AI.Messions
 {
     public class DCR5103 : AMissionControl
     {
-        private SimpleBoss m_boss = null;
+        private SimpleBoss simpleBoss_0;
 
-        private SimpleBoss m_tempBoss = null;
+        private SimpleBoss simpleBoss_1;
 
-        private PhysicalObj m_kingMoive;
+        private PhysicalObj physicalObj_0;
 
-        private PhysicalObj m_kingFront;
+        private PhysicalObj physicalObj_1;
 
-        private int m_kill = 0;
+        private int int_0;
 
-        private int bossId = 5121;
+        private int int_1;
 
-        private int npcId1 = 5122;
+        private int int_2;
 
-        private int npcId2 = 5123;
+        private int int_3;
 
-        private int npcId3 = 5124;
+        private int int_4;
 
-        private int npcId4 = 5104;
+        private int int_5;
 
-        private int m_map = 1153;
+        private int int_6;
 
         public override int CalculateScoreGrade(int score)
         {
@@ -54,27 +54,37 @@ namespace GameServerScript.AI.Messions
             base.Game.AddLoadingFile(2, "image/game/effect/5/heip.swf", "asset.game.4.heip");
             base.Game.AddLoadingFile(2, "image/game/effect/5/tang.swf", "asset.game.4.tang");
             base.Game.AddLoadingFile(2, "image/game/effect/5/lanhuo.swf", "asset.game.4.lanhuo");
-            int[] resources = { bossId, npcId1, npcId2, npcId3, npcId4 };
-            base.Game.LoadResources(resources);
-            int[] gameOverResources = { bossId };
-            base.Game.LoadNpcGameOverResources(gameOverResources);
-            base.Game.SetMap(m_map);
+            int[] npcIds = new int[5]
+            {
+                int_1,
+                int_2,
+                int_3,
+                int_4,
+                int_5
+            };
+            base.Game.LoadResources(npcIds);
+            int[] npcIds2 = new int[1]
+            {
+                int_1
+            };
+            base.Game.LoadNpcGameOverResources(npcIds2);
+            base.Game.SetMap(int_6);
         }
 
         public override void OnStartGame()
         {
             base.OnStartGame();
-            m_kingMoive = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 1);
-            m_kingFront = base.Game.Createlayer(850, 258, "front", "game.asset.living.hongpaoxiaoemoAsset", "out", 1, 1);
+            physicalObj_0 = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 1);
+            physicalObj_1 = base.Game.Createlayer(850, 258, "front", "game.asset.living.hongpaoxiaoemoAsset", "out", 1, 1);
             LivingConfig livingConfig = base.Game.BaseLivingConfig();
             livingConfig.IsFly = true;
-            m_boss = base.Game.CreateBoss(bossId, 1000, 500, 1, 3, "", livingConfig);
-            m_boss.SetRelateDemagemRect(m_boss.NpcInfo.X, m_boss.NpcInfo.Y, m_boss.NpcInfo.Width, m_boss.NpcInfo.Height);
-            m_boss.Say("Ta đợi lâu lắm rồi!", 0, 1000);
-            m_kingMoive.PlayMovie("in", 4000, 0);
-            m_kingFront.PlayMovie("in", 4000, 0);
-            m_kingMoive.PlayMovie("out", 7000, 0);
-            m_kingFront.PlayMovie("out", 7200, 0);
+            simpleBoss_0 = base.Game.CreateBoss(int_1, 1000, 500, 1, 3, "", livingConfig);
+            simpleBoss_0.SetRelateDemagemRect(simpleBoss_0.NpcInfo.X, simpleBoss_0.NpcInfo.Y, simpleBoss_0.NpcInfo.Width, simpleBoss_0.NpcInfo.Height);
+            simpleBoss_0.Say("Uzun zamandır bunu bekliyordum!", 0, 1000);
+            physicalObj_0.PlayMovie("in", 4000, 0);
+            physicalObj_1.PlayMovie("in", 4000, 0);
+            physicalObj_0.PlayMovie("out", 7000, 0);
+            physicalObj_1.PlayMovie("out", 7200, 0);
         }
 
         public override void OnNewTurnStarted()
@@ -85,24 +95,24 @@ namespace GameServerScript.AI.Messions
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-            if (m_kingMoive != null)
+            if (physicalObj_0 != null)
             {
-                base.Game.RemovePhysicalObj(m_kingMoive, sendToClient: true);
-                m_kingMoive = null;
+                base.Game.RemovePhysicalObj(physicalObj_0, true);
+                physicalObj_0 = null;
             }
-            if (m_kingFront != null)
+            if (physicalObj_1 != null)
             {
-                base.Game.RemovePhysicalObj(m_kingFront, sendToClient: true);
-                m_kingFront = null;
+                base.Game.RemovePhysicalObj(physicalObj_1, true);
+                physicalObj_1 = null;
             }
         }
 
         public override bool CanGameOver()
         {
             base.CanGameOver();
-            if (m_boss != null && !m_boss.IsLiving)
+            if (simpleBoss_0 != null && !simpleBoss_0.IsLiving)
             {
-                m_kill++;
+                int_0++;
                 return true;
             }
             if (base.Game.TurnIndex > 200)
@@ -112,32 +122,32 @@ namespace GameServerScript.AI.Messions
             return false;
         }
 
-        private void CreateEffectEndGame()
+        private void method_0()
         {
-            m_tempBoss.ChangeDirection(1, 500);
-            m_tempBoss.Say("Thôi ta éo đùa nữa.", 0, 1000);
-            m_tempBoss.PlayMovie("out", 1000, 0);
-            m_tempBoss.CallFuction(CreateNpcEndGame, 4000);
+            simpleBoss_1.ChangeDirection(1, 500);
+            simpleBoss_1.Say("İşte şimdi sonun geldi!", 0, 1000);
+            simpleBoss_1.PlayMovie("out", 1000, 0);
+            simpleBoss_1.CallFuction(method_1, 4000);
         }
 
-        private void CreateNpcEndGame()
+        private void method_1()
         {
-            SimpleNpc simpleNpc = base.Game.CreateNpc(npcId4, 179, 552, 1, 1, "standC", base.Game.BaseLivingConfig());
+            SimpleNpc simpleNpc = base.Game.CreateNpc(int_5, 179, 552, 1, 1, "standC", base.Game.BaseLivingConfig());
             simpleNpc.PlayMovie("cool", 1000, 0);
-            simpleNpc.Say("Thôi hãy rời khỏi đây mau. Chúa rồng đã sống lại rồi.", 0, 4000, 2000);
-            base.Game.RemoveLiving(m_tempBoss.Id);
+            simpleNpc.Say("Hemen buradan uzaklaşalım. Ejderhayı uyandırdık!", 0, 4000, 2000);
+            base.Game.RemoveLiving(simpleBoss_1.Id);
         }
 
         public override int UpdateUIData()
         {
             base.UpdateUIData();
-            return m_kill;
+            return int_0;
         }
 
         public override void OnGameOver()
         {
             base.OnGameOver();
-            if (m_boss != null && !m_boss.IsLiving)
+            if (simpleBoss_0 != null && !simpleBoss_0.IsLiving)
             {
                 base.Game.IsWin = true;
             }
@@ -160,16 +170,26 @@ namespace GameServerScript.AI.Messions
         public override void OnDied()
         {
             base.OnDied();
-            if (!m_boss.IsLiving)
+            if (!simpleBoss_0.IsLiving)
             {
                 LivingConfig livingConfig = base.Game.BaseLivingConfig();
                 livingConfig.IsFly = true;
                 livingConfig.CanTakeDamage = false;
-                m_tempBoss = base.Game.CreateBoss(bossId, m_boss.X, m_boss.Y, m_boss.Direction, 1, "", livingConfig);
-                base.Game.RemoveLiving(m_boss.Id);
-                base.Game.SendHideBlood(m_tempBoss, 0);
-                m_tempBoss.MoveTo(1000, 485, "fly", base.Game.GetWaitTimerLeft(), CreateEffectEndGame, 10);
+                simpleBoss_1 = base.Game.CreateBoss(int_1, simpleBoss_0.X, simpleBoss_0.Y, simpleBoss_0.Direction, 1, "", livingConfig);
+                base.Game.RemoveLiving(simpleBoss_0.Id);
+                base.Game.SendHideBlood(simpleBoss_1, 0);
+                simpleBoss_1.MoveTo(1000, 485, "fly", base.Game.GetWaitTimerLeft(), method_0, 10);
             }
+        }
+
+        public DCR5103()
+        {
+            int_1 = 5121;
+            int_2 = 5122;
+            int_3 = 5123;
+            int_4 = 5124;
+            int_5 = 5104;
+            int_6 = 1153;
         }
     }
 }

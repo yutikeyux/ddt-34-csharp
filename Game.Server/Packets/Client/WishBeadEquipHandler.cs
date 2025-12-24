@@ -91,7 +91,7 @@ namespace Game.Server.Packets.Client
                     client.Player.UpdateItem(item);
                     client.Player.SaveIntoDatabase();
                     pkg.WriteInt(0);
-                    GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice(eMessageType.ChatNormal, $"[{client.Player.ZoneName}] Chúc mừng người chơi [{client.Player.PlayerCharacter.NickName}] dát vàng thành công {item.TemplateID}, lực chiến lên tầm cao mới.", item.ItemID, item.TemplateID, null));
+                    GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice(eMessageType.ChatNormal, $"|{client.Player.ZoneName}| oyuncusu değerli [{client.Player.PlayerCharacter.NickName}], {item.TemplateID} silahını başarıyla yaldızladı!", item.ItemID, item.TemplateID, null));
                 }
                 else
                 {

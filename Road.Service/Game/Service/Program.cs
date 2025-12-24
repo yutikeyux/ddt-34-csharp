@@ -172,7 +172,7 @@ namespace Game.Service
 			}
             using (var client = new WebClient())
             {
-                client.DownloadString("http://31.58.91.182/request/celeblist/createallceleb.ashx");
+                client.DownloadString("http://109.122.6.15/request/celeblist/createallceleb.ashx");
             }
             Console.WriteLine("Onur listesi güncellendi!");
 			GamePlayer[] allPlayers2 = WorldMgr.GetAllPlayers();
@@ -211,8 +211,19 @@ namespace Game.Service
             }
 
             // Mevcut tarihin hafta sonu olup olmadığını kontrol et (Cumartesi veya Pazar)
+
+
+
+           // bool haftaSonuMu = DateTime.Now.DayOfWeek == DayOfWeek.Saturday ||
+           //					 DateTime.Now.DayOfWeek == DayOfWeek.Sunday;
+					 
             bool haftaSonuMu = DateTime.Now.DayOfWeek == DayOfWeek.Saturday ||
-                               DateTime.Now.DayOfWeek == DayOfWeek.Sunday;
+							   DateTime.Now.DayOfWeek == DayOfWeek.Sunday ||
+							   DateTime.Now.DayOfWeek == DayOfWeek.Monday ||
+							   DateTime.Now.DayOfWeek == DayOfWeek.Tuesday ||
+							   DateTime.Now.DayOfWeek == DayOfWeek.Wednesday ||
+							   DateTime.Now.DayOfWeek == DayOfWeek.Thursday ||
+							   DateTime.Now.DayOfWeek == DayOfWeek.Friday;
 
             int num = Program._random.Next(1, 101);
 
@@ -267,38 +278,38 @@ namespace Game.Service
 			new Program.RastgeleOdul
 			{
 				ItemID = 11101,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Küçük Hoparlör' kazandı!"
+				Sayi = 5,
+				KazanmaMesaji = "Şanslı saat! Herkes 5 adet 'Küçük Hoparlör' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 11102,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Büyük Hoparlör' kazandı!"
+				Sayi = 3,
+				KazanmaMesaji = "Şanslı saat! Herkes 3 adet 'Büyük Hoparlör' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 11019,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '1. Seviye Güçlendirme Taşı' kazandı!"
+				Sayi = 5,
+				KazanmaMesaji = "Şanslı saat! Herkes 5 adet '1. Seviye Güçlendirme Taşı' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 11021,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '2. Seviye Güçlendirme Taşı' kazandı!"
+				Sayi = 4,
+				KazanmaMesaji = "Şanslı saat! Herkes 4 adet '2. Seviye Güçlendirme Taşı' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 11022,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '3. Seviye Güçlendirme Taşı' kazandı!"
+				Sayi = 3,
+				KazanmaMesaji = "Şanslı saat! Herkes 3 adet '3. Seviye Güçlendirme Taşı' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 11023,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '4. Seviye Güçlendirme Taşı' kazandı!"
+				Sayi = 2,
+				KazanmaMesaji = "Şanslı saat! Herkes 2 adet '4. Seviye Güçlendirme Taşı' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
@@ -309,38 +320,38 @@ namespace Game.Service
 			new Program.RastgeleOdul
 			{
 				ItemID = 11020,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kutsallık Sembolü' kazandı!"
+				Sayi = 3,
+				KazanmaMesaji = "Şanslı saat! Herkes 3 adet 'Kutsallık Sembolü' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 311199,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '1. Seviye Saldırı İncisi' kazandı!"
+				Sayi = 4,
+				KazanmaMesaji = "Şanslı saat! Herkes 4 adet '1. Seviye Saldırı İncisi' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 312199,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '1. Seviye Savunma İncisi' kazandı!"
+				Sayi = 4,
+				KazanmaMesaji = "Şanslı saat! Herkes 4 adet '1. Seviye Savunma İncisi' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 313199,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '1. Seviye Nitelik İncisi' kazandı!"
+				Sayi = 4,
+				KazanmaMesaji = "Şanslı saat! Herkes 4 adet '1. Seviye Nitelik İncisi' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 311299,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '2. Seviye Saldırı İncisi' kazandı!"
+				Sayi = 3,
+				KazanmaMesaji = "Şanslı saat! Herkes 3 adet '2. Seviye Saldırı İncisi' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 312299,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '2. Seviye Savunma İncisi' kazandı!"
+				Sayi = 3,
+				KazanmaMesaji = "Şanslı saat! Herkes 3 adet '2. Seviye Savunma İncisi' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{

@@ -30,7 +30,44 @@ namespace Game.Base.Packets
         {
             m_gameClient = client;
         }
+        public void SendCatchBeastOpen(int playerID, bool isOpen)
+        {
+            GSPacketIn pkg = new GSPacketIn(145, playerID);
+            pkg.WriteByte(32);
+            pkg.WriteBoolean(isOpen);
+            SendTCP(pkg);
+        }
+        public void SendUpdateChickActivation(UserChickActiveInfo chickInfo)
+        {
+            GSPacketIn gSPacketIn = new GSPacketIn(84);
+            gSPacketIn.WriteInt(2);
+            gSPacketIn.WriteInt(2);
+            gSPacketIn.WriteInt(chickInfo.IsKeyOpened);
+            gSPacketIn.WriteInt(1);
+            gSPacketIn.WriteDateTime(chickInfo.KeyOpenedTime);
+            gSPacketIn.WriteInt(chickInfo.KeyOpenedType);
+            gSPacketIn.WriteInt((chickInfo.EveryDay.Day < DateTime.Now.Day && DateTime.Now.DayOfWeek == DayOfWeek.Monday) ? 0 : 1);
+            gSPacketIn.WriteInt((chickInfo.EveryDay.Day < DateTime.Now.Day && DateTime.Now.DayOfWeek == DayOfWeek.Tuesday) ? 0 : 1);
+            gSPacketIn.WriteInt((chickInfo.EveryDay.Day < DateTime.Now.Day && DateTime.Now.DayOfWeek == DayOfWeek.Wednesday) ? 0 : 1);
+            gSPacketIn.WriteInt((chickInfo.EveryDay.Day < DateTime.Now.Day && DateTime.Now.DayOfWeek == DayOfWeek.Thursday) ? 0 : 1);
+            gSPacketIn.WriteInt((chickInfo.EveryDay.Day < DateTime.Now.Day && DateTime.Now.DayOfWeek == DayOfWeek.Friday) ? 0 : 1);
+            gSPacketIn.WriteInt((chickInfo.EveryDay.Day < DateTime.Now.Day && DateTime.Now.DayOfWeek == DayOfWeek.Saturday) ? 0 : 1);
+            gSPacketIn.WriteInt((chickInfo.EveryDay.Day < DateTime.Now.Day && DateTime.Now.DayOfWeek == DayOfWeek.Sunday) ? 0 : 1);
+            gSPacketIn.WriteInt((chickInfo.AfterThreeDays.Day < DateTime.Now.Day && chickInfo.OnThreeDay(DateTime.Now)) ? 0 : 1);
+            gSPacketIn.WriteInt((chickInfo.AfterThreeDays.Day < DateTime.Now.Day && chickInfo.OnThreeDay(DateTime.Now)) ? 0 : 1);
+            gSPacketIn.WriteInt((chickInfo.AfterThreeDays.Day < DateTime.Now.Day && chickInfo.OnThreeDay(DateTime.Now)) ? 0 : 1);
+            gSPacketIn.WriteInt((chickInfo.Weekly < chickInfo.StartOfWeek(DateTime.Now, DayOfWeek.Saturday) && DateTime.Now.DayOfWeek == DayOfWeek.Saturday) ? 0 : 1);
+            gSPacketIn.WriteInt(chickInfo.CurrentLvAward);
+            this.SendTCP(gSPacketIn);
+        }
 
+        public void SendOpenHappyRecharge(int playerID)
+        {
+            GSPacketIn pkg = new GSPacketIn(145, playerID);
+            pkg.WriteByte(178);
+            pkg.WriteBoolean(GameProperties.HappyRechargeOpenClose);
+            SendTCP(pkg);
+        }
         public static IPacketLib CreatePacketLibForVersion(int rawVersion, GameClient client)
         {
             Type[] derivedClasses = ScriptMgr.GetDerivedClasses(typeof(IPacketLib));
@@ -363,24 +400,21 @@ namespace Game.Base.Packets
         }
 
         public void SendEdictumVersion()
-        {
-            //geçici olarak bişey göndermemeyi deeyelim
-            return;
-            EdictumInfo[] allEdictumVersion = WorldMgr.GetAllEdictumVersion();
-            Random random = new Random();
-            if (allEdictumVersion.Length != 0)
-            {
-                GSPacketIn gSPacketIn = new GSPacketIn(75);
-                gSPacketIn.WriteInt(allEdictumVersion.Length);
-                EdictumInfo[] array = allEdictumVersion;
-                EdictumInfo[] array2 = array;
-                foreach (EdictumInfo edictumInfo in array2)
-                {
-                    gSPacketIn.WriteInt(edictumInfo.ID + random.Next(10000));
-                }
-                SendTCP(gSPacketIn);
-            }
-        }
+		{
+			EdictumInfo[] allEdictumVersion = WorldMgr.GetAllEdictumVersion();
+			Random random = new Random();
+			if (allEdictumVersion.Length != 0)
+			{
+				GSPacketIn packet = new GSPacketIn(75);
+				packet.WriteInt(allEdictumVersion.Length);
+				EdictumInfo[] array = allEdictumVersion;
+				foreach (EdictumInfo edictumInfo in array)
+				{
+					packet.WriteInt(edictumInfo.ID + random.Next(10000));
+				}
+				SendTCP(packet);
+			}
+		}
 
         public void SendLeftRouleteOpen(UsersExtraInfo info)
         {

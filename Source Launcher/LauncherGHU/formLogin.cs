@@ -107,13 +107,13 @@ namespace LauncherGHU
 				else
 				{
 					lplReport.Visible = true;
-					lplReport.Text = "Vui lòng nhập mật khẩu hợp lệ!";
+					lplReport.Text = "Lütfen geçerli bir parola girin!";
                 }
 			}
 			else
 			{
 				lplReport.Visible = true;
-				lplReport.Text = "Vui lòng nhập ta\u0300i khoa\u0309n hợp lệ!";
+				lplReport.Text = "Lütfen geçerli bir kullanıcı adı girin!";
             }
 		}
 
@@ -174,7 +174,7 @@ namespace LauncherGHU
 
         private void pictureBox4_Click(object sender, EventArgs e)
         {
-			if (MessageBox.Show("Bạn có chắc là muốn thoát Launcher?", "Thoát Launcher", MessageBoxButtons.YesNo, MessageBoxIcon.Hand) == DialogResult.Yes)
+			if (MessageBox.Show("Fırlatıcıyı kapatmak istediğinize emin misiniz?", "Fırlatıcıyı Kapat", MessageBoxButtons.YesNo, MessageBoxIcon.Hand) == DialogResult.Yes)
 			{
 				Application.Exit();
 			}
