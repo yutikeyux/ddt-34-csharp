@@ -1,156 +1,142 @@
 using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using System;
 using System.Collections.Generic;
 
 namespace GameServerScript.AI.NPC
 {
-	public class SeventhHardHouseAi : ABrain
-	{
-		private int m_attackTurn = 0;
+    public class SeventhHardHouseAi : ABrain
+    {
+        private int int_0;
 
-		private List<SimpleNpc> Children = new List<SimpleNpc>();
+        private List<SimpleNpc> list_0;
 
-		private PhysicalObj moive;
+        private int int_1;
 
-		private int npcID2 = 7222;
+        private int int_2;
 
-		private static string[] AllAttackChat = new string[]
-		{
-			"你们这是自寻死路！",
-			"你惹毛我了!",
-			"超级无敌大地震……<br/>震……震…… "
-		};
+        private int int_3;
 
-		private static string[] ShootChat = new string[]
-		{
-			"砸你家玻璃。",
-			"看哥打的可比你们准多了"
-		};
+        private int int_4;
 
-		private static string[] KillPlayerChat = new string[]
-		{
-			"送你回老家！",
-			"就凭你还妄想能够打败我？"
-		};
+        private int int_5;
 
-		private static string[] CallChat = new string[]
-		{
-			"卫兵！ <br/>卫兵！！ ",
-			"啵咕们！！<br/>给我些帮助！"
-		};
+        private int int_6;
 
-		private static string[] ShootedChat = new string[]
-		{
-			"哎呦！很痛…",
-			"我还顶的住…"
-		};
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		private static string[] JumpChat = new string[]
-		{
-			"为了你们的胜利，<br/>向我开炮！",
-			"你再往前半步我就把你给杀了！",
-			"高！<br/>实在是高！"
-		};
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            if (int_0 == 0 && base.Body.Blood < base.Body.MaxBlood / 2)
+            {
+                base.Body.PlayMovie("toA", 0, 1200);
+            }
+            method_0();
+            base.Body.CurrentDamagePlus = 1f;
+            base.Body.CurrentShootMinus = 1f;
+        }
 
-		private static string[] KillAttackChat = new string[]
-		{
-			"超级肉弹！！"
-		};
+        public override void OnCreated()
+        {
+            base.OnCreated();
+        }
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        public override void OnStartAttacking()
+        {
+            bool flag = false;
+            foreach (Player allFightPlayer in base.Game.GetAllFightPlayers())
+            {
+                if (allFightPlayer.IsLiving && allFightPlayer.X > base.Body.X - 400 && allFightPlayer.X < base.Body.X + 400)
+                {
+                    flag = true;
+                }
+            }
+            if (flag)
+            {
+                KillAttack(base.Body.X - 400, base.Body.X + 400);
+                return;
+            }
+            int_5 = 1;
+            int_6 = 4;
+            CreateNpc1();
+            CreateNpc2();
+        }
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			base.Body.CurrentDamagePlus = 1f;
-			base.Body.CurrentShootMinus = 1f;
-			base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			if (base.Body.Direction == -1)
-			{
-				base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
-			else
-			{
-				base.Body.SetRect(-((SimpleBoss)base.Body).NpcInfo.X - ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
-		}
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        private void method_0()
+        {
+            if (int_0 == 0)
+            {
+                base.Body.PlayMovie("stand", 2000, 0);
+            }
+            else
+            {
+                base.Body.PlayMovie("standA", 2000, 0);
+            }
+        }
 
-		public override void OnStartAttacking()
-		{
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			bool flag = false;
-			int num = 0;
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				if (current.IsLiving && current.X < 650)
-				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
-					{
-						num = num2;
-					}
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				this.KillAttack(0, 650);
-			}
-			else if (this.m_attackTurn == 0)
-			{
-				this.Summon();
-				this.m_attackTurn++;
-			}
-			else
-			{
-				this.m_attackTurn = 0;
-			}
-		}
+        public void KillAttack(int fx, int tx)
+        {
+            base.Body.RangeAttacking(fx, tx, "cry", 1000, null);
+        }
 
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-		}
+        public void CreateNpc1()
+        {
+            if (int_5 > int_3)
+            {
+                int_5 = int_3;
+            }
+            int num = int_3 - base.Game.GetLivedNpcs(int_2).Count;
+            if (int_5 > num)
+            {
+                int_5 = num;
+            }
+            if (int_5 > 0)
+            {
+                for (int i = 0; i < int_5; i++)
+                {
+                    ((SimpleBoss)base.Body).CreateChild(int_2, 596, 955, 1, 1, true, ((PVEGame)base.Game).BaseLivingConfig());
+                }
+            }
+        }
 
-		private void KillAttack(int fx, int tx)
-		{
-			int num = base.Game.Random.Next(0, SeventhHardHouseAi.KillAttackChat.Length);
-			base.Body.Say(SeventhHardHouseAi.KillAttackChat[num], 1, 1000);
-			base.Body.CurrentDamagePlus = 10f;
-			base.Body.RangeAttacking(fx, tx, "cry", 5000, null);
-			base.Body.CallFuction(new LivingCallBack(this.GoMovie), 4000);
-		}
+        public void CreateNpc2()
+        {
+            if (int_6 > int_4)
+            {
+                int_6 = int_4;
+            }
+            int num = int_4 - base.Game.GetLivedNpcs(int_1).Count;
+            if (int_6 > num)
+            {
+                int_6 = num;
+            }
+            if (int_6 > 0)
+            {
+                for (int i = 0; i < int_6; i++)
+                {
+                    ((SimpleBoss)base.Body).CreateChild(int_1, 792 + i * 50, 950, 1, 1, true, ((PVEGame)base.Game).BaseLivingConfig());
+                }
+            }
+        }
 
-		private void GoMovie()
-		{
-			List<Player> allFightPlayers = base.Game.GetAllFightPlayers();
-			foreach (Player current in allFightPlayers)
-			{
-				if (current.IsLiving && current.X < 700)
-				{
-					this.moive = ((PVEGame)base.Game).Createlayer(current.X, current.Y, "moive", "asset.game.seven.jinquhd", "out", 1, 0);
-				}
-			}
-		}
+        public SeventhHardHouseAi()
+        {
 
-		private void Summon()
-		{
-			base.Body.CallFuction(new LivingCallBack(this.CreateChild), 4000);
-		}
+            list_0 = new List<SimpleNpc>();
+            int_1 = 7222;
+            int_2 = 7221;
+            int_3 = 5;
+            int_4 = 15;
 
-		public void CreateChild()
-		{
-			((SimpleBoss)base.Body).CreateChild(this.npcID2, 880, 900, 20, 6, 1);
-		}
-	}
+        }
+    }
 }

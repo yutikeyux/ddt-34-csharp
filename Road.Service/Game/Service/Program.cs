@@ -172,9 +172,9 @@ namespace Game.Service
 			}
             using (var client = new WebClient())
             {
-                client.DownloadString("http://109.122.6.15/request/celeblist/createallceleb.ashx");
+                client.DownloadString("http://109.122.6.15/ddt-quest-s1/celeblist/createallceleb.ashx");
             }
-            Console.WriteLine("Onur listesi güncellendi!");
+            Console.WriteLine("Onur listesi güncellenmiştir!");
 			GamePlayer[] allPlayers2 = WorldMgr.GetAllPlayers();
 			for (int j = 0; j < allPlayers2.Length; j++)
 			{

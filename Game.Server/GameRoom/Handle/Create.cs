@@ -36,7 +36,7 @@ namespace Game.Server.GameRoom.Handle
 
                 Player.LastEnterWorldBoss = DateTime.Now;
                 Player.WorldbossBood = RoomMgr.WorldBossRoom.Blood;
-                AbstractBuffer buffer = BufferList.CreatePayBuffer((int)BuffType.WorldBossHP, 50000, 10);
+                AbstractBuffer buffer = BufferList.CreatePayBuffer((int)BuffType.WorldBossHP, 50000, 1);
                 if (buffer != null)
                 {
                     buffer.Start(Player);

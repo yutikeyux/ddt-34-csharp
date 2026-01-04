@@ -507,6 +507,10 @@ namespace Game.Server.GameUtils
                     return true;
                 case NoviceActiveType.STRENGTHEN_WEAPON_ACTIVE:
                     return true;
+                case NoviceActiveType.Kıyafet_Guclendirme:
+                    return true;
+                case NoviceActiveType.Sapka_Guclendirme:   
+                    return true;
                 case NoviceActiveType.UPGRADE_VIP_ACTIVE:
                     return true;
                 case NoviceActiveType.UPDATE_FIGHTPOWER:

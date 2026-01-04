@@ -39,7 +39,7 @@ namespace Game.Server.Rooms
 
         public int PickUpNpcId;
 
-        public int maxViewerCnt = 0;
+        public int maxViewerCnt = 2; //0ı 2 yaptım ama test edelim bi bunu
 
         public DateTime horaInicio;
 

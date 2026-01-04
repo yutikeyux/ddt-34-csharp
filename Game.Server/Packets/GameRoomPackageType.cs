@@ -10,6 +10,7 @@
         GAME_ROOM_REMOVEPLAYER = 5,
         GAME_TEAM = 6,
         GAME_START = 7,
+        ADD_AUTOBOT = 8,
         ROOMLIST_UPDATE = 9,
         GAME_ROOM_UPDATE_PLACE = 10,
         GAME_PICKUP_CANCEL = 11,

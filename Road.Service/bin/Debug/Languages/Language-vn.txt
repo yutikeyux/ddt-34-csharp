@@ -71,7 +71,7 @@ ItemStrengthenHandler.NoMoney:Yetersiz altın.
 ItemStrengthenHandler.NoStrength:Bu öğeye güçlendirme yapılamaz. 
 ItemStrengthenHandler.Content1:Koşullar yetersiz, bu öğeye güçlendirme yapmak için en az gereken:[ 
 ItemStrengthenHandler.Content2:]Tane taş. 
-ItemStrengthenHandler.Success:Öğeyi güçlendirme başarılı; 
+ItemStrengthenHandler.Success:Öğe Koşulları Gerçekleşemedi! Bağlantın Kesilecek!
 ItemStrengthenHandler.NoCondition:Öğe güçlendirme koşulu hatalı. 
 MailGetAttachHandler.Falied:Mail alımı başarısız. 
 MailGetAttachHandler.NoMoney:Yetersiz kupon. 
@@ -3208,7 +3208,7 @@ UserItemContineueHandler.error:Yenileme başarısız.
 ConsortiaRichesOfferHandler.MoneyFalse:Lütfen 1'den fazla kupon yaz
 ItemTransferHandler.LotteryAutoAwardTopAward:Bu öğe transfer edilemez.
 Game.Server.Quests.FinishQuest.RewardBindMoney:{0} bağlı kupon
-GameUserDailyAward.Success:60 dakika duble tecrübe eklentisini zaten elde ettin.
+GameUserDailyAward.Success:Duble Tecrübe alımı başarılı.
 UserBuyItemHandler.NoBuyItem:Bağlı kupon yetersiz.
 UserBuyItemHandler.GiftToken:Bağlı kupon yetersiz.
 UserBuyItemHandler.BindMoneyFalse:Bağlı kupon kesilme başarısız!

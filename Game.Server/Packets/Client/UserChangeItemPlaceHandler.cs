@@ -44,15 +44,15 @@ namespace Game.Server.Packets.Client
                 log.ErrorFormat("client disconnect bagType: {0}, place: {1}, toBagType: {2}, toPlace: {3}, count: {4}, allMove: {5}", bagType, place, toBagType, toPlace, count, allMove);
                 return 0;
             }
-            //if (toBagType == eBageType.Store)
-            //{
-            //    if (!client.Player.isPassCheckCode())
-            //    {
-            //        client.Player.ShowCheckCode();
-            //        return 0;
-            //    }
+            if (toBagType == eBageType.Store)
+            {
+                if (!client.Player.isPassCheckCode())
+                {
+                    client.Player.ShowCheckCode();
+                    return 0;
+                }
             //    client.Player.CountFunction2++;
-            //}
+            }
             bag.BeginChanges();
             toBag.BeginChanges();
             

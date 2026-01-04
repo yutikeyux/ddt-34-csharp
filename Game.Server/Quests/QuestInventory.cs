@@ -361,9 +361,9 @@ namespace Game.Server.Quests
                                     break;
                                 case 10004:
                                     m_player.PlayerCharacter.openFunction(Step.FIFTY_OPEN);
-                                    m_player.AddGift(eGiftType.MONEY);
-                                    m_player.AddGift(eGiftType.BIG_EXP);
-                                    m_player.AddGift(eGiftType.PET_EXP);
+                                    //m_player.AddGift(eGiftType.MONEY);
+                                    //m_player.AddGift(eGiftType.BIG_EXP);
+                                    //m_player.AddGift(eGiftType.PET_EXP);
                                     break;
                                 case 10005:
                                     m_player.PlayerCharacter.openFunction(Step.FORTY_OPEN);
@@ -373,7 +373,7 @@ namespace Game.Server.Quests
                                     break;
                                 case 10007:
                                     m_player.PlayerCharacter.openFunction(Step.POP_TWO_TWENTY);
-                                    m_player.AddGift(eGiftType.SMALL_EXP);
+                                    //m_player.AddGift(eGiftType.SMALL_EXP);
                                     break;
                                 case 10008:
                                     m_player.PlayerCharacter.openFunction(Step.GAIN_TEN_PERSENT);
@@ -458,7 +458,7 @@ namespace Game.Server.Quests
                 }
                 else
                 {
-                    m_player.SendMessage("Ödülü alabilmen için sırt çantanda yer olması lazım :D");
+                    m_player.SendMessage("Çanta Dolu!");
                 }
                 this.OnQuestsChanged(baseQuest);
             }

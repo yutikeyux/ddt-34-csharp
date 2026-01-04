@@ -64,7 +64,7 @@ namespace Game.Logic.Cmd
                 int k = 1; // Saldırı tekrar sayısı
                 float time_s = 1.0f; // Saldırı süresi
                 int boomcount = 1; // Patlama sayısı
-                int delayy = 700; // Gecikme süresi
+                int delayy = 1200; // Gecikme süresi
 
                 // Mesafe kontrolü ve saldırı stratejisi belirleme. not: yuti
                 if (Math.Abs(player.X - target.X) > 60)

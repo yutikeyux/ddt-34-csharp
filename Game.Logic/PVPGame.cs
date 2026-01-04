@@ -1,4 +1,5 @@
 using Bussiness;
+using Bussiness.Managers;
 using Game.Base.Packets;
 using Game.Logic.Actions;
 using Game.Logic.Phy.Maps;
@@ -163,30 +164,55 @@ namespace Game.Logic
 
         public override bool TakeCard(Player player, int index, bool isAuto)
         {
-            if (player.CanTakeOut == 0 || index < 0 || index > Cards.Length || player.FinishTakeCard || Cards[index] > 0)
+            // GÜVENLİK KONTROLLERİ
+            if (player.CanTakeOut == 0 || index < 0 || index >= Cards.Length || player.FinishTakeCard || Cards[index] > 0)
             {
                 return false;
             }
+
             player.CanTakeOut--;
+
+            // PARA BİRİMİ DEĞİŞKENLERİNİ TANIMLAMA (Çalışan koddan eklendi)
+            int gold = 0;
+            int money = 0;
+            int giftToken = 0;
+            int medal = 0;
+            int honor = 0;
+            int hardCurrency = 0;
+            int token = 0;
+            int dragonToken = 0;
+            int magicStonePoint = 0;
+
             int templateID = 0;
             int count = 0;
             List<ItemInfo> infos = null;
+
+            // DROP İŞLEMİ
             if (DropInventory.CardDrop(base.RoomType, ref infos))
             {
                 if (infos != null)
                 {
                     foreach (ItemInfo info in infos)
                     {
+                        // EKLEME 1: Drop listesindeki özel itemleri (altın, para vb.) ayıkla
+                        ShopMgr.FindSpecialItemInfo(info, ref gold, ref money, ref giftToken, ref medal, ref honor, ref hardCurrency, ref token, ref dragonToken, ref magicStonePoint);
+
+                        // Standart Item (Envanter eşyası) kontrolü
                         if (info != null && info.TemplateID > 0)
                         {
                             templateID = info.TemplateID;
                             count = info.Count;
                             player.PlayerDetail.AddTemplate(info, eBageType.TempBag, info.Count, eGameView.BatleTypeGet);
                         }
-                        if (!info.IsTips)
+
+                        // Ödül Bildirimi (İpucu varsa)
+                        if (info.IsTips)
                         {
+                            player.PlayerDetail.PVERewardNotice($"[{player.PlayerDetail.ZoneName}] oyuncusu değerli [{player.PlayerDetail.PlayerCharacter.NickName}] Oyun Salonu'ndan değerli ödüller kazandı. Kazandıkları ödüller: {info.TemplateID} x{info.Count}. ", info.ItemID, info.TemplateID);
+                            player.PlayerDetail.AddLog("TakeCard PVP: ", "MissionName: " + "|Name: " + info.Name + "|Count: " + info.Count);
                         }
                     }
+
                     if (infos.Count == 0)
                     {
                         log.ErrorFormat("Have not DropItem for RoomType.{0}", base.RoomType);
@@ -197,12 +223,49 @@ namespace Game.Logic
             {
                 log.ErrorFormat("Have not DropCondition for RoomType.{0}", base.RoomType);
             }
+
+            // EKLEME 2: Oyuncuya paraları ekle
+            if (player.PlayerDetail != null)
+            {
+                if (gold > 0)
+                    player.PlayerDetail.AddGold(gold);
+
+                if (money > 0)
+                {
+                    player.PlayerDetail.AddMoney(money);
+                    // Para kazanma logunu at
+                    player.PlayerDetail.LogAddMoney(AddMoneyType.Award, AddMoneyType.Award_TakeCard, player.PlayerDetail.PlayerCharacter.ID, money, player.PlayerDetail.PlayerCharacter.Money);
+                }
+
+                if (giftToken > 0)
+                    player.PlayerDetail.AddGiftToken(giftToken);
+
+                if (honor > 0)
+                    player.PlayerDetail.AddHonor(honor);
+
+                // Diğer para birimleri gerekirse buraya eklenebilir:
+                // if (medal > 0) ...
+            }
+
+            // EKLEME 3: Eğer hiçbir item düşmedi (templateID 0 kaldıysa) ama altın düşmüşse,
+            // istemciye altın gönderebilmek için özel templateID (-100) set et.
+            if (templateID == 0 && gold > 0)
+            {
+                templateID = -100;
+                count = gold;
+            }
+
+            // OYUN DURUMU GÜNCELLEME
             if (player.CanTakeOut == 0)
             {
                 player.FinishTakeCard = true;
             }
+
             Cards[index] = 1;
+
+            // Client'a bilgi gönder (Gold gelirse templateID -100, Item gelirse ItemID)
             SendGamePlayerTakeCard(player, isAuto, index, templateID, count);
+
             return true;
         }
 

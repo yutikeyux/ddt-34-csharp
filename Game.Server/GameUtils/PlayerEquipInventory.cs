@@ -795,7 +795,8 @@ namespace Game.Server.GameUtils
             {
                 if (temp.IsRing())
                 {
-                    return slot == 9 || slot == 10 || slot == 16;
+                    return slot == 16;
+                    //return slot == 9 || slot == 10 || slot == 16;
                 }
                 return slot == 9 || slot == 10;
             }

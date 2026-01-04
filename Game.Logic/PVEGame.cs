@@ -2294,7 +2294,7 @@ namespace Game.Logic
             base.SendToAll(pkg);
         }
 
-        public void ChangeTarget(int id)//doi thanh mau boss
+        public void ChangeTarget(int id)
         {
             SendGameChangeTarget(id);
         }

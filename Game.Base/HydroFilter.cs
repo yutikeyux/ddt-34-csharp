@@ -14,10 +14,10 @@ namespace Game.Base
     {
         private const int TIMER_CHECK_INTERVAL = 20000;
         private const int TIMER_SCAN_INTERVAL = 10000;
-        private const int MAX_CONNECTIONS_IN_20SEC = 200;
-        private const int MAX_AVG_PACKETS_PER_CLIENT_IN_20SEC = 5000;
-        private const int SCAN_MAX_CONNECTIONS_PER_IP = 10;
-        private const int SCAN_MAX_PACKETS_PER_IP = 300;
+        private const int MAX_CONNECTIONS_IN_20SEC = 2000;
+        private const int MAX_AVG_PACKETS_PER_CLIENT_IN_20SEC = 50000;
+        private const int SCAN_MAX_CONNECTIONS_PER_IP = 2000;
+        private const int SCAN_MAX_PACKETS_PER_IP = 10000;
         private const int TIMES_TO_DISABLE = 3;
         private const string BLOCK_LIST_FILENAME = "IPBlockList.txt";
         private const string WHITE_LIST_FILENAME = "IPWhiteList.txt"; // Yeni: Whitelist dosyası not: yuti

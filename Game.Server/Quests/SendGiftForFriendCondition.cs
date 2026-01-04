@@ -11,6 +11,8 @@ namespace Game.Server.Quests
 
         public override void AddTrigger(GamePlayer player)
         {
+            //player.SendGiftForFriend += player_SendGiftForFriend;
+
         }
 
         public override bool IsCompleted(GamePlayer player)
@@ -28,6 +30,7 @@ namespace Game.Server.Quests
 
         public override void RemoveTrigger(GamePlayer player)
         {
+            //player.SendGiftForFriend -= player_SendGiftForFriend;
         }
     }
 }

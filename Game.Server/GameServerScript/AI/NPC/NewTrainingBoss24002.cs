@@ -44,7 +44,7 @@ namespace GameServerScript.AI.NPC
 			if (this.m_attackTurn == 0)
 			{
 				this.m_attackTurn++;
-				base.Body.Say("Bay ra ngoài đi，núp trong đóa ko thịt được ta đâu！", 0, 3000);
+				base.Body.Say("Çık oradan, saklanman bi işe yaramayacak！", 0, 3000);
 			}
 			else
 			{

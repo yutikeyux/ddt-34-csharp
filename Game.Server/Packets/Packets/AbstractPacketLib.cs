@@ -904,6 +904,7 @@ namespace Game.Base.Packets
                     m_gameClient.Player.PlayerCharacter.CheckCount += 10000;
                 }
                 GSPacketIn gSPacketIn = new GSPacketIn(200, m_gameClient.Player.PlayerCharacter.ID, 10240);
+
                 if (m_gameClient.Player.PlayerCharacter.CheckError < 1)
                 {
                     gSPacketIn.WriteByte(1);

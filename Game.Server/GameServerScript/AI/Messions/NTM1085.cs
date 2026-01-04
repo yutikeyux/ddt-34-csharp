@@ -117,18 +117,16 @@ namespace GameServerScript.AI.Messions
             }
         }
         public void CreateBoss()
-        {
-            //base.OnStartGame();           
+        {       
             m_moive = Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
-            m_front = Game.Createlayer(273, 510, "font", "game.asset.living.boguoLeaderAsset", "out", 1, 0);
+            m_front = Game.Createlayer(691, 362, "font", "game.asset.living.boguoLeaderAsset", "out", 1, 0);
             m_boss = Game.CreateBoss(bossID, 850, 360, -1, 1, "");
             m_boss.FallFrom(850, 410, "fall", 0, 2, 1000);
             m_boss.SetRelateDemagemRect(m_boss.NpcInfo.X, m_boss.NpcInfo.Y, m_boss.NpcInfo.Width, m_boss.NpcInfo.Height);
             m_boss.Say("Buraya hiç gelmemeliydin！", 0, 6000);
-            m_moive.PlayMovie("in", 9000, 0);
-            //m_boss.PlayMovie("weakness", 10000, 5000);
-            m_front.PlayMovie("in", 9000, 0);
-            m_moive.PlayMovie("out", 15000, 0);
+            m_moive.PlayMovie("in", 6000, 0);
+            m_front.PlayMovie("in", 6000, 0);
+            m_moive.PlayMovie("out", 9000, 0);
 
         }
         private void CreateNpc()

@@ -83,7 +83,7 @@ namespace GameServerScript.AI.Messions
         public void CreateBoss()
         {
             m_moive = Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
-            m_front = Game.Createlayer(200, 200, "font", "game.asset.living.shikongAsset", "out", 1, 0);
+            m_front = Game.Createlayer(200, 250, "font", "game.asset.living.shikongAsset", "out", 1, 0);
             m_boss = Game.CreateBoss(bossID, 160, 330, 1, 1, "");
             m_boss.SetRelateDemagemRect(m_boss.NpcInfo.X, m_boss.NpcInfo.Y, m_boss.NpcInfo.Width, m_boss.NpcInfo.Height);
             m_moive.PlayMovie("in", 6000, 0);

@@ -1246,44 +1246,45 @@ public class GamePlayer : IGamePlayer
         m_gmActivity = new PlayerGmActivity(this, saveTodb: true);
     }
 
-    //public bool isPassCheckCode()
-    //{
-    //    int checkmoney = this.count_random.Next(10, 15);//7, 9); //30 ~ 40 trận sẽ hiện mã captcha
-    //    int checkgp = this.count_random.Next(30, 40);
-    //    int checkfunction = this.count_random.Next(7, 10);
-    //    int checkfunction2 = this.count_random.Next(40, 60);
-    //    bool result = this.m_character.CheckCount == 0 && this.count_addmoney < checkmoney/* && this.count_addgp < checkgp && this.count_function < checkfunction && this.count_function2 < checkfunction2*/;
-    //    Console.WriteLine($"Check: {result}");
-    //    return result;
-    //    return true;
-    //}
+    public bool isPassCheckCode()
+    {
+        
+        //int checkmoney = this.count_random.Next(10, 15);//7, 9); //30 ~ 40 trận sẽ hiện mã captcha
+        //int checkgp = this.count_random.Next(30, 40);
+        //int checkfunction = this.count_random.Next(7, 10);
+        //int checkfunction2 = this.count_random.Next(40, 60);
+        //bool result = this.m_character.CheckCount == 0 && this.count_addmoney < checkmoney/* && this.count_addgp < checkgp && this.count_function < checkfunction && this.count_function2 < checkfunction2*/;
+        //Console.WriteLine($"Check: {result}");
+        //return result;
+        return true;
+    }
 
-    //public void resetPassCode()
-    //{
-    //    this.CountAddMoney = 0;
-    //    this.CountAddGP = 0;
-    //    this.CountFunction = 0;
-    //    this.CountFunction2 = 0;
-    //}
+    public void resetPassCode()
+    {
+       // this.CountAddMoney = 0;
+        //this.CountAddGP = 0;
+        //this.CountFunction = 0;
+        //this.CountFunction2 = 0;
+    }
 
     public bool ShowCheckCode()
     {
-        //this.m_character.CheckCount = 1;
-        //GSPacketIn gSPacketIn = new GSPacketIn(200);
-        //if (Client.Player.PlayerCharacter.CheckError < 1)
-        //{
-        //    gSPacketIn.WriteByte(1);
-        //}
-        //else
-        //{
-        //    gSPacketIn.WriteByte(2);
-        //}
-        //gSPacketIn.WriteBoolean(val: true);
-        //gSPacketIn.WriteByte(1);
-        //gSPacketIn.WriteString("hi");
-        //Client.Player.PlayerCharacter.CheckCode = CheckCode.GenerateCheckCode();
-        //gSPacketIn.Write(CheckCode.CreateImage(Client.Player.PlayerCharacter.CheckCode));
-        //this.SendTCP(gSPacketIn);
+        this.m_character.CheckCount = 1;
+        GSPacketIn gSPacketIn = new GSPacketIn(200);
+        if (Client.Player.PlayerCharacter.CheckError < 1)
+        {
+            gSPacketIn.WriteByte(1);
+        }
+        else
+        {
+            gSPacketIn.WriteByte(2);
+        }
+        gSPacketIn.WriteBoolean(val: true);
+        gSPacketIn.WriteByte(1);
+        gSPacketIn.WriteString("hi");
+        Client.Player.PlayerCharacter.CheckCode = CheckCode.GenerateCheckCode();
+        gSPacketIn.Write(CheckCode.CreateImage(Client.Player.PlayerCharacter.CheckCode));
+        this.SendTCP(gSPacketIn);
         return true;
     }
 
@@ -3589,38 +3590,38 @@ public class GamePlayer : IGamePlayer
                     //Out.SendEliteGameStartRoom(); //turnuva incelenecek
                     Out.SendGuildMemberWeekOpenClose(Extra.Info);
                     Out.SendOpenHappyRecharge(m_character.ID);
-                    if(this.PlayerCharacter.Grade >=3)
-                    {
-                        PlayerCharacter.openFunction(Step.PICK_TWO_TWENTY);
-                    }
-                    if (this.PlayerCharacter.Grade >= 4)
-                    {
-                        PlayerCharacter.openFunction(Step.POP_WIN);
-                    }
-                    if (this.PlayerCharacter.Grade >= 3)
-                    {
-                        PlayerCharacter.openFunction(Step.FIFTY_OPEN);
-                    }
-                    if (this.PlayerCharacter.Grade >= 7)
-                    {
-                        PlayerCharacter.openFunction(Step.FORTY_OPEN);
-                    }
-                    if (this.PlayerCharacter.Grade >= 7)
-                    {
-                        PlayerCharacter.openFunction(Step.THIRTY_OPEN);
-                    }
-                    if (this.PlayerCharacter.Grade >= 7)
-                    {
-                        PlayerCharacter.openFunction(Step.GAIN_TEN_PERSENT);
-                    }
-                    if (this.PlayerCharacter.Grade >= 1)
-                    {
-                        PlayerCharacter.openFunction(Step.PICK_ONE);
-                    }
-                    if (this.PlayerCharacter.Grade >= 5)
-                    {
-                        PlayerCharacter.openFunction(Step.PLANE_OPEN);
-                    }
+                   // if(this.PlayerCharacter.Grade >=5)
+                    //{
+                      //  PlayerCharacter.openFunction(Step.PICK_TWO_TWENTY);
+                    //}
+                    //if (this.PlayerCharacter.Grade >= 4)
+                    //{
+                      //  PlayerCharacter.openFunction(Step.POP_WIN);
+                   // }
+                   // if (this.PlayerCharacter.Grade >= 7)
+                    //{
+                      //  PlayerCharacter.openFunction(Step.FIFTY_OPEN);
+                    //}
+                    //if (this.PlayerCharacter.Grade >= 7)
+                    //{
+                      //  PlayerCharacter.openFunction(Step.FORTY_OPEN);
+                    //}
+                    //if (this.PlayerCharacter.Grade >= 4)
+                    //{
+                     //   PlayerCharacter.openFunction(Step.THIRTY_OPEN);
+                   // }
+                    //if (this.PlayerCharacter.Grade >= 2)
+                    //{
+                     //   PlayerCharacter.openFunction(Step.GAIN_TEN_PERSENT);
+                    //}
+                    //if (this.PlayerCharacter.Grade >= 1)
+                    //{
+                     //   PlayerCharacter.openFunction(Step.PICK_ONE);
+                    //}
+                    //if (this.PlayerCharacter.Grade >= 5)
+                    //{
+                      //  PlayerCharacter.openFunction(Step.PLANE_OPEN);
+                    //}
                     return true;
                 }
                 WorldMgr.RemovePlayer(m_character.ID);
@@ -4713,18 +4714,18 @@ public class GamePlayer : IGamePlayer
             this.Dice.SaveToDatabase();
             this.AvatarCollect.SaveToDatabase();
             m_gmActivity.SaveToDatabase();
-            //try
-            //{
-            //    if (DateTime.Compare(this.m_character.CheckDate.AddMinutes(20.0), DateTime.Now) > 0 && this.m_character.CheckCode != "baodeptrai")
-            //    {
-            //        this.m_character.CheckCode = "baodeptrai";
-            //        this.Disconnect();
-            //    }
-            //}
-            //catch (Exception e)
-            //{
-            //    log.Error("Error Checking hack: " + m_character.NickName + "!", e);
-            //}
+            try
+            {
+                if (DateTime.Compare(this.m_character.CheckDate.AddMinutes(20.0), DateTime.Now) > 0 && this.m_character.CheckCode != "baodeptrai")
+                {
+                    this.m_character.CheckCode = "baodeptrai";
+                    this.Disconnect();
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error("Error Checking hack: " + m_character.NickName + "!", e);
+            }
             return true;
         }
         catch (Exception exception)
@@ -5553,6 +5554,7 @@ public class GamePlayer : IGamePlayer
         }
         PlayerCharacter.FightPower = FightPower;
         OnPlayerPropertyChanged(m_character);
+        Extra.CheckNoviceActiveOpen(NoviceActiveType.UPDATE_FIGHTPOWER);
         Extra.UpdateEventCondition((int)NoviceActiveType.UPDATE_FIGHTPOWER, m_character.FightPower);
     }
 
@@ -6486,10 +6488,10 @@ public class GamePlayer : IGamePlayer
         }
     }
 
-    internal void resetPassCode()
-    {
-        throw new NotImplementedException();
-    }
+   // internal void resetPassCode()
+    //{
+     //   throw new NotImplementedException();
+    //}
 
     public static implicit operator GamePlayer(VirtualGamePlayer v)
     {

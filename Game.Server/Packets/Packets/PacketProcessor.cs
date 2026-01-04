@@ -32,7 +32,7 @@ namespace Game.Base.Packets
         // Rate limiting
         private static readonly ConcurrentDictionary<string, ClientRateInfo> clientRateLimiters =
             new ConcurrentDictionary<string, ClientRateInfo>();
-        private const int MAX_PACKETS_PER_SECOND = 100;
+        private const int MAX_PACKETS_PER_SECOND = 5000;
         private const int RATE_LIMIT_WINDOW_MS = 1000;
 
         // Client information
@@ -79,7 +79,7 @@ namespace Game.Base.Packets
             // Security check: rate limiting
             if (!IsClientAllowedToSendPacket(m_client.TcpEndpoint))
             {
-                log.Warn($"Client {m_client.TcpEndpoint} exceeded rate limit. Packet code: {code}");
+                log.Warn($"Oyuncu {m_client.TcpEndpoint} paket limitlerini aştı. Paket kodu: {code}. İyice bi kontrol et bakalım handlerlardan, nesi yanlış? nesi değil? not: yutikeyu");
                 return;
             }
 

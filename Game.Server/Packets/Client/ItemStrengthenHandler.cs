@@ -147,6 +147,14 @@ namespace Game.Server.Packets.Client
                         {
                             client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.STRENGTHEN_WEAPON_ACTIVE, item.StrengthenLevel);
                         }
+                        if (item.Template.CategoryID == 5 && client.Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.Kıyafet_Guclendirme))
+                        {
+                            client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.Kıyafet_Guclendirme, item.StrengthenLevel);
+                        }
+                        if (item.Template.CategoryID == 1 && client.Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.Sapka_Guclendirme))
+                        {
+                            client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.Sapka_Guclendirme, item.StrengthenLevel);
+                        }
                     }
                     else
                     {

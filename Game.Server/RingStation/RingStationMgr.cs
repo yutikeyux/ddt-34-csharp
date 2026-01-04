@@ -493,7 +493,7 @@ namespace Game.Server.RingStation
 
         public static bool UpdateRingStationInfo(UserRingStationInfo ring)
         {
-            return false;
+            
             if (ring == null)
                 return false;
             using (PlayerBussiness pb = new PlayerBussiness())
@@ -816,7 +816,7 @@ namespace Game.Server.RingStation
             };
             int[] clothArr = new int[] //botun kıyafeti ne koysak ki ya not: yuti
             {
-                5101,
+                5117,
                 5102,
                 5103,
                 5104,

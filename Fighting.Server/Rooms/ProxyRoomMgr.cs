@@ -19,7 +19,7 @@ namespace Fighting.Server.Rooms
 
         public static readonly int PICK_UP_INTERVAL = 1000; //oyun salonu savaş eşleştirme süre düşürme şeyi. 
 
-        public static readonly int CLEAR_ROOM_INTERVAL = 250;
+        public static readonly int CLEAR_ROOM_INTERVAL = 100;
 
         private static bool startWithNpc = false;
 
@@ -227,7 +227,7 @@ namespace Fighting.Server.Rooms
                     {
                         red.startWithNpc = true;
                         red.Client.SendBeginFightNpc(red.selfId, (int)red.RoomType, (int)red.GameType, red.NpcId, red.PlayerCount);
-                        Console.WriteLine("Ös botu çağırılıyor.{0}", red.NpcId);
+                        Console.WriteLine("Bot çağırılıyor.{0}", red.NpcId);
                     }
                     else if (red.startWithNpc && !red.isAutoBot)
                     {//debugu başlat görelim bi

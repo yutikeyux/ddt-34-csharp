@@ -19,6 +19,9 @@ namespace Game.Server.Packets
         CÝVCÝV_KOLAY = 15, //referans olarak eklenmedi henüz
         CÝVCÝV_NORMAL = 16, //referans olarak eklenmedi henüz
         CÝVCÝV_ZOR = 17, //referans olarak eklenmedi henüz
-        BOGO_KOLAY = 18 //referans olarak eklenmedi henüz
+        BOGO_KOLAY = 18,//referans olarak eklenmedi henüz
+        Kýyafet_Guclendirme = 19, //referans olarak eklenmedi henüz
+        Sapka_Guclendirme = 20 //referans olarak eklenmedi henüz
+
     }
 }
