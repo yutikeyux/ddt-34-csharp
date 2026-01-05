@@ -25,7 +25,7 @@ namespace Fighting.Service.action
 
         public void OnAction(Hashtable parameters)
         {
-			Console.Title = "Fighting Service | DDTank 3.0";
+			Console.Title = "Fighting";
 			FightServerConfig config = new FightServerConfig();
 			try
 			{

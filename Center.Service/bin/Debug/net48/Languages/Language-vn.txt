@@ -1,7 +1,4 @@
-#中文包 
-Game.Server.Hello: Merhaba. 
-
-#协议包中的就不加命名空间前缀 
+﻿Game.Server.Hello: Merhaba. 
 ConsortiaAllyAddHandler.Add_Success1:Kaldırma başarılı. 
 ConsortiaAllyAddHandler.Add_Success2:Savaş ilan etme başarılı. 
 ConsortiaAllyAddHandler.Add_Failed:İşlem başarısız. 

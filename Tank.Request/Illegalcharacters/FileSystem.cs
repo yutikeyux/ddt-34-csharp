@@ -1,172 +1,95 @@
 ﻿using System;
-using System.Data;
-using System.Configuration;
-using System.Linq;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Web;
 
 namespace Tank.Request.Illegalcharacters
 {
+    /// <summary>
+    /// Handles the loading and checking of illegal characters/words from files.
+    /// </summary>
     public class FileSystem
     {
-        public ArrayList contentList = new ArrayList();                 //用于记录文件内容的ArrayList对象
+        private List<string> _illegalWords;
 
-        private FileSystemWatcher fileWatcher = new FileSystemWatcher();       //用于监控文件系统的检测者
-
-        private string filePath = string.Empty;
-        private string fileDirectory = string.Empty;
-        private string fileType = string.Empty;
-
-
-        public FileSystem(string Path, string Directory, string Type)
+        /// <summary>
+        /// Initializes a new instance of the FileSystem class.
+        /// </summary>
+        /// <param name="illegalCharPath">Physical path to the main illegal characters file.</param>
+        /// <param name="illegalDirPath">Physical path to a directory containing additional illegal word files.</param>
+        /// <param name="searchPattern">File pattern to look for in the directory (e.g., "*.txt").</param>
+        public FileSystem(string illegalCharPath, string illegalDirPath, string searchPattern)
         {
-            //
-            // TODO: Add constructor logic here
-            //
-            initContent(Path);                          //初始化内容
-            initFileWatcher(Directory, Type);       //初始化检查者
-        }
+            _illegalWords = new List<string>();
 
-
-        private void initContent(string Path)
-        {
-            //将文本内容记录到ArrayList对象中
-            if (File.Exists(Path))
+            // 1. Load from the single specific file
+            if (!string.IsNullOrEmpty(illegalCharPath) && System.IO.File.Exists(illegalCharPath))
             {
-                this.filePath = Path;
-                StreamReader sr = new StreamReader(Path, Encoding.GetEncoding("GB2312"));
-                string str = "";
-
-                if (contentList.Count > 0)
+                try
                 {
-                    contentList.Clear();
+                    string[] words = System.IO.File.ReadAllLines(illegalCharPath);
+                    _illegalWords.AddRange(words);
                 }
-                while (str != null)
+                catch (Exception ex)
                 {
-                    str = sr.ReadLine();
-                    if (!string.IsNullOrEmpty(str))
+                    // Log or silently ignore if the file is locked/missing during startup
+                    System.Diagnostics.Debug.WriteLine("Error loading illegal char file: " + ex.Message);
+                }
+            }
+
+            // 2. Load from the directory
+            if (!string.IsNullOrEmpty(illegalDirPath) && System.IO.Directory.Exists(illegalDirPath))
+            {
+                try
+                {
+                    // Get all files matching the pattern (e.g., *.txt)
+                    string[] files = System.IO.Directory.GetFiles(illegalDirPath, searchPattern, SearchOption.TopDirectoryOnly);
+
+                    foreach (string file in files)
                     {
-                        contentList.Add(str);
-                    }
-
-                }
-                if (str == null)
-                {
-                    sr.Close();
-                }
-
-            }
-        }
-
-        private void initFileWatcher(string directory, string type)
-        {
-
-            if (Directory.Exists(directory))
-            {
-                this.fileDirectory = directory;
-                this.fileType = type;
-                //fileWatcher = new FileSystemWatcher(directory, type);
-                fileWatcher.Path = directory;
-                fileWatcher.Filter = type;
-                //设置属性
-                fileWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName;
-                fileWatcher.EnableRaisingEvents = true;
-                fileWatcher.Changed += new FileSystemEventHandler(OnChanged);
-                fileWatcher.Renamed += new RenamedEventHandler(OnRenamed);
-            }
-
-
-
-
-        }
-
-
-        public bool checkIllegalChar(string strRegName)
-        {
-            bool flag = false;
-
-            if (!string.IsNullOrEmpty(strRegName))
-            {
-
-                flag = checkChar(strRegName);
-
-            }
-
-
-            return flag;
-        }
-
-        private bool checkChar(string strRegName)
-        {
-            bool flag = false;
-            foreach (string strLine in contentList)
-            {
-                //校验非法字符
-                if (!strLine.StartsWith("GM"))
-                {
-                    foreach (char charl in strLine)
-                    {
-                        if (strRegName.Contains(charl.ToString()) && charl.ToString() != " ")
+                        try
                         {
-                            flag = true;
-                            break;
+                            string[] words = System.IO.File.ReadAllLines(file);
+                            _illegalWords.AddRange(words);
                         }
-
-                    }
-                    if (flag)
-                    {
-                        break;
+                        catch { /* Ignore individual file read errors */ }
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    //校验非法词组
-                    string[] keyword = strLine.Split('|');
-                    foreach (string key in keyword)
-                    {
-                        if (strRegName.Contains(key))
-                        {
-                            flag = true;
-                            break;
-                        }
-                    }
-                    if (flag)
-                    {
-                        break;
-                    }
+                    System.Diagnostics.Debug.WriteLine("Error scanning illegal directory: " + ex.Message);
+                }
+            }
+        }
 
+        /// <summary>
+        /// Checks if the input text contains any of the loaded illegal words.
+        /// </summary>
+        /// <param name="input">The text to check (e.g., Nickname).</param>
+        /// <returns>True if an illegal word is found, False otherwise.</returns>
+        public bool checkIllegalChar(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
 
+            // Check against the loaded list
+            // Note: Depending on requirements, you might want case-insensitive comparison
+            foreach (string word in _illegalWords)
+            {
+                if (!string.IsNullOrEmpty(word))
+                {
+                    // Simple Contains check. 
+                    // For better performance with large lists, consider using a HashSet or Trie.
+                    if (input.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        return true; // Illegal character found
+                    }
                 }
             }
 
-            return flag;
-        }
-
-
-        private void OnChanged(object source, FileSystemEventArgs e)
-        {
-            UpdataContent();
-        }
-
-
-        private void UpdataContent()
-        {
-            //重载文件内容
-            initContent(filePath);
-
-        }
-
-        private static void OnRenamed(object source, RenamedEventArgs e)
-        {
-            //换文件名字
+            return false; // Safe
         }
     }
 }

@@ -1,1 +1,1 @@
-# Oyun c# Kaynak Kodları
+# değişiklikleri inceleyip kendinizde de uygulayabilirsiniz

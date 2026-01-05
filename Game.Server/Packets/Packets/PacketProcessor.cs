@@ -297,7 +297,7 @@ namespace Game.Base.Packets
 
             if (!m_packetHandlers.TryAdd(packetCode, handler))
             {
-                log.Warn($"Packet handler for code {packetCode} already registered and was replaced");
+                log.Info($"Packet handler for code {packetCode} already registered and was replaced");
             }
         }
 

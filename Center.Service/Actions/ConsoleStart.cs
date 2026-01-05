@@ -24,7 +24,7 @@ namespace Center.Service.actions
 
         private static bool StartServer()
         {
-			Console.Title = "Center Service | DDTank 3.0";
+			Console.Title = "Center";
 			return CenterServer.Instance.Start();
         }
 

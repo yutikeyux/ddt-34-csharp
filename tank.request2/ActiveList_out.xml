@@ -1,0 +1,4 @@
+<Result value="true" message="Success!">
+  <Item ActiveID="2" Description="" Content="Chúc ae tháng mới nhiều may mắn" AwardContent="Đá Manh Hóa x10 &#xD;&#xA;" HasKey="3" EndDate="2025-11-27 16:17:15" IsOnly="1" StartDate="2022-11-27 16:17:15" Title="Tháng 4 Vui vẻ" Type="1" ActiveType="0" IsAdvance="false" GoodsExchangeTypes="" GoodsExchangeNum="" limitType="" limitValue="" ActionTimeContent="Giành tặng ae tháng 4" />
+  <Item ActiveID="1" Description="" Content="AE nhận quà chiến game nào !" AwardContent="Đệ Nhất Server x1 &#xD;&#xA;" HasKey="3" EndDate="2025-11-27 16:17:15" IsOnly="1" StartDate="2022-11-27 16:17:15" Title="Quà Tân Thủ Chơi Game" Type="1" ActiveType="0" IsAdvance="false" GoodsExchangeTypes="" GoodsExchangeNum="" limitType="" limitValue="" ActionTimeContent="Giành cho Tân Thủ" />
+</Result>

@@ -252,28 +252,28 @@ gamePlayer.PlayerCharacter.Grade.ToString()
         // Token: 0x0600004D RID: 77 RVA: 0x000022A6 File Offset: 0x000004A6
         private void button11_Click(object sender, EventArgs e)
         {
-            Process.Start("http://185.88.175.105/Request/activelist.ashx");
+            Process.Start("http://109.122.6.15/ddt-quest-s1/activelist.ashx");
             MessageBox.Show("(Zaman Sınırlı) Güncellendi [Başarılı]");
         }
 
         // Token: 0x0600004E RID: 78 RVA: 0x000022BF File Offset: 0x000004BF
         private void button12_Click(object sender, EventArgs e)
         {
-            Process.Start("http://185.88.175.105/Request/CelebList/CreateAllCeleb.ashx");
+            Process.Start("http://109.122.6.15/ddt-quest-s1/CelebList/CreateAllCeleb.ashx");
             MessageBox.Show("(Onur Listesi) Güncellendi [Başarılı]");
         }
 
         // Token: 0x0600004F RID: 79 RVA: 0x000022D8 File Offset: 0x000004D8
         private void button13_Click(object sender, EventArgs e)
         {
-            Process.Start("http://185.88.175.105/Request/LoadPVEItems.ashx");
+            Process.Start("http://109.122.6.15/ddt-quest-s1/LoadPVEItems.ashx");
             MessageBox.Show("(Droplar) Güncellendi [Başarılı]");
         }
 
         // Token: 0x06000050 RID: 80 RVA: 0x000022F1 File Offset: 0x000004F1
         private void button14_Click(object sender, EventArgs e)
         {
-            Process.Start("http://185.88.175.105/Request/questlist.ashx");
+            Process.Start("http://109.122.6.15/ddt-quest-s1/questlist.ashx");
             MessageBox.Show("(Görevler) Güncellendi [Başarılı]");
         }
 
@@ -361,7 +361,7 @@ gamePlayer.PlayerCharacter.Grade.ToString()
         // Token: 0x06000056 RID: 86 RVA: 0x00002325 File Offset: 0x00000525
         private void button18_Click(object sender, EventArgs e)
         {
-            Process.Start("http://185.88.175.105/Request/NPCInfoList.ashx");
+            Process.Start("http://109.122.6.15/ddt-quest-s1/NPCInfoList.ashx");
             MessageBox.Show("(NPC'Ler) Güncellendi [Başarılı]");
         }
 
@@ -677,11 +677,11 @@ this.comboBox1.Text,
         }
 
         // Token: 0x0600005E RID: 94 RVA: 0x00005624 File Offset: 0x00003824
-        private void zaza1(string zaza)
+        private void güncel1(string güncelle)
         {
             try
             {
-                string address = ServerManagementForm.link + zaza;
+                string address = ServerManagementForm.link + güncelle;
                 new WebClient().DownloadString(address);
                 Console.WriteLine("Güncelleme Başarılı: " + DateTime.Now.ToString());
             }
@@ -704,21 +704,21 @@ this.comboBox1.Text,
                     if (flag3)
                     {
                         Console.WriteLine("Ball info Güncelleniyor !");
-                        this.zaza1("Balllist.ashx");
+                        this.güncel1("Balllist.ashx");
                     }
                     Console.WriteLine("Ball info Güncellendi !");
                     bool flag4 = MapMgr.ReLoadMap();
                     if (flag4)
                     {
                         Console.WriteLine("Map info Güncelleniyor !");
-                        this.zaza1("MapServerList.ashx");
+                        this.güncel1("MapServerList.ashx");
                     }
                     Console.WriteLine("Map info Güncellendi !");
                     bool flag5 = MapMgr.ReLoadMapServer();
                     if (flag5)
                     {
                         Console.WriteLine("mapserver info Güncelleniyor !");
-                        this.zaza1("MapServerList.ashx");
+                        this.güncel1("MapServerList.ashx");
                     }
                     Console.WriteLine("mapserver Güncellendi !");
                     bool flag6 = PropItemMgr.Reload();
@@ -737,14 +737,14 @@ this.comboBox1.Text,
                     if (flag8)
                     {
                         Console.WriteLine("shop info Güncelleniyor !");
-                        this.zaza1("ShopItemList.ashx");
+                        this.güncel1("ShopItemList.ashx");
                     }
                     Console.WriteLine("shop info Güncellendi !");
                     bool flag9 = QuestMgr.ReLoad();
                     if (flag9)
                     {
                         Console.WriteLine("quest info Güncelleniyor !");
-                        this.zaza1("QuestList.ashx");
+                        this.güncel1("QuestList.ashx");
                     }
                     Console.WriteLine("quest info Güncellendi !");
                     bool flag10 = FusionMgr.ReLoad();
@@ -757,7 +757,7 @@ this.comboBox1.Text,
                     if (flag11)
                     {
                         Console.WriteLine("consortiaMgr info Güncelleniyor !");
-                        this.zaza1("ConsortiaAllyList.ashx");
+                        this.güncel1("ConsortiaAllyList.ashx");
                     }
                     Console.WriteLine("consortiaMgr info Güncellendi !");
                     bool flag12 = RateMgr.ReLoad();
@@ -770,7 +770,7 @@ this.comboBox1.Text,
                     if (flag13)
                     {
                         Console.WriteLine("NPCInfo Güncelleniyor !");
-                        this.zaza1("NPCInfoList.ashx");
+                        this.güncel1("NPCInfoList.ashx");
                     }
                     Console.WriteLine("NPCInfo Güncellendi !");
                     bool flag14 = FightRateMgr.ReLoad();
@@ -799,7 +799,7 @@ this.comboBox1.Text,
                     bool flag17 = this.comboBox3.Text == "Görev Güncelle";
                     if (flag17)
                     {
-                        this.zaza1("QuestList.ashx");
+                        this.güncel1("QuestList.ashx");
                         MessageBox.Show("(Görevler) Güncellendi [Başarılı]");
                     }
                     else
@@ -807,7 +807,7 @@ this.comboBox1.Text,
                         bool flag18 = this.comboBox3.Text == "Onur Listesi Güncelle";
                         if (flag18)
                         {
-                            this.zaza1("CelebList/CreateAllCeleb.ashx");
+                            this.güncel1("CelebList/CreateAllCeleb.ashx");
                             MessageBox.Show("(Onur Listesi) Güncellendi [Başarılı]");
                         }
                         else
@@ -815,7 +815,7 @@ this.comboBox1.Text,
                             bool flag19 = this.comboBox3.Text == "Etkinlikleri Güncelle";
                             if (flag19)
                             {
-                                this.zaza1("ActiveList.ashx");
+                                this.güncel1("ActiveList.ashx");
                                 MessageBox.Show("(Zaman Sınırlı) Güncellendi [Başarılı]");
                             }
                             else
@@ -823,7 +823,7 @@ this.comboBox1.Text,
                                 bool flag20 = this.comboBox3.Text == "Pve_İnfo Güncelle";
                                 if (flag20)
                                 {
-                                    this.zaza1("LoadPVEItems.ashx");
+                                    this.güncel1("LoadPVEItems.ashx");
                                     MessageBox.Show("(Droplar) Güncellendi [Başarılı]");
                                 }
                                 else
@@ -831,7 +831,7 @@ this.comboBox1.Text,
                                     bool flag21 = this.comboBox3.Text == "Templatelist Güncelle";
                                     if (flag21)
                                     {
-                                        this.zaza1("TemplateAlllist.ashx");
+                                        this.güncel1("TemplateAlllist.ashx");
                                         MessageBox.Show("Templist Güncellendi. [Başarılı]");
                                     }
                                     else
@@ -855,7 +855,7 @@ this.comboBox1.Text,
                                                 bool flag25 = ShopMgr.ReLoad();
                                                 if (flag25)
                                                 {
-                                                    this.zaza1("ShopItemList.ashx");
+                                                    this.güncel1("ShopItemList.ashx");
                                                     Console.WriteLine("Shop Güncelleniyor...");
                                                 }
                                                 Console.WriteLine("Shop Güncellendi.!");
@@ -882,7 +882,7 @@ this.comboBox1.Text,
                                                         bool flag29 = NPCInfoMgr.ReLoad();
                                                         if (flag29)
                                                         {
-                                                            this.zaza1("NPCInfoList.ashx");
+                                                            this.güncel1("NPCInfoList.ashx");
                                                             Console.WriteLine("Keşifler Güncelleniyor !");
                                                         }
                                                         Console.WriteLine("Keşifler Güncellendi !");
@@ -896,7 +896,7 @@ this.comboBox1.Text,
                                                             bool flag31 = BallMgr.ReLoad();
                                                             if (flag31)
                                                             {
-                                                                this.zaza1("Balllist.ashx");
+                                                                this.güncel1("Balllist.ashx");
                                                                 Console.WriteLine("Ball Güncelleniyor...");
                                                             }
                                                             Console.WriteLine("Ball Güncellendi.!");
@@ -910,7 +910,7 @@ this.comboBox1.Text,
                                                                 bool flag33 = BallConfigMgr.ReLoad();
                                                                 if (flag33)
                                                                 {
-                                                                    this.zaza1("BombConfig.ashx");
+                                                                    this.güncel1("BombConfig.ashx");
                                                                     Console.WriteLine("Ball Config Güncelleniyor...");
                                                                 }
                                                                 Console.WriteLine("Ball Config Güncellendi.!");
@@ -937,7 +937,7 @@ this.comboBox1.Text,
                                                                         bool flag37 = GoldEquipMgr.ReLoad();
                                                                         if (flag37)
                                                                         {
-                                                                            this.zaza1("GoldEquipTemplateLoad.ashx");
+                                                                            this.güncel1("GoldEquipTemplateLoad.ashx");
                                                                             Console.WriteLine("Goldlar Güncelleniyor...");
                                                                         }
                                                                         Console.WriteLine("Goldlar Güncellendi.!");
@@ -958,7 +958,7 @@ this.comboBox1.Text,
                                                                             {
                                                                                 Console.WriteLine("mapserver info Güncelleniyor !");
                                                                             }
-                                                                            this.zaza1("MapServerList.ashx");
+                                                                            this.güncel1("MapServerList.ashx");
                                                                             Console.WriteLine("Maplar Güncellendi !");
                                                                             MessageBox.Show("Maplar Başarıyla Güncellendi !", "Bilgi");
                                                                         }
@@ -970,7 +970,7 @@ this.comboBox1.Text,
                                                                                 bool flag42 = DropMgr.ReLoad();
                                                                                 if (flag42)
                                                                                 {
-                                                                                    this.zaza1("LoadPVEItems.ashx");
+                                                                                    this.güncel1("LoadPVEItems.ashx");
                                                                                     Console.WriteLine("Droplar Güncelleniyor !");
                                                                                 }
                                                                                 Console.WriteLine("Droplar Güncellendi !");
@@ -1073,7 +1073,7 @@ this.comboBox1.Text,
         private SqlConnection Baglanti_Membership_2 = new SqlConnection("Data Source=elemet-yuti/SA;Initial Catalog=Db_Membership;Persist Security Info=True;User ID=sa;Password=ElementYuti2026.123@");
 
         // Token: 0x04000020 RID: 32
-        private static string link = "http://31.58.91.182/Request/";
+        private static string link = "http://109.122.6.15/ddt-quest-s1/";
 
         private void label7_Click(object sender, EventArgs e)
         {

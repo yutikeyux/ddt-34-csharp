@@ -108,11 +108,11 @@ namespace Game.Service.actions
 		public void OnAction(Hashtable parameters)
 		{
 			bool flag = true;
-			Console.Title = "BomBomRia Road Service ";
+			Console.Title = "Road Service";
 			Console.ForegroundColor = ConsoleColor.Green;
 			GameServer.CreateInstance(this.config = new GameServerConfig());
-			Console.ForegroundColor = ConsoleColor.DarkRed;
-			Console.WriteLine("BomBomRia Road Serveri Başlatılıyor...");
+			Console.ForegroundColor = ConsoleColor.Cyan;
+			Console.WriteLine("Road Başlatılıyor...");
 			GameServer.Instance.Start();
 			Console.ForegroundColor = ConsoleColor.Cyan;
 			GameServer.KeepRunning = true;
@@ -121,12 +121,12 @@ namespace Game.Service.actions
 			if (flag2)
 			{
 				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine("Server Başarısız !!");
+				Console.WriteLine("Server Başarısız!!");
 			}
 			else
 			{
 				Console.WriteLine("Server Online!");
-				Console.WriteLine("Yönetim Konsolunu Açmak İçin (admin) Yazıp Enter Tuşuna Basınız .");
+				Console.WriteLine("Yönetim Konsolunu Açmak İçin (admin) Yazıp Enter Tuşuna Basınız.");
 			}
 			ConsoleClient client = new ConsoleClient();
 			new Thread(new ThreadStart(ConsoleStart.NewForm)).Start();
@@ -162,7 +162,7 @@ namespace Game.Service.actions
 							{
 								Console.Clear();
 								Console.ForegroundColor = ConsoleColor.Cyan;
-								Console.WriteLine("BomBomRia Yönetim Konsolu.");
+								Console.WriteLine("Yönetim Konsolu.");
 								Console.WriteLine("Lütfen numara seçin ;");
 								Console.WriteLine("1.  Mesaj Gönder.");
 								Console.WriteLine("2.  Nick e Ban At.");
@@ -237,7 +237,7 @@ namespace Game.Service.actions
 											GamePlayer[] allPlayers3 = WorldMgr.GetAllPlayers();
 											for (int k = 0; k < allPlayers3.Length; k++)
 											{
-												allPlayers3[k].Out.SendMessage(eMessageType.ALERT, "[ YÖNETİM ]: " + str2);
+												allPlayers3[k].Out.SendMessage(eMessageType.ALERT, "[YÖNETİM]: " + str2);
 											}
 											Console.WriteLine("Mesaj gönderildi.");
 											continue;

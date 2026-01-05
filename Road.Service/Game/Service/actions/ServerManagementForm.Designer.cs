@@ -1203,7 +1203,7 @@
             this.MaximizeBox = false;
             this.Name = "ServerManagementForm";
             this.ShowIcon = false;
-            this.Text = "BomBomRia Yönetim";
+            this.Text = "Yönetim";
             this.Load += new System.EventHandler(this.ServerManagementForm_Load);
             this.groupBox3.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
