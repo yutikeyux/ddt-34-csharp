@@ -1067,10 +1067,10 @@ this.comboBox1.Text,
         private SqlConnection Baglanti_Db = new SqlConnection(ConfigurationManager.AppSettings.Get("conString"));
 
         // Token: 0x0400001E RID: 30
-        private SqlConnection Baglanti_Membership = new SqlConnection("Data Source=elemet-yuti/SA;Initial Catalog=Db_Membership;Persist Security Info=True;User ID=sa;Password=ElementYuti2026.123@");
+        private SqlConnection Baglanti_Membership = new SqlConnection("Data Source=element-yuti/SA;Initial Catalog=Db_Membership;Persist Security Info=True;User ID=sa;Password=ElementYuti2026.123@");
 
         // Token: 0x0400001F RID: 31
-        private SqlConnection Baglanti_Membership_2 = new SqlConnection("Data Source=elemet-yuti/SA;Initial Catalog=Db_Membership;Persist Security Info=True;User ID=sa;Password=ElementYuti2026.123@");
+        private SqlConnection Baglanti_Membership_2 = new SqlConnection("Data Source=element-yuti/SA;Initial Catalog=Db_Membership;Persist Security Info=True;User ID=sa;Password=ElementYuti2026.123@");
 
         // Token: 0x04000020 RID: 32
         private static string link = "http://109.122.6.15/ddt-quest-s1/";

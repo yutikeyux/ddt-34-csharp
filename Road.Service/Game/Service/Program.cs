@@ -506,68 +506,68 @@ namespace Game.Service
 			new Program.RastgeleOdul
 			{
 				ItemID = 20101,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kırmızı Sihirli Karınca Kart Kutusu' kazandı!"
+				Sayi = 25,
+				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kırmızı Sihirli Karınca Kart Kutusu' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 20102,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Mavi Sihirli Karınca Kart Kutusu' kazandı!"
+				Sayi = 25,
+				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Mavi Sihirli Karınca Kart Kutusu' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 20103,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Sihirli Karınca Kraliçesi Kart Kutusu' kazandı!"
+				Sayi = 25,
+				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Sihirli Karınca Kraliçesi Kart Kutusu' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 20104,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Pembe Bogolu Kart Kutusu' kazandı!"
+				Sayi = 25,
+				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Pembe Bogolu Kart Kutusu' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 20105,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bogo Eliti Kart Kutusu' kazandı!"
+				Sayi = 25,
+				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Bogo Eliti Kart Kutusu' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 20106,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bogo Lideri Kart Kutusu' kazandı!"
+				Sayi = 25,
+				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Bogo Lideri Kart Kutusu' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 20107,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bogo Kralı Kart Kutusu' kazandı!"
+				Sayi = 25,
+				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Bogo Kralı Kart Kutusu' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 20108,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kabile Savaşçısı Kart Kutusu' kazandı!"
+				Sayi = 25,
+				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kabile Savaşçısı Kart Kutusu' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 20109,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kabile Askeri Kart Kutusu' kazandı!"
+				Sayi = 25,
+				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kabile Askeri Kart Kutusu' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 20110,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kabile Kardeşinin Abi Kart Kutusu' kazandı!"
+				Sayi = 25,
+				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kabile Kardeşinin Abi Kart Kutusu' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{
 				ItemID = 20111,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kabile Kardeşinin Kardeş Kart Kutusu' kazandı!"
+				Sayi = 25,
+				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kabile Kardeşinin Kardeş Kart Kutusu' kazandı!"
 			},
 			new Program.RastgeleOdul
 			{

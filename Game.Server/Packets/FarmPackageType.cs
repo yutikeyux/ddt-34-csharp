@@ -2,7 +2,7 @@ namespace Game.Server.Packets
 {
     public enum FarmPackageType
 	{
-ENTER_FARM = 1,
+        ENTER_FARM = 1,
         GROW_FIELD = 2,
         ACCELERATE_FIELD = 3,
         GAIN_FIELD = 4,

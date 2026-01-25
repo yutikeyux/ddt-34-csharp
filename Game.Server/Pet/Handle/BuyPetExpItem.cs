@@ -57,9 +57,9 @@ namespace Game.Server.Pet.Handle
                 return false;
             }
             ItemTemplateInfo item = ItemMgr.FindItemTemplate(334102);
-            ItemInfo cloneItem = ItemInfo.CreateFromTemplate(item, info.ItemCount, (int)ItemAddType.Buy);
+            ItemInfo cloneItem = ItemInfo.CreateFromTemplate(item, 1, (int)ItemAddType.Buy);
             cloneItem.IsBinds = true;
-            player.AddTemplate(cloneItem, cloneItem.Template.BagType, info.ItemCount, eGameView.RouletteTypeGet);
+            player.AddTemplate(cloneItem, cloneItem.Template.BagType, 1, eGameView.RouletteTypeGet);
             farm.buyExpRemainNum--;
             GSPacketIn response = new GSPacketIn((byte)ePackageType.PET);
             response.WriteByte((byte)FarmPackageType.BUY_PET_EXP_ITEM);

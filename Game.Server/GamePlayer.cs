@@ -801,6 +801,7 @@ public class GamePlayer : IGamePlayer
                 }
                 OnLevelUp(value);
                 OnPropertiesChanged();
+                UpdateFightPower(); //ekledim bi test etmek lazım ama yaa sanki not:yuti
             }
         }
     }
