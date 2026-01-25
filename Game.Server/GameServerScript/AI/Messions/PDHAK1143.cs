@@ -1,167 +1,199 @@
+using System;
 using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
 
-
 namespace GameServerScript.AI.Messions
 {
+    // Token: 0x020002BB RID: 699
     public class PDHAK1143 : AMissionControl
     {
-        private SimpleBoss _mHawkBoss;
-
-        private SimpleBoss _mBoss;
-
-        private readonly int _bossId = 4205;
-
-        private readonly int _bossId2 = 4206;
-
-        private readonly int _npcId = 4202;
-
-        private bool m_canWin = false;
-
-        private PhysicalObj _mMoive;
-
-        private PhysicalObj _mFront;
-
+        // Token: 0x060022DA RID: 8922 RVA: 0x000FF92C File Offset: 0x000FDB2C
         public override int CalculateScoreGrade(int score)
         {
             base.CalculateScoreGrade(score);
-            if (score > 1750)
+            bool flag = score > 1750;
+            int result;
+            if (flag)
             {
-                return 3;
-            }
-            else if (score > 1675)
-            {
-                return 2;
-            }
-            else if (score > 1600)
-            {
-                return 1;
+                result = 3;
             }
             else
             {
-                return 0;
+                bool flag2 = score > 1675;
+                if (flag2)
+                {
+                    result = 2;
+                }
+                else
+                {
+                    bool flag3 = score > 1600;
+                    if (flag3)
+                    {
+                        result = 1;
+                    }
+                    else
+                    {
+                        result = 0;
+                    }
+                }
             }
+            return result;
         }
 
+        // Token: 0x060022DB RID: 8923 RVA: 0x000FF97C File Offset: 0x000FDB7C
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-            int[] resources = { _bossId, _bossId2, _npcId };
-            int[] gameOverResource = { _bossId, _bossId2, _npcId };
-            Game.AddLoadingFile(2, "image/game/effect/4/feather.swf", "asset.game.4.feather");
-            Game.AddLoadingFile(2, "image/game/thing/bossbornbgasset.swf", "game.asset.living.BossBgAsset");
-            Game.AddLoadingFile(2, "image/game/thing/bossbornbgasset.swf", "game.asset.living.tingyuanlieshouAsset");
-            Game.LoadResources(resources);
-            Game.LoadNpcGameOverResources(gameOverResource);
-            Game.SetMap(1143);
+            int[] npcidleri = new int[]
+            {
+                this.Kartal,
+                this.Kurt,
+                this.int_2
+            };
+            int[] npcIds2 = new int[]
+            {
+                this.Kartal,
+                this.Kurt
+            };
+            base.Game.AddLoadingFile(2, "image/game/effect/4/feather.swf", "asset.game.4.feather");
+            base.Game.AddLoadingFile(2, "image/game/thing/bossbornbgasset.swf", "game.asset.living.BossBgAsset");
+            base.Game.AddLoadingFile(2, "image/game/thing/bossbornbgasset.swf", "game.asset.living.tingyuanlieshouAsset");
+            base.Game.LoadResources(npcidleri);
+            base.Game.LoadNpcGameOverResources(npcIds2);
+            base.Game.SetMap(1143);
         }
 
+        // Token: 0x060022DC RID: 8924 RVA: 0x000FFA3C File Offset: 0x000FDC3C
         public override void OnStartGame()
         {
             base.OnStartGame();
-
-
-            _mMoive = Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
-            _mFront = Game.Createlayer(658, 607, "front", "game.asset.living.tingyuanlieshouAsset", "out", 1, 0);
-
-            LivingConfig config = Game.BaseLivingConfig();
-            config.IsFly = true;
-            config.IsShowBloodBar = true;
-            config.FriendlyBoss = new LivingConfig.FriendlyLiving(_bossId2, true);
-
-            _mHawkBoss = Game.CreateBoss(_bossId, 354, 344, -1, 1, "", config);
-            _mHawkBoss.SetRelateDemagemRect(_mHawkBoss.NpcInfo.X, _mHawkBoss.NpcInfo.Y, _mHawkBoss.NpcInfo.Width, _mHawkBoss.NpcInfo.Height);
-            _mHawkBoss.DoAction = 2;
-
-            Game.SendObjectFocus(_mHawkBoss, 1, 100, 0);
-
-            Game.SendFreeFocus(1460, 962, 1, 3000, 0);
-
-            _mHawkBoss.CallFuction(CreateBoss, 4000);
+            this.Arkaplan_Efekt = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
+            this.Efekt_Yazý = base.Game.Createlayer(1098, 706, "front", "game.asset.living.tingyuanlieshouAsset", "out", 1, 0);
+            LivingConfig kartalkuþ = base.Game.BaseLivingConfig();
+            kartalkuþ.IsFly = true;
+            this.kartalkus = base.Game.CreateBoss(this.Kartal, 354, 344, -1, 1, "born", kartalkuþ);
+            this.kartalkus.SetRelateDemagemRect(this.kartalkus.NpcInfo.X, this.kartalkus.NpcInfo.Y, this.kartalkus.NpcInfo.Width, this.kartalkus.NpcInfo.Height);
+            base.Game.SendObjectFocus(this.kartalkus, 1, 100, 0);
+            base.Game.SendFreeFocus(1460, 962, 1, 3000, 0);
+            this.kartalkus.CallFuction(new LivingCallBack(this.KurtDoður), 4000);
         }
 
-        private void CreateBoss()
+        // Token: 0x060022DD RID: 8925 RVA: 0x000FFB7C File Offset: 0x000FDD7C
+        private void KurtDoður()
         {
-            LivingConfig config = Game.BaseLivingConfig();
-            config.IsShowBloodBar = true;
-            config.FriendlyBoss = new LivingConfig.FriendlyLiving(_bossId, true);
-
-            _mBoss = Game.CreateBoss(_bossId2, 1460, 962, -1, 1, "", config);
-            _mBoss.SetRelateDemagemRect(_mBoss.NpcInfo.X, _mBoss.NpcInfo.Y, _mBoss.NpcInfo.Width, _mBoss.NpcInfo.Height);
-            _mBoss.DoAction = 2;
-            _mBoss.Delay++;
-
-            Game.SendFreeFocus(740, 680, 1, 2500, 0);
-
-            _mBoss.Config.FriendlyBoss.FriendBoss = _mHawkBoss;
-            _mBoss.Config.FriendlyBoss.ActionStr = "shield";
-
-            _mHawkBoss.Config.FriendlyBoss.FriendBoss = _mBoss;
-            _mHawkBoss.Config.FriendlyBoss.ActionStr = "shield";
-
-            _mMoive.PlayMovie("in", 3000, 0);
-            _mFront.PlayMovie("in", 3200, 0);
-            _mMoive.PlayMovie("out", 6000, 0);
-            _mFront.PlayMovie("out", 6000, 0);
+            this.simpleBoss_1 = base.Game.CreateBoss(this.Kurt, 1460, 962, -1, 1, "born");
+            this.simpleBoss_1.SetRelateDemagemRect(this.simpleBoss_1.NpcInfo.X, this.simpleBoss_1.NpcInfo.Y, this.simpleBoss_1.NpcInfo.Width, this.simpleBoss_1.NpcInfo.Height);
+            this.Arkaplan_Efekt.PlayMovie("in", 3000, 0);
+            this.Efekt_Yazý.PlayMovie("in", 3200, 0);
+            this.Arkaplan_Efekt.PlayMovie("out", 6000, 0);
+            this.Efekt_Yazý.PlayMovie("out", 6000, 0);
         }
 
+        // Token: 0x060022DE RID: 8926 RVA: 0x000FFC5A File Offset: 0x000FDE5A
+        public override void OnNewTurnStarted()
+        {
+            base.OnNewTurnStarted();
+        }
+
+        // Token: 0x060022DF RID: 8927 RVA: 0x000FFC64 File Offset: 0x000FDE64
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-
-            if (Game.TurnIndex <= 1) return;
-            if (_mMoive != null)
+            bool flag = base.Game.TurnIndex > 1;
+            if (flag)
             {
-                Game.RemovePhysicalObj(_mMoive, true);
-                _mMoive = null;
-            }
-            if (_mFront != null)
-            {
-                Game.RemovePhysicalObj(_mFront, true);
-                _mFront = null;
+                bool flag2 = this.Arkaplan_Efekt != null;
+                if (flag2)
+                {
+                    base.Game.RemovePhysicalObj(this.Arkaplan_Efekt, true);
+                    this.Arkaplan_Efekt = null;
+                }
+                bool flag3 = this.Efekt_Yazý != null;
+                if (flag3)
+                {
+                    base.Game.RemovePhysicalObj(this.Efekt_Yazý, true);
+                    this.Efekt_Yazý = null;
+                }
             }
         }
 
+        // Token: 0x060022E0 RID: 8928 RVA: 0x000FFCE0 File Offset: 0x000FDEE0
         public override bool CanGameOver()
         {
-            if (_mBoss != null && !_mBoss.IsLiving && !m_canWin)
+            bool flag = this.kartalkus != null && !this.kartalkus.IsLiving && this.simpleBoss_1 != null && !this.simpleBoss_1.IsLiving;
+            bool result;
+            if (flag)
             {
-                Game.GameStateModify = eGameState.Waiting;
-                Game.SendFreeFocus(_mHawkBoss.X, _mHawkBoss.Y - 100, 0, 0, 0);
-
-                _mHawkBoss.PlayMovie("die", 2500, 0);
-                _mHawkBoss.Die(4000);
-
-                m_canWin = true;
+                this.int_3++;
+                result = true;
             }
-            if (_mHawkBoss != null && !_mHawkBoss.IsLiving && !m_canWin)
+            else
             {
-                Game.GameStateModify = eGameState.Waiting;
-                Game.SendFreeFocus(_mBoss.X, _mBoss.Y - 100, 0, 0, 0);
-
-                _mBoss.PlayMovie("die", 2500, 0);
-                _mBoss.Die(4000);
-
-                m_canWin = true;
+                bool flag2 = base.Game.TotalTurn > base.Game.MissionInfo.TotalTurn;
+                result = flag2;
             }
-            return Game.TotalKillCount >= Game.MissionInfo.TotalCount || Game.TotalTurn > Game.MissionInfo.TotalTurn;
+            return result;
         }
 
+        // Token: 0x060022E1 RID: 8929 RVA: 0x000FFD60 File Offset: 0x000FDF60
         public override int UpdateUIData()
         {
             base.UpdateUIData();
-            return Game.TotalKillCount;
+            return this.int_3;
         }
-        public override void OnWaitingGameState()
-        {
-            base.OnWaitingGameState();
-            Game.GameStateModify = eGameState.Playing;
-        }
+
+        // Token: 0x060022E2 RID: 8930 RVA: 0x000FFD80 File Offset: 0x000FDF80
         public override void OnGameOver()
         {
             base.OnGameOver();
-            Game.IsWin = Game.TotalKillCount >= Game.MissionInfo.TotalCount;
+            bool flag = this.kartalkus != null && !this.kartalkus.IsLiving && this.simpleBoss_1 != null && !this.simpleBoss_1.IsLiving;
+            if (flag)
+            {
+                base.Game.IsWin = true;
+            }
+            else
+            {
+                base.Game.IsWin = false;
+            }
         }
+
+        // Token: 0x060022E3 RID: 8931 RVA: 0x000FFDE5 File Offset: 0x000FDFE5
+        public override void OnShooted()
+        {
+            base.OnShooted();
+        }
+
+        // Token: 0x060022E4 RID: 8932 RVA: 0x000FFDEF File Offset: 0x000FDFEF
+        public PDHAK1143()
+        {
+            this.Kartal = 4205;
+            this.Kurt = 4206;
+            this.int_2 = 4202;
+        }
+
+        // Token: 0x040013EE RID: 5102
+        private SimpleBoss kartalkus;
+
+        // Token: 0x040013EF RID: 5103
+        private SimpleBoss simpleBoss_1;
+
+        // Token: 0x040013F0 RID: 5104
+        private int Kartal;
+
+        // Token: 0x040013F1 RID: 5105
+        private int Kurt;
+
+        // Token: 0x040013F2 RID: 5106
+        private int int_2;
+
+        // Token: 0x040013F3 RID: 5107
+        private int int_3;
+
+        // Token: 0x040013F4 RID: 5108
+        private PhysicalObj Arkaplan_Efekt;
+
+        // Token: 0x040013F5 RID: 5109
+        private PhysicalObj Efekt_Yazý;
     }
 }

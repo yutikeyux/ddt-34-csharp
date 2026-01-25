@@ -1,157 +1,228 @@
+using System;
 using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using SqlDataProvider.Data;
-using System;
-using Bussiness;
 
 namespace GameServerScript.AI.Messions
 {
+    // Token: 0x020002BF RID: 703
     public class PDHAT1144 : AMissionControl
     {
-        private SimpleBoss m_king = null;
-
-        private int bossID = 4108; // Minotaur
-
-        private int npcId = 4107; // lua di nguc
-
-        private int npcId2 = 4110; // lua di nguc
-
-        private int kill = 0;
-
-        private PhysicalObj m_moive;
-
-        private PhysicalObj m_front;
-
+        // Token: 0x0600230A RID: 8970 RVA: 0x00100F94 File Offset: 0x000FF194
         public override int CalculateScoreGrade(int score)
         {
             base.CalculateScoreGrade(score);
-            if (score > 1750)
+            bool flag = score > 1750;
+            int result;
+            if (flag)
             {
-                return 3;
-            }
-            else if (score > 1675)
-            {
-                return 2;
-            }
-            else if (score > 1600)
-            {
-                return 1;
+                result = 3;
             }
             else
             {
-                return 0;
+                bool flag2 = score > 1675;
+                if (flag2)
+                {
+                    result = 2;
+                }
+                else
+                {
+                    bool flag3 = score > 1600;
+                    if (flag3)
+                    {
+                        result = 1;
+                    }
+                    else
+                    {
+                        result = 0;
+                    }
+                }
             }
+            return result;
         }
 
+        // Token: 0x0600230B RID: 8971 RVA: 0x00100FE4 File Offset: 0x000FF1E4
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-            int[] resources = { bossID, npcId, npcId2 };
-            int[] gameOverResource = { bossID };
-            Game.AddLoadingFile(2, "image/game/effect/4/power.swf", "game.crazytank.assetmap.Buff_powup");
-            Game.AddLoadingFile(2, "image/game/effect/4/blade.swf", "asset.game.4.blade");
-            Game.AddLoadingFile(2, "image/game/thing/bossbornbgasset.swf", "game.asset.living.BossBgAsset");
-            Game.AddLoadingFile(2, "image/game/thing/bossbornbgasset.swf", "game.asset.living.tingyuanlieshouAsset");
-            Game.LoadResources(resources);
-            Game.LoadNpcGameOverResources(gameOverResource);
-            Game.SetMap(1144);
+            int[] resources = new int[]
+            {
+                this.İlkMinotar,
+                this.MorRuh,
+                this.İkinciMinotar,
+                this.MaviRuh
+            };
+            int[] gameOverResource = new int[]
+            {
+                this.İlkMinotar,
+                this.İkinciMinotar
+            };
+            base.Game.AddLoadingFile(2, "image/game/effect/4/power.swf", "game.crazytank.assetmap.Buff_powup");
+            base.Game.AddLoadingFile(2, "image/game/effect/4/blade.swf", "asset.game.4.blade");
+            base.Game.AddLoadingFile(2, "image/game/thing/bossbornbgasset.swf", "game.asset.living.BossBgAsset");
+            base.Game.AddLoadingFile(2, "image/game/thing/bossbornbgasset.swf", "game.asset.living.tingyuanlieshouAsset");
+            base.Game.LoadResources(resources);
+            base.Game.LoadNpcGameOverResources(gameOverResource);
+            base.Game.SetMap(1144);
         }
 
+        // Token: 0x0600230C RID: 8972 RVA: 0x001010C4 File Offset: 0x000FF2C4
         public override void OnStartGame()
         {
             base.OnStartGame();
-
-            LivingConfig config = Game.BaseLivingConfig();
+            LivingConfig config = base.Game.BaseLivingConfig();
             config.HaveShield = true;
-
-            m_moive = Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
-            m_front = Game.Createlayer(1019, 620, "front", "game.asset.living.emozhanshiAsset", "out", 1, 0);
-
-            m_king = Game.CreateBoss(bossID, 1255, 958, -1, 1, "born", config);
-            m_king.SetRelateDemagemRect(m_king.NpcInfo.X, m_king.NpcInfo.Y, m_king.NpcInfo.Width, m_king.NpcInfo.Height);
-            m_king.DoAction = 2;
-
-            //Game.SendFreeFocus(m_king, 1, 100, 0);
-
-            m_king.CallFuction(new LivingCallBack(MovieCreateBoss), 1000);
+            this.BossGirişEfekti = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
+            this.BossYazıEfekti = base.Game.Createlayer(1019, 590, "front", "game.asset.living.emozhanshiAsset", "out", 1, 0);
+            this.Mino = base.Game.CreateBoss(this.İlkMinotar, 1255, 958, -1, 1, "born", config);
+            this.Mino.SetRelateDemagemRect(this.Mino.NpcInfo.X, this.Mino.NpcInfo.Y, this.Mino.NpcInfo.Width, this.Mino.NpcInfo.Height);
+            this.Mino.CallFuction(new LivingCallBack(this.İlkMinoyuDoğdur), 1000);
         }
 
-        private void MovieCreateBoss()
+        // Token: 0x0600230D RID: 8973 RVA: 0x001011D0 File Offset: 0x000FF3D0
+        private void İlkMinoyuDoğdur()
         {
-            Game.SendObjectFocus(m_king, 1, 500, 0);
-
-            m_king.PlayMovie("in", 2000, 0);
-            Game.SendObjectFocus(m_king, 2, 2000, 3000);
-            m_king.PlayMovie("standA", 9000, 0);
-            m_king.Say("Ngọn lửa sôi sục đang cháy trong ta!", 0, 9200);
-
-            m_moive.PlayMovie("in", 15000, 0);
-            m_front.PlayMovie("in", 15200, 0);
-            m_moive.PlayMovie("out", 18200, 0);
-            m_front.PlayMovie("out", 18000, 0);
+            base.Game.SendObjectFocus(this.Mino, 1, 500, 0);
+            this.Mino.PlayMovie("in", 2000, 0);
+            base.Game.SendObjectFocus(this.Mino, 2, 2000, 3000);
+            this.Mino.PlayMovie("standA", 9000, 0);
+            this.Mino.Say("Bunu çooook uzun zamandır bekliyordum!", 0, 4200);
+            this.BossGirişEfekti.PlayMovie("in", 9200, 0);
+            this.BossYazıEfekti.PlayMovie("in", 9400, 0);
+            this.BossGirişEfekti.PlayMovie("out", 11200, 0);
+            this.BossYazıEfekti.PlayMovie("out", 11400, 0);
         }
 
+        // Token: 0x0600230E RID: 8974 RVA: 0x001012B5 File Offset: 0x000FF4B5
         public override void OnNewTurnStarted()
         {
             base.OnNewTurnStarted();
         }
 
+        // Token: 0x0600230F RID: 8975 RVA: 0x001012C0 File Offset: 0x000FF4C0
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-            if (!(m_king != null && m_king.IsLiving == false))
+            bool flag = this.Mino == null || this.Mino.IsLiving;
+            if (flag)
             {
-                Game.TotalKillCount = 0;
+                base.Game.TotalKillCount = 0;
             }
-            if (Game.TurnIndex > 1)
+            bool flag2 = base.Game.TurnIndex > 1;
+            if (flag2)
             {
-                if (m_moive != null)
+                bool flag3 = this.BossGirişEfekti != null;
+                if (flag3)
                 {
-                    Game.RemovePhysicalObj(m_moive, true);
-                    m_moive = null;
+                    base.Game.RemovePhysicalObj(this.BossGirişEfekti, true);
+                    this.BossGirişEfekti = null;
                 }
-                if (m_front != null)
+                bool flag4 = this.BossYazıEfekti != null;
+                if (flag4)
                 {
-                    Game.RemovePhysicalObj(m_front, true);
-                    m_front = null;
+                    base.Game.RemovePhysicalObj(this.BossYazıEfekti, true);
+                    this.BossYazıEfekti = null;
                 }
             }
         }
 
+        // Token: 0x06002310 RID: 8976 RVA: 0x00101364 File Offset: 0x000FF564
         public override bool CanGameOver()
         {
-            if (m_king != null && m_king.IsLiving == false)
-                return true;
-
-            if (Game.TotalTurn > Game.MissionInfo.TotalTurn)
-                return true;
-
-            return false;
-        }
-
-        public override int UpdateUIData()
-        {
-            base.UpdateUIData();
-            return Game.TotalKillCount;
-        }
-
-        public override void OnGameOver()
-        {
-            base.OnGameOver();
-            if (m_king != null && m_king.IsLiving == false)
+            bool flag = this.Mino2 != null && !this.Mino2.IsLiving && this.Durum >= 2;
+            bool result;
+            if (flag)
             {
-                Game.IsWin = true;
+                result = true;
             }
             else
             {
-                Game.IsWin = false;
+                bool flag2 = base.Game.TotalTurn > base.Game.MissionInfo.TotalTurn;
+                if (flag2)
+                {
+                    result = true;
+                }
+                else
+                {
+                    bool flag3 = this.Durum <= 1 && this.Mino != null && !this.Mino.IsLiving;
+                    if (flag3)
+                    {
+                        this.Durum++;
+                        this.Mino2 = base.Game.CreateBoss(this.İkinciMinotar, this.Mino.X, this.Mino.Y, this.Mino.Direction, 1, "standB");
+                        this.Mino2.CallFuction(new LivingCallBack(this.CreateBoss), 1000);
+                    }
+                    result = false;
+                }
+            }
+            return result;
+        }
+
+        // Token: 0x06002311 RID: 8977 RVA: 0x0010146C File Offset: 0x000FF66C
+        private void CreateBoss()
+        {
+            base.Game.RemoveLiving(this.Mino.Id);
+            this.Mino2.PlayMovie("born", 0, 0);
+            this.Mino2.Say("<span class=\"red\">İşte şimdi sıçtınız altınıza!</span>", 0, 200);
+        }
+
+        // Token: 0x06002312 RID: 8978 RVA: 0x001014BC File Offset: 0x000FF6BC
+        public override int UpdateUIData()
+        {
+            base.UpdateUIData();
+            return base.Game.TotalKillCount;
+        }
+
+        // Token: 0x06002313 RID: 8979 RVA: 0x001014E0 File Offset: 0x000FF6E0
+        public override void OnGameOver()
+        {
+            base.OnGameOver();
+            bool flag = this.Durum >= 2 && this.Mino2 != null && !this.Mino2.IsLiving && this.Mino != null && !this.Mino.IsLiving;
+            if (flag)
+            {
+                base.Game.IsWin = true;
+            }
+            else
+            {
+                base.Game.IsWin = false;
             }
         }
 
+        // Token: 0x06002314 RID: 8980 RVA: 0x0010154E File Offset: 0x000FF74E
         public override void OnShooted()
         {
             base.OnShooted();
         }
+
+        // Token: 0x06002315 RID: 8981 RVA: 0x00101558 File Offset: 0x000FF758
+        public PDHAT1144()
+        {
+        }
+
+        // Token: 0x0400140E RID: 5134
+        private SimpleBoss Mino = null;
+
+        // Token: 0x0400140F RID: 5135
+        private SimpleBoss Mino2 = null;
+
+        // Token: 0x04001410 RID: 5136
+        private int İlkMinotar = 4108;
+
+        // Token: 0x04001411 RID: 5137
+        private int MorRuh = 4107;
+
+        // Token: 0x04001412 RID: 5138
+        private int İkinciMinotar = 4109;
+
+        // Token: 0x04001413 RID: 5139
+        private int MaviRuh = 4110;
+
+        // Token: 0x04001414 RID: 5140
+        private int Durum = 1;
+
+        // Token: 0x04001415 RID: 5141
+        private PhysicalObj BossGirişEfekti;
+
+        // Token: 0x04001416 RID: 5142
+        private PhysicalObj BossYazıEfekti;
     }
 }

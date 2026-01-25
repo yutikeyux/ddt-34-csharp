@@ -2964,7 +2964,7 @@ namespace Game.Logic
 			SendToAll(pkg);
 		}
 
-		internal void SendRemoveLiving(int id)
+		public void SendRemoveLiving(int id)
 		{
 			GSPacketIn pkg = new GSPacketIn((byte)ePackageTypeLogic.GAME_CMD);
 			pkg.WriteByte(53);
