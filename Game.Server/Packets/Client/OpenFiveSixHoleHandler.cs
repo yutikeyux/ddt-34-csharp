@@ -18,7 +18,7 @@ namespace Game.Server.Packets.Client
             int templateId = packet.ReadInt();
             if (DateTime.Compare(client.Player.LastOpenHole.AddMilliseconds(100.0), DateTime.Now) > 0)
             {
-                client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("GameServer.OpenHole.TooQuickly"));
+                client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Biraz Yavaşla"));
                 return 0;
             }
             client.Player.LastOpenHole = DateTime.Now;

@@ -107,6 +107,146 @@ namespace Game.Server.Packets.Client
                 {
                     rateVIP += StrengthenMgr.VIPStrengthenEx * rateBasic;
                 }
+                if (client.Player.PlayerCharacter.Grade < 15 && item.StrengthenLevel >= 7 && item.Template.CategoryID == 7)              
+                {
+                    client.Player.SendMessage("Silah güçlendirme limitine eriştin. 15. seviyeye ulaş!");
+                    return 0;
+                }
+                if (client.Player.PlayerCharacter.Grade < 20 && item.StrengthenLevel >= 8 && item.Template.CategoryID == 7)
+                {
+                    client.Player.SendMessage("Silah güçlendirme limitine eriştin. 20. seviyeye ulaş!");
+                    return 0;
+                }
+                if (client.Player.PlayerCharacter.Grade < 30 && item.StrengthenLevel >= 9 && item.Template.CategoryID == 7)
+                {
+                    client.Player.SendMessage("Silah güçlendirme limitine eriştin. 30. seviyeye ulaş!");
+                    return 0;
+                }
+                if (client.Player.PlayerCharacter.Grade < 35 && item.StrengthenLevel >= 10 && item.Template.CategoryID == 7)
+                {
+                    client.Player.SendMessage("Silah güçlendirme limitine eriştin. 35. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag19 = client.Player.PlayerCharacter.Grade < 40 && item.StrengthenLevel >= 11 && item.Template.CategoryID == 7;
+                if (flag19)
+                {
+                    client.Player.SendMessage("Silah güçlendirme limitine eriştin. 40. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag20 = client.Player.PlayerCharacter.Grade < 50 && item.StrengthenLevel >= 12 && item.Template.CategoryID == 7;
+                if (flag20)
+                {
+                    client.Player.SendMessage("Silah güçlendirme limitine eriştin. 50. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag21 = client.Player.PlayerCharacter.Grade < 15 && item.StrengthenLevel >= 7 && item.Template.CategoryID == 1;
+                if (flag21)
+                {
+                    client.Player.SendMessage("Şapka güçlendirme limitine eriştin. 15. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag22 = client.Player.PlayerCharacter.Grade < 20 && item.StrengthenLevel >= 8 && item.Template.CategoryID == 1;
+                if (flag22)
+                {
+                    client.Player.SendMessage("Şapka güçlendirme limitine eriştin. 20. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag23 = client.Player.PlayerCharacter.Grade < 25 && item.StrengthenLevel >= 9 && item.Template.CategoryID == 1;
+                if (flag23)
+                {
+                    client.Player.SendMessage("Şapka güçlendirme limitine eriştin. 25. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag24 = client.Player.PlayerCharacter.Grade < 30 && item.StrengthenLevel >= 10 && item.Template.CategoryID == 1;
+                if (flag24)
+                {
+                    client.Player.SendMessage("Şapka güçlendirme limitine eriştin. 30. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag25 = client.Player.PlayerCharacter.Grade < 35 && item.StrengthenLevel >= 11 && item.Template.CategoryID == 1;
+                if (flag25)
+                {
+                    client.Player.SendMessage("Şapka güçlendirme limitine eriştin. 35. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag26 = client.Player.PlayerCharacter.Grade < 40 && item.StrengthenLevel >= 12 && item.Template.CategoryID == 1;
+                if (flag26)
+                {
+                    client.Player.SendMessage("Şapka güçlendirme limitine eriştin. 40. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag27 = client.Player.PlayerCharacter.Grade < 15 && item.StrengthenLevel >= 7 && item.Template.CategoryID == 5;
+                if (flag27)
+                {
+                    client.Player.SendMessage("Kıyafet güçlendirme limitine eriştin. 15. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag28 = client.Player.PlayerCharacter.Grade < 20 && item.StrengthenLevel >= 8 && item.Template.CategoryID == 5;
+                if (flag28)
+                {
+                    client.Player.SendMessage("Kıyafet güçlendirme limitine eriştin. 20. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag29 = client.Player.PlayerCharacter.Grade < 25 && item.StrengthenLevel >= 9 && item.Template.CategoryID == 5;
+                if (flag29)
+                {
+                    client.Player.SendMessage("Kıyafet güçlendirme limitine eriştin. 25. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag30 = client.Player.PlayerCharacter.Grade < 30 && item.StrengthenLevel >= 10 && item.Template.CategoryID == 5;
+                if (flag30)
+                {
+                    client.Player.SendMessage("Kıyafet güçlendirme limitine eriştin. 30. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag31 = client.Player.PlayerCharacter.Grade < 35 && item.StrengthenLevel >= 11 && item.Template.CategoryID == 5;
+                if (flag31)
+                {
+                    client.Player.SendMessage("Kıyafet güçlendirme limitine eriştin. 35. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag32 = client.Player.PlayerCharacter.Grade < 40 && item.StrengthenLevel >= 12 && item.Template.CategoryID == 5;
+                if (flag32)
+                {
+                    client.Player.SendMessage("Kıyafet güçlendirme limitine eriştin. 40. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag33 = client.Player.PlayerCharacter.Grade < 25 && item.StrengthenLevel >= 7 && item.Template.CategoryID == 17;
+                if (flag33)
+                {
+                    client.Player.SendMessage("Destek Ekipman güçlendirme limitine eriştin. 25. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag34 = client.Player.PlayerCharacter.Grade < 30 && item.StrengthenLevel >= 8 && item.Template.CategoryID == 17;
+                if (flag34)
+                {
+                    client.Player.SendMessage("Destek Ekipman güçlendirme limitine eriştin. 30. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag35 = client.Player.PlayerCharacter.Grade < 35 && item.StrengthenLevel >= 9 && item.Template.CategoryID == 17;
+                if (flag35)
+                {
+                    client.Player.SendMessage("Destek Ekipman güçlendirme limitine eriştin. 35. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag36 = client.Player.PlayerCharacter.Grade < 40 && item.StrengthenLevel >= 10 && item.Template.CategoryID == 17;
+                if (flag36)
+                {
+                    client.Player.SendMessage("Destek Ekipman güçlendirme limitine eriştin. 40. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag37 = client.Player.PlayerCharacter.Grade < 45 && item.StrengthenLevel >= 11 && item.Template.CategoryID == 17;
+                if (flag37)
+                {
+                    client.Player.SendMessage("Destek Ekipman güçlendirme limitine eriştin. 45. seviyeye ulaş!");
+                    return 0;
+                }
+                bool flag38 = client.Player.PlayerCharacter.Grade < 50 && item.StrengthenLevel >= 12 && item.Template.CategoryID == 17;
+                if (flag38)
+                {
+                    client.Player.SendMessage("Destek Ekipman güçlendirme limitine eriştin. 50. seviyeye ulaş!");
+                    return 0;
+                }
                 if (stones.Count >= 1)
                 {
                     item.StrengthenTimes++;
