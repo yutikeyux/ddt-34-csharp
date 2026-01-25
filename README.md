@@ -1,1 +1,1 @@
-DDTANK 4.1
+# değişiklikleri inceleyip kendinizde de uygulayabilirsiniz
