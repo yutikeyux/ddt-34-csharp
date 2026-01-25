@@ -16,7 +16,6 @@ namespace Game.Server.Packets.Client
 			ItemInfo item = client.Player.GetItemAt(bag, place);
 			if (item == null)
 			{
-				//client.Player.SendMessage("Vật phẩm không tồn tại.");
 				client.Player.SendMessage(LanguageMgr.GetTranslation("NewTitleCardHandler.ItemNotFound"));
 			}
 			else
@@ -24,18 +23,16 @@ namespace Game.Server.Packets.Client
 				NewTitleInfo title = NewTitleMgr.FindNewTitle(item.Template.Property1);
 				if (title == null)
 				{
-					//client.Player.SendMessage("Danh hiệu chưa mở.");
 					client.Player.SendMessage(LanguageMgr.GetTranslation("NewTitleCardHandler.TitleNotFound"));
 				}
 				else if (client.Player.RemoveCountFromStack(item, 1))
 				{
 					client.Player.Rank.AddNewRank(title.ID, item.Template.Property2);
 					client.Player.EquipBag.UpdatePlayerProperties();
-					GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice($"[{client.Player.ZoneName}] oyuncusu: [{client.Player.PlayerCharacter.NickName}]  ~{title.Name}~ kazandı! Tebrikler!"));
+					GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice($"|{client.Player.ZoneName}| oyuncusu değerli [{client.Player.PlayerCharacter.NickName}]  ~{title.Name}~ ünvanını kazandı! Tebriks!"));
 				}
 				else
 				{
-					//client.Player.SendMessage("Xử lý dữ liệu thất bại. Vui lòng thử lại sau.");
 					client.Player.SendMessage(LanguageMgr.GetTranslation("NewTitleCardHandler.RemoveItemError"));
 				}
 			}

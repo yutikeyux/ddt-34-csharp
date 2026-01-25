@@ -56,32 +56,32 @@
   </ActivityType>
   <ActivityType value="2">
     <Items SubActivityType="1" Condition="3">
-      <Item TemplateId="11003" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
-      <Item TemplateId="11007" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
-      <Item TemplateId="11011" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
-      <Item TemplateId="11015" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
-      <Item TemplateId="11023" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="1" />
+      <Item TemplateId="11001" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
+      <Item TemplateId="11005" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
+      <Item TemplateId="11009" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
+      <Item TemplateId="11013" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
+      <Item TemplateId="11019" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="3" />
     </Items>
     <Items SubActivityType="2" Condition="5">
-      <Item TemplateId="11003" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
-      <Item TemplateId="11007" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
-      <Item TemplateId="11011" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
-      <Item TemplateId="11015" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
-      <Item TemplateId="11023" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="2" />
+      <Item TemplateId="11002" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
+      <Item TemplateId="11006" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
+      <Item TemplateId="11010" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
+      <Item TemplateId="11014" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
+      <Item TemplateId="11021" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="3" />
     </Items>
     <Items SubActivityType="3" Condition="7">
       <Item TemplateId="11003" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
       <Item TemplateId="11007" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
       <Item TemplateId="11011" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
       <Item TemplateId="11015" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
-      <Item TemplateId="11023" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="3" />
+      <Item TemplateId="11022" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="3" />
     </Items>
     <Items SubActivityType="4" Condition="9">
-      <Item TemplateId="11030" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
-      <Item TemplateId="11031" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
-      <Item TemplateId="11032" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
-      <Item TemplateId="11033" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
-      <Item TemplateId="11024" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="2" />
+      <Item TemplateId="11004" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
+      <Item TemplateId="11008" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
+      <Item TemplateId="11012" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
+      <Item TemplateId="11016" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
+      <Item TemplateId="11023" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="3" />
     </Items>
     <Items SubActivityType="5" Condition="10">
       <Item TemplateId="11030" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
@@ -91,39 +91,39 @@
       <Item TemplateId="11024" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="3" />
     </Items>
     <Items SubActivityType="6" Condition="11">
-      <Item TemplateId="11024" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="3" />
+      <Item TemplateId="11030" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="8" />
+      <Item TemplateId="11031" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="8" />
+      <Item TemplateId="11032" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="8" />
+      <Item TemplateId="11033" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="8" />
+      <Item TemplateId="11024" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="6" />
     </Items>
     <Items SubActivityType="7" Condition="12">
-      <Item TemplateId="11024" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="3" />
+      <Item TemplateId="11030" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="16" />
+      <Item TemplateId="11031" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="16" />
+      <Item TemplateId="11032" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="16" />
+      <Item TemplateId="11033" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="16" />
+      <Item TemplateId="11024" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="12" />
     </Items>
   </ActivityType>
   <ActivityType value="3">
     <Items SubActivityType="1" Condition="2000">
-      <Item TemplateId="40003" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="200" />
-      <Item TemplateId="11150" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="200" />
-      <Item TemplateId="11187" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="200" />
+      <Item TemplateId="325100" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="2" />
     </Items>
     <Items SubActivityType="2" Condition="4000">
-      <Item TemplateId="40003" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="350" />
-      <Item TemplateId="11150" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="350" />
-      <Item TemplateId="11188" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="350" />
+      <Item TemplateId="325104" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="4" />
     </Items>
     <Items SubActivityType="3" Condition="8000">
-      <Item TemplateId="40004" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="100" />
-      <Item TemplateId="11188" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="400" />
-      <Item TemplateId="11150" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="500" />
+      <Item TemplateId="325107" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="8" />
     </Items>
     <Items SubActivityType="4" Condition="20000">
-      <Item TemplateId="40004" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="250" />
-      <Item TemplateId="11188" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="500" />
-      <Item TemplateId="11150" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="500" />
+      <Item TemplateId="325110" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="20" />
     </Items>
     <Items SubActivityType="5" Condition="40000">
-      <Item TemplateId="40004" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="300" />
-      <Item TemplateId="11188" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="500" />
-      <Item TemplateId="11150" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="650" />
+      <Item TemplateId="325113" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="40" />
     </Items>
-    <Items SubActivityType="6" Condition="80000" />
+    <Items SubActivityType="6" Condition="80000">
+      <Item TemplateId="325129" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="80" />
+    </Items>
   </ActivityType>
   <ActivityType value="4">
     <Items SubActivityType="1" Condition="2000">
