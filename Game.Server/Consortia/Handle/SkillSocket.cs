@@ -92,7 +92,7 @@ namespace Game.Server.Consortia.Handle
 			}
 			else
 			{
-				Player.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Consortia.Msg6"));
+				Player.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Buff Alýnamaz!"));
 			}
 			return 0;
 		}

@@ -60,7 +60,7 @@ namespace Game.Server.Consortia.Handle
 						Player.PlayerCharacter.ConsortiaLevel = consortiaLevelInfo.Level;
 						Player.RemoveGold(needGold);
 						Player.RemoveMoney(needMoney);
-						msg = "ConsortiaCreateHandler.Success";
+						msg = "Birlik Kurma Baþarýlý";
 						val = true;
 						consortiaID = consortiaInfo.ConsortiaID;
 						GameServer.Instance.LoginServer.SendConsortiaCreate(consortiaID, Player.PlayerCharacter.Offer, consortiaInfo.ConsortiaName);

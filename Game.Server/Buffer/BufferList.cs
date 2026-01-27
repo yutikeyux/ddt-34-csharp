@@ -219,6 +219,7 @@ namespace Game.Server.Buffer
 				case 105:
 				case 107:
 				case 109:
+				case 108:
 				case 110:
 					return true;
 				default:
@@ -481,7 +482,7 @@ namespace Game.Server.Buffer
 					buffer = new WorldBossAddDamageBuffer(info);
 					break;
 				default:
-					Console.WriteLine("CreateBuffer does not exist type: " + info.Type);
+					Console.WriteLine("SQL Para 1 girilmiþ ama Buffer Liste girilmemiþ: " + info.Type);
 					break;
             }
             return buffer;

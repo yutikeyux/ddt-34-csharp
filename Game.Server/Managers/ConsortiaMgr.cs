@@ -512,7 +512,7 @@ namespace Game.Server.Managers
                     BufferList.CreatePayBuffer(106, buffInfo.value, validate, id)?.Start(Player);
                     break;
                 case 8:
-                    Player.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Consortia.Msg2"));
+                    BufferList.CreatePayBuffer(108, buffInfo.value, validate, id)?.Start(Player);
                     return false;
                 case 11:
                     BufferList.CreatePayBuffer(111, buffInfo.value, validate, id)?.Start(Player);
