@@ -44,15 +44,15 @@ namespace Game.Server.Pet.Handle
 				usersPetInfo.VIPLevel = player.PlayerCharacter.VIPLevel;
 				petBag.AddPetTo(usersPetInfo, num);
 				player.RemoveCountFromStack(itemAt, 1);
-				if (petTemplateInfo.StarLevel > 4)
+				if (petTemplateInfo.StarLevel >= 4)
 				{
-					string translation = LanguageMgr.GetTranslation("Tebrikler! {0} adlý oyuncu, {2} yýldýzlý {1} evcil hayvanýný sahiplendi!", player.PlayerCharacter.NickName, petTemplateInfo.Name, petTemplateInfo.StarLevel);
+					string translation = LanguageMgr.GetTranslation("Tebrikler! [" + player.PlayerCharacter.NickName +"] adlý oyuncu, " + petTemplateInfo.StarLevel +" yýldýzlý " + petTemplateInfo.Name + " evcil hayvanýný sahiplendi!");
 					GSPacketIn packet2 = WorldMgr.SendSysNotice(translation);
 					GameServer.Instance.LoginServer.SendPacket(packet2);
 				}
 				else
 				{
-					player.SendMessage(LanguageMgr.GetTranslation("{1} yýldýzlý {0} evcil hayvanýný baþarýyla sahiplendiniz.", petTemplateInfo.Name, petTemplateInfo.StarLevel));
+					player.SendMessage("Evcil hayvan elde etme baþarýlý!");
 				}
 				petBag.SaveToDatabase(saveAdopt: false);
 				GSPacketIn gSPacketIn = new GSPacketIn(68);

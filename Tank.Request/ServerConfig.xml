@@ -132,8 +132,8 @@
   <Item Name="GrooveLevelUpSysNotice" Value="35|40,45" />
   <Item Name="IsCardTypeUpNoticeEnabled" Value="True" />
   <Item Name="CardTypeUpSysNotice" Value="1,4" />
-  <Item Name="OverseaVIPFeatures" Value="False" />
-  <Item Name="MalaysiaFeatures" Value="False" />
+  <Item Name="OverseaVIPFeatures" Value="True" />
+  <Item Name="MalaysiaFeatures" Value="True" />
   <Item Name="VietnamFeatures" Value="True" />
   <Item Name="SpaAddictionMoneyNeeded" Value="1299" />
   <Item Name="KickPlayerMoney" Value="-1" />

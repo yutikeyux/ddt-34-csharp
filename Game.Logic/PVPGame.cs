@@ -700,7 +700,7 @@ namespace Game.Logic
             }
             else
             {
-                WaitTime(17 * 1000);
+                WaitTime(16 * 1000);
             }
             OnGameOverred();
         }
@@ -923,7 +923,7 @@ namespace Game.Logic
             MapPoint mapRandomPos = MapMgr.GetMapRandomPos(m_map.Info.ID);
             GSPacketIn pkg2 = new GSPacketIn(3);
             pkg2.WriteInt(2);
-            pkg2.WriteString($"Ardarda öldürme özelliği takım kuşanıldı.");
+            pkg2.WriteString($"Oyun başlıyor...");
             SendToAll(pkg2, null);
             GSPacketIn pkg = new GSPacketIn((byte)ePackageTypeLogic.GAME_CMD);
             pkg.WriteByte(99);
