@@ -111,7 +111,7 @@ namespace Game.Logic
                 {
                     FrozenWind = true;
                 }
-                //tân thủ
+                
                 if (!FreeFatal && player.PlayerCharacter.Grade <= 15)
                 {
                     FreeFatal = true;
@@ -136,7 +136,7 @@ namespace Game.Logic
                 {
                     FrozenWind = true;
                 }
-                //tân thủ
+                
                 if (!FreeFatal && player2.PlayerCharacter.Grade <= 15)
                 {
                     FreeFatal = true;
@@ -321,13 +321,13 @@ namespace Game.Logic
 
         private int CalculateGuildMatchResult(List<Player> players, int winTeam)
         {
-            //Kiểm tra RoomType and GameType
+            
             if (base.RoomType != eRoomType.Match || base.GameType != eGameType.Guild)
             {
                 return 0;
             }
 
-            //Sử dụng method FirstOrDefault để lấy winPlayer và losePlayer để giảm số lần duyệt.
+            
             var winPlayer = players.FirstOrDefault(p => p.Team == winTeam)?.PlayerDetail;
             var losePlayer = players.FirstOrDefault(p => p.Team != winTeam)?.PlayerDetail;
             if (winPlayer == null || losePlayer == null)
@@ -335,7 +335,7 @@ namespace Game.Logic
                 return 0;
             }
 
-            //Sử dụng method Sum để tính tổng teamTotalHurt của đội thắng thay vì dùng vòng lặp foreach.
+            
             int teamTotalHurt = players
                 .Where(p => p.Team == winTeam)
                 .Sum(p => Math.Min(p.TotalHurt, (int)((p.Team == 1) ? ((float)m_blueTeam.Count * m_blueAvgLevel * 300f) : (m_redAvgLevel * (float)m_redTeam.Count * 300f))));
@@ -356,8 +356,7 @@ namespace Game.Logic
                 log.Error(string.Format("pvpgame ======= riches : {0}, count : {1}, teamTotalHurt : {2}", riches, ((winTeam == 1) ? m_blueTeam.Count : m_redTeam.Count), teamTotalHurt));
             }
 
-            //Sử dụng method ForEach để thực hiện việc thêm riches cho các Player của đội thắng
-            //players.Where(p => p.Team == winTeam).ForEach(p => p.PlayerDetail.AddRobRiches(riches));
+            
             players.Where(p => p.Team == winTeam).ToList().ForEach(p => p.PlayerDetail.AddRobRiches(riches));
             return riches;
         }
@@ -477,7 +476,7 @@ namespace Game.Logic
             int riches = CalculateGuildMatchResult(players, winTeam);
             if (base.RoomType == eRoomType.Match && base.GameType == eGameType.Guild)
             {
-                int losebaseoffer = -10;
+                int losebaseoffer = -5;
                 _ = players.Count / 2;
                 _ = losebaseoffer + (int)Math.Round((double)(players.Count / 2) * 0.5);
             }
@@ -548,12 +547,12 @@ namespace Game.Logic
                     int expPVP = 0;
                     int giftPVP = 0;
                     int timex2 = 1;
-                    DateTime GoldTimeStart = Convert.ToDateTime("12:00:00"); //bat dau
-                    DateTime GoldTimeEnd = Convert.ToDateTime("13:00:00"); //ket thuc
-                    DateTime GoldTimeStart1 = Convert.ToDateTime("20:30:00"); // bat dau
-                    DateTime GoldTimeEnd1 = Convert.ToDateTime("21:30:00"); // ket thuc
-                    DateTime GoldTimeStart2 = Convert.ToDateTime("02:30:00"); // bat dau
-                    DateTime GoldTimeEnd2 = Convert.ToDateTime("03:00:00"); // ket thuc
+                    DateTime GoldTimeStart = Convert.ToDateTime("12:00:00"); 
+                    DateTime GoldTimeEnd = Convert.ToDateTime("13:00:00"); 
+                    DateTime GoldTimeStart1 = Convert.ToDateTime("20:30:00"); 
+                    DateTime GoldTimeEnd1 = Convert.ToDateTime("21:30:00"); 
+                    DateTime GoldTimeStart2 = Convert.ToDateTime("02:30:00"); 
+                    DateTime GoldTimeEnd2 = Convert.ToDateTime("03:00:00"); 
                     GoldTimeStart = Convert.ToDateTime(GameProperties.GoldTimeStart.Split('|')[0]);
                     GoldTimeStart1 = Convert.ToDateTime(GameProperties.GoldTimeStart.Split('|')[1]);
                     GoldTimeStart2 = Convert.ToDateTime(GameProperties.GoldTimeStart.Split('|')[2]);
@@ -701,7 +700,7 @@ namespace Game.Logic
             }
             else
             {
-                WaitTime(16 * 1000);
+                WaitTime(17 * 1000);
             }
             OnGameOverred();
         }
@@ -773,10 +772,6 @@ namespace Game.Logic
                     allFightPlayer.PlayerDetail.SendMessage($"Oyuncu: {ContinuousRunningPlayer} sürekli saldırı fırsatı elde etti!");
                 }
             }
-            //if (m_currentLiving is Player && FindNextTurnedLiving(true) is Player)
-            //{
-            //	ContinuousRunningPlayer = (m_currentLiving as Player).PlayerDetail.PlayerCharacter.NickName;
-            //}
             ContinuousRunningPlayer = (m_currentLiving as Player).PlayerDetail.PlayerCharacter.NickName;
             OnBeginNewTurn();
         }
@@ -796,28 +791,28 @@ namespace Game.Logic
             Player player = base.RemovePlayer(gp, IsKick);
             if (player != null && player.IsLiving && base.GameState != eGameState.Loading)
             {
-                gp.RemoveGP(gp.PlayerCharacter.Grade * 12);
+                gp.RemoveGP(gp.PlayerCharacter.Grade * 5);
                 string msg = null;
                 string translation = null;
                 if (base.RoomType == eRoomType.Match)
                 {
                     if (base.GameType == eGameType.Guild)
                     {
-                        msg = LanguageMgr.GetTranslation("AbstractPacketLib.SendGamePlayerLeave.Msg6", gp.PlayerCharacter.Grade * 12, 15);
+                        msg = LanguageMgr.GetTranslation("AbstractPacketLib.SendGamePlayerLeave.Msg6", gp.PlayerCharacter.Grade * 5, 15);
                         gp.RemoveOffer(15);
-                        translation = LanguageMgr.GetTranslation("AbstractPacketLib.SendGamePlayerLeave.Msg7", gp.PlayerCharacter.NickName, gp.PlayerCharacter.Grade * 12, 15);
+                        translation = LanguageMgr.GetTranslation("AbstractPacketLib.SendGamePlayerLeave.Msg7", gp.PlayerCharacter.NickName, gp.PlayerCharacter.Grade * 5, 15);
                     }
                     else if (base.GameType == eGameType.Free)
                     {
-                        msg = LanguageMgr.GetTranslation("AbstractPacketLib.SendGamePlayerLeave.Msg6", gp.PlayerCharacter.Grade * 12, 5);
+                        msg = LanguageMgr.GetTranslation("AbstractPacketLib.SendGamePlayerLeave.Msg6", gp.PlayerCharacter.Grade * 10, 5);
                         gp.RemoveOffer(5);
-                        translation = LanguageMgr.GetTranslation("AbstractPacketLib.SendGamePlayerLeave.Msg7", gp.PlayerCharacter.NickName, gp.PlayerCharacter.Grade * 12, 5);
+                        translation = LanguageMgr.GetTranslation("AbstractPacketLib.SendGamePlayerLeave.Msg7", gp.PlayerCharacter.NickName, gp.PlayerCharacter.Grade * 10, 5);
                     }
                 }
                 else 
                 {
-                    msg = LanguageMgr.GetTranslation("AbstractPacketLib.SendGamePlayerLeave.Msg4", gp.PlayerCharacter.Grade * 12);
-                    translation = LanguageMgr.GetTranslation("AbstractPacketLib.SendGamePlayerLeave.Msg5", gp.PlayerCharacter.NickName, gp.PlayerCharacter.Grade * 12);
+                    msg = LanguageMgr.GetTranslation("AbstractPacketLib.SendGamePlayerLeave.Msg4", gp.PlayerCharacter.Grade * 15);
+                    translation = LanguageMgr.GetTranslation("AbstractPacketLib.SendGamePlayerLeave.Msg5", gp.PlayerCharacter.NickName, gp.PlayerCharacter.Grade * 15);
                 }
                 SendMessage(gp, msg, translation, 3);
                 if (GetSameTeam())
@@ -881,31 +876,31 @@ namespace Game.Logic
                         switch (enumerator.Current)
                         {
                             case 1010807:
-                                kill += 5;
+                                kill += 1;
                                 break;
                             case 1010808:
-                                kill += 5;
+                                kill += 2;
                                 break;
                             case 1010812:
-                                kill++;
+                                kill += 3;
                                 break;
                             case 1010814:
-                                kill++;
+                                kill += 4;
                                 break;
                             case 1010813:
-                                kill += 2;
+                                kill += 5;
                                 break;
                             case 1010815:
-                                kill += 2;
+                                kill += 6;
                                 break;
                             case 1010816:
-                                kill += 2;
+                                kill += 7;
                                 break;
                             case 1010822:
-                                kill += 2;
+                                kill += 8;
                                 break;
                             case 1010809:
-                                kill += 5;
+                                kill += 9;
                                 break;
                         }
                     }
@@ -926,10 +921,10 @@ namespace Game.Logic
             SendSyncLifeTime();
             List<Player> allFightPlayers = GetAllFightingPlayers();
             MapPoint mapRandomPos = MapMgr.GetMapRandomPos(m_map.Info.ID);
-            //GSPacketIn pkg2 = new GSPacketIn(3);
-            //pkg2.WriteInt(2);
-            //pkg2.WriteString($"Kết hợp trận đấu thành công.");
-            //SendToAll(pkg2, null);
+            GSPacketIn pkg2 = new GSPacketIn(3);
+            pkg2.WriteInt(2);
+            pkg2.WriteString($"Ardarda öldürme özelliği takım kuşanıldı.");
+            SendToAll(pkg2, null);
             GSPacketIn pkg = new GSPacketIn((byte)ePackageTypeLogic.GAME_CMD);
             pkg.WriteByte(99);
             pkg.WriteInt(allFightPlayers.Count);
@@ -940,7 +935,7 @@ namespace Game.Logic
                 {
                     GSPacketIn pkg3 = new GSPacketIn(3);
                     pkg3.WriteInt(2);
-                    pkg3.WriteString($"Trang bị VIP giúp [{player.PlayerDetail.PlayerCharacter.NickName}] giảm thương thêm {kill}%");
+                    pkg3.WriteString($"Bu özel takım, Oyuncu [{player.PlayerDetail.PlayerCharacter.NickName}] için ek olarak {kill}% savunma sağlar!");
                     SendToAll(pkg3, null);
                 }
                 player.Reset();

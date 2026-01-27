@@ -3080,17 +3080,20 @@ public class GamePlayer : IGamePlayer
             {
                 m_character.Texp.texpCount = 0;
             }
-            int[] updatedSlots = new int[3]
+            int[] updatedSlots = new int[6]
             {
                 0,
                 1,
-                2
+                2,
+                3,
+                4,
+                5
             };
             Out.SendUpdateInventorySlot(FightBag, updatedSlots);
             UpdateWeaklessGuildProgress();
             UpdateItemForUser(1);
             ChecVipkExpireDay();
-            //EventSeven = pb.GetEventSevenDays(GameServer.Instance.Configuration.ZoneId);
+            EventSeven = pb.GetEventSevenDays(GameServer.Instance.Configuration.ZoneId);
             UpdateLevel();
             UpdatePet(m_petBag.GetPetIsEquip());
             if (m_character.CheckNewDay())
@@ -3102,9 +3105,9 @@ public class GamePlayer : IGamePlayer
                     DateTime stopDate = Convert.ToDateTime(GameProperties.EndEventOldPlayer);
                     if (DateTime.Now >= startDate && DateTime.Now < stopDate)
                     {
-                        int Money = 5000; //3000000 olan değer 5000e düşürüldü not: yuti
+                        int Money = 1000; //3000000 olan değer 1000e düşürüldü not: yuti
                         string Title = "Eski Oyuncu Geri Dönüşü"; //türkçeleştirildi not: yuti
-                        string Cotent = "Tebrikler!"; //türkçeleştirildi not: yuti
+                        string Cotent = "Tebrikler! 🎉 Uzun bir aradan sonra aramıza geri döndüğün için seni özel olarak karşılıyoruz! Bu ödüllerle macerana daha güçlü devam edebilirsin. Yeniden aramızda olman bizi çok mutlu etti! İyi oyunlar dileriz!"; //türkçeleştirildi not: yuti
                         List<ItemInfo> items = new List<ItemInfo>();
                         foreach (OldPlayerAwardInfo oldPlayerAward in OldPlayerAwardMgr.oldPlayerAwards)
                         {
@@ -3124,7 +3127,7 @@ public class GamePlayer : IGamePlayer
                 OnPlayerLogin();
                 m_character.NewDay = DateTime.Now;
                 m_character.BoxGetDate = DateTime.Now;
-                //m_character.damageScores = 0;
+                m_character.damageScores = 0;
                 m_character.Score = 0;
                 m_battle.Reset();
                 m_extra.Info.MinHotSpring = 60;
@@ -3144,7 +3147,7 @@ public class GamePlayer : IGamePlayer
                 AccumulativeUpdate();
                 this.ChangeDailyExpVip();
             }
-            if (this.m_character.Grade > 19)
+            if (this.m_character.Grade > 30)
             {
                 this.LoadGemStone(pb);
             }
@@ -3172,7 +3175,7 @@ public class GamePlayer : IGamePlayer
             pb.UpdatePlayer(m_character);
             pb.UpdateUserMatchInfo(MatchInfo);
             this.LoadMedals();
-            this.LoadRepute();//bjnboo
+            this.LoadRepute();
             this.SaveIntoDatabase();
             this.SavePlayerInfo();
             result = true;
@@ -6178,6 +6181,8 @@ public class GamePlayer : IGamePlayer
     #region WorldBoss
 
     public WorldBossProcessor WorldBoss { get; private set; }
+    public EventSevenDaysInfo EventSeven { get; private set; }
+
     private WorldBossLogicProcessor _worldBossProcessor;
     public int AddDamageScores(int value) //trminhpc
     {
