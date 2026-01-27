@@ -8,7 +8,7 @@ using System.Threading;
 namespace Bussiness.Managers
 {
     public class ConsortiaExtraMgr
-    {
+    {//test
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static Dictionary<int, ConsortiaLevelInfo> _consortiaLevel;
