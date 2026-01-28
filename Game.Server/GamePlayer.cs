@@ -5719,7 +5719,7 @@ public class GamePlayer : IGamePlayer
                     {
                         damageScore = value / 400;
                         honor = value / 1200;
-                        msg = LanguageMgr.GetTranslation("Savaş başarıyla tamamlandı!", damageScore, " Puan ve", honor, " onur kazandınız!", damageScore, honor); //türkçeleştirildi not: yuti
+                        msg = LanguageMgr.GetTranslation("Savaş başarıyla tamamlandı! " + damageScore + " Puan ve " + honor + " onur kazandınız!"); //türkçeleştirildi not: yuti
                         AddDamageScores(damageScore);
                         RoomMgr.WorldBossRoom.UpdateRank(this, damageScore, honor);
                         RoomMgr.WorldBossRoom.ReduceBlood(value);

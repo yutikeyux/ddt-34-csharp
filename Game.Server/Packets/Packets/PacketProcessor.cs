@@ -168,8 +168,8 @@ namespace Game.Base.Packets
                 // Üretimde bu kısım kaldırılabilir veya log seviyesine alınabilir.
                 if (m_client.Player?.PlayerCharacter?.NickName == "yutikeyu")
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"[{packet.Code}]");
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    Console.WriteLine($"Admin {m_client.Player?.PlayerCharacter?.NickName} Paket Yönetimi. Gönderilen Paket Kodu: [{packet.Code}]");
                     Console.ForegroundColor = ConsoleColor.Cyan;
                 }
 
