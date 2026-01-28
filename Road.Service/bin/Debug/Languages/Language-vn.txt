@@ -532,7 +532,7 @@ OpenUpArkHandler.Notice:Tebrikler {0} açmadan {1} kazanılan {2}.
 GunsaluteCommand.GoldNotEnough:Yetersiz altın. 
 GunsaluteCommand.MoneyNotEnough:Yetersiz kupon. 
 GunsaluteCommand.Successed1:[{0}] havai fişek patlattı. 
-SceneChatHandler.Fast:Bu kanalda 30 saniyede ancak bir kere yorum yapılabilir. 
+SceneChatHandler.Fast:Bu kanalda 3 saniyede ancak bir kere yorum yapılabilir. 
 
 
 
@@ -3657,7 +3657,7 @@ Tank.Request.ConsortiaCheck.Right:Tebrikler! Birlik adı kullanılabilir.
 UpdateSLOT.ResetComplete: {0} puan kartı kazandınız.
 UpdateSLOT.Complete:Kart başarıyla {0} seviyesine yükseltildi.
 UpdateSLOT.Fail:Puan en az 50 olmalı.
-ItemStrengthenHandler.congratulation2:Tebrikler! [{0}] başarıyla {2} {1} daha yüksek beceriye yükseltti.
+ItemStrengthenHandler.congratulation2:Tebrikler! {0} oyuncusu [{1}] başarıyla {2} ekipmanını daha yüksek beceriye yükseltti.
 OpenHoleHandler.congratulation:Tebrikler! [{0}] matkap deliği {1} [{2}] {3} başarıyla geliştirildi.
 OpenBeadHandler.congratulation:Tebrikler! Olağanüstü yetenekli [{0}], {1} başarıyla {2} seviyesine yükseltti.
 OpenHoleHandler.Complete: Delik açma tamamlandı.

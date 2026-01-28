@@ -66,7 +66,7 @@ namespace Game.Server.Packets.Client
                                     itemAward.IsBinds = item.IsBinds;
                                     itemAward.ValidDate = item.ValidDate;
                                     client.Player.AddTemplate(itemAward, LanguageMgr.GetTranslation("Hazine Tarlası Ödülü!"));
-                                    client.Player.SendMessage(LanguageMgr.GetTranslation("Tebrikler! x{1} adet {0} kazandınız.", itemAward.Template.Name, item.Count));
+                                    client.Player.SendMessage(LanguageMgr.GetTranslation("Tebrikler! " + item.Count + " adet " + itemAward.Template.Name + " kazandınız."));
                                     ChickenBox.canOpenCounts--;
                                     if (ChickenBox.canOpenCounts == 0)
                                     {

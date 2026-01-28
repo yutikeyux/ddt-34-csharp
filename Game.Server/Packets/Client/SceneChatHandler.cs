@@ -136,7 +136,7 @@ namespace Game.Server.Packets.Client
                             {
                                 return 1;
                             }
-                            if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(30.0), DateTime.Now) > 0)
+                            if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(3.0), DateTime.Now) > 0)
                             {
                                 client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("SceneChatHandler.Fast"));
                                 return 1;
