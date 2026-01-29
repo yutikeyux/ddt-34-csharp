@@ -14,7 +14,10 @@
       <Item TemplateId="11019" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="8" />
       <Item TemplateId="315001" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="100" />
     </Items>
-    <Items SubActivityType="3" Condition="25" />
+    <Items SubActivityType="3" Condition="25">
+      <Item TemplateId="35130101" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="1" />
+      <Item TemplateId="332101" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="8" />
+    </Items>
     <Items SubActivityType="4" Condition="30" />
     <Items SubActivityType="5" Condition="50" />
     <Items SubActivityType="6" Condition="60" />

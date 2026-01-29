@@ -182,7 +182,6 @@ namespace Game.Logic
             int token = 0;
             int dragonToken = 0;
             int magicStonePoint = 0;
-
             int templateID = 0;
             int count = 0;
             List<ItemInfo> infos = null;
@@ -208,7 +207,7 @@ namespace Game.Logic
                         // Ödül Bildirimi (İpucu varsa)
                         if (info.IsTips)
                         {
-                            player.PlayerDetail.PVERewardNotice($"[{player.PlayerDetail.ZoneName}] oyuncusu değerli [{player.PlayerDetail.PlayerCharacter.NickName}] Oyun Salonu'ndan değerli ödüller kazandı. Kazandıkları ödüller: {info.TemplateID} x{info.Count}. ", info.ItemID, info.TemplateID);
+                            player.PlayerDetail.SendMessage(player.PlayerDetail.ZoneName + " oyuncusu değerli [" + player.PlayerDetail.PlayerCharacter.NickName + "] Oyun Salonu'ndan değerli ödüller kazandı. Kazandıkları ödüller: " + info.Name + "x" + info.Count  + ".");
                             player.PlayerDetail.AddLog("TakeCard PVP: ", "MissionName: " + "|Name: " + info.Name + "|Count: " + info.Count);
                         }
                     }

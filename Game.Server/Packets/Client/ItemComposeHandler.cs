@@ -25,6 +25,24 @@ namespace Game.Server.Packets.Client
             //pkg.ClearContext();
             GSPacketIn pkg = new GSPacketIn((byte)ePackageType.ITEM_COMPOSE, client.Player.PlayerCharacter.ID);
 
+            var now = DateTime.UtcNow;
+
+            if (client.Player.ComposePacketWindowStart == DateTime.MinValue ||
+                (now - client.Player.ComposePacketWindowStart).TotalSeconds >= 1)
+            {
+                client.Player.ComposePacketWindowStart = now;
+                client.Player.ComposePacketCount = 0;
+            }
+
+            client.Player.ComposePacketCount++;
+
+            if (client.Player.ComposePacketCount > 2)
+            {
+                client.Out.SendMessage(eMessageType.ERROR, "Çok hızlı işlem yapıyorsunuz, lütfen yavaşlayın.");
+                return 0;
+            }
+
+            
             StringBuilder str = new StringBuilder();
             int mustGold = GameProperties.PRICE_COMPOSE_GOLD;
             if (client.Player.PlayerCharacter.HasBagPassword && client.Player.PlayerCharacter.IsLocked)

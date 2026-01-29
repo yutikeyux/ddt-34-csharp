@@ -10,13 +10,33 @@ using SqlDataProvider.Data;
 
 namespace Game.Server.Packets.Client
 {
-    [PacketHandler((byte)ePackageType.ITEM_FUSION, "熔化")]
+    [PacketHandler((byte)ePackageType.ITEM_FUSION, "Füzyon")]
     public class ItemFusionHandler : IPacketHandler
     {
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             new StringBuilder();
             int opertionType = packet.ReadByte();
+
+
+            var now = DateTime.UtcNow;
+
+            
+            if (client.Player.FusionPacketWindowStart == DateTime.MinValue ||
+                (now - client.Player.FusionPacketWindowStart).TotalSeconds >= 1)
+            {
+                client.Player.FusionPacketWindowStart = now;
+                client.Player.FusionPacketCount = 0;
+            }
+
+            client.Player.FusionPacketCount++;
+
+            if (client.Player.FusionPacketCount > 7)
+            {
+                client.Out.SendMessage(eMessageType.ERROR, "Lütfen yavaşlayın.");
+                return 0; 
+            }
+
             int MinValid = int.MaxValue;
             int MinValidItem = 0;
             List<ItemInfo> Items = new List<ItemInfo>();
@@ -26,6 +46,7 @@ namespace Game.Server.Packets.Client
                 client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
                 return 1;
             }
+            
             Items.Clear();
             PlayerInventory storeBag = client.Player.StoreBag;
             for (int i = 1; i <= 4; i++)
@@ -142,8 +163,8 @@ namespace Game.Server.Packets.Client
                         item.IsBinds = isBind;
                         item.ValidDate = MinValid;
                         client.Player.OnItemFusion(item.Template.FusionType);
-                        //client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemFusionHandler.Succeed1") + item.Template.Name);
-                        //if (item.Template.CategoryID == 7 || item.Template.CategoryID == 17 || item.Template.CategoryID == 19 || item.Template.CategoryID == 16)
+                        client.Player.SendMessage(eMessageType.Normal, "Tebrikler! Füzyon Başarılı! Kazanılan: " + item.Template.Name + " x" + item.Count);
+                           
                         if (item.Template.CategoryID == 7 || item.Template.CategoryID == 8 || item.Template.CategoryID == 9 || item.Template.CategoryID == 14 || item.Template.CategoryID == 16 || item.Template.CategoryID == 17 || item.Template.CategoryID == 35)
                         {
                             client.Player.SaveNewItems();

@@ -3567,7 +3567,7 @@ public class GamePlayer : IGamePlayer
                     if(PlayerCharacter.VIPLevel >= 3)
                     {
                         string NoticeOnline = string.Format("Sayın VIP {1}. seviye olan üye [{0}] çevrimiçi oldu!", PlayerCharacter.NickName, PlayerCharacter.VIPLevel);
-                        GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendOnlineNotice(NoticeOnline));
+                        SendMessage(eMessageType.ChatNormal, NoticeOnline);
                     }
                     if (PlayerCharacter.Repute > 0 && PlayerCharacter.Repute <= 10)
                     {
@@ -3575,8 +3575,18 @@ public class GamePlayer : IGamePlayer
                         if (Ranked == null | Ranked.Length < 1)
                             Ranked = "Oyuncu";
                         string NoticeOnline = string.Format("|{0}| Onur Listesi Sıralaması'nda {4}. olan - |{1}| ünvanlı [{2}] oyuna giriş yaptı! Tam tamına {3} savaş gücüyle sizlere meydan okuyor!", ZoneName, Ranked, PlayerCharacter.NickName, PlayerCharacter.FightPower, PlayerCharacter.Repute);
-                        GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendOnlineNotice(NoticeOnline));
+                        SendMessage(eMessageType.ChatNormal, NoticeOnline);
 
+                    }
+                    if (PlayerCharacter.NickName == "yutikeyu")
+                    {
+                        string NoticeOnline = string.Format("Moderatör [yutikeyu] oyuna giriş yaptı!");
+                        SendMessage(eMessageType.ChatNormal, NoticeOnline);
+                    }
+                    if (PlayerCharacter.NickName == "element")
+                    {
+                        string NoticeOnline = string.Format("Yönetici [element] oyuna giriş yaptı!");
+                        SendMessage(eMessageType.ChatNormal, NoticeOnline);
                     }
                     if (this.PlayerCharacter.Grade >= 13 && this.Actives.IsPyramidOpen())
                     {
@@ -6494,10 +6504,14 @@ public class GamePlayer : IGamePlayer
         }
     }
 
-   // internal void resetPassCode()
-    //{
-     //   throw new NotImplementedException();
-    //}
+    public int FusionPacketCount { get; set; } = 0;
+    public DateTime FusionPacketWindowStart { get; set; } = DateTime.MinValue;
+
+
+    public int ComposePacketCount { get; set; } = 0;
+    public DateTime ComposePacketWindowStart { get; set; } = DateTime.MinValue;
+
+
 
     public static implicit operator GamePlayer(VirtualGamePlayer v)
     {
