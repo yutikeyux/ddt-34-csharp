@@ -1,4 +1,4 @@
-<Result value="true" message="Başarılı!">
+<Result value="true" message="Success!">
   <item PetTemplateID="-1" KindID="1" GetType="1" SkillID="1" SkillBookID="-1" MinLevel="1" DeleteSkillIDs="" />
   <item PetTemplateID="-1" KindID="1" GetType="1" SkillID="2" SkillBookID="-1" MinLevel="5" DeleteSkillIDs="1," />
   <item PetTemplateID="-1" KindID="1" GetType="1" SkillID="3" SkillBookID="-1" MinLevel="15" DeleteSkillIDs="1,2," />

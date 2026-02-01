@@ -2179,7 +2179,7 @@ public class GamePlayer : IGamePlayer
                             itemInfo.LuckCompose = item.LuckCompose;
                             itemInfo.IsBinds = item.IsBind;
                             itemInfo.ValidDate = item.ValidDate;
-                            SendItemToMail(itemInfo, LanguageMgr.GetTranslation("Tebrikler! Oyunumuzda belirli koşulları sağladığınız için bu ödülleri almaya hak kazandınız! Bu ödüller size sistem tarafından belirlenen koşulları yerine getirdiğiniz için teslim edildi! Değerli öğelerin tadını çıkarın!", eventLiveInfo.Description), LanguageMgr.GetTranslation("Koşullu Etkinlik Yöneticisi"), eMailType.Manage); //türkçeleştirildi not: yuti
+                            SendItemToMail(itemInfo, LanguageMgr.GetTranslation("Merhaba! Dikkatini ve merakını karşılıksız bırakmadık. Oyunda belirli koşulları başarıyla yerine getirdiğin için özel bir ödül kazandın! Bu ödül, yalnızca detaylara önem veren ve oyunu keşfetmeyi seven oyunculara veriliyor. Ödülün şu anda hesabına tanımlandı. Envanterinde veya ilgili oyun ekranında hemen kullanabilirsin. Küçük bir ipucu: Bu tarz ödüller, oyunda düşündüğünden daha fazla yerde karşına çıkabilir. Keyifli Oyunlar.", eventLiveInfo.Description), LanguageMgr.GetTranslation("Tebrikler! Gizli Ödül!"), eMailType.Manage); //türkçeleştirildi not: yuti
                         }
                     }
                 }
@@ -3567,7 +3567,7 @@ public class GamePlayer : IGamePlayer
                     if(PlayerCharacter.VIPLevel >= 3)
                     {
                         string NoticeOnline = string.Format("Sayın VIP {1}. seviye olan üye [{0}] çevrimiçi oldu!", PlayerCharacter.NickName, PlayerCharacter.VIPLevel);
-                        SendMessage(eMessageType.ChatNormal, NoticeOnline);
+                        WorldMgr.SendMessageAll(NoticeOnline);
                     }
                     if (PlayerCharacter.Repute > 0 && PlayerCharacter.Repute <= 10)
                     {
@@ -3575,18 +3575,18 @@ public class GamePlayer : IGamePlayer
                         if (Ranked == null | Ranked.Length < 1)
                             Ranked = "Oyuncu";
                         string NoticeOnline = string.Format("|{0}| Onur Listesi Sıralaması'nda {4}. olan - |{1}| ünvanlı [{2}] oyuna giriş yaptı! Tam tamına {3} savaş gücüyle sizlere meydan okuyor!", ZoneName, Ranked, PlayerCharacter.NickName, PlayerCharacter.FightPower, PlayerCharacter.Repute);
-                        SendMessage(eMessageType.ChatNormal, NoticeOnline);
+                        WorldMgr.SendMessageAll(NoticeOnline);
 
                     }
                     if (PlayerCharacter.NickName == "yutikeyu")
                     {
                         string NoticeOnline = string.Format("Moderatör [yutikeyu] oyuna giriş yaptı!");
-                        SendMessage(eMessageType.ChatNormal, NoticeOnline);
+                        WorldMgr.SendMessageAll(NoticeOnline);
                     }
                     if (PlayerCharacter.NickName == "element")
                     {
                         string NoticeOnline = string.Format("Yönetici [element] oyuna giriş yaptı!");
-                        SendMessage(eMessageType.ChatNormal, NoticeOnline);
+                        WorldMgr.SendMessageAll(NoticeOnline);
                     }
                     if (this.PlayerCharacter.Grade >= 13 && this.Actives.IsPyramidOpen())
                     {
@@ -4754,9 +4754,9 @@ public class GamePlayer : IGamePlayer
         {
             if (GmActivityMgr.FoodActivity != null)
             {
-               // Out.SendOpenFoodActive(GmActivityMgr.FoodActivity);
+                Out.SendOpenFoodActive(GmActivityMgr.FoodActivity);
             }
-         //   Out.SendOpenGodsRoad();
+            Out.SendOpenGodsRoad();
             int ıD = PlayerCharacter.ID;
             if (PlayerCharacter.Grade >= 20)
             {

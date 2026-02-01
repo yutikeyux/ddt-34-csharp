@@ -1,4 +1,4 @@
-<Result total="153" value="true" message="Başarılı!">
+<Result total="153" value="true" message="Success!">
   <Item ID="100" Order="60" Show="0" Name="Acemi öğretmen" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikte elde et（Elde edilemez）" />
   <Item ID="101" Order="61" Show="0" Name="Yüksek seviyeli öğretmen" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikte elde et（Elde edilemez）" />
   <Item ID="102" Order="62" Show="0" Name="Sert öğretmen" Pic="0" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikte elde et（Elde edilemez）" />

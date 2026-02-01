@@ -1,9 +1,12 @@
 using Bussiness;
 using Bussiness.Managers;
+using Game.Base;
+using Game.Base.Events;
 using Game.Base.Packets;
 using Game.Logic.Actions;
 using Game.Logic.Phy.Maps;
 using Game.Logic.Phy.Object;
+using Game.Server;
 using log4net;
 using SqlDataProvider.Data;
 using System;
@@ -203,11 +206,12 @@ namespace Game.Logic
                             count = info.Count;
                             player.PlayerDetail.AddTemplate(info, eBageType.TempBag, info.Count, eGameView.BatleTypeGet);
                         }
-
+                        
                         // Ödül Bildirimi (İpucu varsa)
                         if (info.IsTips)
                         {
-                            player.PlayerDetail.SendMessage(player.PlayerDetail.ZoneName + " oyuncusu değerli [" + player.PlayerDetail.PlayerCharacter.NickName + "] Oyun Salonu'ndan değerli ödüller kazandı. Kazandıkları ödüller: " + info.Name + "x" + info.Count  + ".");
+                            
+                            player.PlayerDetail.PVERewardNotice(player.PlayerDetail.ZoneName + " oyuncusu değerli [" + player.PlayerDetail.PlayerCharacter.NickName + "] Oyun salonundan değerli ödüller kazandı. Kazandıkları ödüller: " + info.Name + " x" + info.Count + ". ", info.ItemID, info.TemplateID);
                             player.PlayerDetail.AddLog("TakeCard PVP: ", "MissionName: " + "|Name: " + info.Name + "|Count: " + info.Count);
                         }
                     }

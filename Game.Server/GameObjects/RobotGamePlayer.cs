@@ -20,6 +20,10 @@ namespace Game.Server.GameObjects
             {
                 Nothing();
             }
+
+            public void SendOpenGodsRoad()
+                { }
+            public void SendOpenFoodActive(GmActivityInfo info) { }
             public void SendUpdateChickActivation(UserChickActiveInfo chickInfo) => Nothing();
             public void SendOpenHappyRecharge(int playerID) => Nothing();
 

@@ -30,6 +30,18 @@ namespace Game.Base.Packets
         {
             m_gameClient = client;
         }
+
+        public void SendOpenFoodActive(GmActivityInfo info)
+        {
+
+        }
+        public void SendOpenGodsRoad()
+        {
+            GSPacketIn pkg = new GSPacketIn(86);
+            pkg.WriteByte(86);
+            SendTCP(pkg);
+        }
+
         public void SendCatchBeastOpen(int playerID, bool isOpen)
         {
             GSPacketIn pkg = new GSPacketIn(145, playerID);

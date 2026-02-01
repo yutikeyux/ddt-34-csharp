@@ -1,5 +1,6 @@
 using Game.Server.Buffer;
 using Game.Server.GameUtils;
+using Game.Server.Managers;
 using Game.Server.Packets;
 using Game.Server.Quests;
 using Game.Server.Rooms;
@@ -275,5 +276,10 @@ namespace Game.Base.Packets
         #endregion
 
         void SendPyramidOpenClose(PyramidConfigInfo info);
+
+        void SendOpenGodsRoad();
+        void SendOpenFoodActive(GmActivityInfo info);
+
+
     }
 }

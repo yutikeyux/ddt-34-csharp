@@ -1,4 +1,4 @@
-<Result value="true" message="Başarılı!">
+<Result value="true" message="Success!">
   <item ID="1001" Name="Ek bir top artırır" EffectPic="" Description="" Pic="-1" />
   <item ID="1002" Name="4 beceri elde edilir." EffectPic="" Description="" Pic="-1" />
   <item ID="1003" Name="5 beceri elde edilir." EffectPic="" Description="" Pic="-1" />

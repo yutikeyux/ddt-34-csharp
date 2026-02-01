@@ -17,6 +17,11 @@ namespace Game.Server.Packets.Server
 			throw new NotImplementedException();
         }
 
+        public void SendOpenGodsRoad()
+            { throw new NotImplementedException(); }
+        public void SendOpenFoodActive(GmActivityInfo info)
+            { throw new NotImplementedException(); }
+
         public void SendLeftRouleteOpen(UsersExtraInfo info)
         {
 			throw new NotImplementedException();

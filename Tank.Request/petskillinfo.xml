@@ -1,4 +1,4 @@
-<Result value="true" message="Başarılı!">
+<Result value="true" message="Success!">
   <item ID="1" Name="Yumurta Vuruşu Sv 1" ElementIDs="1122," Description="Evcil hayvanın her saldırısında %15 hasar verir." BallType="3" NewBallID="-1" CostMP="0" Pic="1" Action="" EffectPic="" Delay="0" ColdDown="0" GameType="0" Probability="10000" />
   <item ID="2" Name="Yumurta Vuruşu Sv 2" ElementIDs="1123," Description="Evcil hayvanın her saldırısında %25 hasar verir." BallType="3" NewBallID="-1" CostMP="0" Pic="1" Action="" EffectPic="" Delay="0" ColdDown="0" GameType="0" Probability="10000" />
   <item ID="3" Name="Yumurta Vuruşu Sv 3" ElementIDs="1124," Description="Evcil hayvanın her saldırısında %36 hasar verir." BallType="3" NewBallID="-1" CostMP="0" Pic="1" Action="" EffectPic="" Delay="0" ColdDown="0" GameType="0" Probability="10000" />

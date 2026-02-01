@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.1.11312.151 d18.0
+VisualStudioVersion = 18.1.11312.151
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Center.Service", "Center.Service\Center.Service.csproj", "{FB5E98BE-653A-4581-81A4-CF5DC5486F6D}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Center.Service", "Center.Se
 		{D0ACEE1F-BD96-4065-B8EF-2A4E5B3AF06F} = {D0ACEE1F-BD96-4065-B8EF-2A4E5B3AF06F}
 		{E9B67168-6C13-42F6-B199-B3DD95118AF2} = {E9B67168-6C13-42F6-B199-B3DD95118AF2}
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tank.Request", "Tank.Request\Tank.Request.csproj", "{9959D91D-72F4-4002-A2FF-B89B78B60AD9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fighting.Service", "Fighting.Service\Fighting.Service.csproj", "{4061612F-AEED-4AB4-8F5A-5F3D0971DCDA}"
 EndProject
@@ -61,14 +59,6 @@ Global
 		{FB5E98BE-653A-4581-81A4-CF5DC5486F6D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FB5E98BE-653A-4581-81A4-CF5DC5486F6D}.Release|x86.ActiveCfg = Release|Any CPU
 		{FB5E98BE-653A-4581-81A4-CF5DC5486F6D}.Release|x86.Build.0 = Release|Any CPU
-		{9959D91D-72F4-4002-A2FF-B89B78B60AD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9959D91D-72F4-4002-A2FF-B89B78B60AD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9959D91D-72F4-4002-A2FF-B89B78B60AD9}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9959D91D-72F4-4002-A2FF-B89B78B60AD9}.Debug|x86.Build.0 = Debug|Any CPU
-		{9959D91D-72F4-4002-A2FF-B89B78B60AD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9959D91D-72F4-4002-A2FF-B89B78B60AD9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9959D91D-72F4-4002-A2FF-B89B78B60AD9}.Release|x86.ActiveCfg = Release|Any CPU
-		{9959D91D-72F4-4002-A2FF-B89B78B60AD9}.Release|x86.Build.0 = Release|Any CPU
 		{4061612F-AEED-4AB4-8F5A-5F3D0971DCDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4061612F-AEED-4AB4-8F5A-5F3D0971DCDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4061612F-AEED-4AB4-8F5A-5F3D0971DCDA}.Debug|x86.ActiveCfg = Debug|Any CPU
