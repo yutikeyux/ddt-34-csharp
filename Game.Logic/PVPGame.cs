@@ -18,6 +18,7 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Security.Policy;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Game.Logic
 {
@@ -211,7 +212,7 @@ namespace Game.Logic
                         if (info.IsTips)
                         {
                             
-                            player.PlayerDetail.PVERewardNotice(player.PlayerDetail.ZoneName + " oyuncusu değerli [" + player.PlayerDetail.PlayerCharacter.NickName + "] Oyun salonundan değerli ödüller kazandı. Kazandıkları ödüller: " + info.Name + " x" + info.Count + ". ", info.ItemID, info.TemplateID);
+                            base.PVPÖzelMesaj(player.PlayerDetail.ZoneName + " oyuncusu değerli [" + player.PlayerDetail.PlayerCharacter.NickName + "] Oyun salonundan değerli ödüller kazandı. Kazandıkları ödüller: " + info.Name + " x" + info.Count + ". ");
                             player.PlayerDetail.AddLog("TakeCard PVP: ", "MissionName: " + "|Name: " + info.Name + "|Count: " + info.Count);
                         }
                     }

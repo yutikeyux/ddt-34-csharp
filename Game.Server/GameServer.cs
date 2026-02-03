@@ -368,91 +368,6 @@ namespace Game.Server
             return true;
         }
 
-        //protected void GoldTimeScan(object sender)
-        //{
-        //    try
-        //    {
-        //        int tickCount = Environment.TickCount;
-        //        if (log.IsInfoEnabled)
-        //        {
-        //            log.Info("GoldTime Scaning ...");
-        //            log.Debug("GoldTime ThreadId=" + Thread.CurrentThread.ManagedThreadId);
-        //        }
-
-        //        Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-        //        GamePlayer[] players = WorldMgr.GetAllPlayers();
-
-        //        DateTime GoldTimeStart = Convert.ToDateTime(GameProperties.GoldTimeStart.Split('|')[0]);
-        //        DateTime GoldTimeStart1 = Convert.ToDateTime(GameProperties.GoldTimeStart.Split('|')[1]);
-        //        DateTime GoldTimeStart2 = Convert.ToDateTime(GameProperties.GoldTimeStart.Split('|')[2]);
-        //        DateTime GoldTimeEnd = Convert.ToDateTime(GameProperties.GoldTimeEnd.Split('|')[0]);
-        //        DateTime GoldTimeEnd1 = Convert.ToDateTime(GameProperties.GoldTimeEnd.Split('|')[1]);
-        //        DateTime GoldTimeEnd2 = Convert.ToDateTime(GameProperties.GoldTimeEnd.Split('|')[2]);
-
-        //        // if (!ActiveSystemMgr.IsGoldTimeOpen && (GoldTimeStart <= DateTime.Now && DateTime.Now < GoldTimeEnd || GoldTimeStart1 <= DateTime.Now && DateTime.Now < GoldTimeEnd1 || GoldTimeStart2 <= DateTime.Now && DateTime.Now < GoldTimeEnd2))
-        //        if (!ActiveSystemMgr.IsGoldTimeOpen && DateTime.Now >= GoldTimeStart && DateTime.Now < GoldTimeEnd)
-        //        {
-        //            ActiveSystemMgr.IsGoldTimeOpen = true;
-        //            foreach (var item in players)
-        //            {
-        //                item.SendMessage("Giờ vàng đã bắt đầu, mau vào phòng game chiến đấu nào!");
-        //            }
-        //        }
-        //        else if (!ActiveSystemMgr.IsGoldTimeOpen && DateTime.Now >= GoldTimeStart1 && DateTime.Now < GoldTimeEnd1)
-        //        {
-        //            ActiveSystemMgr.IsGoldTimeOpen = true;
-        //            foreach (var item in players)
-        //            {
-        //                item.SendMessage("Giờ vàng đã bắt đầu, mau vào phòng game chiến đấu nào!");
-        //            }
-        //        }
-        //        else if (!ActiveSystemMgr.IsGoldTimeOpen && DateTime.Now >= GoldTimeStart2 && DateTime.Now < GoldTimeEnd2)
-        //        {
-        //            ActiveSystemMgr.IsGoldTimeOpen = true;
-        //            foreach (var item in players)
-        //            {
-        //                item.SendMessage("Giờ vàng đã bắt đầu, mau vào phòng game chiến đấu nào!");
-        //            }
-        //        }
-        //        //else if (ActiveSystemMgr.IsGoldTimeOpen && (DateTime.Now >= GoldTimeEnd || DateTime.Now >= GoldTimeEnd1 || DateTime.Now >= GoldTimeEnd2))
-        //        if (DateTime.Now >= GoldTimeEnd && ActiveSystemMgr.IsGoldTimeOpen)
-        //        {
-        //            ActiveSystemMgr.IsGoldTimeOpen = false;
-        //            foreach (var item in players)
-        //            {
-        //                item.SendMessage("Giờ vàng đã kết thúc, hẹn gặp lại lần sau!");
-        //            }
-        //        }
-        //        else if (DateTime.Now >= GoldTimeEnd1 && ActiveSystemMgr.IsGoldTimeOpen)
-        //        {
-        //            ActiveSystemMgr.IsGoldTimeOpen = false;
-        //            foreach (var item in players)
-        //            {
-        //                item.SendMessage("Giờ vàng đã kết thúc, hẹn gặp lại lần sau!");
-        //            }
-        //        }
-        //        else if (DateTime.Now >= GoldTimeEnd2 && ActiveSystemMgr.IsGoldTimeOpen)
-        //        {
-        //            ActiveSystemMgr.IsGoldTimeOpen = false;
-        //            foreach (var item in players)
-        //            {
-        //                item.SendMessage("Giờ vàng đã kết thúc, hẹn gặp lại lần sau!");
-        //            }
-        //        }
-        //        if (log.IsInfoEnabled)
-        //        {
-        //            log.Info("GoldTimeScan completed!");
-        //        }
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        if (log.IsErrorEnabled)
-        //        {
-        //            log.Error("GoldTimeScan fail", exception);
-        //        }
-        //    }
-        //}
-
         protected void GoldTimeScan(object sender)
         {
             try
@@ -699,61 +614,55 @@ namespace Game.Server
         {
             try
             {
-                int tickCount = Environment.TickCount;
                 if (log.IsInfoEnabled)
                 {
-                    log.Info("Little Game Scaning ...");
-                    log.Debug("LittleGameScan ThreadId=" + Thread.CurrentThread.ManagedThreadId);
+                    log.Info("Little Game Scanning ...");
                 }
 
                 Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-                List<DayOfWeek> opendays = new List<DayOfWeek>//hangi günler açık veya kapalı olacağı. şu an her gün açık. not: yuti
-                {
-                    DayOfWeek.Monday,
-                    DayOfWeek.Tuesday,
-                    DayOfWeek.Wednesday,
-                    DayOfWeek.Thursday,
-                    DayOfWeek.Friday,
-                    DayOfWeek.Saturday,
-                    DayOfWeek.Sunday
-                };
-                if (opendays.Contains(DateTime.Now.DayOfWeek))
-                {
 
-                    int startTime = GameProperties.LittleGameStartHourse; //saçma sapan bi mantık değiştirebiliriz not: yuti
-                    int stopTime = GameProperties.LittleGameStartHourse + GameProperties.LittleGameTimeSpending;
-                    if (DateTime.Now.Hour == startTime && !LittleGameWorldMgr.IsOpen)
+                // Gün kontrolünü (opendays) kaldırdık çünkü "her gün açık" olacak.
+                // Zaman kontrolünü Dakika bazlı yaptık ki "her saat yenilensin".
+
+                int currentMinute = DateTime.Now.Minute;
+
+                // 1. BAŞLANGIÇ: Saat başı (Dakika 0) oyun kapalıysa açar.
+                if (currentMinute >= 0 && !LittleGameWorldMgr.IsOpen)
+                {
+                    LittleGameWorldMgr.OpenLittleGameSetup();
+
+                    // Oyun başladığında oyunculara bildirim
+                    foreach (var player in WorldMgr.GetAllPlayers())
                     {
-                        LittleGameWorldMgr.OpenLittleGameSetup();
+                        player.Actives.SendLittleGameActived();
+                        player.Out.SendMessage(eMessageType.Normal, "Bogo Savaşı başladı! (Süre: 1 Saat)");
                     }
-                    else if (DateTime.Now.Hour >= stopTime && LittleGameWorldMgr.IsOpen)
+
+                    if (log.IsInfoEnabled) log.Info("LittleGame Hourly Start triggered.");
+                }
+                // 2. BİTİŞ UYARISI: Saatin 55'inde oyun açıksa uyarı verir.
+                else if (currentMinute == 55 && LittleGameWorldMgr.IsOpen)
+                {
+                    // Dinamik geri sayım mesajı (60 - 55 = 5 dakika)
+                    string message = $"Bogo Savaşı {(60 - currentMinute)} dakika sonra sona erecek!";
+
+                    foreach (var player in WorldMgr.GetAllPlayers())
                     {
-                        LittleGameWorldMgr.CloseLittleGame();
-                    }
-                    else if (DateTime.Now.Hour == startTime - 1 && !LittleGameWorldMgr.IsOpen && DateTime.Now.Minute >= 55)
-                    {
-                        foreach (var player in WorldMgr.GetAllPlayers())
-                        {
-                            player.Actives.SendLittleGameActived();
-                            player.Out.SendMessage(eMessageType.Normal, $"Bogo Savaşı {(int)(60 - DateTime.Now.Minute)} dakika sonra başlıyor!");
-                        }
-                    }
-                    else if (DateTime.Now.Hour == startTime && LittleGameWorldMgr.IsOpen && DateTime.Now.Minute >= 55)
-                    {
-                        foreach (var player in WorldMgr.GetAllPlayers())
-                        {
-                            player.Actives.SendLittleGameActived();
-                            player.Out.SendMessage(eMessageType.Normal, $"Bogo Savaşı {(int)(60 - DateTime.Now.Minute)} dakika sonra sona erecek!");
-                        }
-                    }
-                    if (log.IsInfoEnabled)
-                    {
-                        log.Info("LittleGame today scan completed!");
+                        player.Actives.SendLittleGameActived();
+                        player.Out.SendMessage(eMessageType.Normal, message);
                     }
                 }
-                else if (log.IsInfoEnabled)
+                // 3. KAPANIŞ: Saatin 59'unda oyun açıksa kapatır (Bir sonraki saat için temizlik).
+                else if (currentMinute == 59 && LittleGameWorldMgr.IsOpen)
                 {
-                    log.Info("LittleGame scan not today!");
+                    LittleGameWorldMgr.CloseLittleGame();
+
+                    if (log.IsInfoEnabled) log.Info("LittleGame Hourly Stop triggered.");
+                }
+
+                if (log.IsInfoEnabled)
+                {
+                    log.Info("LittleGame scan completed!");
                 }
             }
             catch (Exception exception)
@@ -765,6 +674,7 @@ namespace Game.Server
             }
             finally
             {
+                // GameMgr ile ilgili diğer kısımlar dokunulmadan aynı bırakıldı
                 if (log.IsErrorEnabled)
                 {
                     log.Info("GameMgr Scaning ...");
@@ -803,9 +713,9 @@ namespace Game.Server
                     if (player.PlayerCharacter.ID > 0)
                     {
                         var RECHANGE_MONEY_ACTIVE_OFWEEK = player.Extra.GetEventProcess((int)NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK).IsReset;
-                        var USE_MONEY_ACTIVE_OFWEEK = player.Extra.GetEventProcess((int)NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK).IsReset;
-                        if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
-                        {
+                        var USE_MONEY_ACTIVE_OFWEEK = player.Extra.GetEventProcess((int)NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK).IsReset;                       
+                            if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
+                            {
                             if (!RECHANGE_MONEY_ACTIVE_OFWEEK)
                             {
                                 player.Extra.ResetNoviceEvent(NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK);
@@ -882,7 +792,7 @@ namespace Game.Server
                 catch (Exception)
                 {
 
-                    log.Error(string.Concat("Cant parse other login server!"));
+                    Console.WriteLine(string.Concat("Başka sunucu yok henüz birleştirmedik!"));
                 }
 
             }
@@ -1427,10 +1337,10 @@ namespace Game.Server
                 {
                     return false;
                 }
-                //if (!InitComponent(InitOtherLoginServer(), "Login To OtherCenterServer"))
-                //{
-                //  return false;
-                //}
+                if (!InitComponent(InitOtherLoginServer(), "Login To OtherCenterServer"))
+                {
+                 return false;
+                }
                 if (!InitComponent(HotSpringMgr.Init(), "HotSpringMgr Init"))
                 {
                     return false;
@@ -1485,8 +1395,8 @@ namespace Game.Server
                     return false;
                 if (!InitComponent(TotemHonorMgr.Init(), "TotemHonorMgr Init"))
                     return false;
-                // if (!InitComponent(DailyLeagueAwardMgr.Init(), "DailyLeagueAwardMgr Init")) //kaldırıldı not: yuti
-                // return false;
+                if (!InitComponent(DailyLeagueAwardMgr.Init(), "DailyLeagueAwardMgr Init")) //kaldırıldı not: yuti
+                 return false;
                 if (!InitComponent(SpiritInfoMgr.Init(), "SpiritInfoMgr Int"))
                     return false; //buralarda ne geziyon la :D
                 if (!InitComponent(SetsBuildTempMgr.Init(), "SetsBuildTempMgr Init"))

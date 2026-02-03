@@ -6510,8 +6510,7 @@ public class GamePlayer : IGamePlayer
 
     public int ComposePacketCount { get; set; } = 0;
     public DateTime ComposePacketWindowStart { get; set; } = DateTime.MinValue;
-
-
+    public int CountFunction2 { get; internal set; }
 
     public static implicit operator GamePlayer(VirtualGamePlayer v)
     {

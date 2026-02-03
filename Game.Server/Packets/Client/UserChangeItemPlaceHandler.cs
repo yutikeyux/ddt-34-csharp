@@ -28,11 +28,11 @@ namespace Game.Server.Packets.Client
             PlayerInventory toBag = client.Player.GetInventory(toBagType);
             ItemInfo item = bag.GetItemAt(place);
             
-            //if (DateTime.Compare(client.Player.LastMovePlaceItem.AddMilliseconds(300.0), DateTime.Now) > 0)
-            //{
-            //    client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Thao tác quá nhanh !"));
-            //    return 0;
-            //}
+            if (DateTime.Compare(client.Player.LastMovePlaceItem.AddMilliseconds(300.0), DateTime.Now) > 0)
+            {
+               client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Yavaşla istersen!"));
+                return 0;
+            }
             if (item == null)
             {
                 return 0;
@@ -51,7 +51,7 @@ namespace Game.Server.Packets.Client
                     client.Player.ShowCheckCode();
                     return 0;
                 }
-            //    client.Player.CountFunction2++;
+                client.Player.CountFunction2++;
             }
             bag.BeginChanges();
             toBag.BeginChanges();

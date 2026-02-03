@@ -1,4 +1,5 @@
-﻿using Game.Base.Packets;
+﻿using Game.Base;
+using Game.Base.Packets;
 using Game.Logic.Actions;
 using Game.Logic.Phy.Maps;
 using Game.Logic.Phy.Object;
@@ -897,7 +898,30 @@ namespace Game.Logic
 			return list;
 		}
 
-		internal void SendChat(IGamePlayer player, string msg)
+        public void PVPÖzelMesaj(string msg)
+        {
+            // Tüm savaşan oyuncuların listesini al
+            Player[] allPlayers = GetAllPlayers();
+
+            // Her bir oyuncu için döngüyü başlat
+            foreach (Player p in allPlayers)
+            {
+                // Paketi oluştur (ID: 3, genel mesaj/bildirim paketidir)
+                GSPacketIn pkg = new GSPacketIn((byte)3);
+
+                // Paket parametrelerini set et
+                pkg.Parameter1 = 0; // Gönderen ID (0 ise sistem mesajı demektir)
+                pkg.Parameter2 = LifeTime; // Paketin yaşam süresi
+
+                // Mesajı pakete yaz
+                pkg.WriteInt(0); // Mesaj Tipi
+                pkg.WriteString(msg); // Mesaj İçeriği
+
+                // Sadece bu oyuncuya doğrudan TCP gönder
+                p.PlayerDetail.SendTCP(pkg);
+            }
+        }
+        internal void SendChat(IGamePlayer player, string msg)
 		{
 			if (msg != "")
 			{
