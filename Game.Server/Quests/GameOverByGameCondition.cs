@@ -47,7 +47,7 @@ namespace Game.Server.Quests
                     }
                     break;
                 case eGameType.Training:
-                    if ((this.m_info.Para1 == 2 || this.m_info.Para1 == -1) && this.Value > 0)
+                    if ((this.m_info.Para1 == 2) && this.Value > 0)
                     {
                         --this.Value;
                         break;

@@ -29,9 +29,7 @@ namespace Game.Server.Rooms
 
         private int m_currentFloor;
 
-		private bool m_isOpenBoss;
-
-     
+        private bool m_isOpenBoss;
 
         public RoomSetupChangeAction(BaseRoom room, eRoomType roomType, byte timeMode, eHardLevel hardLevel, int levelLimits, int mapId, string password, string roomname, bool isCrosszone, bool isOpenBoss, string Pic, int currentFloor)
         {
@@ -50,16 +48,41 @@ namespace Game.Server.Rooms
 
             if (isOpenBoss)
             {
-                
+
                 if (mapId == 10000)
                 {
-                   //oyun seçili deðilse yani direkt keþif seçme ekranýndaysa not: yuti
                     m_currentFloor = 1;
-                    m_pic = "show1" + ".jpg"; //map resource id si 10000 yani keþif seçme ekraný olarak direkt gözüküyor not: yuti
+                    m_pic = "show1.jpg";
                 }
-                else // Eðer oyun seçiliyse direkt son etabýna eriþilir ve o show gösteriliyo zaten normal her þey burada not: yuti
+                else if (mapId == 7)
                 {
-                    List<int> lastFloorData = GetLastFloor(mapId, (int)hardLevel);
+
+                    if (m_hardLevel == eHardLevel.Easy)
+                    {
+
+                        m_currentFloor = 2;
+                        m_pic = "show" + 5 + ".jpg";
+                    }
+                    else if (m_hardLevel == eHardLevel.Normal)
+                    {
+                        m_currentFloor = 4;
+                        m_pic = "show8.jpg";
+                    }
+                    else if (m_hardLevel == eHardLevel.Hard)
+                    {
+
+                        m_currentFloor = 4;
+                        m_pic = "show" + 8 + ".jpg";
+                    }
+                    else
+                    {
+                        m_currentFloor = 1;
+                        m_pic = "show1.jpg";
+                    }
+                }
+                else
+                {
+                    List<int> lastFloorData = GetLastFloor(mapId, (int)m_hardLevel);
 
                     if (lastFloorData != null && lastFloorData.Count >= 2)
                     {
@@ -68,17 +91,14 @@ namespace Game.Server.Rooms
                     }
                     else
                     {
-                        // Eðer keþifin son etabý yoksa ve oyuncu boss açmaya çalýþýyosa da konsola böyle bi log yazdýrýp kontrol edebiliriz not: yuti
-                        Console.WriteLine("HATA: Boss odasý için geçerli 'LastFloor' verisi bulunamadý. MapId: " + mapId + ", HardLevel: " + hardLevel);
+                        Console.WriteLine("HATA: Boss odasý için geçerli 'LastFloor' verisi bulunamadý. MapId: " + mapId + ", HardLevel: " + m_hardLevel);
                         m_currentFloor = 1;
-                        m_pic = "show1.jpg"; // Varsayýlan etap resmi not: yuti
+                        m_pic = "show1.jpg";
                     }
                 }
-                
             }
         }
 
-        
         public List<int> GetLastFloor(int mapID, int hardLevel)
         {
             List<int> floor = new List<int>();
@@ -87,14 +107,13 @@ namespace Game.Server.Rooms
             {
                 string[] splitLastFloor = pve.LastFloor.Split(',');
 
-                // hardLevel indeksinin dizi sýnýrlarý içinde olup olmadýðýný kontrol et not: yuti
                 if (hardLevel >= 0 && hardLevel < splitLastFloor.Length)
                 {
                     int result;
                     if (int.TryParse(splitLastFloor[hardLevel], out result))
                     {
                         floor.Add(result);
-                        floor.Add(result); 
+                        floor.Add(result);
                     }
                 }
                 else
@@ -105,24 +124,23 @@ namespace Game.Server.Rooms
             return floor;
         }
 
-
         public void Execute()
         {
-			m_room.RoomType = m_roomType;
-			m_room.TimeMode = m_timeMode;
-			m_room.HardLevel = m_hardLevel;
-			m_room.LevelLimits = m_levelLimits;
-			m_room.MapId = m_mapId;
-			m_room.Name = m_roomName;
-			m_room.Password = m_password;
-			m_room.isCrosszone = m_isCrosszone;
-			m_room.isOpenBoss = m_isOpenBoss;
-			m_room.currentFloor = m_currentFloor;
-			m_room.Pic = m_pic;
+            m_room.RoomType = m_roomType;
+            m_room.TimeMode = m_timeMode;
+            m_room.HardLevel = m_hardLevel;
+            m_room.LevelLimits = m_levelLimits;
+            m_room.MapId = m_mapId;
+            m_room.Name = m_roomName;
+            m_room.Password = m_password;
+            m_room.isCrosszone = m_isCrosszone;
+            m_room.isOpenBoss = m_isOpenBoss;
+            m_room.currentFloor = m_currentFloor;
+            m_room.Pic = m_pic;
             m_room.UpdateGameStyle();
             m_room.UpdateRoomGameType();
-			m_room.SendRoomSetupChange(m_room);
-			RoomMgr.WaitingRoom.SendUpdateRoom(m_room);
+            m_room.SendRoomSetupChange(m_room);
+            RoomMgr.WaitingRoom.SendUpdateRoom(m_room);
         }
     }
 }

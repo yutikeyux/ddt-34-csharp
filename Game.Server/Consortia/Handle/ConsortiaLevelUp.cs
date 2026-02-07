@@ -146,7 +146,7 @@ namespace Game.Server.Consortia.Handle
 
                     if (info.SmithLevel >= 3)
                     {
-                        notice = LanguageMgr.GetTranslation("ConsortiaSmithUpGradeHandler.Notice", Player.PlayerCharacter.ConsortiaName, info.SmithLevel);
+                        notice = (Player.PlayerCharacter.ConsortiaName + " Birliði, Demirci Atölye seviyesini baþarýyla "  + info.SmithLevel + " seviyesine yükseltti!");
                     }
                     break;
                 case 5://BufferLevel
