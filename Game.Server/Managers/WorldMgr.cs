@@ -868,7 +868,7 @@ namespace Game.Server.Managers
             GamePlayer[] players = WorldMgr.GetAllPlayers();
             foreach (GamePlayer player in players)
             {
-                player.SendMessage(message);
+                player.SendMessage(eMessageType.SYS_NOTICE, message);
             }
         }
     }

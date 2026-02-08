@@ -635,7 +635,7 @@ namespace Game.Server
                     foreach (var player in WorldMgr.GetAllPlayers())
                     {
                         player.Actives.SendLittleGameActived();
-                        player.Out.SendMessage(eMessageType.Normal, "Bogo Savaşı başladı! (Süre: 1 Saat)");
+                        player.Out.SendMessage(eMessageType.SYS_NOTICE, "Bogo Savaşı başladı! (Süre: 1 Saat)");
                     }
 
                     if (log.IsInfoEnabled) log.Info("LittleGame Hourly Start triggered.");
@@ -649,7 +649,7 @@ namespace Game.Server
                     foreach (var player in WorldMgr.GetAllPlayers())
                     {
                         player.Actives.SendLittleGameActived();
-                        player.Out.SendMessage(eMessageType.Normal, message);
+                        player.Out.SendMessage(eMessageType.SYS_NOTICE, message);
                     }
                 }
                 // 3. KAPANIŞ: Saatin 59'unda oyun açıksa kapatır (Bir sonraki saat için temizlik).

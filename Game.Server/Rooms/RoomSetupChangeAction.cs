@@ -59,26 +59,45 @@ namespace Game.Server.Rooms
 
                     if (m_hardLevel == eHardLevel.Easy)
                     {
-
-                        m_currentFloor = 2;
-                        m_pic = "show" + 5 + ".jpg";
+                        m_pic = "show5.jpg";
                     }
                     else if (m_hardLevel == eHardLevel.Normal)
                     {
-                        m_currentFloor = 4;
                         m_pic = "show8.jpg";
                     }
                     else if (m_hardLevel == eHardLevel.Hard)
                     {
-
-                        m_currentFloor = 4;
-                        m_pic = "show" + 8 + ".jpg";
+                        m_pic = "elementbununtasarýmýnýyapsanaknkumutla.jpg";
                     }
                     else
                     {
                         m_currentFloor = 1;
                         m_pic = "show1.jpg";
                     }
+                }
+                else if (mapId == 1)
+                {
+                    if (m_hardLevel == eHardLevel.Terror)
+                    {
+                        m_pic = "show7.jpg";
+                    }
+                    else if (m_hardLevel == eHardLevel.Hard)
+                    {    
+                        m_pic = "show6.jpg";
+                    }
+                    else if (m_hardLevel == eHardLevel.Normal)
+                    {
+                        m_pic = "show4.jpg";
+                    }
+                    else if (m_hardLevel == eHardLevel.Easy)
+                    {
+                        m_pic = "show2.jpg";
+                    }
+                    else
+                    {
+                        m_pic = "show1.jpg";
+                    }
+
                 }
                 else
                 {
@@ -98,6 +117,8 @@ namespace Game.Server.Rooms
                 }
             }
         }
+
+        
 
         public List<int> GetLastFloor(int mapID, int hardLevel)
         {

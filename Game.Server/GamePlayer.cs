@@ -3548,7 +3548,7 @@ public class GamePlayer : IGamePlayer
                     if (ActiveSystemMgr.IsLeagueOpen)
                     {
                         Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.maxCount, 1);
-                        SendMessage(eMessageType.GM_NOTICE, "Lig Başladı! Birlik savaşlarında kim kimi yenecek bakalım!"); //türkçeleştirildi not: yuti
+                        SendMessage(eMessageType.SYS_NOTICE, "Lig Başladı! Birlik savaşlarında kim kimi yenecek bakalım!"); //türkçeleştirildi not: yuti
                     }
                     else
                     {
@@ -3556,7 +3556,7 @@ public class GamePlayer : IGamePlayer
                     }
                     if (ActiveSystemMgr.IsGoldTimeOpen)
                     {
-                        SendMessage(eMessageType.GM_NOTICE, "Altın Saat Etkinliği başladı! Haydi Oyun salonunda buluşalım!"); //türkçeleştirildi not: yuti
+                        SendMessage(eMessageType.SYS_NOTICE, "Altın Saat Etkinliği başladı! Haydi Oyun salonunda buluşalım!"); //türkçeleştirildi not: yuti
                     }
                     ShowCheckCode();
                     Out.SendUserSyncEquipGhost(this);

@@ -28,11 +28,11 @@ namespace Game.Server.Packets.Client
             PlayerInventory toBag = client.Player.GetInventory(toBagType);
             ItemInfo item = bag.GetItemAt(place);
             
-            if (DateTime.Compare(client.Player.LastMovePlaceItem.AddMilliseconds(300.0), DateTime.Now) > 0)
-            {
-               client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Yavaşla istersen!"));
-                return 0;
-            }
+           // if (DateTime.Compare(client.Player.LastMovePlaceItem.AddMilliseconds(300.0), DateTime.Now) > 0)
+            //{
+            //   client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Yavaşla istersen!"));
+            //    return 0;
+           // }
             if (item == null)
             {
                 return 0;
