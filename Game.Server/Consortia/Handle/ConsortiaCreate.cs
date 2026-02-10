@@ -25,7 +25,7 @@ namespace Game.Server.Consortia.Handle
 				int consortiaID = 0;
 				int needGold = consortiaLevelInfo.NeedGold;
 				int needMoney = 500;
-				int needGrade = 5;
+				int needGrade = 12;
 				string msg = "ConsortiaCreateHandler.Failed";
 				ConsortiaDutyInfo dutyInfo = new ConsortiaDutyInfo();
 				if (!string.IsNullOrEmpty(text) && Player.PlayerCharacter.Gold >= needGold && Player.PlayerCharacter.Grade >= needGrade && Player.PlayerCharacter.Money >= needMoney)

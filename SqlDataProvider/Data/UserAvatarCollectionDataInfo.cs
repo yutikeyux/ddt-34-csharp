@@ -34,7 +34,9 @@ namespace SqlDataProvider.Data
 
 		public UserAvatarCollectionDataInfo()
 		{
-		}
+			
+
+        }
 
 		public UserAvatarCollectionDataInfo(int templateid, int sex)
 		{

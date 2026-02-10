@@ -172,7 +172,7 @@ namespace Game.Service
 			}
             using (var client = new WebClient())
             {
-                client.DownloadString("http://109.122.6.15/ddt-quest-s1/celeblist/createallceleb.ashx");
+                client.DownloadString("http://88.209.248.52/ddt-quest-s1/celeblist/createallceleb.ashx");
             }
             Console.WriteLine("Onur listesi güncellenmiştir!");
 			GamePlayer[] allPlayers2 = WorldMgr.GetAllPlayers();
@@ -196,7 +196,7 @@ namespace Game.Service
 			GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
 			for (int i = 0; i < allPlayers.Length; i++)
 			{
-				allPlayers[i].SendMessage("Discord sunucumuza katılarak etkinliklerden ve çekilişlerden haberdar olabilirsiniz: https://discord.gg/bombom");
+				allPlayers[i].SendMessage("Discord sunucumuza katılarak etkinliklerden ve çekilişlerden haberdar olabilirsiniz: discord.gg/bombom");
 			}
 			Console.WriteLine("Discord linki chate gönderildi.");
 		}
