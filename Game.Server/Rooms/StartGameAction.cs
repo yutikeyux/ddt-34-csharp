@@ -113,7 +113,7 @@ namespace Game.Server.Rooms
             }
             else
             {
-                GSPacketIn pkg2 = m_room.Host.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("Tam da şu anda oda sahibi odadan çıktı！"));
+                GSPacketIn pkg2 = m_room.Host.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("Odada bir sorun meydana geldi！ Oda değiştir!"));
                 m_room.SendToAll(pkg2, m_room.Host);
             }
             m_room.SendCancelPickUp();

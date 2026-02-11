@@ -514,7 +514,7 @@ namespace Game.Logic
             return true;
         }
 
-        public void CanStopGame()
+        public void CanStopGame() //oyun sonrası etap uzatma olayları için buraya bi bakalım not:yuti
         {
             if (!IsWin)
             {

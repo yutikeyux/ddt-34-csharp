@@ -101,7 +101,7 @@ namespace Game.Server.LittleGame
                     foreach (var player in WorldMgr.GetAllPlayers())
                     {
                         player.Actives.SendLittleGameActived();
-                        player.Out.SendMessage(eMessageType.Normal, "Bogo savaşı başladı! Herkes katılabilir!"); //türkçeleştirildi not: yuti
+                        player.Out.SendMessage(eMessageType.SYS_NOTICE, "Bogo savaşı başladı! Herkes katılabilir!"); //türkçeleştirildi not: yuti
                     }
                 }
             }
@@ -136,7 +136,7 @@ namespace Game.Server.LittleGame
                 foreach (var player in WorldMgr.GetAllPlayers())
                 {
                     player.Actives.SendLittleGameActived();
-                    player.Out.SendMessage(eMessageType.Normal, "Bogo savaşı sona erdi."); //türkçeleştirildi. not: yuti
+                    player.Out.SendMessage(eMessageType.SYS_NOTICE, "Bogo savaşı sona erdi."); //türkçeleştirildi. not: yuti
                 }
             }
         }

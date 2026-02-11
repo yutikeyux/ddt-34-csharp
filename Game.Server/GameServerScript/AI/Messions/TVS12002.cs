@@ -99,8 +99,6 @@ namespace GameServerScript.AI.Messions
             base.Game.AddLoadingFile(2, "image/game/effect/9/biaoji.swf", "asset.game.nine.biaojiA");
             base.Game.AddLoadingFile(2, "image/game/effect/9/dapao.swf", "asset.game.nine.dapao");
             base.Game.AddLoadingFile(2, "image/game/effect/5/xiaopao.swf", "asset.game.4.xiaopao");
-            //base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
-           // base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.ducaizheAsset");
             int[] NpcResource = new int[] { BossID, HelperNPCID, cannonball };
             base.Game.LoadResources(NpcResource);
             base.Game.LoadNpcGameOverResources(NpcResource);
@@ -119,8 +117,6 @@ namespace GameServerScript.AI.Messions
         public override void OnStartGame()
         {
             base.OnStartGame();
-           // physicalObj_0 = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
-            //physicalObj_1 = base.Game.Createlayer(1300, 730, "font", "game.asset.living.ducaizheAsset", "out", 1, 0);
             CreateCrockBoss();
         }
         public override void OnDied()

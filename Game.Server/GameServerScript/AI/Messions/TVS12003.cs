@@ -58,7 +58,6 @@ namespace GameServerScript.AI.Messions
                 return true;
             }
             return false;
-            //return (base.Game.CanEnd && (base.Game.TotalKillCount >= base.Game.MissionInfo.TotalCount || base.Game.Param1 >= base.Game.Param2)) ? true : false;
         }
         public override void OnPrepareGameOver()
         {
@@ -161,7 +160,6 @@ namespace GameServerScript.AI.Messions
             Boss = base.Game.CreateBoss(BossID, 951, 540, -1, 0, "born", livingConfig);
             base.Game.SendFreeFocus(951, 540, 1, 1, 1);
             Game.BloodBuff = m_bloodBuff;
-            //Boss.CallFuction(CreateChicken, 2000);
         }
 
         private void CreateChicken()

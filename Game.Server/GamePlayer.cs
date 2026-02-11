@@ -1262,7 +1262,7 @@ public class GamePlayer : IGamePlayer
 
     public void resetPassCode()
     {
-       // this.CountAddMoney = 0;
+      // this.CountAddMoney = 0;
         //this.CountAddGP = 0;
         //this.CountFunction = 0;
         //this.CountFunction2 = 0;
@@ -1438,7 +1438,7 @@ public class GamePlayer : IGamePlayer
                 if (num > 0)
                 {
                     AddOffer(num);
-                    SendHideMessage(string.Format("Maksimum seviyeye ulaştığınız için kazandığınız deneyim mükafata dönüştürüldü. Kazanılan Mükafat:", num)); //türkçeleştirildi not: yuti
+                    SendHideMessage(string.Format("Maksimum seviyeye ulaştığınız için kazandığınız deneyim mükafata dönüştürüldü. Kazanılan Mükafat: " + num)); //türkçeleştirildi not: yuti
                 }
             }
             //this.count_addgp++;
@@ -1479,7 +1479,7 @@ public class GamePlayer : IGamePlayer
                 if (num > 0)
                 {
                     AddOffer(num);
-                    SendHideMessage(string.Format("Maksimum seviyeye ulaştığınız için kazandığınız deneyim mükafata dönüştürüldü. Kazanılan Mükafat:", num)); //türkçeleştirildi not: yuti
+                    SendHideMessage(string.Format("Maksimum seviyeye ulaştığınız için kazandığınız deneyim mükafata dönüştürüldü. Kazanılan Mükafat: " + num)); //türkçeleştirildi not: yuti
                 }
             }
             //this.count_addgp++;
@@ -1946,7 +1946,7 @@ public class GamePlayer : IGamePlayer
             bool flag = false;
             using (new PlayerBussiness())
             {
-                flag = SendItemsToMail(infos, "Merhaba değerli TrBombom oyuncusu! Sırt çantandaki eşyalar o kadar yer biriktirmiş ki boş yer kalmamış. Lütfen Ek Çanta veya Çelik kasanızı da kontrol edip sırt çantanızda yeterli yer sağlayıp bu öğeyi yeniden envanterinize ekleyin.", "Sırt Çantası Taşkınlığı", eMailType.BuyItem);
+                flag = SendItemsToMail(infos, "Merhaba değerli Bombom oyuncusu! Sırt çantandaki eşyalar o kadar yer biriktirmiş ki boş yer kalmamış. Lütfen Ek Çanta veya Çelik kasanızı da kontrol edip sırt çantanızda yeterli yer sağlayıp bu öğeyi yeniden envanterinize ekleyin.", "Sırt Çantası Taşkınlığı", eMailType.BuyItem);
             }
             if (flag)
             {

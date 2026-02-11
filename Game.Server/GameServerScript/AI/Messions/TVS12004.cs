@@ -30,10 +30,6 @@ namespace GameServerScript.AI.Messions
 
         private SimpleBoss Boss3;
 
-      //  private PhysicalObj m_KingMove;
-
-       // private PhysicalObj m_Boss_Present;
-
         public override int CalculateScoreGrade(int score)
         {
             base.CalculateScoreGrade(score);
@@ -103,8 +99,6 @@ namespace GameServerScript.AI.Messions
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-        //    Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
-          //  Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.fengkuangAsset");
             Game.AddLoadingFile(2, "image/game/effect/9/daodan.swf", "asset.game.nine.daodan");
             Game.AddLoadingFile(2, "image/game/effect/9/diancipao.swf", "asset.game.nine.diancipao");
             Game.AddLoadingFile(2, "image/game/effect/9/fengyin.swf", "asset.game.nine.fengyin");
@@ -153,8 +147,6 @@ namespace GameServerScript.AI.Messions
         }
         private void CreateFinalBoss()
         {
-        //    m_KingMove = Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
-        //    m_Boss_Present = Game.Createlayer(800, 450, "font", "game.asset.living.fengkuangAsset", "out", 1, 0, true);
             Game.SendFreeFocus(987, 342, 1, 1, 1);
             Boss2 = null;
             LivingConfig livingConfig = Game.BaseLivingConfig();
@@ -162,9 +154,6 @@ namespace GameServerScript.AI.Messions
             livingConfig.CanCountKill = true;
             livingConfig.isBotom = 0;
             Boss3 = Game.CreateBoss(BossID3, 987, 342, -1, 1, "born", livingConfig);
-            //m_KingMove.PlayMovie("in", 3000, 0);
-            //m_Boss_Present.PlayMovie("in", 3000, 0);
-            //m_KingMove.PlayMovie("out", 10000, 0);
         }
         private void CreateFirstBoss()
         {

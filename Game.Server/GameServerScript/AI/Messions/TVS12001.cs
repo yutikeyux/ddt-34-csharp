@@ -115,7 +115,7 @@ namespace GameServerScript.AI.Messions
                 m_boss = Game.CreateBoss(BossID, 100, 700, 1, 2, "", config);
                 m_boss.FallFrom(100, 700, "", 0, 0, 1000, null);
                 m_boss.SetRelateDemagemRect(-41, -187, 83, 140);
-                m_boss.DoAction = 3;//bi bang
+                m_boss.DoAction = 3;
             }
         }
 
