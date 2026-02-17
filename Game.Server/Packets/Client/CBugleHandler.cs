@@ -18,7 +18,7 @@ namespace Game.Server.Packets.Client
             ItemInfo itemByTemplateID = client.Player.PropBag.GetItemByTemplateID(0, templateId);
             if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(0.0), DateTime.Now) > 0)
             {
-                client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("5 dakikada 1 sunucular arası mesaj gönderebilirsin!"));
+                client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("Yavaşla!"));
                 return 1;
             }
             GSPacketIn gSPacketIn = new GSPacketIn(73, clientId);
@@ -42,17 +42,17 @@ namespace Game.Server.Packets.Client
                 gSPacketIn.WriteString(client.Player.PlayerCharacter.NickName);
                 gSPacketIn.WriteString(str);
                 gSPacketIn.WriteString(client.Player.ZoneName);
-                //GameServer.Instance.LoginServer.SendPacket(gSPacketIn);
+                GameServer.Instance.LoginServer.SendPacket(gSPacketIn);
                 foreach (var item in GameServer.Instance.OtherLoginServer)
                 {
                     if (item.IsConnected)
                     {
-                        //GSPacketIn gSPacketIn2 = new GSPacketIn(72);
-                        //gSPacketIn2.WriteInt(itemByTemplateID.Template.Property2);
-                        //gSPacketIn2.WriteInt(client.Player.PlayerCharacter.ID);
-                        //gSPacketIn2.WriteString(client.Player.PlayerCharacter.NickName);
-                        //gSPacketIn2.WriteString(str);
-                        //item.SendPacket(gSPacketIn2);
+                        GSPacketIn gSPacketIn2 = new GSPacketIn(72);
+                        gSPacketIn2.WriteInt(itemByTemplateID.Template.Property2);
+                        gSPacketIn2.WriteInt(client.Player.PlayerCharacter.ID);
+                        gSPacketIn2.WriteString(client.Player.PlayerCharacter.NickName);
+                        gSPacketIn2.WriteString(str);
+                        item.SendPacket(gSPacketIn2);
                         item.SendPacket(gSPacketIn);
                     }
 

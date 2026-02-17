@@ -71,6 +71,14 @@ namespace Game.Server.Rooms
             return true;
         }
 
+        // Game.Server.Rooms.RoomMgr
+        // Token: 0x060001AE RID: 430 RVA: 0x00002B01 File Offset: 0x00000D01
+        public static void FakeRoom(string roomName, int playerCount, int maxPlayerCount, int roomType)
+        {
+            RoomMgr.AddAction(new FakeRoomAction(roomName, playerCount, maxPlayerCount, roomType));
+        }
+
+
         public static void Start()
         {
 			if (!m_running)

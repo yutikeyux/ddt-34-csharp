@@ -81,7 +81,7 @@ namespace Game.Server.Packets.Client
                                 }
                                 else
                                 {
-                                    Console.WriteLine("{0} Login with {1} zaman aşımıııııııııııı yeteeeeeeer....", user, pass);
+                                    Console.WriteLine("{0} yine amına koyduğumun zaman aşımına uğradı amına koyim.", user);
                                     client.Out.SendKitoff(LanguageMgr.GetTranslation("UserLoginHandler.OverTime"));
                                     client.Disconnect();
                                 }

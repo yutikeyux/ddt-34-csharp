@@ -158,8 +158,8 @@ namespace Game.Server.Quests
 					return new UserToemGemstoneCondition(quest, info, value);
 				case 55:
 					return new CashWeekCondition(quest, info, value);
-                //case 100:
-                //	return new PlayerOnlineTimeCondiction(quest, info, value);
+                case 100:
+                	return new PlayerOnlineTimeCondiction(quest, info, value);
                 case 102:
                 	return new PlayerOnlineSpaCondiction(quest, info, value);
                 default:

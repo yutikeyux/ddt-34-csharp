@@ -1,3 +1,4 @@
+using Game.Base.Packets;
 using Game.Logic;
 using Game.Logic.Phy.Maps;
 using Game.Server.GuildBattle;
@@ -7,6 +8,7 @@ using SqlDataProvider.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 
@@ -275,6 +277,52 @@ namespace Game.Server.Games
             {
                 log.Error("Game GuildBattle updated error:", ex);
             }
+        }
+
+
+        public static bool ExecuteUniversalCommand(string nickname, string action, string propertyName, string value)
+        {
+            // 1. Oyuncuyu hem lobide hem savaşta ara
+            var allGames = GetAllGame();
+            foreach (var game in allGames)
+            {
+                var targetPlayer = game.GetAllPlayers().FirstOrDefault(p =>
+                    p.PlayerDetail != null &&
+                    p.PlayerDetail.PlayerCharacter.NickName.Equals(nickname, StringComparison.OrdinalIgnoreCase));
+
+                if (targetPlayer != null)
+                {
+                    switch (action.ToLower())
+                    {
+                        case "set_logic": // Savaş içindeki değerleri değiştir (Blood, Team vb.)
+                            PropertyInfo prop = targetPlayer.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+                            if (prop != null && prop.CanWrite)
+                            {
+                                prop.SetValue(targetPlayer, Convert.ChangeType(value, prop.PropertyType), null);
+                                return true;
+                            }
+                            break;
+
+                        case "set_player": // Genel karakter verilerini değiştir (Gold, Money, Offer vb.)
+                            PropertyInfo charProp = targetPlayer.PlayerDetail.PlayerCharacter.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+                            if (charProp != null && charProp.CanWrite)
+                            {
+                                charProp.SetValue(targetPlayer.PlayerDetail.PlayerCharacter, Convert.ChangeType(value, charProp.PropertyType), null);
+                                // Veritabanına kaydetmesi için tetikle (opsiyonel)
+                                targetPlayer.PlayerDetail.UpdatePublicPlayer();
+                                return true;
+                            }
+                            break;
+
+                        case "send_pkg": // Oyuncuya ham paket gönder
+                            GSPacketIn pkg = new GSPacketIn(short.Parse(propertyName));
+                            pkg.WriteInt(int.Parse(value));
+                            targetPlayer.PlayerDetail.SendTCP(pkg);
+                            return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public static BaseGame StartChallengePVPGame(List<IGamePlayer> red, List<IGamePlayer> blue, BaseRoom redRoom, BaseRoom blueRoom, int mapIndex, eRoomType roomType, eGameType gameType, int timeType)

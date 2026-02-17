@@ -39,7 +39,7 @@ namespace Game.Server.Packets.Client
                 client.Player.PlayerCharacter.CheckCount += 1;
                 client.Out.SendMessage(eMessageType.ChatERROR, "Yanlış kimlik doğrulaması, eğer birçok kez yanlış yapılırsa oyundan atılabilirsiniz.");
                 client.Player.PlayerCharacter.CheckError++;
-                client.Player.ShowCheckCode();
+                //client.Player.ShowCheckCode();
             }
             else
             {

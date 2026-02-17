@@ -13,7 +13,7 @@ namespace Game.Server.Api
             Timeout = TimeSpan.FromSeconds(2)
         };
 
-        private static readonly string BOT_URL = "http://192.168.100.4:9600/game/chat";
+        private static readonly string BOT_URL = "http://31.11.64.28:9600/game/chat";
         private static readonly string SECRET = "supersecret";
 
         public static void Send(string username, int level, string message, int picId = 0, string avatarUrl = null)

@@ -48,7 +48,7 @@ namespace Game.Server.Packets.Client
             {
                 if (!client.Player.isPassCheckCode())
                 {
-                    client.Player.ShowCheckCode();
+                    //client.Player.ShowCheckCode();
                     return 0;
                 }
                 client.Player.CountFunction2++;

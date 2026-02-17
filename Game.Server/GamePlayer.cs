@@ -1268,26 +1268,26 @@ public class GamePlayer : IGamePlayer
         //this.CountFunction2 = 0;
     }
 
-    public bool ShowCheckCode()
-    {
-        this.m_character.CheckCount = 1;
-        GSPacketIn gSPacketIn = new GSPacketIn(200);
-        if (Client.Player.PlayerCharacter.CheckError < 1)
-        {
-            gSPacketIn.WriteByte(1);
-        }
-        else
-        {
-            gSPacketIn.WriteByte(2);
-        }
-        gSPacketIn.WriteBoolean(val: true);
-        gSPacketIn.WriteByte(1);
-        gSPacketIn.WriteString("hi");
-        Client.Player.PlayerCharacter.CheckCode = CheckCode.GenerateCheckCode();
-        gSPacketIn.Write(CheckCode.CreateImage(Client.Player.PlayerCharacter.CheckCode));
-        this.SendTCP(gSPacketIn);
-        return true;
-    }
+    //public bool ShowCheckCode()
+    //{
+    //    this.m_character.CheckCount = 1;
+    //    GSPacketIn gSPacketIn = new GSPacketIn(200);
+    //    if (Client.Player.PlayerCharacter.CheckError < 1)
+    //    {
+    //        gSPacketIn.WriteByte(1);
+    //    }
+    //    else
+    //    {
+    //        gSPacketIn.WriteByte(2);
+    //    }
+    //    gSPacketIn.WriteBoolean(val: true);
+    //    gSPacketIn.WriteByte(1);
+    //    gSPacketIn.WriteString("hi");
+    //    Client.Player.PlayerCharacter.CheckCode = CheckCode.GenerateCheckCode();
+    //    gSPacketIn.Write(CheckCode.CreateImage(Client.Player.PlayerCharacter.CheckCode));
+    //    this.SendTCP(gSPacketIn);
+    //    return true;
+    //}
 
     public bool isPlayerWarrior()
     {
@@ -3558,7 +3558,7 @@ public class GamePlayer : IGamePlayer
                     {
                         SendMessage(eMessageType.SYS_NOTICE, "Altın Saat Etkinliği başladı! Haydi Oyun salonunda buluşalım!"); //türkçeleştirildi not: yuti
                     }
-                    ShowCheckCode();
+                    //ShowCheckCode();
                     Out.SendUserSyncEquipGhost(this);
                     Out.SendGuildMemberWeekOpenClose(Extra.Info);
                     this.Dice.SendDiceActiveOpen();

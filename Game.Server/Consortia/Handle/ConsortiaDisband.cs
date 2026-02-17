@@ -19,11 +19,11 @@ namespace Game.Server.Consortia.Handle
         {
             if (Player.PlayerCharacter.ConsortiaID == 0)
                 return 0;
-            if (!Player.isPassCheckCode())
-            {
-                Player.ShowCheckCode();
-                return 1;
-            }
+            //if (!Player.isPassCheckCode())
+            //{
+            //    Player.ShowCheckCode();
+            //    return 1;
+            //}
            // Player.CountFunction++;
             int id = Player.PlayerCharacter.ConsortiaID;
             string consortiaName = Player.PlayerCharacter.ConsortiaName;

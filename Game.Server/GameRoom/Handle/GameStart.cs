@@ -211,7 +211,7 @@ namespace Game.Server.GameRoom.Handle
                 {
                     Player.CurrentRoom.IsPlaying = false;
                     Player.CurrentRoom.SendCancelPickUp();
-                    Player.ShowCheckCode();
+                    //Player.ShowCheckCode();
                     return true;
                 }
 

@@ -76,14 +76,14 @@ namespace Game.Service.actions
                 for (int i = 0; i < array.Length; i++)
                 {
                     GamePlayer gamePlayer = allPlayers[i];
-                    Console.WriteLine(string.Concat(new string[]
-                    {
-gamePlayer.PlayerCharacter.UserName,
-" - [",
-gamePlayer.PlayerCharacter.NickName,
-"] seviye: ",
-gamePlayer.PlayerCharacter.Grade.ToString()
-                    }));
+                   // Console.WriteLine(string.Concat(new string[]
+                  //  {
+                  //  gamePlayer.PlayerCharacter.UserName,
+                  //      "- [",
+                  //     gamePlayer.PlayerCharacter.NickName,
+                  //     "] seviye: ",
+                 //      gamePlayer.PlayerCharacter.Grade.ToString()
+               //     }));
                     this.lixtBox1.Items.Add(gamePlayer.PlayerCharacter.NickName);
                 }
             }

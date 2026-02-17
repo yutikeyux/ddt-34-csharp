@@ -14,7 +14,7 @@ namespace Bussiness.Managers
 
         private static Dictionary<int, LoadUserBoxInfo> _timeBoxs;
 
-        private static List<ItemTemplateInfo> Lists;
+        public static List<ItemTemplateInfo> Lists;
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -277,5 +277,10 @@ namespace Bussiness.Managers
 			}
 			return null;
 		}
-	}
+
+        public static ItemTemplateInfo[] GetAllGoods()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

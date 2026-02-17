@@ -23,9 +23,9 @@ namespace Game.Server.Rooms
 
         private byte[] m_playerState;
 
-        private int m_playerCount = 0;
+        public int m_playerCount = 0;
 
-        private int m_placesCount = 10;
+        public int m_placesCount = 10;
 
         private bool m_isUsing = false;
 

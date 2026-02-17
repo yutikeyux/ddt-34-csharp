@@ -3,10 +3,11 @@ using Bussiness.Managers;
 using Game.Base.Packets;
 using Game.Logic;
 using Game.Server;
-using Game.Server.RingStation;
 using Game.Server.GameObjects;
+using Game.Server.Games;
 using Game.Server.Managers;
 using Game.Server.Packets;
+using Game.Server.RingStation;
 using Game.Server.Rooms;
 using GameServerScript.AI.NPC;
 using log4net;
@@ -711,13 +712,11 @@ namespace Game.Server.API
                             : username; // yoksa direkt gönderilen username
 
                         // --- PAKET ---
-                        GSPacketIn pkg = new GSPacketIn((byte)73, 0);
-
-                        pkg.WriteInt(0);              // ZoneID (sunucuya göre istersen doldur)
-                        pkg.WriteInt(0);              // PlayerID (0 = sistem/özel)
-                        pkg.WriteString(inGameNick);  // Nick
-                        pkg.WriteString(message);     // Mesaj
-                        pkg.WriteString("");          // ZoneName (boş bırakıyoruz)
+                        GSPacketIn pkg = new GSPacketIn((short)eChatServerPacket.SCENE_CHAT);
+                        pkg.WriteByte(16); // BİZİM YENİ DİSCORD KANALIMIZ (16)
+                        pkg.WriteBoolean(false); // isGM
+                        pkg.WriteString(inGameNick); // Discord Kullanıcı Adı veya Nick
+                        pkg.WriteString(message); // Mesaj
 
                         // Diğer login serverlara gönder
                         foreach (var item in GameServer.Instance.OtherLoginServer)
@@ -804,6 +803,21 @@ namespace Game.Server.API
                         WriteJson(ctx, new { error = "Sunucu hatası: " + ex.Message });
                         return;
                     }
+                }
+
+                if (path == "/api/game/universal")
+                {
+                    var d = ReadJsonBodyJ(req);
+                    bool result = GameMgr.ExecuteUniversalCommand(
+                        d["Nickname"]?.ToString(),
+                        d["Action"]?.ToString(),    // "set_logic", "set_player", "send_pkg"
+                        d["Property"]?.ToString(),  // "Blood", "Gold", "Level" vb.
+                        d["Value"]?.ToString()      // "1", "99999" vb.
+                    );
+
+                    if (result) WriteJson(ctx, new { status = "success" });
+                    else { ctx.Response.StatusCode = 404; WriteJson(ctx, new { error = "Target not found" }); }
+                    return;
                 }
 
                 if (path == "/api/game/link/list" && req.HttpMethod == "GET")
