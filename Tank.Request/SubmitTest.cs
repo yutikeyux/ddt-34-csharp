@@ -6,10 +6,10 @@ using Bussiness;
 
 namespace Tank.Request
 {
-	// Token: 0x02000078 RID: 120
+	// Token: 0x02000074 RID: 116
 	public class SubmitTest : Page
 	{
-		// Token: 0x06000221 RID: 545 RVA: 0x0000FFA4 File Offset: 0x0000E1A4
+		// Token: 0x0600021B RID: 539 RVA: 0x000105E4 File Offset: 0x0000E7E4
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			using (new ConsortiaBussiness())
@@ -17,19 +17,19 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x06000222 RID: 546 RVA: 0x00002BB1 File Offset: 0x00000DB1
+		// Token: 0x0600021C RID: 540 RVA: 0x00010618 File Offset: 0x0000E818
 		protected void Button1_Click(object sender, EventArgs e)
 		{
 			base.Response.Redirect("/LoginTest.aspx?name=" + this.TextBox1.Text);
 		}
 
-		// Token: 0x04000086 RID: 134
+		// Token: 0x04000080 RID: 128
 		protected HtmlForm form1;
 
-		// Token: 0x04000087 RID: 135
+		// Token: 0x04000081 RID: 129
 		protected TextBox TextBox1;
 
-		// Token: 0x04000088 RID: 136
+		// Token: 0x04000082 RID: 130
 		protected Button Button1;
 	}
 }

@@ -205,8 +205,8 @@ namespace Game.Server.Packets.Client
 						//	}
 						if (value3.IsTips)
                         {
-							GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice(eMessageType.ChatNormal, $"[{client.Player.ZoneName}] Chúc mừng người chơi [{client.Player.PlayerCharacter.NickName}] mở hộp quà nhận được {value3.TemplateID}x{value3.Count}.", value3.ItemID, value3.TemplateID, null));
-						}
+                            GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice(eMessageType.ChatNormal, $"[{client.Player.ZoneName}] Tebrikler! [{client.Player.PlayerCharacter.NickName}] kutu açarak [{value3.Template.Name}] kazandı!", value3.ItemID, value3.TemplateID, null));
+                        }
 						//}
 						if (value3.Template.MaxCount < 2)
 						{

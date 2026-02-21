@@ -5961,33 +5961,65 @@ public class GamePlayer : IGamePlayer
     {
         if (game.RoomType == eRoomType.Match)
         {
-            if (isWin)
-            {
-                m_character.Win++;
-            }
+            if (isWin) m_character.Win++;
             m_character.Total++;
         }
-        if (blood == 1)
-        {
-            OnFightOneBloodIsWin(game.RoomType, isWin);
-        }
-        if (playerCount == 4)
-        {
-            OnGameOver2v2(isWin);
-        }
-        if (isCouple && this.GameMarryTeam != null)
-        {
-            this.GameMarryTeam(game, isWin, gainXp, playerCount);
-        }
-        if (this.GameOverCountTeam != null)
-        {
-            this.GameOverCountTeam(game, isWin, gainXp, playerCount);
-        }
-        if (this.GameOver != null)
-        {
-            this.GameOver(game, isWin, gainXp, isSpanArea, isCouple);
-        }
+        if (blood == 1) OnFightOneBloodIsWin(game.RoomType, isWin);
+        if (playerCount == 4) OnGameOver2v2(isWin);
+        if (isCouple && this.GameMarryTeam != null) this.GameMarryTeam(game, isWin, gainXp, playerCount);
+        if (this.GameOverCountTeam != null) this.GameOverCountTeam(game, isWin, gainXp, playerCount);
+        if (this.GameOver != null) this.GameOver(game, isWin, gainXp, isSpanArea, isCouple);
+
         ClearFightBuffOneMatch();
+
+        // DISCORD MAC SONU SKORBORDU - PYTHON ICIN HAM VERI (SON KEZ BUILD ALACAKSIN)
+        ThreadPool.QueueUserWorkItem(delegate (object state)
+        {
+            try
+            {
+                System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
+                // KENDI WEBHOOK LINKINI YAZMAYI UNUTMA
+                string webhookUrl = "https://discord.com/api/webhooks/1474082590058352749/kv9vo5Hj-1j0hROIg89LsWeV9d_SYYTiiUGErBdQaQPaJlr6471GbDii_Afwbo0otzPm";
+
+                if (string.IsNullOrEmpty(webhookUrl) || !webhookUrl.StartsWith("http")) return;
+
+                string durum = isWin ? "Kazandı" : "Kaybetti";
+                string odaTipi = game != null ? game.RoomType.ToString() : "Bilinmiyor";
+                string oyuncuIsmi = m_character != null ? m_character.NickName : "Bilinmeyen";
+                int seviye = m_character != null ? m_character.Grade : 0;
+
+                // Rakip Bulma
+                List<string> rakipler = new List<string>();
+                if (this.CurrentRoom != null)
+                {
+                    foreach (GamePlayer p in this.CurrentRoom.GetPlayers())
+                    {
+                        if (p != null && p != this && p.CurrentRoomTeam != this.CurrentRoomTeam && p.PlayerCharacter != null)
+                            rakipler.Add(p.PlayerCharacter.NickName);
+                    }
+                }
+                string rakipIsimleri = rakipler.Count > 0 ? string.Join(", ", rakipler) : "Bot / NPC";
+
+                int hasar = this.Players != null ? this.Players.TotalAllHurt : 0;
+                int kalanCan = this.Players != null ? this.Players.Blood : blood;
+
+                // SÜS YOK, DİREKT PYTHON'UN OKUYACAĞI ŞİFRELİ METNİ YOLLUYORUZ
+                string rawData = string.Format("[MATCH_RESULT]|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}",
+                    oyuncuIsmi, seviye, rakipIsimleri, odaTipi, durum, hasar.ToString("N0"), kalanCan.ToString("N0"), gainXp);
+
+                var payload = new { content = rawData, username = "Oyun Logu" };
+                string jsonPayload = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
+
+                using (System.Net.WebClient client = new System.Net.WebClient())
+                {
+                    client.Encoding = System.Text.Encoding.UTF8;
+                    client.Headers.Add("User-Agent", "Mozilla/5.0");
+                    client.Headers[System.Net.HttpRequestHeader.ContentType] = "application/json";
+                    client.UploadString(webhookUrl, "POST", jsonPayload);
+                }
+            }
+            catch (Exception ex) { log.Error("Discord Webhook Hata: ", ex); }
+        });
     }
 
     public void OnFightOneBloodIsWin(eRoomType roomType, bool isWin)
@@ -6241,13 +6273,18 @@ public class GamePlayer : IGamePlayer
         {
             if (value < 1)
                 return false;
+
             if (Actives.Info.ActiveMoney >= value)
             {
+                // Burada RemoveActiveMoney zaten "kupon harcandı" mesajını basacak
                 RemoveActiveMoney(value);
                 RemoveMoney(value);
                 return true;
             }
-            SendMessage(LanguageMgr.GetTranslation("GamePlayer.Msg8", Actives.Info.ActiveMoney));
+
+            // Eskiden: LanguageMgr.GetTranslation("GamePlayer.Msg8", Actives.Info.ActiveMoney)
+            // Yetersiz kupon mesajı
+            SendMessage("Kupon harcandı!");
         }
         else
         {
@@ -6263,14 +6300,19 @@ public class GamePlayer : IGamePlayer
             if (GameProperties.IsActiveMoney)
             {
                 Actives.Info.ActiveMoney += value;
+
                 if (Actives.Info.ActiveMoney <= int.MinValue)
                 {
                     Actives.Info.ActiveMoney = int.MaxValue;
-                    SendMessage(LanguageMgr.GetTranslation("GamePlayer.Msg9"));
+                    // Eskiden: GamePlayer.Msg9
+                    SendMessage("Kupon sayacı maksimum değere ulaştı, daha fazla kupon eklenemiyor.");
                 }
                 else
                 {
-                    SendHideMessage(LanguageMgr.GetTranslation("GamePlayer.Msg1", value, Actives.Info.ActiveMoney));
+                    // Eskiden: GamePlayer.Msg1
+                    SendHideMessage(
+                        "Hesabına " + value + " kupon eklendi."
+                    );
                 }
                 return value;
             }
@@ -6283,11 +6325,17 @@ public class GamePlayer : IGamePlayer
         if (value > 0 && value <= Actives.Info.ActiveMoney)
         {
             Actives.Info.ActiveMoney -= value;
-            SendHideMessage(LanguageMgr.GetTranslation("GamePlayer.Msg2", value, Actives.Info.ActiveMoney));
+
+            // Eskiden: GamePlayer.Msg2
+            SendHideMessage(
+                value + " kupon harcandı. Kalan kupon: " + Actives.Info.ActiveMoney
+            );
+
             return value;
         }
         return 0;
     }
+
 
     public void LoadGemStone(PlayerBussiness db)
     {

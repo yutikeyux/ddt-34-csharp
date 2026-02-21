@@ -10,58 +10,67 @@ using log4net;
 
 namespace Tank.Request
 {
-	// Token: 0x0200005D RID: 93
+	// Token: 0x0200005B RID: 91
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class NickNameCheck : IHttpHandler
 	{
-		// Token: 0x060001A3 RID: 419 RVA: 0x0000D390 File Offset: 0x0000B590
+		// Token: 0x060001A1 RID: 417 RVA: 0x0000D570 File Offset: 0x0000B770
 		public void ProcessRequest(HttpContext context)
 		{
-			LanguageMgr.Setup(HttpContext.Current.Server.MapPath(".") + "\\");
-			bool flag = false;
-			string translation = LanguageMgr.GetTranslation("Oyuncunun adı zaten mevcut.", Array.Empty<object>());
-			XElement xelement = new XElement("Result");
+			string path = HttpContext.Current.Server.MapPath(".");
+			path += "\\";
+			LanguageMgr.Setup(path);
+			bool value = false;
+			string message = LanguageMgr.GetTranslation(" Tên người chơi đã tồn tại", Array.Empty<object>());
+			XElement result = new XElement("Result");
 			try
 			{
-				string text = csFunction.ConvertSql(HttpUtility.UrlDecode(context.Request["NickName"]));
-				if (Encoding.Default.GetByteCount(text) <= 14)
+				string nickName = csFunction.ConvertSql(HttpUtility.UrlDecode(context.Request["NickName"]));
+				bool flag = Encoding.Default.GetByteCount(nickName) <= 14;
+				if (flag)
 				{
-					if (string.IsNullOrEmpty(text))
+					bool flag2 = !string.IsNullOrEmpty(nickName);
+					if (flag2)
 					{
-						goto IL_EB;
-					}
-					if (!new Regex("^[a-za-z0-9àáâãèéêìíòóôõùúăđĩũơàáâãèéêìíòóôõùúăđĩũơưăạảấầẩẫậắằẳẵặẹẻẽềềểếưăạảấầẩẫậắằẳẵặẹẻẽềềểếễệỉịọỏốồổỗộớờởỡợụủứừễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵýỷỹửữựỳỵỷỹ\\s|_.]+$").IsMatch(text))
-					{
-						translation = LanguageMgr.GetTranslation("UseReworkNameHandler.HasSpecialCharacters", Array.Empty<object>());
-						goto IL_EB;
-					}
-					using (PlayerBussiness playerBussiness = new PlayerBussiness())
-					{
-						if (playerBussiness.GetUserSingleByNickName(text) == null)
+						Regex regexItem = new Regex("^[a-za-z0-9àáâãèéêìíòóôõùúăđĩũơàáâãèéêìíòóôõùúăđĩũơưăạảấầẩẫậắằẳẵặẹẻẽềềểếưăạảấầẩẫậắằẳẵặẹẻẽềềểếễệỉịọỏốồổỗộớờởỡợụủứừễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵýỷỹửữựỳỵỷỹ\\s|_.]+$");
+						bool flag3 = !regexItem.IsMatch(nickName);
+						if (flag3)
 						{
-							flag = true;
-							translation = LanguageMgr.GetTranslation("Tank.Request.NickNameCheck.Right", Array.Empty<object>());
+							message = LanguageMgr.GetTranslation("UseReworkNameHandler.HasSpecialCharacters", Array.Empty<object>());
 						}
-						goto IL_EB;
+						else
+						{
+							using (PlayerBussiness db = new PlayerBussiness())
+							{
+								bool flag4 = db.GetUserSingleByNickName(nickName) == null;
+								if (flag4)
+								{
+									value = true;
+									message = LanguageMgr.GetTranslation("Tank.Request.NickNameCheck.Right", Array.Empty<object>());
+								}
+							}
+						}
 					}
 				}
-				translation = LanguageMgr.GetTranslation("Tank.Request.NickNameCheck.Long", Array.Empty<object>());
-				IL_EB:;
+				else
+				{
+					message = LanguageMgr.GetTranslation("Tank.Request.NickNameCheck.Long", Array.Empty<object>());
+				}
 			}
-			catch (Exception exception)
+			catch (Exception ex)
 			{
-				NickNameCheck.log.Error("NickNameCheck", exception);
-				flag = false;
+				NickNameCheck.log.Error("NickNameCheck", ex);
+				value = false;
 			}
-			xelement.Add(new XAttribute("value", flag));
-			xelement.Add(new XAttribute("message", translation));
+			result.Add(new XAttribute("value", value));
+			result.Add(new XAttribute("message", message));
 			context.Response.ContentType = "text/plain";
-			context.Response.Write(xelement.ToString(false));
+			context.Response.Write(result.ToString(false));
 		}
 
 		// Token: 0x1700005D RID: 93
-		// (get) Token: 0x060001A4 RID: 420 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x060001A2 RID: 418 RVA: 0x0000D72C File Offset: 0x0000B92C
 		public bool IsReusable
 		{
 			get
@@ -70,7 +79,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x0400005E RID: 94
+		// Token: 0x0400005D RID: 93
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

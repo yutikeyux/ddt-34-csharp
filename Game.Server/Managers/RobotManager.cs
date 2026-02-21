@@ -21,8 +21,8 @@ namespace Game.Server.Managers
         private static Dictionary<int, RobotGamePlayer> RobotGamePlayers = new Dictionary<int, RobotGamePlayer>();
 
         // Ayar: Kaç bot ve oda oluşturulacağını buradan belirleyebilirsiniz
-        private const int MaxBotCount = 100;
-        private const int MaxRoomCount = 25;
+        private const int MaxBotCount = 0;
+        private const int MaxRoomCount = 0;
 
         // --- GİYDİRME İÇİN GEREKLİ ITEM ID LİSTELERİ ---
         // Bu ID'ler ItemInfo.xml veya veritabanınızdaki ItemTemplate tablosuna göredir.

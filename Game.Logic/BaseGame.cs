@@ -40,7 +40,7 @@ namespace Game.Logic
 
 		private long long_1;
 
-		private ArrayList m_actions;
+		private readonly ArrayList m_actions;
 
 		protected TurnedLiving m_currentLiving;
 
@@ -54,7 +54,7 @@ namespace Game.Logic
 
 		protected List<Living> m_livings;
 
-		private List<LoadingFileInfo> m_loadingFiles;
+		private readonly List<LoadingFileInfo> m_loadingFiles;
 
 		public Map m_map;
 
@@ -70,17 +70,17 @@ namespace Game.Logic
 
 		protected Random m_random;
 
-		private int m_roomId;
+		private readonly int m_roomId;
 
-		private List<Ball> m_tempBall;
+		private readonly List<Ball> m_tempBall;
 
-		private List<Box> m_tempBox;
+		private readonly List<Box> m_tempBox;
 
-		private List<Point> m_tempPoints;
+		private readonly List<Point> m_tempPoints;
 
 		private List<Point> m_tempGhostPoints;
 
-		private List<TurnedLiving> m_turnQueue;
+		private readonly List<TurnedLiving> m_turnQueue;
 
 		private long m_waitTimer;
 
@@ -206,19 +206,19 @@ namespace Game.Logic
 
 		public int RoomId => m_roomId;
 
-		public int TurnIndex
-		{
-			get
-			{
-				return m_turnIndex;
-			}
-			set
-			{
-				m_turnIndex = value;
-			}
-		}
+        public int TurnIndex
+        {
+            get
+            {
+                return turnIndex; // element
+            }
+            set
+            {
+                turnIndex = value; // Küçük 't' ile
+            }
+        }
 
-		public bool KichNo
+        public bool KichNo
 		{
 			get
 			{
@@ -3260,7 +3260,7 @@ namespace Game.Logic
 
 		public override string ToString()
 		{
-			return $"Id:{base.Id},player:{PlayerCount},state:{GameState},current:{CurrentLiving},turnIndex:{m_turnIndex},actions:{m_actions.Count}";
+			return $"Id:{base.Id},player:{PlayerCount},state:{GameState},current:{CurrentLiving},turnIndex:{TurnIndex},actions:{m_actions.Count}";
 		}
 
 		public bool IsSpecialPVE()

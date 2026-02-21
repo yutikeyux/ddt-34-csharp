@@ -96,30 +96,30 @@ namespace Tank.Request
 			if (flag4)
 			{
 				StaticsMgr.CelebBuildDay = DateTime.Now.Day;
-				StringBuilder bulid = new StringBuilder();
+				StringBuilder build = new StringBuilder();
 				try
 				{
-					bulid.Append(CelebByGpList.Build());
-					bulid.Append(CelebByDayGPList.Build());
-					bulid.Append(CelebByWeekGPList.Build());
-					bulid.Append(CelebByOfferList.Build());
-					bulid.Append(CelebByDayOfferList.Build());
-					bulid.Append(CelebByWeekOfferList.Build());
-					bulid.Append(CelebByDayFightPowerList.Build());
-					bulid.Append(CelebByConsortiaRiches.Build());
-					bulid.Append(CelebByConsortiaDayRiches.Build());
-					bulid.Append(CelebByConsortiaWeekRiches.Build());
-					bulid.Append(CelebByConsortiaHonor.Build());
-					bulid.Append(CelebByConsortiaDayHonor.Build());
-					bulid.Append(CelebByConsortiaWeekHonor.Build());
-					bulid.Append(CelebByConsortiaLevel.Build());
-					bulid.Append(CelebByDayBestEquip.Build());
+					build.Append(CelebByGpList.Build());
+					build.Append(CelebByDayGPList.Build());
+					build.Append(CelebByWeekGPList.Build());
+					build.Append(CelebByOfferList.Build());
+					build.Append(CelebByDayOfferList.Build());
+					build.Append(CelebByWeekOfferList.Build());
+					build.Append(CelebByDayFightPowerList.Build());
+					build.Append(CelebByConsortiaRiches.Build());
+					build.Append(CelebByConsortiaDayRiches.Build());
+					build.Append(CelebByConsortiaWeekRiches.Build());
+					build.Append(CelebByConsortiaHonor.Build());
+					build.Append(CelebByConsortiaDayHonor.Build());
+					build.Append(CelebByConsortiaWeekHonor.Build());
+					build.Append(CelebByConsortiaLevel.Build());
+					build.Append(CelebByDayBestEquip.Build());
 					StaticsMgr.log.Info("Complete auto update Celeb in " + DateTime.Now.ToString());
 				}
 				catch (Exception ex2)
 				{
-					bulid.Append("CelebByList is Error!");
-					StaticsMgr.log.Error(bulid.ToString(), ex2);
+					build.Append("CelebByList is Error!");
+					StaticsMgr.log.Error(build.ToString(), ex2);
 				}
 			}
 		}

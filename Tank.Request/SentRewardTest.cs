@@ -4,10 +4,10 @@ using System.Web.UI.HtmlControls;
 
 namespace Tank.Request
 {
-	// Token: 0x0200006F RID: 111
+	// Token: 0x0200006B RID: 107
 	public class SentRewardTest : Page
 	{
-		// Token: 0x060001FA RID: 506 RVA: 0x0000EFA4 File Offset: 0x0000D1A4
+		// Token: 0x060001F4 RID: 500 RVA: 0x0000F4DC File Offset: 0x0000D6DC
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			string mailTitle = "大幅度是";
@@ -35,7 +35,7 @@ namespace Tank.Request
 			base.Response.Redirect("http://192.168.0.4:828/SentReward.ashx?content=" + base.Server.UrlEncode(content));
 		}
 
-		// Token: 0x04000076 RID: 118
+		// Token: 0x04000070 RID: 112
 		protected HtmlForm form1;
 	}
 }

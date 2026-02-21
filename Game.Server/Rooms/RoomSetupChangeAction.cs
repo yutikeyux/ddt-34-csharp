@@ -59,14 +59,17 @@ namespace Game.Server.Rooms
 
                     if (m_hardLevel == eHardLevel.Easy)
                     {
+                        m_currentFloor = 2;
                         m_pic = "show5.jpg";
                     }
                     else if (m_hardLevel == eHardLevel.Normal)
                     {
+                        m_currentFloor = 3;
                         m_pic = "show8.jpg";
                     }
                     else if (m_hardLevel == eHardLevel.Hard)
                     {
+                        m_currentFloor = 4;
                         m_pic = "elementbununtasarýmýnýyapsanaknkumutla.jpg";
                     }
                     else
@@ -79,18 +82,22 @@ namespace Game.Server.Rooms
                 {
                     if (m_hardLevel == eHardLevel.Terror)
                     {
+                        m_currentFloor = 5;
                         m_pic = "show7.jpg";
                     }
                     else if (m_hardLevel == eHardLevel.Hard)
-                    {    
+                    {
+                        m_currentFloor = 4;
                         m_pic = "show6.jpg";
                     }
                     else if (m_hardLevel == eHardLevel.Normal)
                     {
+                        m_currentFloor = 3;
                         m_pic = "show4.jpg";
                     }
                     else if (m_hardLevel == eHardLevel.Easy)
                     {
+                        m_currentFloor = 2;
                         m_pic = "show2.jpg";
                     }
                     else

@@ -4,46 +4,19 @@ using Game.Base.Packets;
 using Game.Logic;
 using Game.Server;
 using Game.Server.GameObjects;
-using Game.Server.Games;
 using Game.Server.Managers;
 using Game.Server.Packets;
-using Game.Server.RingStation;
 using Game.Server.Rooms;
-using GameServerScript.AI.NPC;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
-using System.Linq;
+using System.Linq; // Savaş filtrelemeleri için eklendi
 using System.Net;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
-
-
-
-//knka 9000 portu çakışıyordu sistemde iki defa ekli olduğu için
-// ben de 9500 yaptım
-//game.server üzerinden sağ tıklayıp rebuild atarsan
-//game.server klasörüne atar
-//orda dll ve pdb yi kopyalayıp
-//roadın içine yapıştırdım
-//ok şu an
-//sen de öyle yapıp başlat roadı
-//center fighting ok şu an
-//bir de teleportlarda ufak şeyler değiştirdim geri de aldım mı tam bilmiyorum ama senin bıraktığın haldeki gibi olması lazım incelersin
-//baseworldbossroom.cs de addplayer ı da değiştirdim gibi bi şe oldu sonra senin bıraktığın hale geri aldım gibi onu da incelersin knka
-
-
-
-
-
-
-// 1. DÜZELTME: Namespace'i Game.Server'ın içine taşıdık.
 namespace Game.Server.API
 {
     internal static class GameApiServer
@@ -56,9 +29,7 @@ namespace Game.Server.API
             System.Configuration.ConfigurationManager.AppSettings["AdminKey"] ?? "DEGISTIR";
 
         private static int API_PORT =>
-            int.TryParse(System.Configuration.ConfigurationManager.AppSettings["ApiPort"], out var p) ? p : 9999; //9500 olarak değiştim çakışıyordu not: yuti
-
-
+            int.TryParse(System.Configuration.ConfigurationManager.AppSettings["ApiPort"], out var p) ? p : 9500;
 
         public static void Start(int port = -1)
         {
@@ -91,26 +62,7 @@ namespace Game.Server.API
             }
         }
 
-        // Bu metot, GamePlayer.cs'ye IsAPITeleporting propertysi eklemeden
-        // reflection ile bu bayrağı ayarlamaya çalışır.
-        private static void SetIsAPITeleporting(GamePlayer player, bool value)
-        {
-            try
-            {
-                Type playerType = player.GetType();
-                PropertyInfo prop = playerType.GetProperty("IsAPITeleporting");
-
-                if (prop != null && prop.CanWrite)
-                {
-                    prop.SetValue(player, value);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[API ERROR] Reflection failed on IsAPITeleporting for {player.PlayerCharacter.NickName}: {ex.Message}");
-            }
-        }
-
+        // Oyuncu enerjisi hesabı (PlayerInfo için gerekli)
         private static int CalcEnergy(int agility)
         {
             return 240 + (int)(agility / 30.0);
@@ -135,6 +87,9 @@ namespace Game.Server.API
                     ctx.Response.StatusCode = 200; ctx.Response.Close(); return;
                 }
 
+                // ==========================================
+                // HERKESE AÇIK (PUBLIC) ENDPOINTLER
+                // ==========================================
                 if (path == "" || path == "/")
                 {
                     WriteJson(ctx, new { ok = true, name = "Game API", version = 1 });
@@ -152,7 +107,7 @@ namespace Game.Server.API
                     var allClients = GameServer.Instance.GetAllClients();
                     int onlineCount = allClients != null ? allClients.Length : 0;
 
-                    List<Game.Server.Rooms.BaseRoom> allUsingRoom = RoomMgr.GetAllUsingRoom();
+                    List<BaseRoom> allUsingRoom = RoomMgr.GetAllUsingRoom();
                     int activeRoomCount = 0;
                     int playingPlayerCount = 0;
                     foreach (var room in allUsingRoom)
@@ -183,7 +138,7 @@ namespace Game.Server.API
                 if (path == "/api/game/onlineplayers" && req.HttpMethod == "GET")
                 {
                     var players = WorldMgr.GetAllPlayers();
-                    var list = new System.Collections.Generic.List<object>();
+                    var list = new List<object>();
                     foreach (var p in players)
                     {
                         var c = p.PlayerCharacter;
@@ -193,85 +148,7 @@ namespace Game.Server.API
                     return;
                 }
 
-
-
-                if (path.StartsWith("/api/game/playerinfo/") && req.HttpMethod == "GET")
-                {
-                    var nick = path.Substring("/api/game/playerinfo/".Length);
-
-                    // 1) Önce online oyuncu var mı bak
-                    var p = WorldMgr.GetClientByPlayerNickName(nick);
-                    if (p != null)
-                    {
-                        var c = p.PlayerCharacter;
-
-                        // --- BURASI ÖNEMLİ ---
-                        // Hasar/Zırh için Attack/Defence yerine
-                        // GamePlayer metodlarını kullanıyoruz:
-                        double baseAttack = p.GetBaseAttack();   // Hasar
-                        double baseDefence = p.GetBaseDefence();  // Zırh
-
-                        int hp = c.hp;
-                        int energy = CalcEnergy(c.Agility);
-
-                        WriteJson(ctx, new
-                        {
-                            Username = c.UserName,
-                            Nickname = c.NickName,
-                            Level = c.Grade,
-                            Money = c.Money,
-                            Attack = c.Attack,
-                            Defence = c.Defence,
-                            Agility = c.Agility,
-                            Luck = c.Luck,
-                            HP = hp,
-                            Damage = (int)baseAttack,
-                            Guard = (int)baseDefence,
-                            Energy = energy,
-                            FightPower = c.FightPower,
-                            IsOnline = true
-                        });
-                        return;
-                    }
-
-                    // 2) Offline ise DB'den PlayerInfo çek
-                    using (var pb = new PlayerBussiness())
-                    {
-                        var info = pb.GetUserSingleByNickName(nick);
-                        if (info == null)
-                        {
-                            ctx.Response.StatusCode = 404;
-                            WriteJson(ctx, new { error = "Oyuncu bulunamadı" });
-                            return;
-                        }
-
-                        // Offline için elimizde GetBaseAttack/GetBaseDefence yok,
-                        // en azından Attack/Defence'i Damage/Guard olarak gönderiyoruz.
-                        int hp = info.hp;
-                        int energy = CalcEnergy(info.Agility);
-
-                        WriteJson(ctx, new
-                        {
-                            Username = info.UserName,
-                            Nickname = info.NickName,
-                            Level = info.Grade,
-                            Money = info.Money,
-                            Attack = info.Attack,
-                            Defence = info.Defence,
-                            Agility = info.Agility,
-                            Luck = info.Luck,
-                            HP = hp,
-                            Damage = info.Attack,
-                            Guard = info.Defence,
-                            Energy = energy,
-                            FightPower = info.FightPower,
-                            IsOnline = false
-                        });
-                        return;
-                    }
-                }
-
-
+                // !stat komutu için gerekli update endpointi
                 if (path.StartsWith("/api/game/update/") && req.HttpMethod == "GET")
                 {
                     var nick = path.Substring("/api/game/update/".Length);
@@ -283,7 +160,6 @@ namespace Game.Server.API
                         return;
                     }
 
-                    // Sadece online oyuncuyu güncelleyebiliriz
                     var pl = WorldMgr.GetClientByPlayerNickName(nick);
                     if (pl == null)
                     {
@@ -294,10 +170,7 @@ namespace Game.Server.API
 
                     try
                     {
-                        // client.Player.SavePlayerInfo();’nin GamePlayer versiyonu
                         pl.SavePlayerInfo();
-                        pl.SendMessage("Hesabınız Discord üzerinden güncellendi.");
-
                         var c = pl.PlayerCharacter;
 
                         WriteJson(ctx, new
@@ -319,151 +192,87 @@ namespace Game.Server.API
                     }
                 }
 
-                if (path == "/api/game/announce/types" && req.HttpMethod == "GET")
+                // !stat ve VIP Senkronizasyonu için playerinfo endpointi
+                if (path.StartsWith("/api/game/playerinfo/") && req.HttpMethod == "GET")
                 {
-                    WriteJson(ctx, new { types = new[] { "kucuk", "buyuk", "kirmizi", "mor", "admin", "sari" } });
-                    return;
+                    var nick = path.Substring("/api/game/playerinfo/".Length);
+
+                    // 1) Önce online oyuncu var mı bak
+                    var p = WorldMgr.GetClientByPlayerNickName(nick);
+                    if (p != null)
+                    {
+                        var c = p.PlayerCharacter;
+                        double baseAttack = p.GetBaseAttack();
+                        double baseDefence = p.GetBaseDefence();
+                        int hp = c.hp;
+                        int energy = CalcEnergy(c.Agility);
+
+                        WriteJson(ctx, new
+                        {
+                            Username = c.UserName,
+                            Nickname = c.NickName,
+                            Level = c.Grade,
+                            Money = c.Money,
+                            Attack = c.Attack,
+                            Defence = c.Defence,
+                            Agility = c.Agility,
+                            Luck = c.Luck,
+                            HP = hp,
+                            Damage = (int)baseAttack,
+                            Guard = (int)baseDefence,
+                            Energy = energy,
+                            FightPower = c.FightPower,
+                            VIPLevel = c.VIPLevel,
+                            IsOnline = true
+                        });
+                        return;
+                    }
+
+                    // 2) Offline ise DB'den PlayerInfo çek
+                    using (var pb = new PlayerBussiness())
+                    {
+                        var info = pb.GetUserSingleByNickName(nick);
+                        if (info == null)
+                        {
+                            ctx.Response.StatusCode = 404;
+                            WriteJson(ctx, new { error = "Oyuncu bulunamadı" });
+                            return;
+                        }
+
+                        int hp = info.hp;
+                        int energy = CalcEnergy(info.Agility);
+
+                        WriteJson(ctx, new
+                        {
+                            Username = info.UserName,
+                            Nickname = info.NickName,
+                            Level = info.Grade,
+                            Money = info.Money,
+                            Attack = info.Attack,
+                            Defence = info.Defence,
+                            Agility = info.Agility,
+                            Luck = info.Luck,
+                            HP = hp,
+                            Damage = info.Attack,
+                            Guard = info.Defence,
+                            Energy = energy,
+                            FightPower = info.FightPower,
+                            VIPLevel = info.VIPLevel,
+                            IsOnline = false
+                        });
+                        return;
+                    }
                 }
 
-                
-
-
+                // ==========================================
+                // YETKİ KONTROLÜ (API KEY GEREKTİRENLER)
+                // ==========================================
                 if (!IsAuthorized(req))
                 {
                     ctx.Response.StatusCode = 401;
                     WriteJson(ctx, new { error = "Unauthorized", tip = "X-API-Key header gerekli" });
                     return;
                 }
-
-                if (path == "/api/game/worldboss/start" && req.HttpMethod == "POST")
-                {
-                    var d = ReadJsonBodyJ(req);
-                    int durationMinutes = d["DurationMinutes"]?.ToObject<int?>() ?? 10;
-                    int bossId = 1243; // Varsayılan Boss ID
-                    int bossMaxBlood = NPCInfoMgr.GetNpcInfoById(bossId)?.Blood ?? 500000;
-
-                    // --- KİLİT BAŞLANGICI ---
-                    lock (RoomMgr.WorldBossRoom)
-                    {
-                        if (RoomMgr.WorldBossRoom.WorldOpen)
-                        {
-                            ctx.Response.StatusCode = 400;
-                            WriteJson(ctx, new { error = "World Boss zaten açık durumda." });
-                            return;
-                        }
-
-                        RoomMgr.WorldBossRoom.BeginTime = DateTime.Now;
-                        RoomMgr.WorldBossRoom.EndTime = DateTime.Now.AddMinutes(durationMinutes);
-                        RoomMgr.WorldBossRoom.MaxBlood = bossMaxBlood;
-                        RoomMgr.WorldBossRoom.Blood = bossMaxBlood;
-                        RoomMgr.WorldBossRoom.Name = "DISCORD BOSS";
-                        RoomMgr.WorldBossRoom.BossResourceId = "1";
-                        RoomMgr.WorldBossRoom.CurrentPve = bossId;
-                        RoomMgr.WorldBossRoom.FightOver = false;
-                        RoomMgr.WorldBossRoom.RoomClose = false;
-                        RoomMgr.WorldBossRoom.WorldOpen = true;
-                        RoomMgr.WorldBossRoom.FightTime = durationMinutes;
-                    }
-                    // --- KİLİT BİTİŞİ ---
-
-                    foreach (var pl in WorldMgr.GetAllPlayers())
-                    {
-                        pl.Out.SendOpenWorldBoss(0, 0);
-                        pl.Out.SendMessage((eMessageType)1, $"[Yönetim] Dünya BOSS etkinliği {durationMinutes} dakika süreyle BAŞLATILDI!");
-                    }
-
-                    WriteJson(ctx, new { message = $"World Boss başlatıldı. Süre: {durationMinutes} dakika.", duration = durationMinutes });
-                    return;
-                }
-
-                if (path == "/api/game/worldboss/stop" && req.HttpMethod == "POST")
-                {
-                    // --- KİLİT BAŞLANGICI ---
-                    lock (RoomMgr.WorldBossRoom)
-                    {
-                        if (!RoomMgr.WorldBossRoom.WorldOpen)
-                        {
-                            ctx.Response.StatusCode = 400;
-                            WriteJson(ctx, new { error = "World Boss zaten kapalı." });
-                            return;
-                        }
-
-                        RoomMgr.WorldBossRoom.FightOver = true;
-                        RoomMgr.WorldBossRoom.SendFightOver();
-                        RoomMgr.WorldBossRoom.SendRoomClose();
-                        RoomMgr.WorldBossRoom.WorldBossClose();
-                        RoomMgr.WorldBossRoom.SendGiftForUserJoined();
-                    }
-                    // --- KİLİT BİTİŞİ ---
-
-                    foreach (var pl in WorldMgr.GetAllPlayers())
-                    {
-                        pl.Out.SendMessage((eMessageType)1, "[Yönetim] Dünya BOSS etkinliği MANUEL OLARAK sonlandırıldı ve ödüller dağıtıldı.");
-                    }
-
-                    WriteJson(ctx, new { message = "World Boss manuel olarak sonlandırıldı ve ödül dağıtımı başlatıldı." });
-                    return;
-                }
-
-
-                if (path == "/api/game/worldboss/teleport" && req.HttpMethod == "POST")
-                {
-                    var d = ReadJsonBodyJ(req);
-                    string nickname = d["Nickname"]?.ToString();
-
-                    var pl = WorldMgr.GetClientByPlayerNickName(nickname);
-                    if (pl == null) { WriteJson(ctx, new { error = "Oyuncu bulunamadı" }); return; }
-
-                    if (!RoomMgr.WorldBossRoom.WorldOpen)
-                    {
-                        WriteJson(ctx, new { error = "World Boss etkinliği şu an aktif değil." }); return;
-                    }
-
-                    lock (pl)
-                    {
-                        // 1. ADIM: Oyuncuyu mevcut konumundan çıkar
-                        if (pl.CurrentRoom != null)
-                        {
-                            // İstemciye (client) "artık bu odada değilsin" paketini gönder
-                            pl.Out.SendSceneRemovePlayer(pl);
-                            // Sunucudan (server) oyuncuyu kaldır
-                            pl.CurrentRoom.RemovePlayerUnsafe(pl);
-                        }
-                        else
-                        {
-                            // Lobideyse lobiden çıkar
-                            RoomMgr.ExitWaitingRoom(pl);
-                        }
-
-                        // 2. ADIM: Oyuncuyu World Boss odasına ekle
-                        SetIsAPITeleporting(pl, true);
-
-                        // Sunucu tarafında oyuncunun durumunu ayarla
-                        RoomMgr.WorldBossRoom.AssignPlayerToRoom(pl);
-
-                        // Koordinatlarını ayarla (AddPlayer bu bilgiyi pakete yazacak)
-                        pl.X = RoomMgr.WorldBossRoom.PlayerDefaultPosX;
-                        pl.Y = RoomMgr.WorldBossRoom.PlayerDefaultPosY;
-
-                        // Bu metot oyuncuyu listeye ekler VE istemciye ENTER (kod 3) paketini gönderir
-                        bool added = RoomMgr.WorldBossRoom.AddPlayer(pl);
-
-                        SetIsAPITeleporting(pl, false);
-
-                        if (!added)
-                        {
-                            pl.CurrentRoom = null;
-                            WriteJson(ctx, new { error = "Sunucu Hatası: Oyuncu odaya eklenemedi (İç kural reddetti)." });
-                            return;
-                        }
-
-                        pl.SendMessage("Yönetici tarafından World Boss haritasına ışınlandınız.");
-                    }
-
-                    WriteJson(ctx, new { message = $"{nickname} World Boss haritasına ışınlandı." });
-                    return;
-                }
-
 
                 if (path == "/api/game/announce" && req.HttpMethod == "POST")
                 {
@@ -560,8 +369,6 @@ namespace Game.Server.API
                     return;
                 }
 
-
-
                 if (path == "/api/game/unban" && req.HttpMethod == "POST")
                 {
                     var d = ReadJsonBodyJ(req);
@@ -589,7 +396,7 @@ namespace Game.Server.API
                     new PlayerBussiness().SendMailAndItem(title, content, pc.ID,
                         itemId, count, 0, 0, 0, 0, 0, 0, 0, 0, isBinds);
 
-                    p.SendMessage($"[Discord Ödülün] oyun içi mail kutuna gönderildi."); //AGA OKUYOSAN REBUILD ATMAYI UNUTMA //AGA OKUYOSAN REBUILD ATMAYI UNUTMA //AGA OKUYOSAN REBUILD ATMAYI UNUTMA //AGA OKUYOSAN REBUILD ATMAYI UNUTMA //AGA OKUYOSAN REBUILD ATMAYI UNUTMA 
+                    p.SendMessage($"[Discord Ödülün] oyun içi mail kutuna gönderildi.");
                     WriteJson(ctx, new { message = "Hediye gönderildi", nickname, itemId, count });
                     return;
                 }
@@ -669,91 +476,9 @@ namespace Game.Server.API
                     return;
                 }
 
-                if (path == "/api/game/chat" && req.HttpMethod == "POST")
-                {
-                    try
-                    {
-                        var d = ReadJsonBodyJ(req);
-
-                        string username = d["username"]?.ToString() ?? "Discord";
-                        string message = d["message"]?.ToString();
-                        string discordIdStr = d["discordId"]?.ToString(); // yeni alan (opsiyonel)
-
-                        if (string.IsNullOrEmpty(message))
-                        {
-                            WriteJson(ctx, new { error = "Mesaj boş olamaz." });
-                            return;
-                        }
-
-                        GamePlayer linkedPlayer = null;
-
-                        // Eğer discordId geldiyse -> bağlı oyun hesabını bul
-                        if (!string.IsNullOrEmpty(discordIdStr) && long.TryParse(discordIdStr, out long discordId))
-                        {
-                            int userId = DiscordLinkMgr.GetUserIdByDiscordId(discordId);
-
-                            if (userId > 0)
-                            {
-                                // Online oyuncular arasından bu UserID'yi bul
-                                foreach (var p in WorldMgr.GetAllPlayers())
-                                {
-                                    if (p.PlayerCharacter != null && p.PlayerCharacter.ID == userId)
-                                    {
-                                        linkedPlayer = p;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        // Eğer bağlı hesap bulunduysa, oyunda gözükecek isim olarak NickName'i kullan
-                        string inGameNick = linkedPlayer != null
-                            ? linkedPlayer.PlayerCharacter.NickName
-                            : username; // yoksa direkt gönderilen username
-
-                        // --- PAKET ---
-                        GSPacketIn pkg = new GSPacketIn((short)eChatServerPacket.SCENE_CHAT);
-                        pkg.WriteByte(16); // BİZİM YENİ DİSCORD KANALIMIZ (16)
-                        pkg.WriteBoolean(false); // isGM
-                        pkg.WriteString(inGameNick); // Discord Kullanıcı Adı veya Nick
-                        pkg.WriteString(message); // Mesaj
-
-                        // Diğer login serverlara gönder
-                        foreach (var item in GameServer.Instance.OtherLoginServer)
-                        {
-                            if (item.IsConnected)
-                            {
-                                item.SendPacket(pkg);
-                            }
-                        }
-
-                        // Online tüm oyunculara gönder
-                        foreach (var pl in WorldMgr.GetAllPlayers())
-                        {
-                            if (pl != null && pl.Out != null)
-                            {
-                                pkg.ClientID = pl.PlayerCharacter.ID;
-                                pl.Out.SendTCP(pkg);
-                            }
-                        }
-
-                        WriteJson(ctx, new
-                        {
-                            success = true,
-                            message_sent = message,
-                            from = inGameNick,
-                            linked = linkedPlayer != null
-                        });
-                        return;
-                    }
-                    catch (Exception ex)
-                    {
-                        log.Error("API /api/game/chat error:", ex);
-                        WriteJson(ctx, new { error = "Sunucu hatası: " + ex.Message });
-                        return;
-                    }
-                }
-
+                // ==========================================
+                // DISCORD HESAP EŞLEŞTİRME SİSTEMİ (LİNKLER)
+                // ==========================================
                 if (path == "/api/game/link/info" && req.HttpMethod == "GET")
                 {
                     try
@@ -805,21 +530,6 @@ namespace Game.Server.API
                     }
                 }
 
-                if (path == "/api/game/universal")
-                {
-                    var d = ReadJsonBodyJ(req);
-                    bool result = GameMgr.ExecuteUniversalCommand(
-                        d["Nickname"]?.ToString(),
-                        d["Action"]?.ToString(),    // "set_logic", "set_player", "send_pkg"
-                        d["Property"]?.ToString(),  // "Blood", "Gold", "Level" vb.
-                        d["Value"]?.ToString()      // "1", "99999" vb.
-                    );
-
-                    if (result) WriteJson(ctx, new { status = "success" });
-                    else { ctx.Response.StatusCode = 404; WriteJson(ctx, new { error = "Target not found" }); }
-                    return;
-                }
-
                 if (path == "/api/game/link/list" && req.HttpMethod == "GET")
                 {
                     int top = 100;
@@ -835,7 +545,7 @@ namespace Game.Server.API
                     catch { }
 
                     var links = DiscordLinkMgr.GetAllLinks(top);
-                    var result = new System.Collections.Generic.List<object>();
+                    var result = new List<object>();
 
                     using (var pb = new PlayerBussiness())
                     {
@@ -887,21 +597,14 @@ namespace Game.Server.API
                     if (discordId > 0)
                         affected += DiscordLinkMgr.UnlinkByDiscordId(discordId);
 
-                    WriteJson(ctx, new
-                    {
-                        removed = affected
-                    });
+                    WriteJson(ctx, new { removed = affected });
                     return;
                 }
 
                 if (path == "/api/game/link/clear" && req.HttpMethod == "POST")
                 {
                     int removed = DiscordLinkMgr.ClearAllLinks();
-
-                    WriteJson(ctx, new
-                    {
-                        removed
-                    });
+                    WriteJson(ctx, new { removed });
                     return;
                 }
 
@@ -910,7 +613,6 @@ namespace Game.Server.API
                     try
                     {
                         var d = ReadJsonBodyJ(req);
-
                         string code = d["code"]?.ToString();
                         string discordIdStr = d["discordId"]?.ToString();
 
@@ -928,11 +630,7 @@ namespace Game.Server.API
                             return;
                         }
 
-                        Console.WriteLine($"[API] /api/game/link/confirm çağrıldı: code={code}, discordId={discordId}");
-
                         int userId = DiscordLinkMgr.ConsumeCodeAndBindUser(code, discordId);
-
-                        Console.WriteLine($"[API] /api/game/link/confirm sonucu: userId={userId}");
 
                         if (userId <= 0)
                         {
@@ -941,7 +639,6 @@ namespace Game.Server.API
                             return;
                         }
 
-                        // Karakter bilgisini çek
                         string nick = "";
                         int level = 0;
                         string style = "";
@@ -983,16 +680,242 @@ namespace Game.Server.API
                     }
                 }
 
-                // **BUNDAN SONRA** auth gelsin
-                if (!IsAuthorized(req))
+                // ==========================================
+                // YENİ: SAVAŞ (BATTLE) İZLEME VE MÜDAHALE
+                // ==========================================
+
+                // 1. Savaşları Listeleme
+                if (path == "/api/game/battles" && req.HttpMethod == "GET")
                 {
-                    ctx.Response.StatusCode = 401;
-                    WriteJson(ctx, new { error = "Unauthorized", tip = "X-API-Key header gerekli" });
+                    var activeRooms = RoomMgr.GetAllUsingRoom().Where(r => r.IsPlaying).ToList();
+                    var list = new List<object>();
+
+                    foreach (var room in activeRooms)
+                    {
+                        var players = room.GetPlayers().Select(x => x.PlayerCharacter.NickName).ToList();
+                        list.Add(new
+                        {
+                            RoomId = room.RoomId,
+                            RoomType = room.RoomType.ToString(),
+                            MapId = room.MapId,
+                            PlayerCount = players.Count,
+                            Players = players
+                        });
+                    }
+                    WriteJson(ctx, new { Count = activeRooms.Count, Battles = list });
                     return;
                 }
 
+                // 2. Odaya Mesaj Gönderme veya Oyuncu Atma
+                if (path == "/api/game/battle/action" && req.HttpMethod == "POST")
+                {
+                    var d = ReadJsonBodyJ(req);
+                    string action = d["Action"]?.ToString().ToLowerInvariant();
+                    string target = d["Target"]?.ToString();
+                    string message = d["Message"]?.ToString() ?? "";
+
+                    if (action == "msgroom" && int.TryParse(target, out int roomId))
+                    {
+                        var room = RoomMgr.GetAllUsingRoom().FirstOrDefault(r => r.RoomId == roomId);
+                        if (room != null)
+                        {
+                            GSPacketIn pkg = new GSPacketIn(3);
+                            pkg.WriteInt(3);
+                            pkg.WriteString("[YÜCE ADMIN]: " + message);
+                            room.SendToAll(pkg);
+
+                            WriteJson(ctx, new { success = true, message = "Odaya mesaj iletildi." });
+                            return;
+                        }
+                    }
+                    else if (action == "kickplayer")
+                    {
+                        var p = WorldMgr.GetClientByPlayerNickName(target);
+                        if (p != null && p.CurrentRoom != null)
+                        {
+                            RoomMgr.ExitRoom(p.CurrentRoom, p);
+                            p.SendMessage("Yönetici tarafından savaştan atıldınız!");
+                            WriteJson(ctx, new { success = true, message = $"{target} savaştan atıldı." });
+                            return;
+                        }
+                        WriteJson(ctx, new { error = "Oyuncu savaşta değil veya bulunamadı." });
+                        return;
+                    }
+                    ctx.Response.StatusCode = 400;
+                    WriteJson(ctx, new { error = "Geçersiz işlem veya hedef." });
+                    return;
+                }
+
+                // 3. TANRI GÜÇLERİ (God Powers) - LAMBDA HATASIZ KESİN ÇÖZÜM
+                if (path == "/api/game/battle/godpower" && req.HttpMethod == "POST")
+                {
+                    var d = ReadJsonBodyJ(req);
+                    string action = d["Action"]?.ToString().ToLowerInvariant();
+                    string target = d["Target"]?.ToString();
+                    int amount = d["Amount"]?.ToObject<int?>() ?? 10000;
+
+                    var gp = WorldMgr.GetClientByPlayerNickName(target);
+
+                    if (gp == null)
+                    {
+                        ctx.Response.StatusCode = 404;
+                        WriteJson(ctx, new { error = $"'{target}' oyunda bulunamadı. Büyük/küçük harf kontrol et." });
+                        return;
+                    }
+
+                    if (gp.CurrentRoom == null || !gp.CurrentRoom.IsPlaying)
+                    {
+                        ctx.Response.StatusCode = 400;
+                        WriteJson(ctx, new { error = $"'{target}' şu an bir savaşta değil, lobide bekliyor." });
+                        return;
+                    }
+
+                    try
+                    {
+                        object room = gp.CurrentRoom;
+                        PropertyInfo gameProp = room.GetType().GetProperty("Game");
+                        object game = gameProp?.GetValue(room, null);
+
+                        if (game == null)
+                        {
+                            ctx.Response.StatusCode = 400;
+                            WriteJson(ctx, new { error = "Savaş odası bulundu fakat harita henüz yüklenmemiş." });
+                            return;
+                        }
+
+                        // ========================================================
+                        // LAMBDA (=>) KULLANMADAN FİZİKSEL KARAKTER BULMA
+                        // ========================================================
+                        object physicalPlayer = null;
+
+                        MethodInfo getAllMethod = game.GetType().GetMethod("GetAllPlayers", Type.EmptyTypes)
+                                               ?? game.GetType().GetMethod("GetAllFightPlayers", Type.EmptyTypes);
+
+                        if (getAllMethod != null)
+                        {
+                            var playersList = getAllMethod.Invoke(game, null) as System.Collections.IEnumerable;
+                            if (playersList != null)
+                            {
+                                foreach (object pObj in playersList)
+                                {
+                                    if (pObj == null) continue;
+
+                                    PropertyInfo detailProp = pObj.GetType().GetProperty("PlayerDetail");
+                                    if (detailProp != null)
+                                    {
+                                        object detailObj = detailProp.GetValue(pObj, null);
+                                        if (detailObj == gp)
+                                        {
+                                            physicalPlayer = pObj;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (physicalPlayer == null)
+                        {
+                            MethodInfo findMethod = game.GetType().GetMethod("FindPlayer", new Type[] { typeof(int) });
+                            if (findMethod != null) physicalPlayer = findMethod.Invoke(game, new object[] { gp.PlayerId });
+
+                            if (physicalPlayer == null)
+                            {
+                                Type igpType = gp.GetType().GetInterface("IGamePlayer") ?? gp.GetType();
+                                MethodInfo findMethod2 = game.GetType().GetMethod("GetPlayer", new Type[] { igpType });
+                                if (findMethod2 != null) physicalPlayer = findMethod2.Invoke(game, new object[] { gp });
+                            }
+                        }
+
+                        if (physicalPlayer == null) physicalPlayer = gp.Players;
+
+                        if (physicalPlayer == null)
+                        {
+                            ctx.Response.StatusCode = 400;
+                            WriteJson(ctx, new { error = $"'{target}' haritaya henüz ayak basmadı veya izleyici modunda." });
+                            return;
+                        }
+
+                        PropertyInfo isLivingProp = physicalPlayer.GetType().GetProperty("IsLiving");
+                        bool isLiving = isLivingProp != null && (bool)isLivingProp.GetValue(physicalPlayer, null);
+
+                        if (!isLiving)
+                        {
+                            ctx.Response.StatusCode = 400;
+                            WriteJson(ctx, new { error = $"'{target}' isimli oyuncu zaten ölmüş/hayalet modunda!" });
+                            return;
+                        }
+
+
+                        // ========================================================
+                        // BÜYÜ ZAMANI (GOD MODE V2 - TEMİZLENMİŞ)
+                        // ========================================================
+                        switch (action)
+                        {
+                            case "smite":
+                                MethodInfo dieMethod = physicalPlayer.GetType().GetMethod("Die", Type.EmptyTypes);
+                                dieMethod?.Invoke(physicalPlayer, null);
+                                WriteJson(ctx, new { success = true, message = $"'{target}' isimli oyuncuya yıldırım çarptı (Tek yedi)!" });
+                                break;
+
+                            case "heal":
+                                MethodInfo addBloodMethod = physicalPlayer.GetType().GetMethod("AddBlood", new Type[] { typeof(int) });
+                                addBloodMethod?.Invoke(physicalPlayer, new object[] { amount });
+                                WriteJson(ctx, new { success = true, message = $"'{target}' canı {amount} yenilendi." });
+                                break;
+
+                            case "dander":
+                                MethodInfo setDanderMethod = physicalPlayer.GetType().GetMethod("SetDander", new Type[] { typeof(int) });
+                                setDanderMethod?.Invoke(physicalPlayer, new object[] { 200 });
+                                WriteJson(ctx, new { success = true, message = $"'{target}' öfkesi (POW) fullendi." });
+                                break;
+
+                            case "dondur":
+                                MethodInfo addDelayMethod = physicalPlayer.GetType().GetMethod("AddDelay", new Type[] { typeof(int) });
+                                if (addDelayMethod != null)
+                                {
+                                    addDelayMethod.Invoke(physicalPlayer, new object[] { 4000 });
+                                }
+                                else
+                                {
+                                    PropertyInfo delayProp = physicalPlayer.GetType().GetProperty("Delay");
+                                    if (delayProp != null)
+                                    {
+                                        int currentDelay = (int)delayProp.GetValue(physicalPlayer, null);
+                                        delayProp.SetValue(physicalPlayer, currentDelay + 4000, null);
+                                    }
+                                }
+                                WriteJson(ctx, new { success = true, message = $"'{target}' donduruldu! (Sırası çalındı, oynayamaz)." });
+                                break;
+
+                            case "bomba":
+                                PropertyInfo bloodProp = physicalPlayer.GetType().GetProperty("Blood");
+                                int currentBlood = (int)(bloodProp?.GetValue(physicalPlayer, null) ?? 1000);
+
+                                MethodInfo addBombaMethod = physicalPlayer.GetType().GetMethod("AddBlood", new Type[] { typeof(int) });
+                                addBombaMethod?.Invoke(physicalPlayer, new object[] { -(currentBlood - 1) });
+
+                                WriteJson(ctx, new { success = true, message = $"'{target}' kafasına roket yedi! Sadece 1 HP'si kaldı." });
+                                break;
+
+                            default:
+                                ctx.Response.StatusCode = 400;
+                                WriteJson(ctx, new { error = "Bilinmeyen eylem (action) tipi." });
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Error("GodPower API Hatasi: ", ex);
+                        ctx.Response.StatusCode = 500;
+                        WriteJson(ctx, new { error = "Sistem hatasi (Oyun Motoru): " + (ex.InnerException?.Message ?? ex.Message) });
+                    }
+                    return;
+                }
+
+                // Eşleşmeyen rotalar için 404
                 ctx.Response.StatusCode = 404;
-                WriteJson(ctx, new { error = "Endpoint yok" });
+                WriteJson(ctx, new { error = "Endpoint bulunamadı" });
             }
             catch (Exception ex)
             {
@@ -1004,7 +927,6 @@ namespace Game.Server.API
         private static bool IsAuthorized(HttpListenerRequest req)
         {
             var headerKey = req.Headers["X-API-Key"];
-            Console.WriteLine($"[API] Auth check: headerKey={headerKey}, adminKey={ADMIN_KEY}");
             return headerKey == ADMIN_KEY;
         }
 
@@ -1046,7 +968,7 @@ namespace Game.Server.API
             try
             {
                 var t = Type.GetType(typeFullName);
-                var m = t?.GetMethod(methodName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                var m = t?.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
                 m?.Invoke(null, args ?? Array.Empty<object>());
             }
             catch { }

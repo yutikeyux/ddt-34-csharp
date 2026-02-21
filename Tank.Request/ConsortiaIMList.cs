@@ -3,95 +3,69 @@ using System.Reflection;
 using System.Web;
 using System.Web.Services;
 using System.Xml.Linq;
-using Bussiness; // İş katmanı kütüphanesi
-using log4net; // Loglama kütüphanesi
-using Road.Flash; // Flash istemcisi yardımcı kütüphanesi
-using SqlDataProvider.Data; // Veritabanı veri yapıları
+using Bussiness;
+using log4net;
+using Road.Flash;
+using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-    // Token: 0x02000020 RID: 32
-    // ConsortiaIMList sınıfı, bir loncanın üye listesini ve temel bilgilerini getirmek için kullanılan bir HTTP Handler'dır.
-    [WebService(Namespace = "http://tempuri.org/")]
-    [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-    public class ConsortiaIMList : IHttpHandler
-    {
-        // Log4net ile loglama nesnesi
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	// Token: 0x0200001F RID: 31
+	[WebService(Namespace = "http://tempuri.org/")]
+	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+	public class ConsortiaIMList : IHttpHandler
+	{
+		// Token: 0x0600007E RID: 126 RVA: 0x000055F8 File Offset: 0x000037F8
+		public void ProcessRequest(HttpContext context)
+		{
+			bool value = false;
+			string message = "Fail!";
+			int total = 0;
+			XElement result = new XElement("Result");
+			try
+			{
+				int id = int.Parse(context.Request["id"]);
+				using (ConsortiaBussiness db = new ConsortiaBussiness())
+				{
+					ConsortiaInfo info = db.GetConsortiaSingle(id);
+					bool flag = info != null;
+					if (flag)
+					{
+						result.Add(new XAttribute("Level", info.Level));
+						result.Add(new XAttribute("Repute", info.Repute));
+					}
+				}
+				using (ConsortiaBussiness db2 = new ConsortiaBussiness())
+				{
+					ConsortiaUserInfo[] infos = db2.GetConsortiaUsersPage(1, 1000, ref total, -1, id, -1, -1);
+					foreach (ConsortiaUserInfo info2 in infos)
+					{
+						result.Add(FlashUtils.CreateConsortiaIMInfo(info2));
+					}
+					value = true;
+					message = "Success!";
+				}
+			}
+			catch (Exception ex)
+			{
+				ConsortiaIMList.log.Error("ConsortiaIMList", ex);
+			}
+			result.Add(new XAttribute("value", value));
+			result.Add(new XAttribute("message", message));
+			context.Response.Write(result.ToString(false));
+		}
 
-        // Token: 0x06000081 RID: 129 RVA: 0x000060CC File Offset: 0x000042CC
-        // Gelen isteği karşılayan ve liste hazırlayan metod
-        public void ProcessRequest(HttpContext context)
-        {
-            bool isSuccess = false;
-            string message = "Hata!";
-            int totalCount = 0;
+		// Token: 0x1700001C RID: 28
+		// (get) Token: 0x0600007F RID: 127 RVA: 0x0000579C File Offset: 0x0000399C
+		public bool IsReusable
+		{
+			get
+			{
+				return false;
+			}
+		}
 
-            // Kök XML elementini oluştur
-            XElement resultXml = new XElement("Result");
-
-            try
-            {
-                // Lonca ID'sini al
-                int consortiaID = int.Parse(context.Request["id"]);
-
-                // --- 1. ADIM: LONCA BİLGİLERİNİ (ROOT ATTRIBUTES) ALMA ---
-                using (ConsortiaBussiness dbConsortia = new ConsortiaBussiness())
-                {
-                    ConsortiaInfo consortiaInfo = dbConsortia.GetConsortiaSingle(consortiaID);
-
-                    if (consortiaInfo != null)
-                    {
-                        // Lonca bilgisi varsa, XML'in kök elementine seviye ve itibar (repute) ekle
-                        resultXml.Add(new XAttribute("Level", consortiaInfo.Level));
-                        resultXml.Add(new XAttribute("Repute", consortiaInfo.Repute));
-                    }
-                }
-
-                // --- 2. ADIM: LONCA ÜYELERİNİ LİSTELEME ---
-                // NOT: Orijinal kodda ikinci bir using bloğu açılmış. Veritabanı bağlantısı kapatıp tekrar açmak verimsizdir 
-                // ancak orijinal yapı bozulmamalıdır.
-                using (ConsortiaBussiness dbUsers = new ConsortiaBussiness())
-                {
-                    // Sayfa: 1, Boyut: 1000. (İlk 1000 üyeyi getir)
-                    ConsortiaUserInfo[] userList = dbUsers.GetConsortiaUsersPage(1, 1000, ref totalCount, -1, consortiaID, -1, -1);
-
-                    // Çekilen her üyeyi döngüye al
-                    foreach (ConsortiaUserInfo userInfo in userList)
-                    {
-                        // Üye bilgisini XML formatına çevirip sonuç listesine ekle
-                        // FlashUtils, Flash istemcilerine uygun XML oluşturmak için kullanılan bir yardımcı sınıftır.
-                        resultXml.Add(FlashUtils.CreateConsortiaIMInfo(userInfo));
-                    }
-
-                    isSuccess = true;
-                    message = "Başarılı!";
-                }
-            }
-            catch (Exception ex)
-            {
-                // Hata oluşursa logla
-                ConsortiaIMList.log.Error("ConsortiaIMList yüklenirken hata:", ex);
-            }
-
-            // --- 3. YANITI HAZIRLAMA ---
-            resultXml.Add(new XAttribute("value", isSuccess));
-            resultXml.Add(new XAttribute("message", message));
-
-            // Yanıtı ekrana yaz
-            context.Response.Write(resultXml.ToString(false));
-        }
-
-        // Token: 0x1700001C RID: 28
-        // (get) Token: 0x06000082 RID: 130 RVA: 0x00003828 File Offset: 0x00001A28
-        // IHttpHandler arayüzünün zorunlu üyesi.
-        // False döndürmek, bu sınıfın bir pool (havuz) içinde tekrar kullanılmayacağını belirtir.
-        public bool IsReusable
-        {
-            get
-            {
-                return false;
-            }
-        }
-    }
+		// Token: 0x0400001C RID: 28
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	}
 }

@@ -70,7 +70,7 @@ namespace Tank.Flash
 						logingame.FlashUrl,
 						"?user=",
 						HttpUtility.UrlEncode(text),
-						"&key=",
+						"&key=",//
 						HttpUtility.UrlEncode(text2)
 					});
 					if ("1" == ConfigurationManager.AppSettings["content2"])

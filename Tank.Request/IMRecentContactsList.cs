@@ -3,59 +3,39 @@ using System.Reflection;
 using System.Web;
 using System.Web.Services;
 using System.Xml.Linq;
-using Bussiness; // İş katmanı kütüphanesi
-using log4net; // Loglama kütüphanesi
-using SqlDataProvider.Data; // Veritabanı veri yapıları
+using Bussiness;
+using log4net;
 
 namespace Tank.Request
 {
-    // Token: 0x02000043 RID: 67
-    // IMRecentContactsList sınıfı, anlık mesaj son iletişimlerini listelemek için kullanılan bir HTTP Handler'dır.
-    // Not: Sınıf adı "IMRecentContacts" olarak geçiyor, ancak içerideki metod "IMListLoad" (veya benzeri) yerine sabit veri dönüyor.
-    [WebService(Namespace = "http://tempuri.org/")]
-    [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-    public class IMRecentContactsList : IHttpHandler
-    {
-        // Log4net ile loglama nesnesi
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	// Token: 0x02000041 RID: 65
+	[WebService(Namespace = "http://tempuri.org/")]
+	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+	public class IMRecentContactsList : IHttpHandler
+	{
+		// Token: 0x06000131 RID: 305 RVA: 0x0000A1AC File Offset: 0x000083AC
+		public void ProcessRequest(HttpContext context)
+		{
+			XElement result = new XElement("Result");
+			bool value = true;
+			string message = "Success!";
+			result.Add(new XAttribute("value", value));
+			result.Add(new XAttribute("message", message));
+			context.Response.ContentType = "text/plain";
+			context.Response.Write(result.ToString(false));
+		}
 
-        // Token: 0x06000133 RID: 307 RVA: 0x0000A440 File Offset: 0x00008640
-        // Gelen isteği karşılayan metod
-        public void ProcessRequest(HttpContext context)
-        {
-            bool isSuccess = true; // Sabit olarak true ayarlı
-            string message = "Başarılı!"; // Sabit olarak başarı mesajı
+		// Token: 0x17000043 RID: 67
+		// (get) Token: 0x06000132 RID: 306 RVA: 0x0000A234 File Offset: 0x00008434
+		public bool IsReusable
+		{
+			get
+			{
+				return false;
+			}
+		}
 
-            // Kök XML elementini oluştur
-            XElement resultXml = new XElement("Result");
-
-            // --- NOT: KOD MANTIĞI ---
-            // Bu metodun içinde HERHANGİ BİR VERİTABANI SORGUSU YOKTUR.
-            // Herhangi bir parametre ("uid", "username" vb.) OKUNMAMAKTADIR.
-            // Sadece statik bir "Başarılı" sonucu döner.
-            // Olası Kullanım Senaryoları:
-            // 1. Ping/Connection Check: İstemci "Bu servis çalışıyor mu?" diye sorar.
-            // 2. Placeholder: Özellik henüz tamamlanmamış, yer tutucu koddur.
-
-            // XML'e genel durum bilgilerini (value ve message) ekle
-            resultXml.Add(new XAttribute("value", isSuccess));
-            resultXml.Add(new XAttribute("message", message));
-
-            // Yanıtı ekrana yaz
-            context.Response.ContentType = "text/plain";
-            context.Response.Write(resultXml.ToString(false));
-        }
-
-        // Token: 0x17000043 RID: 67
-        // (get) Token: 0x06000134 RID: 308 RVA: 0x00003828 File Offset: 0x00001A28
-        // IHttpHandler arayüzünün zorunlu üyesi.
-        // False döndürmek, bu sınıfın bir pool (havuz) içinde tekrar kullanılmayacağını belirtir.
-        public bool IsReusable
-        {
-            get
-            {
-                return false;
-            }
-        }
-    }
+		// Token: 0x04000047 RID: 71
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	}
 }

@@ -5,45 +5,45 @@ using System.Web.Services;
 
 namespace Tank.Request.CelebList
 {
-	// Token: 0x02000097 RID: 151
+	// Token: 0x02000093 RID: 147
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class CreateAllCeleb : IHttpHandler
 	{
-		// Token: 0x060002C6 RID: 710 RVA: 0x00011FA8 File Offset: 0x000101A8
+		// Token: 0x060002C0 RID: 704 RVA: 0x00012C14 File Offset: 0x00010E14
 		public void ProcessRequest(HttpContext context)
 		{
 			bool flag = csFunction.ValidAdminIP(context.Request.UserHostAddress);
 			if (flag)
 			{
-				StringBuilder Build = new StringBuilder();
-				Build.Append(CelebByGpList.Build());
-				Build.Append(CelebByDayGPList.Build());
-				Build.Append(CelebByWeekGPList.Build());
-				Build.Append(CelebByOfferList.Build());
-				Build.Append(CelebByDayOfferList.Build());
-				Build.Append(CelebByWeekOfferList.Build());
-				Build.Append(CelebByDayFightPowerList.Build());
-				Build.Append(CelebByConsortiaRiches.Build());
-				Build.Append(CelebByConsortiaDayRiches.Build());
-				Build.Append(CelebByConsortiaWeekRiches.Build());
-				Build.Append(CelebByConsortiaHonor.Build());
-				Build.Append(CelebByConsortiaDayHonor.Build());
-				Build.Append(CelebByConsortiaWeekHonor.Build());
-				Build.Append(CelebByConsortiaLevel.Build());
-				Build.Append(CelebByDayBestEquip.Build());
-				Build.Append(celebbyconsortiafightpower.Build());
+				StringBuilder bulid = new StringBuilder();
+				bulid.Append(CelebByGpList.Build());
+				bulid.Append(CelebByDayGPList.Build());
+				bulid.Append(CelebByWeekGPList.Build());
+				bulid.Append(CelebByOfferList.Build());
+				bulid.Append(CelebByDayOfferList.Build());
+				bulid.Append(CelebByWeekOfferList.Build());
+				bulid.Append(CelebByDayFightPowerList.Build());
+				bulid.Append(CelebByConsortiaRiches.Build());
+				bulid.Append(CelebByConsortiaDayRiches.Build());
+				bulid.Append(CelebByConsortiaWeekRiches.Build());
+				bulid.Append(CelebByConsortiaHonor.Build());
+				bulid.Append(CelebByConsortiaDayHonor.Build());
+				bulid.Append(CelebByConsortiaWeekHonor.Build());
+				bulid.Append(CelebByConsortiaLevel.Build());
+				bulid.Append(CelebByDayBestEquip.Build());
+				bulid.Append(celebbyconsortiafightpower.Build());
 				context.Response.ContentType = "text/plain";
-				context.Response.Write(Build.ToString());
+				context.Response.Write(bulid.ToString());
 			}
 			else
 			{
-				context.Response.Write("Tabi Efendim!" + context.Request.UserHostAddress);
+				context.Response.Write("IP is not valid!" + context.Request.UserHostAddress);
 			}
 		}
 
 		// Token: 0x17000091 RID: 145
-		// (get) Token: 0x060002C7 RID: 711 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x060002C1 RID: 705 RVA: 0x00012D4C File Offset: 0x00010F4C
 		public bool IsReusable
 		{
 			get

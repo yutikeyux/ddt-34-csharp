@@ -12,13 +12,13 @@ using Tank.Request.Illegalcharacters;
 
 namespace Tank.Request
 {
-	// Token: 0x02000084 RID: 132
+	// Token: 0x02000080 RID: 128
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class VisualizeRegister : IHttpHandler
 	{
 		// Token: 0x1700007E RID: 126
-		// (get) Token: 0x06000256 RID: 598 RVA: 0x0001108C File Offset: 0x0000F28C
+		// (get) Token: 0x06000250 RID: 592 RVA: 0x000118C8 File Offset: 0x0000FAC8
 		public static string IllegalCharacters
 		{
 			get
@@ -28,7 +28,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x1700007F RID: 127
-		// (get) Token: 0x06000257 RID: 599 RVA: 0x000110B0 File Offset: 0x0000F2B0
+		// (get) Token: 0x06000251 RID: 593 RVA: 0x000118EC File Offset: 0x0000FAEC
 		public static string IllegalDirectory
 		{
 			get
@@ -37,7 +37,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x06000258 RID: 600 RVA: 0x000110D4 File Offset: 0x0000F2D4
+		// Token: 0x06000252 RID: 594 RVA: 0x00011910 File Offset: 0x0000FB10
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
@@ -154,7 +154,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x17000080 RID: 128
-		// (get) Token: 0x06000259 RID: 601 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x06000253 RID: 595 RVA: 0x00011D14 File Offset: 0x0000FF14
 		public bool IsReusable
 		{
 			get
@@ -163,10 +163,10 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x04000095 RID: 149
+		// Token: 0x0400008F RID: 143
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		// Token: 0x04000096 RID: 150
+		// Token: 0x04000090 RID: 144
 		private static FileSystem fileIllegal = new FileSystem(HttpContext.Current.Server.MapPath(VisualizeRegister.IllegalCharacters), HttpContext.Current.Server.MapPath(VisualizeRegister.IllegalDirectory), "*.txt");
 	}
 }

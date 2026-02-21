@@ -6,18 +6,18 @@ using log4net;
 
 namespace Tank.Request.CelebList
 {
-	// Token: 0x02000088 RID: 136
+	// Token: 0x02000084 RID: 132
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class CelebByConsortiaDayRiches : IHttpHandler
 	{
-		// Token: 0x0600026C RID: 620 RVA: 0x00002D2D File Offset: 0x00000F2D
+		// Token: 0x06000266 RID: 614 RVA: 0x00012219 File Offset: 0x00010419
 		public void ProcessRequest(HttpContext context)
 		{
 			context.Response.Write(CelebByConsortiaDayRiches.Build(context));
 		}
 
-		// Token: 0x0600026D RID: 621 RVA: 0x00011970 File Offset: 0x0000FB70
+		// Token: 0x06000267 RID: 615 RVA: 0x00012230 File Offset: 0x00010430
 		public static string Build(HttpContext context)
 		{
 			bool flag = !csFunction.ValidAdminIP(context.Request.UserHostAddress);
@@ -33,14 +33,14 @@ namespace Tank.Request.CelebList
 			return result;
 		}
 
-		// Token: 0x0600026E RID: 622 RVA: 0x000119A8 File Offset: 0x0000FBA8
+		// Token: 0x06000268 RID: 616 RVA: 0x00012268 File Offset: 0x00010468
 		public static string Build()
 		{
 			return csFunction.BuildCelebConsortia("CelebByConsortiaDayRiches", 11, "CelebByConsortiaDayRiches_Out");
 		}
 
 		// Token: 0x17000082 RID: 130
-		// (get) Token: 0x0600026F RID: 623 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x06000269 RID: 617 RVA: 0x0001228C File Offset: 0x0001048C
 		public bool IsReusable
 		{
 			get
@@ -49,7 +49,7 @@ namespace Tank.Request.CelebList
 			}
 		}
 
-		// Token: 0x0400009D RID: 157
+		// Token: 0x04000097 RID: 151
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

@@ -33,12 +33,6 @@
     <ProjectReference Include="..\SqlDataProvider\SqlDataProvider.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Lsj.Util">
-      <HintPath>..\Road.Service\bin\Debug\Lsj.Util.dll</HintPath>
-    </Reference>
-    <Reference Include="Lsj.Util.JSON">
-      <HintPath>..\Road.Service\bin\Debug\Lsj.Util.JSON.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Road.Service\bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>

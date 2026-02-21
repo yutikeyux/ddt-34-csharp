@@ -6,13 +6,13 @@ using Bussiness;
 
 namespace Tank.Request
 {
-	// Token: 0x0200006C RID: 108
+	// Token: 0x02000068 RID: 104
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class runetemplatelist : IHttpHandler
 	{
 		// Token: 0x1700006A RID: 106
-		// (get) Token: 0x060001EC RID: 492 RVA: 0x0000215A File Offset: 0x0000035A
+		// (get) Token: 0x060001E6 RID: 486 RVA: 0x00002D8D File Offset: 0x00000F8D
 		public bool IsReusable
 		{
 			get
@@ -21,22 +21,22 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x060001ED RID: 493 RVA: 0x0000E8E0 File Offset: 0x0000CAE0
+		// Token: 0x060001E7 RID: 487 RVA: 0x0000EDEC File Offset: 0x0000CFEC
 		public void ProcessRequest(HttpContext context)
 		{
 			bool flag = csFunction.ValidAdminIP(context.Request.UserHostAddress);
 			if (flag)
 			{
-				context.Response.Write(runetemplatelist.Build(context));
+				context.Response.Write(runetemplatelist.Bulid(context));
 			}
 			else
 			{
-				context.Response.Write("Tabi Efendim!");
+				context.Response.Write("IP is not valid!");
 			}
 		}
 
-		// Token: 0x060001EE RID: 494 RVA: 0x0000E92C File Offset: 0x0000CB2C
-		public static string Build(HttpContext context)
+		// Token: 0x060001E8 RID: 488 RVA: 0x0000EE38 File Offset: 0x0000D038
+		public static string Bulid(HttpContext context)
 		{
 			bool flag = false;
 			string str = "Fail!";

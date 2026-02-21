@@ -15,13 +15,13 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	// Token: 0x02000052 RID: 82
+	// Token: 0x02000050 RID: 80
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class Login : IHttpHandler, IRequiresSessionState
 	{
 		// Token: 0x17000052 RID: 82
-		// (get) Token: 0x06000176 RID: 374 RVA: 0x0000280F File Offset: 0x00000A0F
+		// (get) Token: 0x06000174 RID: 372 RVA: 0x0000BDF8 File Offset: 0x00009FF8
 		public static string ValidDate
 		{
 			get
@@ -31,7 +31,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x17000053 RID: 83
-		// (get) Token: 0x06000177 RID: 375 RVA: 0x0000215A File Offset: 0x0000035A
+		// (get) Token: 0x06000175 RID: 373 RVA: 0x00002D8D File Offset: 0x00000F8D
 		public bool IsReusable
 		{
 			get
@@ -40,102 +40,107 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x06000178 RID: 376 RVA: 0x0000BE08 File Offset: 0x0000A008
+		// Token: 0x06000176 RID: 374 RVA: 0x0000BE1C File Offset: 0x0000A01C
 		public void ProcessRequest(HttpContext context)
 		{
-			bool flag = false;
-			string translation = LanguageMgr.GetTranslation("Tank.Request.Login.Fail1", Array.Empty<object>());
-			bool flag2 = false;
-			XElement xelement = new XElement("Result");
-			string text = context.Request["p"];
+			bool value = false;
+			string message = LanguageMgr.GetTranslation("Tank.Request.Login.Fail1", Array.Empty<object>());
+			bool isError = false;
+			XElement result = new XElement("Result");
+			string p = context.Request["p"];
 			try
 			{
-				BaseInterface baseInterface = BaseInterface.CreateInterface();
+				BaseInterface inter = BaseInterface.CreateInterface();
 				string site = (context.Request["site"] == null) ? "" : HttpUtility.UrlDecode(context.Request["site"]);
-				string userHostAddress = context.Request.UserHostAddress;
-				if (!string.IsNullOrEmpty(text))
+				string IP = context.Request.UserHostAddress;
+				bool flag = string.IsNullOrEmpty(p);
+				if (!flag)
 				{
-					byte[] array = CryptoHelper.RsaDecryt2(StaticFunction.RsaCryptor, text);
-					string[] array2 = Encoding.UTF8.GetString(array, 7, array.Length - 7).Split(new char[]
+					byte[] src = CryptoHelper.RsaDecryt2(StaticFunction.RsaCryptor, p);
+					string[] strList = Encoding.UTF8.GetString(src, 7, src.Length - 7).Split(new char[]
 					{
 						','
 					});
-					if (array2.Length == 4)
+					bool flag2 = strList.Length != 4;
+					if (!flag2)
 					{
-						string name = array2[0];
-						string text2 = array2[1];
-						string text3 = array2[2];
-						string nickname = array2[3];
-						int num = 0;
-						bool flag3 = false;
-						bool byUserIsFirst = PlayerManager.GetByUserIsFirst(name);
-						PlayerInfo playerInfo = baseInterface.CreateLogin(name, text3, int.Parse(ConfigurationManager.AppSettings["ServerID"]), ref translation, ref num, userHostAddress, ref flag2, byUserIsFirst, ref flag3, site, nickname);
+						string name = strList[0];
+						string pwd = strList[1];
+						string newPwd = strList[2];
+						string nickname = strList[3];
+						int isFirst = 0;
+						bool isActive = false;
+						bool firstValidate = PlayerManager.GetByUserIsFirst(name);
+						PlayerInfo player = inter.CreateLogin(name, newPwd, int.Parse(ConfigurationManager.AppSettings["ServerID"]), ref message, ref isFirst, IP, ref isError, firstValidate, ref isActive, site, nickname);
+						bool flag3 = isActive;
 						if (flag3)
 						{
 							StaticsMgr.RegCountAdd();
 						}
-						if (playerInfo != null && !flag2)
+						bool flag4 = player != null && !isError;
+						if (flag4)
 						{
-							if (num == 0)
+							bool flag5 = isFirst == 0;
+							if (flag5)
 							{
-								PlayerManager.Update(name, text3);
+								PlayerManager.Update(name, newPwd);
 							}
 							else
 							{
 								PlayerManager.Remove(name);
 							}
-							string value = string.IsNullOrEmpty(playerInfo.Style) ? ",,,,,,,," : playerInfo.Style;
-							playerInfo.Colors = (string.IsNullOrEmpty(playerInfo.Colors) ? ",,,,,,,," : playerInfo.Colors);
-							XElement content = new XElement("Item", new object[]
+							string str3 = string.IsNullOrEmpty(player.Style) ? ",,,,,,,," : player.Style;
+							player.Colors = (string.IsNullOrEmpty(player.Colors) ? ",,,,,,,," : player.Colors);
+							XElement xelement2 = new XElement("Item", new object[]
 							{
-								new XAttribute("ID", playerInfo.ID),
-								new XAttribute("IsFirst", num),
-								new XAttribute("NickName", playerInfo.NickName),
+								new XAttribute("ID", player.ID),
+								new XAttribute("IsFirst", isFirst),
+								new XAttribute("NickName", player.NickName),
 								new XAttribute("Date", ""),
 								new XAttribute("IsConsortia", 0),
-								new XAttribute("ConsortiaID", playerInfo.ConsortiaID),
-								new XAttribute("Sex", playerInfo.Sex),
-								new XAttribute("WinCount", playerInfo.Win),
-								new XAttribute("TotalCount", playerInfo.Total),
-								new XAttribute("EscapeCount", playerInfo.Escape),
-								new XAttribute("DutyName", (playerInfo.DutyName == null) ? "" : playerInfo.DutyName),
-								new XAttribute("GP", playerInfo.GP),
+								new XAttribute("ConsortiaID", player.ConsortiaID),
+								new XAttribute("Sex", player.Sex),
+								new XAttribute("WinCount", player.Win),
+								new XAttribute("TotalCount", player.Total),
+								new XAttribute("EscapeCount", player.Escape),
+								new XAttribute("DutyName", (player.DutyName == null) ? "" : player.DutyName),
+								new XAttribute("GP", player.GP),
 								new XAttribute("Honor", ""),
-								new XAttribute("Style", value),
-								new XAttribute("Gold", playerInfo.Gold),
-								new XAttribute("Colors", (playerInfo.Colors == null) ? "" : playerInfo.Colors),
-								new XAttribute("Attack", playerInfo.Attack),
-								new XAttribute("Defence", playerInfo.Defence),
-								new XAttribute("Agility", playerInfo.Agility),
-								new XAttribute("Luck", playerInfo.Luck),
-								new XAttribute("Grade", playerInfo.Grade),
-								new XAttribute("Hide", playerInfo.Hide),
-								new XAttribute("Repute", playerInfo.Repute),
-								new XAttribute("ConsortiaName", (playerInfo.ConsortiaName == null) ? "" : playerInfo.ConsortiaName),
-								new XAttribute("Offer", playerInfo.Offer),
-								new XAttribute("Skin", (playerInfo.Skin == null) ? "" : playerInfo.Skin),
-								new XAttribute("ReputeOffer", playerInfo.ReputeOffer),
-								new XAttribute("ConsortiaHonor", playerInfo.ConsortiaHonor),
-								new XAttribute("ConsortiaLevel", playerInfo.ConsortiaLevel),
-								new XAttribute("ConsortiaRepute", playerInfo.ConsortiaRepute),
-								new XAttribute("Money", playerInfo.Money + playerInfo.MoneyLock),
-								new XAttribute("AntiAddiction", playerInfo.AntiAddiction),
-								new XAttribute("IsMarried", playerInfo.IsMarried),
-								new XAttribute("SpouseID", playerInfo.SpouseID),
-								new XAttribute("SpouseName", (playerInfo.SpouseName == null) ? "" : playerInfo.SpouseName),
-								new XAttribute("MarryInfoID", playerInfo.MarryInfoID),
-								new XAttribute("IsCreatedMarryRoom", playerInfo.IsCreatedMarryRoom),
-								new XAttribute("IsGotRing", playerInfo.IsGotRing),
-								new XAttribute("LoginName", (playerInfo.UserName == null) ? "" : playerInfo.UserName),
-								new XAttribute("Nimbus", playerInfo.Nimbus),
-								new XAttribute("FightPower", playerInfo.FightPower),
-								new XAttribute("AnswerSite", playerInfo.AnswerSite),
-								new XAttribute("WeaklessGuildProgressStr", (playerInfo.WeaklessGuildProgressStr == null) ? "" : playerInfo.WeaklessGuildProgressStr),
+								new XAttribute("Style", str3),
+								new XAttribute("Gold", player.Gold),
+								new XAttribute("Colors", (player.Colors == null) ? "" : player.Colors),
+								new XAttribute("Attack", player.Attack),
+								new XAttribute("Defence", player.Defence),
+								new XAttribute("Agility", player.Agility),
+								new XAttribute("Luck", player.Luck),
+								new XAttribute("Grade", player.Grade),
+								new XAttribute("Hide", player.Hide),
+								new XAttribute("Repute", player.Repute),
+								new XAttribute("ConsortiaName", (player.ConsortiaName == null) ? "" : player.ConsortiaName),
+								new XAttribute("Offer", player.Offer),
+								new XAttribute("Skin", (player.Skin == null) ? "" : player.Skin),
+								new XAttribute("ReputeOffer", player.ReputeOffer),
+								new XAttribute("ConsortiaHonor", player.ConsortiaHonor),
+								new XAttribute("ConsortiaLevel", player.ConsortiaLevel),
+								new XAttribute("ConsortiaRepute", player.ConsortiaRepute),
+								new XAttribute("Money", player.Money + player.MoneyLock),
+								new XAttribute("AntiAddiction", player.AntiAddiction),
+								new XAttribute("IsMarried", player.IsMarried),
+								new XAttribute("SpouseID", player.SpouseID),
+								new XAttribute("SpouseName", (player.SpouseName == null) ? "" : player.SpouseName),
+								new XAttribute("MarryInfoID", player.MarryInfoID),
+								new XAttribute("IsCreatedMarryRoom", player.IsCreatedMarryRoom),
+								new XAttribute("IsGotRing", player.IsGotRing),
+								new XAttribute("LoginName", (player.UserName == null) ? "" : player.UserName),
+								new XAttribute("Nimbus", player.Nimbus),
+								new XAttribute("FightPower", player.FightPower),
+								new XAttribute("AnswerSite", player.AnswerSite),
+								new XAttribute("WeaklessGuildProgressStr", (player.WeaklessGuildProgressStr == null) ? "" : player.WeaklessGuildProgressStr),
 								new XAttribute("IsOldPlayer", false)
 							});
-							xelement.Add(content);
-							flag = true;
-							translation = LanguageMgr.GetTranslation("Tank.Request.Login.Success", Array.Empty<object>());
+							result.Add(xelement2);
+							value = true;
+							message = LanguageMgr.GetTranslation("Tank.Request.Login.Success", Array.Empty<object>());
 						}
 						else
 						{
@@ -147,22 +152,22 @@ namespace Tank.Request
 			}
 			catch (Exception ex)
 			{
-				byte[] array3 = Convert.FromBase64String(text);
+				byte[] numArray = Convert.FromBase64String(p);
 				Login.log.Error("User Login error: (--" + StaticFunction.RsaCryptor.KeySize.ToString() + "--)" + ex.ToString());
-				Login.log.Error("--dataarray: " + Marshal.ToHexDump("kötü giriş algılandı" + array3.Length.ToString(), array3));
-				flag = false;
-				translation = LanguageMgr.GetTranslation("Tank.Request.Login.Fail2", Array.Empty<object>());
+				Login.log.Error("--dataarray: " + Marshal.ToHexDump("fuckingbitch " + numArray.Length.ToString(), numArray));
+				value = false;
+				message = LanguageMgr.GetTranslation("Tank.Request.Login.Fail2", Array.Empty<object>());
 			}
 			finally
 			{
-				xelement.Add(new XAttribute("value", flag));
-				xelement.Add(new XAttribute("message", translation));
+				result.Add(new XAttribute("value", value));
+				result.Add(new XAttribute("message", message));
 				context.Response.ContentType = "text/plain";
-				context.Response.Write(xelement.ToString(false));
+				context.Response.Write(result.ToString(false));
 			}
 		}
 
-		// Token: 0x04000054 RID: 84
+		// Token: 0x04000053 RID: 83
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

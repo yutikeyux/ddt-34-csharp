@@ -729,7 +729,7 @@ namespace Game.Server
                             if (result)
                             {
                                 isReset = true;
-                                player.SendMessage("Haftalık ödüller yenilendi!");
+                                player.SendMessage("Haftalık harcama etkinliği sıfırlandı!");
                                 player.Extra.ResetUsersEventProcess((int)NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK, isReset);
                                 player.Extra.ResetUsersEventProcess((int)NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK, isReset);
                             }

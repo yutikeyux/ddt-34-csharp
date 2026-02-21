@@ -9,14 +9,14 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	// Token: 0x02000077 RID: 119
+	// Token: 0x02000073 RID: 115
 	public class subactivelist : IHttpHandler
 	{
-		// Token: 0x0600021D RID: 541 RVA: 0x0000FE34 File Offset: 0x0000E034
+		// Token: 0x06000217 RID: 535 RVA: 0x00010448 File Offset: 0x0000E648
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "fail!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -33,7 +33,7 @@ namespace Tank.Request
 						}
 					}
 					value = true;
-					message = "Başarılı!";
+					message = "Success!";
 				}
 			}
 			catch (Exception ex)
@@ -48,7 +48,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x17000074 RID: 116
-		// (get) Token: 0x0600021E RID: 542 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x06000218 RID: 536 RVA: 0x000105B8 File Offset: 0x0000E7B8
 		public bool IsReusable
 		{
 			get
@@ -57,7 +57,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x04000085 RID: 133
+		// Token: 0x0400007F RID: 127
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

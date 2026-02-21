@@ -7,20 +7,20 @@ using log4net;
 
 namespace Tank.Request
 {
-	// Token: 0x02000046 RID: 70
+	// Token: 0x02000044 RID: 68
 	public class KitoffUser : Page
 	{
 		// Token: 0x17000046 RID: 70
-		// (get) Token: 0x0600013F RID: 319 RVA: 0x000035C4 File Offset: 0x000017C4
+		// (get) Token: 0x0600013D RID: 317 RVA: 0x0000A51C File Offset: 0x0000871C
 		public static string GetAdminIP
 		{
 			get
 			{
-				return ConfigurationManager.AppSettings["AdminIP"];
+				return ConfigurationSettings.AppSettings["AdminIP"];
 			}
 		}
 
-		// Token: 0x06000140 RID: 320 RVA: 0x0000A730 File Offset: 0x00008930
+		// Token: 0x0600013E RID: 318 RVA: 0x0000A540 File Offset: 0x00008740
 		public static bool ValidLoginIP(string ip)
 		{
 			string ips = KitoffUser.GetAdminIP;
@@ -30,7 +30,7 @@ namespace Tank.Request
 			}).Contains(ip);
 		}
 
-		// Token: 0x06000141 RID: 321 RVA: 0x0000A774 File Offset: 0x00008974
+		// Token: 0x0600013F RID: 319 RVA: 0x0000A584 File Offset: 0x00008784
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			bool result = false;
@@ -48,7 +48,7 @@ namespace Tank.Request
 			base.Response.Write(result);
 		}
 
-		// Token: 0x0400004A RID: 74
+		// Token: 0x04000049 RID: 73
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

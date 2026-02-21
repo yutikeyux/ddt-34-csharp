@@ -18,11 +18,11 @@ namespace Tank.Request
 		// Token: 0x06000146 RID: 326 RVA: 0x0000A74B File Offset: 0x0000894B
 		public void ProcessRequest(HttpContext context)
 		{
-			context.Response.Write(LoadItemsCategory.Bulid(context));
+			context.Response.Write(LoadItemsCategory.build(context));
 		}
 
 		// Token: 0x06000147 RID: 327 RVA: 0x0000A760 File Offset: 0x00008960
-		public static string Bulid(HttpContext context)
+		public static string build(HttpContext context)
 		{
 			bool value = false;
 			string message = "Fail!";

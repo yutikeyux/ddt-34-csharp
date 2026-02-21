@@ -10,32 +10,32 @@ using log4net;
 
 namespace Tank.Request
 {
-	// Token: 0x0200006E RID: 110
+	// Token: 0x0200006A RID: 106
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class SentReward : IHttpHandler
 	{
 		// Token: 0x1700006B RID: 107
-		// (get) Token: 0x060001F2 RID: 498 RVA: 0x0000EA50 File Offset: 0x0000CC50
+		// (get) Token: 0x060001EC RID: 492 RVA: 0x0000EF5C File Offset: 0x0000D15C
 		public static string GetSentRewardIP
 		{
 			get
 			{
-				return ConfigurationManager.AppSettings["SentRewardIP"];
+				return ConfigurationSettings.AppSettings["SentRewardIP"];
 			}
 		}
 
 		// Token: 0x1700006C RID: 108
-		// (get) Token: 0x060001F3 RID: 499 RVA: 0x0000EA74 File Offset: 0x0000CC74
+		// (get) Token: 0x060001ED RID: 493 RVA: 0x0000EF80 File Offset: 0x0000D180
 		public static string GetSentRewardKey
 		{
 			get
 			{
-				return ConfigurationManager.AppSettings["SentRewardKey"];
+				return ConfigurationSettings.AppSettings["SentRewardKey"];
 			}
 		}
 
-		// Token: 0x060001F4 RID: 500 RVA: 0x0000EA98 File Offset: 0x0000CC98
+		// Token: 0x060001EE RID: 494 RVA: 0x0000EFA4 File Offset: 0x0000D1A4
 		public static bool ValidSentRewardIP(string ip)
 		{
 			string ips = SentReward.GetSentRewardIP;
@@ -45,7 +45,7 @@ namespace Tank.Request
 			}).Contains(ip);
 		}
 
-		// Token: 0x060001F5 RID: 501 RVA: 0x0000EADC File Offset: 0x0000CCDC
+		// Token: 0x060001EF RID: 495 RVA: 0x0000EFE8 File Offset: 0x0000D1E8
 		public void ProcessRequest(HttpContext context)
 		{
 			context.Response.ContentType = "text/plain";
@@ -92,7 +92,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x060001F6 RID: 502 RVA: 0x0000EC0C File Offset: 0x0000CE0C
+		// Token: 0x060001F0 RID: 496 RVA: 0x0000F118 File Offset: 0x0000D318
 		private bool checkParam(ref string param)
 		{
 			int minValidDate = 0;
@@ -156,7 +156,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x1700006D RID: 109
-		// (get) Token: 0x060001F7 RID: 503 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x060001F1 RID: 497 RVA: 0x0000F4B0 File Offset: 0x0000D6B0
 		public bool IsReusable
 		{
 			get
@@ -165,7 +165,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x04000075 RID: 117
+		// Token: 0x0400006F RID: 111
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

@@ -9,28 +9,28 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	// Token: 0x0200007D RID: 125
+	// Token: 0x02000079 RID: 121
 	public class totemhonortemplate : IHttpHandler
 	{
-		// Token: 0x06000237 RID: 567 RVA: 0x000104BC File Offset: 0x0000E6BC
+		// Token: 0x06000231 RID: 561 RVA: 0x00010BC8 File Offset: 0x0000EDC8
 		public void ProcessRequest(HttpContext context)
 		{
 			bool flag = csFunction.ValidAdminIP(context.Request.UserHostAddress);
 			if (flag)
 			{
-				context.Response.Write(totemhonortemplate.Build(context));
+				context.Response.Write(totemhonortemplate.Bulid(context));
 			}
 			else
 			{
-				context.Response.Write("Tabi Efendim!");
+				context.Response.Write("IP is not valid!");
 			}
 		}
 
-		// Token: 0x06000238 RID: 568 RVA: 0x00010508 File Offset: 0x0000E708
-		public static string Build(HttpContext context)
+		// Token: 0x06000232 RID: 562 RVA: 0x00010C14 File Offset: 0x0000EE14
+		public static string Bulid(HttpContext context)
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "Fail!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -42,7 +42,7 @@ namespace Tank.Request
 						result.Add(FlashUtils.CreateTotemHonorTemplate(info));
 					}
 					value = true;
-					message = "Başarılı!";
+					message = "Success!";
 				}
 			}
 			catch (Exception ex)
@@ -55,7 +55,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x17000079 RID: 121
-		// (get) Token: 0x06000239 RID: 569 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x06000233 RID: 563 RVA: 0x00010D0C File Offset: 0x0000EF0C
 		public bool IsReusable
 		{
 			get
@@ -64,7 +64,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x0400008C RID: 140
+		// Token: 0x04000086 RID: 134
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

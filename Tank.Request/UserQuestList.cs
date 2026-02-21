@@ -10,16 +10,16 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	// Token: 0x02000081 RID: 129
+	// Token: 0x0200007D RID: 125
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class UserQuestList : IHttpHandler
 	{
-		// Token: 0x06000247 RID: 583 RVA: 0x00010A24 File Offset: 0x0000EC24
+		// Token: 0x06000241 RID: 577 RVA: 0x000111B8 File Offset: 0x0000F3B8
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "Fail!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -32,7 +32,7 @@ namespace Tank.Request
 						result.Add(FlashUtils.CreateQuestDataInfo(quest));
 					}
 					value = true;
-					message = "Başarılı!";
+					message = "Success!";
 				}
 			}
 			catch (Exception ex)
@@ -46,7 +46,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x1700007C RID: 124
-		// (get) Token: 0x06000248 RID: 584 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x06000242 RID: 578 RVA: 0x000112DC File Offset: 0x0000F4DC
 		public bool IsReusable
 		{
 			get
@@ -55,7 +55,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x04000090 RID: 144
+		// Token: 0x0400008A RID: 138
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

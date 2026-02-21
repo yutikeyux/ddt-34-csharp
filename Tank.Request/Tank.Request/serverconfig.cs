@@ -16,7 +16,7 @@ namespace Tank.Request
 	public class serverconfig : IHttpHandler
 	{
 		// Token: 0x060001F6 RID: 502 RVA: 0x0000F59C File Offset: 0x0000D79C
-		public static string Bulid(HttpContext context)
+		public static string build(HttpContext context)
 		{
 			bool flag = false;
 			string str = "Fail!";
@@ -49,7 +49,7 @@ namespace Tank.Request
 			bool flag = csFunction.ValidAdminIP(context.Request.UserHostAddress);
 			if (flag)
 			{
-				context.Response.Write(serverconfig.Bulid(context));
+				context.Response.Write(serverconfig.build(context));
 			}
 			else
 			{

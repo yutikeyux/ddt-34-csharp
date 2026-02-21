@@ -9,24 +9,24 @@ using log4net;
 
 namespace Tank.Request
 {
-	// Token: 0x02000083 RID: 131
+	// Token: 0x0200007F RID: 127
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class VisualizeItemLoad : IHttpHandler
 	{
-		// Token: 0x06000252 RID: 594 RVA: 0x00010F90 File Offset: 0x0000F190
+		// Token: 0x0600024C RID: 588 RVA: 0x000117A0 File Offset: 0x0000F9A0
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "Fail!";
 			bool sex = bool.Parse(context.Request["sex"]);
 			XElement result = new XElement("Result");
 			try
 			{
-				string content = ConfigurationManager.AppSettings[sex ? "BoyVisualizeItem" : "GrilVisualizeItem"];
+				string content = ConfigurationSettings.AppSettings[sex ? "BoyVisualizeItem" : "GrilVisualizeItem"];
 				result.Add(new XAttribute("content", content));
 				value = true;
-				message = "Başarılı!";
+				message = "Success!";
 			}
 			catch (Exception ex)
 			{
@@ -39,7 +39,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x1700007D RID: 125
-		// (get) Token: 0x06000253 RID: 595 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x0600024D RID: 589 RVA: 0x0001189C File Offset: 0x0000FA9C
 		public bool IsReusable
 		{
 			get
@@ -48,7 +48,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x04000094 RID: 148
+		// Token: 0x0400008E RID: 142
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

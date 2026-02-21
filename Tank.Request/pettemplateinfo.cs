@@ -9,20 +9,20 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	// Token: 0x02000065 RID: 101
+	// Token: 0x02000063 RID: 99
 	public class pettemplateinfo : IHttpHandler
 	{
-		// Token: 0x060001CB RID: 459 RVA: 0x00002A13 File Offset: 0x00000C13
+		// Token: 0x060001C9 RID: 457 RVA: 0x0000E15D File Offset: 0x0000C35D
 		public void ProcessRequest(HttpContext context)
 		{
-			context.Response.Write(pettemplateinfo.Build(context));
+			context.Response.Write(pettemplateinfo.Bulid(context));
 		}
 
-		// Token: 0x060001CC RID: 460 RVA: 0x0000DD70 File Offset: 0x0000BF70
-		public static string Build(HttpContext context)
+		// Token: 0x060001CA RID: 458 RVA: 0x0000E174 File Offset: 0x0000C374
+		public static string Bulid(HttpContext context)
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "Fail!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -34,7 +34,7 @@ namespace Tank.Request
 						result.Add(FlashUtils.CreatePetTemplate(info));
 					}
 					value = true;
-					message = "Başarılı!";
+					message = "Success!";
 				}
 			}
 			catch (Exception ex)
@@ -47,7 +47,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x17000066 RID: 102
-		// (get) Token: 0x060001CD RID: 461 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x060001CB RID: 459 RVA: 0x0000E26C File Offset: 0x0000C46C
 		public bool IsReusable
 		{
 			get
@@ -56,7 +56,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x04000067 RID: 103
+		// Token: 0x04000066 RID: 102
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

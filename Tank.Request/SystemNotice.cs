@@ -9,20 +9,20 @@ using log4net;
 
 namespace Tank.Request
 {
-	// Token: 0x0200007B RID: 123
+	// Token: 0x02000077 RID: 119
 	public class SystemNotice : Page
 	{
 		// Token: 0x17000077 RID: 119
-		// (get) Token: 0x0600022E RID: 558 RVA: 0x000035C4 File Offset: 0x000017C4
+		// (get) Token: 0x06000228 RID: 552 RVA: 0x0001091C File Offset: 0x0000EB1C
 		public static string GetChargeIP
 		{
 			get
 			{
-				return ConfigurationManager.AppSettings["AdminIP"];
+				return ConfigurationSettings.AppSettings["AdminIP"];
 			}
 		}
 
-		// Token: 0x0600022F RID: 559 RVA: 0x00010260 File Offset: 0x0000E460
+		// Token: 0x06000229 RID: 553 RVA: 0x00010940 File Offset: 0x0000EB40
 		public static bool ValidLoginIP(string ip)
 		{
 			string ips = SystemNotice.GetChargeIP;
@@ -32,7 +32,7 @@ namespace Tank.Request
 			}).Contains(ip);
 		}
 
-		// Token: 0x06000230 RID: 560 RVA: 0x000102A4 File Offset: 0x0000E4A4
+		// Token: 0x0600022A RID: 554 RVA: 0x00010984 File Offset: 0x0000EB84
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			int result = 1;
@@ -67,7 +67,7 @@ namespace Tank.Request
 			base.Response.Write(result);
 		}
 
-		// Token: 0x0400008B RID: 139
+		// Token: 0x04000085 RID: 133
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

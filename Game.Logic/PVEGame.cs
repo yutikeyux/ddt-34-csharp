@@ -507,30 +507,56 @@ namespace Game.Logic
 
         public bool CanStartNewSession()
         {
-            if (base.m_turnIndex != 0)
+            if (base.TurnIndex != 0)
             {
                 return IsAllReady();
             }
             return true;
         }
 
-        public void CanStopGame() //oyun sonrası etap uzatma olayları için buraya bi bakalım not:yuti
+        public void CanStopGame()
         {
+            // 1. KRİTİK DÜZELTME: Oyun biterken zamanlayıcıyı DURDUR.
+            //ClearWaitTimer();
+
             if (!IsWin)
             {
-                if ((base.GameType == eGameType.Dungeon))// && SessionId > 1)
+                // --- KAYBETME DURUMU ---
+                // Koşullar: 1. Oturumdan sonraysa, 2. Dungeon ise, 3. Labyrinth değilse
+                if (SessionId > 1 && GameType == eGameType.Dungeon && RoomType != eRoomType.Labyrinth)
                 {
-                    ClearWaitTimer();
+                    // 2. DÜZELTME: Maliyeti hesapla.
+                    // Eğer görev bilgisi varsa ve tekrar deneme maliyeti tanımlıysa onu al, yoksa 2 gönder.
+                    // Not: Sabit 2 yerine gerçek maliyeti göndermek daha doğrudur.
+                    if (m_missionInfo != null)
+                    {
+                        WantTryAgain = m_missionInfo.TryAgainCost;
+                        // Eğer TryAgainCost yoksa veya 0 ise, senin istediğin 2'yi fallback olarak kullanabilirsin:
+                        if (WantTryAgain == 0) WantTryAgain = 2;
+                    }
+                    else
+                    {
+                        WantTryAgain = 2;
+                    }
+
+                    SendMissionInfo();
+                    SendMissionTryAgain();
                 }
             }
             else
             {
+                // --- KAZANMA DURUMU (Eksikti, geri eklendi) ---
+                // Kazanıldığında da genellikle mission info güncellenir (özellikle sonraki aşama için).
+                // Eğer kazanınca info göndermek istemiyorsan bu bloğu silebilirsin ama
+                // genellikle nextSession varsa bilgi güncellemesi yapılır.
                 int nextSessionId = 1 + this.SessionId;
                 if (this.Misssions.ContainsKey(nextSessionId) && (m_info.ID == 5 || m_info.ID == 14))
                 {
-                    this.WantTryAgain = 1;
+                    this.WantTryAgain = 1; // Özel harita mantığı
+                                           // Gerekirse buraya da SendMissionInfo() eklenebilir.
                 }
             }
+
             SetupStyle(0);
         }
 
@@ -1155,7 +1181,7 @@ namespace Game.Logic
             m_currentLiving = FindNextTurnedLiving();
             if (m_currentLiving != null && CanEnterGate)
             {
-                base.m_turnIndex++;
+                base.TurnIndex++;
                 m_currentLiving.PrepareSelfTurn();
                 List<Box> newBoxes = new List<Box>();
                 SendGameNextTurn(m_currentLiving, this, newBoxes);
@@ -1449,7 +1475,7 @@ namespace Game.Logic
                 m_currentLiving = FindNextTurnedLiving();
                 if (m_currentLiving != null)
                 {
-                    base.m_turnIndex++;
+                    base.TurnIndex++;
                     this.SendUpdateUiData();
                     if (m_currentLiving is SimpleBoss && m_currentLiving.Config.IsShowBloodBar)
                         ChangeTarget(m_currentLiving.Id);
@@ -1507,7 +1533,7 @@ namespace Game.Logic
                             base.SendGameNextTurn(this.m_currentLiving, this, newBoxes);
                             if (this.m_currentLiving.IsAttacking)
                             {
-                                base.AddAction(new WaitLivingAttackingAction(this.m_currentLiving, base.m_turnIndex, (base.getTurnTime() + 20) * 1000));
+                                base.AddAction(new WaitLivingAttackingAction(this.m_currentLiving, base.TurnIndex, (base.getTurnTime() + 20) * 1000));
                             }
                         }
                         if (m_currentLiving is Player)
@@ -1892,7 +1918,24 @@ namespace Game.Logic
                 pkg.WriteInt(TotalCount);
                 pkg.WriteInt(Param2);
                 pkg.WriteInt(Param4);
-                pkg.WriteInt(WantTryAgain);
+
+                // --- DÜZELTME BAŞLANGICI ---
+
+                // Eskiden: pkg.WriteInt(WantTryAgain); // Sadece 0 veya 1 gönderiyordu.
+
+                // Yeni: Veritabanındaki gerçek maliyeti (TryAgainCost) gönderiyoruz.
+                int TryAgainCost = 0;
+
+                // Eğer veritabanında tekrar deneme izni varsa maliyeti al
+                if (m_missionInfo.TryAgain)
+                {
+                    TryAgainCost = m_missionInfo.TryAgainCost;
+                }
+
+                pkg.WriteInt(TryAgainCost);
+
+                // --- DÜZELTME BİTİŞİ ---
+
                 pkg.WriteString(Pic);
                 SendToAll(pkg);
             }
@@ -1902,7 +1945,30 @@ namespace Game.Logic
         {
             GSPacketIn pkg = new GSPacketIn((byte)ePackageTypeLogic.GAME_CMD);
             pkg.WriteByte((byte)eTankCmdType.GAME_MISSION_TRY_AGAIN);
-            pkg.WriteInt(WantTryAgain);
+
+            // --- DÜZELTME BAŞLANGICI ---
+
+            int costToSend = 0;
+
+            // Eğer tekrar deneme izni varsa (bool) maliyeti al
+            if (m_missionInfo != null && m_missionInfo.TryAgain)
+            {
+                costToSend = m_missionInfo.TryAgainCost;
+            }
+
+            // Client'ın beklediği integer değeri pakete yaz
+            pkg.WriteInt(costToSend);
+
+            // Eğer cost 0 geldiyse ve tekrar denemek için para ödenmesi gerekiyorsa
+            // (örneğin sistemde tanımlıysa) buraya varsayılan bir değer yazabilirsin:
+            // if (cost == 0) cost = 100; 
+
+            // Buraya BAYRAK (WantTryAgain) yerine MALİYETİ (cost) yazıyoruz.
+            // ActionScript tarafındaki this._info.value bu değeri okuyacak.
+           
+
+            // --- DÜZELTME BİTİŞİ ---
+
             SendToAll(pkg);
         }
 
@@ -2128,7 +2194,7 @@ namespace Game.Logic
             if (base.GameState == eGameState.SessionPrepared)
             {
                 m_gameState = eGameState.Loading;
-                base.m_turnIndex = 0;
+                base.TurnIndex = 0;
                 SendMissionInfo();
                 SendStartLoading(60);
                 VaneLoading();
@@ -2305,7 +2371,7 @@ namespace Game.Logic
 
         public void ResetForTry()
         {
-            base.m_turnIndex = 0;
+            base.TurnIndex = 0;
             foreach (Player allFightPlayer in GetAllFightPlayers())
             {
                 allFightPlayer.Ready = true;

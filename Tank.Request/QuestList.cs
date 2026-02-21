@@ -13,30 +13,30 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	// Token: 0x02000068 RID: 104
+	// Token: 0x02000065 RID: 101
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class QuestList : IHttpHandler
 	{
-		// Token: 0x060001DB RID: 475 RVA: 0x0000E218 File Offset: 0x0000C418
+		// Token: 0x060001D8 RID: 472 RVA: 0x0000E6B4 File Offset: 0x0000C8B4
 		public void ProcessRequest(HttpContext context)
 		{
 			bool flag = csFunction.ValidAdminIP(context.Request.UserHostAddress);
 			if (flag)
 			{
-				context.Response.Write(QuestList.Build(context));
+				context.Response.Write(QuestList.Bulid(context));
 			}
 			else
 			{
-				context.Response.Write("Tabi Efendim!");
+				context.Response.Write("IP is not valid!");
 			}
 		}
 
-		// Token: 0x060001DC RID: 476 RVA: 0x0000E264 File Offset: 0x0000C464
-		public static string Build(HttpContext context)
+		// Token: 0x060001D9 RID: 473 RVA: 0x0000E700 File Offset: 0x0000C900
+		public static string Bulid(HttpContext context)
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "Fail!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -69,7 +69,7 @@ namespace Tank.Request
 						result.Add(temp_xml);
 					}
 					value = true;
-					message = "Başarılı!";
+					message = "Success!";
 				}
 			}
 			catch (Exception ex)
@@ -81,7 +81,7 @@ namespace Tank.Request
 			return csFunction.CreateCompressXml(context, result, "QuestList", true);
 		}
 
-		// Token: 0x060001DD RID: 477 RVA: 0x0000E494 File Offset: 0x0000C694
+		// Token: 0x060001DA RID: 474 RVA: 0x0000E930 File Offset: 0x0000CB30
 		private static void AppendAttribute(XmlDocument doc, XmlNode node, string attr, string value)
 		{
 			XmlAttribute at = doc.CreateAttribute(attr);
@@ -90,7 +90,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x17000067 RID: 103
-		// (get) Token: 0x060001DE RID: 478 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x060001DB RID: 475 RVA: 0x0000E95C File Offset: 0x0000CB5C
 		public bool IsReusable
 		{
 			get
@@ -99,7 +99,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x04000071 RID: 113
+		// Token: 0x0400006C RID: 108
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

@@ -7,14 +7,14 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	// Token: 0x02000072 RID: 114
+	// Token: 0x0200006E RID: 110
 	public class shopcheapitemlist : IHttpHandler
 	{
-		// Token: 0x06000205 RID: 517 RVA: 0x0000F344 File Offset: 0x0000D544
+		// Token: 0x060001FF RID: 511 RVA: 0x0000F8D4 File Offset: 0x0000DAD4
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "Fail!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -30,7 +30,7 @@ namespace Tank.Request
 						}
 					}
 					value = true;
-					message = "Başarılı!";
+					message = "Success!";
 				}
 			}
 			catch
@@ -43,7 +43,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x17000070 RID: 112
-		// (get) Token: 0x06000206 RID: 518 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x06000200 RID: 512 RVA: 0x0000FA00 File Offset: 0x0000DC00
 		public bool IsReusable
 		{
 			get

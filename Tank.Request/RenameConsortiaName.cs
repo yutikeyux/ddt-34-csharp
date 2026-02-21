@@ -11,13 +11,13 @@ using Road.Flash;
 
 namespace Tank.Request
 {
-	// Token: 0x0200006A RID: 106
+	// Token: 0x02000066 RID: 102
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class RenameConsortiaName : IHttpHandler
 	{
 		// Token: 0x17000068 RID: 104
-		// (get) Token: 0x060001E4 RID: 484 RVA: 0x0000215A File Offset: 0x0000035A
+		// (get) Token: 0x060001DE RID: 478 RVA: 0x00002D8D File Offset: 0x00000F8D
 		public bool IsReusable
 		{
 			get
@@ -26,7 +26,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x060001E5 RID: 485 RVA: 0x0000E4C0 File Offset: 0x0000C6C0
+		// Token: 0x060001DF RID: 479 RVA: 0x0000E988 File Offset: 0x0000CB88
 		public void ProcessRequest(HttpContext context)
 		{
 			bool flag = false;
@@ -83,7 +83,7 @@ namespace Tank.Request
 			context.Response.Write(xelement.ToString(false));
 		}
 
-		// Token: 0x04000073 RID: 115
+		// Token: 0x0400006D RID: 109
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

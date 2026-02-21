@@ -10,30 +10,30 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	// Token: 0x0200005C RID: 92
+	// Token: 0x0200005A RID: 90
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class newtitle : IHttpHandler
 	{
-		// Token: 0x0600019E RID: 414 RVA: 0x0000D224 File Offset: 0x0000B424
+		// Token: 0x0600019C RID: 412 RVA: 0x0000D3D8 File Offset: 0x0000B5D8
 		public void ProcessRequest(HttpContext context)
 		{
 			bool flag = csFunction.ValidAdminIP(context.Request.UserHostAddress);
 			if (flag)
 			{
-				context.Response.Write(newtitle.Build(context));
+				context.Response.Write(newtitle.Bulid(context));
 			}
 			else
 			{
-				context.Response.Write("Tabi Efendim!");
+				context.Response.Write("IP is not valid!");
 			}
 		}
 
-		// Token: 0x0600019F RID: 415 RVA: 0x0000D270 File Offset: 0x0000B470
-		public static string Build(HttpContext context)
+		// Token: 0x0600019D RID: 413 RVA: 0x0000D424 File Offset: 0x0000B624
+		public static string Bulid(HttpContext context)
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "Fail!";
 			XElement result = new XElement("Result");
 			int t = 0;
 			try
@@ -47,7 +47,7 @@ namespace Tank.Request
 						result.Add(FlashUtils.CreateNewTitleInfo(info));
 					}
 					value = true;
-					message = "Başarılı!";
+					message = "Success!";
 				}
 			}
 			catch (Exception ex)
@@ -61,7 +61,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x1700005C RID: 92
-		// (get) Token: 0x060001A0 RID: 416 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x0600019E RID: 414 RVA: 0x0000D544 File Offset: 0x0000B744
 		public bool IsReusable
 		{
 			get
@@ -70,7 +70,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x0400005D RID: 93
+		// Token: 0x0400005C RID: 92
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

@@ -10,10 +10,10 @@ using Bussiness;
 
 namespace Tank.Request
 {
-	// Token: 0x02000082 RID: 130
+	// Token: 0x0200007E RID: 126
 	public class ValidateCode : Page
 	{
-		// Token: 0x0600024B RID: 587 RVA: 0x00010B48 File Offset: 0x0000ED48
+		// Token: 0x06000245 RID: 581 RVA: 0x00011308 File Offset: 0x0000F508
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			string code = CheckCode.GenerateCheckCode();
@@ -23,13 +23,13 @@ namespace Tank.Request
 			base.Response.BinaryWrite(bytes);
 		}
 
-		// Token: 0x0600024C RID: 588 RVA: 0x00002C85 File Offset: 0x00000E85
+		// Token: 0x06000246 RID: 582 RVA: 0x0001134D File Offset: 0x0000F54D
 		protected void Button1_Click(object sender, EventArgs e)
 		{
 			this.CreateCheckCodeImage(this.GenerateCheckCode());
 		}
 
-		// Token: 0x0600024D RID: 589 RVA: 0x00010B90 File Offset: 0x0000ED90
+		// Token: 0x06000247 RID: 583 RVA: 0x00011360 File Offset: 0x0000F560
 		private string GenerateCheckCode()
 		{
 			string checkCode = string.Empty;
@@ -42,7 +42,7 @@ namespace Tank.Request
 			return checkCode;
 		}
 
-		// Token: 0x0600024E RID: 590 RVA: 0x00010BE8 File Offset: 0x0000EDE8
+		// Token: 0x06000248 RID: 584 RVA: 0x000113B8 File Offset: 0x0000F5B8
 		private void CreateCheckCodeImage(string checkCode)
 		{
 			bool flag = checkCode == null || checkCode.Trim() == string.Empty;
@@ -97,7 +97,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x0600024F RID: 591 RVA: 0x00010E6C File Offset: 0x0000F06C
+		// Token: 0x06000249 RID: 585 RVA: 0x0001163C File Offset: 0x0000F83C
 		public static Bitmap KiRotate(Bitmap bmp, float angle, Color bkColor)
 		{
 			int w = bmp.Width + 2;
@@ -134,7 +134,7 @@ namespace Tank.Request
 			return dst;
 		}
 
-		// Token: 0x04000091 RID: 145
+		// Token: 0x0400008B RID: 139
 		public static Color[] colors = new Color[]
 		{
 			Color.Blue,
@@ -143,10 +143,10 @@ namespace Tank.Request
 			Color.Gold
 		};
 
-		// Token: 0x04000092 RID: 146
+		// Token: 0x0400008C RID: 140
 		protected HtmlForm form1;
 
-		// Token: 0x04000093 RID: 147
+		// Token: 0x0400008D RID: 141
 		protected Button Button1;
 	}
 }

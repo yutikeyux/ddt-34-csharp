@@ -1,96 +1,71 @@
 ﻿using System;
-using System.Configuration; // 'ConfigurationManager' yerine güncel sınıf
+using System.Configuration;
 using System.Reflection;
 using System.Web;
 using System.Web.Services;
-using log4net; // Loglama kütüphanesi
+using log4net;
 
 namespace Tank.Request
 {
-    // Token: 0x02000037 RID: 55
-    // FavoriteTransit sınıfı, oyuncuların favori sayfalarına veya çıkış sayfalarına yönlendirme işlemini yapar.
-    [WebService(Namespace = "http://tempuri.org/")]
-    [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-    public class FavoriteTransit : IHttpHandler
-    {
-        // Log4net ile loglama nesnesi
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	// Token: 0x02000036 RID: 54
+	[WebService(Namespace = "http://tempuri.org/")]
+	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+	public class FavoriteTransit : IHttpHandler
+	{
+		// Token: 0x17000038 RID: 56
+		// (get) Token: 0x060000FF RID: 255 RVA: 0x000087FC File Offset: 0x000069FC
+		public static string GetFavoriteUrl
+		{
+			get
+			{
+				return ConfigurationSettings.AppSettings["FavoriteUrl"];
+			}
+		}
 
-        // Token: 0x17000038 RID: 56
-        // (get) Token: 0x06000102 RID: 258 RVA: 0x00008F18 File Offset: 0x00007118
-        // Varsayılan yönlendirme URL'ini (Web.config'te tanımlı "FavoriteUrl") okuyan özellik.
-        // DÜZELTME: Orijinal kodda eski "ConfigurationManager" kullanılıyordu, güncellendi.
-        public static string GetFavoriteUrl
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["FavoriteUrl"];
-            }
-        }
+		// Token: 0x06000100 RID: 256 RVA: 0x00008820 File Offset: 0x00006A20
+		public void ProcessRequest(HttpContext context)
+		{
+			context.Response.ContentType = "text/plain";
+			try
+			{
+				string username = (context.Request["username"] == null) ? "" : HttpUtility.UrlDecode(context.Request["username"]);
+				string site = (context.Request["site"] == null) ? "" : HttpUtility.UrlDecode(context.Request["site"]).ToLower();
+				string url = string.Empty;
+				bool flag = !string.IsNullOrEmpty(site);
+				if (flag)
+				{
+					url = ConfigurationSettings.AppSettings[string.Format("FavoriteUrl_{0}", site)];
+					int place = username.IndexOf('_');
+					bool flag2 = place != -1;
+					if (flag2)
+					{
+						username = username.Substring(place + 1, username.Length - place - 1);
+					}
+				}
+				bool flag3 = string.IsNullOrEmpty(url);
+				if (flag3)
+				{
+					url = FavoriteTransit.GetFavoriteUrl;
+				}
+				context.Response.Redirect(string.Format(url, username, site), false);
+			}
+			catch (Exception ex)
+			{
+				FavoriteTransit.log.Error("FavoriteTransit:", ex);
+			}
+		}
 
-        // Token: 0x06000103 RID: 259 RVA: 0x00008F3C File Offset: 0x0000713C
-        // Gelen isteği karşılayan ve yönlendirme işlemi yapan metod
-        public void ProcessRequest(HttpContext context)
-        {
-            context.Response.ContentType = "text/plain";
-            string redirectUrl = string.Empty;
+		// Token: 0x17000039 RID: 57
+		// (get) Token: 0x06000101 RID: 257 RVA: 0x00008954 File Offset: 0x00006B54
+		public bool IsReusable
+		{
+			get
+			{
+				return false;
+			}
+		}
 
-            try
-            {
-                // --- 1. PARAMETRELERİ ALMA ---
-                string username = (context.Request["username"] == null) ? "" : HttpUtility.UrlDecode(context.Request["username"]);
-                string siteKey = (context.Request["site"] == null) ? "" : HttpUtility.UrlDecode(context.Request["site"]).ToLower();
-
-                // --- 2. URL BELİRLEME ---
-                bool isSiteProvided = !string.IsNullOrEmpty(siteKey);
-
-                if (isSiteProvided)
-                {
-                    // Siteye özel bir URL var mı bak (Örn: FavoriteUrl_facebook)
-                    string configKey = string.Format("FavoriteUrl_{0}", siteKey);
-                    redirectUrl = ConfigurationManager.AppSettings[configKey];
-
-                    // --- 3. KULLANICI ADI TEMİZLİĞİ ---
-                    // Kullanıcı adında alt tire (_) varsa ve bu bir site prefix'i ise (Örn: S1_Ahmet)
-                    // Site prefix'ini silip sadece kullanıcı adını (Ahmet) almak için kullanılır.
-                    int underscoreIndex = username.IndexOf('_');
-                    bool hasUnderscore = underscoreIndex != -1;
-
-                    if (hasUnderscore)
-                    {
-                        // Alt çizgi sonrasındaki karakteri alır (Suffix)
-                        username = username.Substring(underscoreIndex + 1);
-                    }
-                }
-
-                // Eğer hala URL bulunamadıysa varsayılan URL'i al
-                bool isUrlEmpty = string.IsNullOrEmpty(redirectUrl);
-                if (isUrlEmpty)
-                {
-                    redirectUrl = FavoriteTransit.GetFavoriteUrl;
-                }
-
-                // --- 4. YÖNLENDİRME ---
-                // URL formatında string.Format kullanılır. Muhtemelen URL şöyledir:
-                // "http://site.com/login.aspx?user={0}&site={1}" -> {0}=username, {1}=site
-                context.Response.Redirect(string.Format(redirectUrl, username, siteKey), false);
-            }
-            catch (Exception ex)
-            {
-                FavoriteTransit.log.Error("FavoriteTransit yönlendirme hatası:", ex);
-            }
-        }
-
-        // Token: 0x17000039 RID: 57
-        // (get) Token: 0x06000104 RID: 260 RVA: 0x00003828 File Offset: 0x00001A28
-        // IHttpHandler arayüzünün zorunlu üyesi.
-        // False döndürmek, bu sınıfın bir pool (havuz) içinde tekrar kullanılmayacağını belirtir.
-        public bool IsReusable
-        {
-            get
-            {
-                return false;
-            }
-        }
-    }
+		// Token: 0x0400003E RID: 62
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	}
 }

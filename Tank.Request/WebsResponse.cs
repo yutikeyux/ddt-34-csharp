@@ -5,10 +5,10 @@ using System.Text;
 
 namespace Tank.Request
 {
-	// Token: 0x02000085 RID: 133
+	// Token: 0x02000081 RID: 129
 	public class WebsResponse
 	{
-		// Token: 0x0600025C RID: 604 RVA: 0x00011530 File Offset: 0x0000F730
+		// Token: 0x06000256 RID: 598 RVA: 0x00011D80 File Offset: 0x0000FF80
 		public static string GetPage(string url, string postData, string encodeType, out string err)
 		{
 			Encoding encoding = Encoding.GetEncoding(encodeType);

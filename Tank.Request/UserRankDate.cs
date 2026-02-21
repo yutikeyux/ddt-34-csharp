@@ -10,12 +10,12 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	// Token: 0x02000013 RID: 19
+	// Token: 0x02000012 RID: 18
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class UserRankDate : IHttpHandler
 	{
-		// Token: 0x0600004C RID: 76 RVA: 0x00004AF0 File Offset: 0x00002CF0
+		// Token: 0x06000049 RID: 73 RVA: 0x00003E14 File Offset: 0x00002014
 		public void ProcessRequest(HttpContext context)
 		{
 			bool flag = false;
@@ -55,7 +55,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x17000010 RID: 16
-		// (get) Token: 0x0600004D RID: 77 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x0600004A RID: 74 RVA: 0x00003F5C File Offset: 0x0000215C
 		public bool IsReusable
 		{
 			get
@@ -64,7 +64,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x04000011 RID: 17
+		// Token: 0x04000010 RID: 16
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

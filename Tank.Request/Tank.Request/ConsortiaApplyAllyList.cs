@@ -45,7 +45,7 @@ namespace Tank.Request
 			{
 				ConsortiaApplyAllyList.log.Error("ConsortiaApplyAllyList", ex);
 			}
-			result.Add(new XAttribute("total", total));
+			result.Add(new XAttribute("total", total)); //
 			result.Add(new XAttribute("value", value));
 			result.Add(new XAttribute("message", message));
 			context.Response.ContentType = "text/plain";

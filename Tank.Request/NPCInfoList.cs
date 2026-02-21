@@ -10,22 +10,22 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	// Token: 0x0200005F RID: 95
+	// Token: 0x0200005D RID: 93
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class NPCInfoList : IHttpHandler
 	{
-		// Token: 0x060001AD RID: 429 RVA: 0x00002927 File Offset: 0x00000B27
+		// Token: 0x060001AB RID: 427 RVA: 0x0000D92A File Offset: 0x0000BB2A
 		public void ProcessRequest(HttpContext context)
 		{
-			context.Response.Write(NPCInfoList.Build(context));
+			context.Response.Write(NPCInfoList.Bulid(context));
 		}
 
-		// Token: 0x060001AE RID: 430 RVA: 0x0000D6A8 File Offset: 0x0000B8A8
-		public static string Build(HttpContext context)
+		// Token: 0x060001AC RID: 428 RVA: 0x0000D940 File Offset: 0x0000BB40
+		public static string Bulid(HttpContext context)
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "Fail!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -37,7 +37,7 @@ namespace Tank.Request
 						result.Add(FlashUtils.CreatNPCInfo(info));
 					}
 					value = true;
-					message = "Başarılı!";
+					message = "Success!";
 				}
 			}
 			catch (Exception ex)
@@ -50,7 +50,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x1700005F RID: 95
-		// (get) Token: 0x060001AF RID: 431 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x060001AD RID: 429 RVA: 0x0000DA38 File Offset: 0x0000BC38
 		public bool IsReusable
 		{
 			get
@@ -59,7 +59,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x04000060 RID: 96
+		// Token: 0x0400005F RID: 95
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

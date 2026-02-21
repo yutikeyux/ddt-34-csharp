@@ -10,30 +10,30 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	// Token: 0x02000061 RID: 97
+	// Token: 0x0200005F RID: 95
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class petlevellist : IHttpHandler
 	{
-		// Token: 0x060001B7 RID: 439 RVA: 0x0000D91C File Offset: 0x0000BB1C
+		// Token: 0x060001B5 RID: 437 RVA: 0x0000DC20 File Offset: 0x0000BE20
 		public void ProcessRequest(HttpContext context)
 		{
 			bool flag = csFunction.ValidAdminIP(context.Request.UserHostAddress);
 			if (flag)
 			{
-				context.Response.Write(petlevellist.Build(context));
+				context.Response.Write(petlevellist.Bulid(context));
 			}
 			else
 			{
-				context.Response.Write("Tabi Efendim!");
+				context.Response.Write("IP is not valid!");
 			}
 		}
 
-		// Token: 0x060001B8 RID: 440 RVA: 0x0000D968 File Offset: 0x0000BB68
-		public static string Build(HttpContext context)
+		// Token: 0x060001B6 RID: 438 RVA: 0x0000DC6C File Offset: 0x0000BE6C
+		public static string Bulid(HttpContext context)
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "Fail!";
 			XElement result = new XElement("Result");
 			int t = 0;
 			try
@@ -47,7 +47,7 @@ namespace Tank.Request
 						result.Add(FlashUtils.CreatePetLevels(info));
 					}
 					value = true;
-					message = "Başarılı!";
+					message = "Success!";
 				}
 			}
 			catch (Exception ex)
@@ -61,7 +61,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x17000062 RID: 98
-		// (get) Token: 0x060001B9 RID: 441 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x060001B7 RID: 439 RVA: 0x0000DD8C File Offset: 0x0000BF8C
 		public bool IsReusable
 		{
 			get
@@ -70,7 +70,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x04000063 RID: 99
+		// Token: 0x04000062 RID: 98
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

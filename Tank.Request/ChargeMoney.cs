@@ -1,170 +1,124 @@
 ﻿using System;
-using System.Configuration; // 'ConfigurationManager' yerine güncel sınıf
+using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.UI;
-using Bussiness; // İş katmanı kütüphanesi
-using Bussiness.CenterService; // Merkez servisi (WCF) kütüphanesi
-using Bussiness.Interface; // Arayüz yardımcı kütüphanesi
-using log4net; // Loglama kütüphanesi
-using SqlDataProvider.Data; // Veritabanı veri yapıları
+using Bussiness;
+using Bussiness.CenterService;
+using Bussiness.Interface;
+using log4net;
+using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-    // Token: 0x02000014 RID: 20
-    // ChargeMoney sınıfı, oyuncuların para yükleme işlemlerini işleyen bir Web Forms sayfasıdır (Page).
-    public class ChargeMoney : Page
-    {
-        // Log4net ile loglama nesnesi
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	// Token: 0x02000013 RID: 19
+	public class ChargeMoney : Page
+	{
+		// Token: 0x17000011 RID: 17
+		// (get) Token: 0x0600004D RID: 77 RVA: 0x00003F85 File Offset: 0x00002185
+		public static string GetChargeIP
+		{
+			get
+			{
+				return ConfigurationSettings.AppSettings["ChargeIP"];
+			}
+		}
 
-        // Token: 0x17000011 RID: 17
-        // (get) Token: 0x06000050 RID: 80 RVA: 0x0000226B File Offset: 0x0000046B
-        // Web.config dosyasında tanımlı "ChargeIP" ayarını okuyan özellik.
-        // DÜZELTME: Orijinal kodda eski "ConfigurationManager" kullanılıyordu, "ConfigurationManager" ile güncellendi.
-        public static string GetChargeIP
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["ChargeIP"];
-            }
-        }
+		// Token: 0x0600004E RID: 78 RVA: 0x00003F98 File Offset: 0x00002198
+		protected void Page_Load(object sender, EventArgs e)
+		{
+			int num = 1;
+			try
+			{
+				num = 10;
+				string userHostAddress = this.Context.Request.UserHostAddress;
+				bool flag = ChargeMoney.ValidLoginIP(userHostAddress);
+				if (flag)
+				{
+					string content = HttpUtility.UrlDecode(base.Request["content"]);
+					string site = (base.Request["site"] == null) ? "" : HttpUtility.UrlDecode(base.Request["site"]).ToLower();
+					int UserID = Convert.ToInt32(HttpUtility.UrlDecode(base.Request["nickname"]));
+					string[] strArray = BaseInterface.CreateInterface().UnEncryptCharge(content, ref num, site);
+					bool flag2 = strArray.Length > 5;
+					if (flag2)
+					{
+						string chargeID = strArray[0];
+						string user = strArray[1].Trim();
+						int money = int.Parse(strArray[2]);
+						string str = strArray[3];
+						decimal needMoney = decimal.Parse(strArray[4]);
+						bool flag3 = !string.IsNullOrEmpty(user);
+						if (flag3)
+						{
+							string nameBySite = BaseInterface.GetNameBySite(user, site);
+							bool flag4 = money > 0;
+							if (flag4)
+							{
+								using (PlayerBussiness playerBussiness = new PlayerBussiness())
+								{
+									int userID = 0;
+									DateTime now = DateTime.Now;
+									bool flag5 = playerBussiness.AddChargeMoney(chargeID, nameBySite, money, str, needMoney, ref userID, ref num, now, userHostAddress, UserID);
+									if (flag5)
+									{
+										num = 0;
+										using (CenterServiceClient centerServiceClient = new CenterServiceClient())
+										{
+											centerServiceClient.ChargeMoney(userID, chargeID);
+											using (PlayerBussiness playerBussiness2 = new PlayerBussiness())
+											{
+												PlayerInfo userSingleByUserId = playerBussiness2.GetUserSingleByUserID(userID);
+												bool flag6 = userSingleByUserId != null;
+												if (flag6)
+												{
+													StaticsMgr.Log(now, nameBySite, userSingleByUserId.Sex, money, str, needMoney);
+												}
+												else
+												{
+													StaticsMgr.Log(now, nameBySite, true, money, str, needMoney);
+													ChargeMoney.log.Error("ChargeMoney_StaticsMgr:Player is null!");
+												}
+											}
+										}
+									}
+								}
+							}
+							else
+							{
+								num = 3;
+							}
+						}
+						else
+						{
+							num = 2;
+						}
+					}
+				}
+				else
+				{
+					num = 5;
+				}
+			}
+			catch (Exception ex)
+			{
+				ChargeMoney.log.Error("ChargeMoney:", ex);
+			}
+			base.Response.Write(num.ToString() + this.Context.Request.UserHostAddress);
+		}
 
-        // Token: 0x06000051 RID: 81 RVA: 0x00004C38 File Offset: 0x00002E38
-        // Sayfa yüklendiğinde çalışır (Ödeme geri çağrısı / Callback olarak çalışır)
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            // Dönüş kodu (Sonuç)
-            // 1: Başlangıç/Hata, 0: Başarılı, 2: Kullanıcı yok, 3: Para tutarı hatalı, 5: IP yetkisiz
-            int resultCode = 1;
+		// Token: 0x0600004F RID: 79 RVA: 0x00004248 File Offset: 0x00002448
+		public static bool ValidLoginIP(string ip)
+		{
+			string getChargeIp = ChargeMoney.GetChargeIP;
+			int num = string.IsNullOrEmpty(getChargeIp) ? 1 : (getChargeIp.Split(new char[]
+			{
+				'|'
+			}).Contains(ip) ? 1 : 0);
+			return num != 0;
+		}
 
-            try
-            {
-                // Önce kodu 10 yapıyor, sonradan durumlar güncellenecek.
-                resultCode = 10;
-
-                string clientIP = this.Context.Request.UserHostAddress;
-
-                // --- 1. GÜVENLİK KONTROLÜ ---
-                // İstek yapan IP, ödeme sisteminin IP listesinde mi?
-                if (!ChargeMoney.ValidLoginIP(clientIP))
-                {
-                    resultCode = 5; // Yetkisiz IP
-                }
-                else
-                {
-                    // --- 2. PARAMETRELERİ ALMA ---
-                    // İçerik (Şifrelenmiş ödeme verisi)
-                    string content = HttpUtility.UrlDecode(base.Request["content"]);
-
-                    // Site (Ödeme platformu bilgisi)
-                    string site = (base.Request["site"] == null) ? "" : HttpUtility.UrlDecode(base.Request["site"]).ToLower();
-
-                    // NOT: Parametre adı "nickname" ancak gelen veri aslında "UserID" (Oyuncu ID'si) olarak int'e çevriliyor.
-                    // Orijinal kodda böyle kullanılmış, uyumluluk için değiştirmedik.
-                    int requestUserID = Convert.ToInt32(HttpUtility.UrlDecode(base.Request["nickname"]));
-
-                    // --- 3. ŞİFRE ÇÖZME VE DOĞRULAMA ---
-                    // Arayüz üzerinden şifreli içeriği çöz
-                    string[] decryptedData = BaseInterface.CreateInterface().UnEncryptCharge(content, ref resultCode, site);
-
-                    // Çözülen verinin uzunluğu kontrolü (Beklenen parametre sayısı: ChargeID, User, Money, Currency, NeedMoney)
-                    if (decryptedData.Length > 5)
-                    {
-                        string chargeID = decryptedData[0]; // İşlem ID
-                        string username = decryptedData[1].Trim(); // Kullanıcı Adı
-                        int money = int.Parse(decryptedData[2]); // Miktar (Game Currency?)
-                        string currency = decryptedData[3]; // Para Birimi (TL, USD vb.)
-                        decimal needMoney = decimal.Parse(decryptedData[4]); // Ödenen Gerçek Para
-
-                        // --- 4. VERİ DOĞRULAMA ---
-                        if (!string.IsNullOrEmpty(username))
-                        {
-                            // Site'ye göre oyuncu adını normalize et (Harf duyarlılığı vb.)
-                            string normalizedUsername = BaseInterface.GetNameBySite(username, site);
-
-                            // Miktar sıfırdan büyük olmalı
-                            if (money > 0)
-                            {
-                                // --- 5. VERİTABANI İŞLEMİ ---
-                                using (PlayerBussiness pb = new PlayerBussiness())
-                                {
-                                    // Yükleme işlemini veritabanına ekle (Başarılıysa true döner)
-                                    int dbUserID = 0;
-                                    DateTime transactionTime = DateTime.Now;
-
-                                    bool success = pb.AddChargeMoney(chargeID, normalizedUsername, money, currency, needMoney, ref dbUserID, ref resultCode, transactionTime, clientIP, requestUserID);
-
-                                    if (success)
-                                    {
-                                        resultCode = 0; // Başarılı!
-
-                                        // --- 6. MERKEZ SERVİSİNE HABER VER ---
-                                        // Oyun sunucusunun/Center'ın oyuncunun parasını güncellemesini sağla
-                                        using (CenterServiceClient serviceClient = new CenterServiceClient())
-                                        {
-                                            serviceClient.ChargeMoney(dbUserID, chargeID);
-
-                                            // --- 7. İSTATİSTİK LOG ---
-                                            using (PlayerBussiness pbLog = new PlayerBussiness())
-                                            {
-                                                PlayerInfo userInfo = pbLog.GetUserSingleByUserID(dbUserID);
-
-                                                if (userInfo != null)
-                                                {
-                                                    // Oyuncu bilgisi varsa, cinsiyet bilgisiyle beraber logla
-                                                    StaticsMgr.Log(transactionTime, normalizedUsername, userInfo.Sex, money, currency, needMoney);
-                                                }
-                                                else
-                                                {
-                                                    // Oyuncu bulunamazsa (rare case), varsayılan bir log at
-                                                    StaticsMgr.Log(transactionTime, normalizedUsername, true, money, currency, needMoney);
-
-                                                    // Hata logla: İşlem başarılı ama kullanıcı info null geldi
-                                                    ChargeMoney.log.Error("ChargeMoney_StaticsMgr:Player is null!");
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                resultCode = 3; // Para tutarı hatalı
-                            }
-                        }
-                        else
-                        {
-                            resultCode = 2; // Kullanıcı adı yok
-                        }
-                    }
-                    // Else: decryptedData.Length <= 5 ise resultCode 'UnEncryptCharge' metodu tarafından zaten set edilmiş demektir.
-                }
-            }
-            catch (Exception ex)
-            {
-                // Genel hata loglama
-                ChargeMoney.log.Error("ChargeMoney işlem hatası:", ex);
-            }
-
-            // --- SONUÇ ---
-            // Yanıt sadece "HataKodu" + "IPAdresi" formatındadır.
-            base.Response.Write(resultCode.ToString() + this.Context.Request.UserHostAddress);
-        }
-
-        // Token: 0x06000052 RID: 82 RVA: 0x00004EE8 File Offset: 0x000030E8
-        // Gelen IP adresinin yetkili ödeme IP'leri arasında olup olmadığını kontrol eder
-        public static bool ValidLoginIP(string ip)
-        {
-            string chargeIPs = ChargeMoney.GetChargeIP;
-
-            // Mantık:
-            // 1. ChargeIP boşsa -> Hepsine izin ver (1).
-            // 2. ChargeIP doluysa -> Gelen IP listede varsa (1), yoksa (0).
-            int isValid = string.IsNullOrEmpty(chargeIPs) ? 1 : (chargeIPs.Split(new char[] { '|' }).Contains(ip) ? 1 : 0);
-
-            return isValid != 0;
-        }
-    }
+		// Token: 0x04000011 RID: 17
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	}
 }

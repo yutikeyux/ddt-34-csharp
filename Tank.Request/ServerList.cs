@@ -11,16 +11,16 @@ using Road.Flash;
 
 namespace Tank.Request
 {
-	// Token: 0x02000071 RID: 113
+	// Token: 0x0200006D RID: 109
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class ServerList : IHttpHandler
 	{
-		// Token: 0x06000201 RID: 513 RVA: 0x0000F1A8 File Offset: 0x0000D3A8
+		// Token: 0x060001FB RID: 507 RVA: 0x0000F70C File Offset: 0x0000D90C
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "Fail!";
 			int total = 0;
 			XElement result = new XElement("Result");
 			try
@@ -39,7 +39,7 @@ namespace Tank.Request
 					}
 				}
 				value = true;
-				message = "Başarılı!";
+				message = "Success!";
 			}
 			catch (Exception ex)
 			{
@@ -53,7 +53,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x1700006F RID: 111
-		// (get) Token: 0x06000202 RID: 514 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x060001FC RID: 508 RVA: 0x0000F8A8 File Offset: 0x0000DAA8
 		public bool IsReusable
 		{
 			get
@@ -62,7 +62,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x04000078 RID: 120
+		// Token: 0x04000072 RID: 114
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

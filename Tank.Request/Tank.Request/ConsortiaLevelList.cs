@@ -19,11 +19,11 @@ namespace Tank.Request
 		public void ProcessRequest(HttpContext context)
 		{
 			context.Response.ContentType = "text/plain";
-			context.Response.Write(ConsortiaLevelList.Bulid(context));
+			context.Response.Write(ConsortiaLevelList.build(context));
 		}
 
 		// Token: 0x06000087 RID: 135 RVA: 0x000059C4 File Offset: 0x00003BC4
-		public static string Bulid(HttpContext context)
+		public static string build(HttpContext context)
 		{
 			bool value = false;
 			string message = "Fail!";

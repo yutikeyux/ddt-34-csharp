@@ -9,10 +9,10 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	// Token: 0x02000080 RID: 128
+	// Token: 0x0200007C RID: 124
 	public class UserNameCheck : Page
 	{
-		// Token: 0x06000244 RID: 580 RVA: 0x00010934 File Offset: 0x0000EB34
+		// Token: 0x0600023E RID: 574 RVA: 0x000110B0 File Offset: 0x0000F2B0
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			int result = 1;
@@ -46,7 +46,7 @@ namespace Tank.Request
 			base.Response.Write(result);
 		}
 
-		// Token: 0x0400008F RID: 143
+		// Token: 0x04000089 RID: 137
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

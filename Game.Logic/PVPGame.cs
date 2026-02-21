@@ -745,7 +745,7 @@ namespace Game.Logic
             ClearWaitTimer();
             ClearDiedPhysicals();
             CheckBox();
-            base.m_turnIndex++;
+            base.TurnIndex++;
             List<Box> newBoxes = CreateBox();
             foreach (Physics item in m_map.GetAllPhysicalSafe())
             {
@@ -766,7 +766,7 @@ namespace Game.Logic
                 SendGameNextTurn(m_currentLiving, this, newBoxes);
                 if (m_currentLiving.IsAttacking)
                 {
-                    AddAction(new WaitLivingAttackingAction(m_currentLiving, base.m_turnIndex, (m_timeType + 20) * 1000));
+                    AddAction(new WaitLivingAttackingAction(m_currentLiving, base.TurnIndex, (m_timeType + 20) * 1000));
                 }
             }
             if (m_currentLiving is Player && (m_currentLiving as Player).PlayerDetail.PlayerCharacter.NickName == ContinuousRunningPlayer)

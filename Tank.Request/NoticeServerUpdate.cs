@@ -10,20 +10,20 @@ using log4net;
 
 namespace Tank.Request
 {
-	// Token: 0x0200005E RID: 94
+	// Token: 0x0200005C RID: 92
 	public class NoticeServerUpdate : Page
 	{
 		// Token: 0x1700005E RID: 94
-		// (get) Token: 0x060001A7 RID: 423 RVA: 0x000035C4 File Offset: 0x000017C4
+		// (get) Token: 0x060001A5 RID: 421 RVA: 0x0000D758 File Offset: 0x0000B958
 		public static string GetAdminIP
 		{
 			get
 			{
-				return ConfigurationManager.AppSettings["AdminIP"];
+				return ConfigurationSettings.AppSettings["AdminIP"];
 			}
 		}
 
-		// Token: 0x060001A8 RID: 424 RVA: 0x0000D510 File Offset: 0x0000B710
+		// Token: 0x060001A6 RID: 422 RVA: 0x0000D77C File Offset: 0x0000B97C
 		public static bool ValidLoginIP(string ip)
 		{
 			string ips = NoticeServerUpdate.GetAdminIP;
@@ -33,7 +33,7 @@ namespace Tank.Request
 			}).Contains(ip);
 		}
 
-		// Token: 0x060001A9 RID: 425 RVA: 0x0000D554 File Offset: 0x0000B754
+		// Token: 0x060001A7 RID: 423 RVA: 0x0000D7C0 File Offset: 0x0000B9C0
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			int result = 2;
@@ -72,7 +72,7 @@ namespace Tank.Request
 			base.Response.Write(result);
 		}
 
-		// Token: 0x060001AA RID: 426 RVA: 0x0000D650 File Offset: 0x0000B850
+		// Token: 0x060001A8 RID: 424 RVA: 0x0000D8BC File Offset: 0x0000BABC
 		private int HandleServerMapUpdate()
 		{
 			string Url = "http://" + HttpContext.Current.Request.Url.Authority.ToString() + "/MapServerList.ashx";
@@ -90,7 +90,7 @@ namespace Tank.Request
 			return result;
 		}
 
-		// Token: 0x0400005F RID: 95
+		// Token: 0x0400005E RID: 94
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

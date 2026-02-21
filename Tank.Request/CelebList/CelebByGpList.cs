@@ -6,18 +6,18 @@ using log4net;
 
 namespace Tank.Request.CelebList
 {
-	// Token: 0x02000093 RID: 147
+	// Token: 0x0200008F RID: 143
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class CelebByGpList : IHttpHandler
 	{
-		// Token: 0x060002AE RID: 686 RVA: 0x00002F06 File Offset: 0x00001106
+		// Token: 0x060002A8 RID: 680 RVA: 0x000129A1 File Offset: 0x00010BA1
 		public void ProcessRequest(HttpContext context)
 		{
 			context.Response.Write(CelebByGpList.Build(context));
 		}
 
-		// Token: 0x060002AF RID: 687 RVA: 0x00011E38 File Offset: 0x00010038
+		// Token: 0x060002A9 RID: 681 RVA: 0x000129B8 File Offset: 0x00010BB8
 		public static string Build(HttpContext context)
 		{
 			bool flag = !csFunction.ValidAdminIP(context.Request.UserHostAddress);
@@ -33,14 +33,14 @@ namespace Tank.Request.CelebList
 			return result;
 		}
 
-		// Token: 0x060002B0 RID: 688 RVA: 0x00011E70 File Offset: 0x00010070
+		// Token: 0x060002AA RID: 682 RVA: 0x000129F0 File Offset: 0x00010BF0
 		public static string Build()
 		{
 			return csFunction.BuildCelebUsers("CelebByGpList", 0, "CelebForUsers");
 		}
 
 		// Token: 0x1700008D RID: 141
-		// (get) Token: 0x060002B1 RID: 689 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x060002AB RID: 683 RVA: 0x00012A14 File Offset: 0x00010C14
 		public bool IsReusable
 		{
 			get
@@ -49,7 +49,7 @@ namespace Tank.Request.CelebList
 			}
 		}
 
-		// Token: 0x040000A8 RID: 168
+		// Token: 0x040000A2 RID: 162
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }

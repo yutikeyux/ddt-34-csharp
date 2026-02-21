@@ -21,11 +21,11 @@ namespace Tank.Request
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class IMFriendsBbs : IHttpHandler
 	{
-		// Token: 0x06000123 RID: 291 RVA: 0x00009908 File Offset: 0x00007B08
+		// Token: 0x06000125 RID: 293 RVA: 0x000096C0 File Offset: 0x000078C0
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "Fail!";
 			XElement result = new XElement("Result");
 			IMFriendsBbs.IAgentFriends friendsClass = new IMFriendsBbs.Normal();
 			StringBuilder friendUserName = new StringBuilder();
@@ -113,7 +113,7 @@ namespace Tank.Request
 						}
 					}
 					value = true;
-					message = "Başarılı!";
+					message = "Success!";
 				}
 				catch (Exception ex2)
 				{
@@ -126,8 +126,8 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x1700003F RID: 63
-		// (get) Token: 0x06000124 RID: 292 RVA: 0x00003828 File Offset: 0x00001A28
+		// Token: 0x17000040 RID: 64
+		// (get) Token: 0x06000126 RID: 294 RVA: 0x00009BF0 File Offset: 0x00007DF0
 		public bool IsReusable
 		{
 			get
@@ -139,17 +139,17 @@ namespace Tank.Request
 		// Token: 0x04000044 RID: 68
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		// Token: 0x0200003F RID: 63
+		// Token: 0x02000098 RID: 152
 		public interface IAgentFriends
 		{
-			// Token: 0x06000127 RID: 295
+			// Token: 0x060002CB RID: 715
 			string FriendsString(string uid);
 		}
 
-		// Token: 0x02000040 RID: 64
+		// Token: 0x02000099 RID: 153
 		public class Normal : IMFriendsBbs.IAgentFriends
 		{
-			// Token: 0x06000128 RID: 296 RVA: 0x00009E38 File Offset: 0x00008038
+			// Token: 0x060002CC RID: 716 RVA: 0x00012DD4 File Offset: 0x00010FD4
 			public string FriendsString(string uid)
 			{
 				try
@@ -180,17 +180,17 @@ namespace Tank.Request
 				return string.Empty;
 			}
 
-			// Token: 0x17000040 RID: 64
-			// (get) Token: 0x06000129 RID: 297 RVA: 0x00009EF8 File Offset: 0x000080F8
+			// Token: 0x17000092 RID: 146
+			// (get) Token: 0x060002CD RID: 717 RVA: 0x00012E94 File Offset: 0x00011094
 			public static string FriendInterface
 			{
 				get
 				{
-					return ConfigurationManager.AppSettings["FriendInterface"];
+					return ConfigurationSettings.AppSettings["FriendInterface"];
 				}
 			}
 
-			// Token: 0x04000045 RID: 69
+			// Token: 0x040000AD RID: 173
 			private string Url;
 		}
 	}

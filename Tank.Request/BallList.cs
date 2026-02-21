@@ -3,94 +3,71 @@ using System.Reflection;
 using System.Web;
 using System.Web.Services;
 using System.Xml.Linq;
-using Bussiness; // İş katmanı kütüphanesi
-using log4net; // Loglama kütüphanesi
-using Road.Flash; // Flash istemcisi yardımcı kütüphanesi
-using SqlDataProvider.Data; // Veritabanı veri yapıları
+using Bussiness;
+using log4net;
+using Road.Flash;
+using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-    // Token: 0x0200000F RID: 15
-    // BallList sınıfı, oyundaki topların listesini almak için kullanılan bir HTTP Handler'dır.
-    [WebService(Namespace = "http://tempuri.org/")]
-    [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-    public class BallList : IHttpHandler
-    {
-        // Log4net ile loglama nesnesi
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	// Token: 0x0200000E RID: 14
+	[WebService(Namespace = "http://tempuri.org/")]
+	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+	public class BallList : IHttpHandler
+	{
+		// Token: 0x06000036 RID: 54 RVA: 0x000038EC File Offset: 0x00001AEC
+		public void ProcessRequest(HttpContext context)
+		{
+			bool flag = csFunction.ValidAdminIP(context.Request.UserHostAddress);
+			if (flag)
+			{
+				context.Response.Write(BallList.Bulid(context));
+			}
+			else
+			{
+				context.Response.Write("IP is not valid!");
+			}
+		}
 
-        // Token: 0x06000039 RID: 57 RVA: 0x00004688 File Offset: 0x00002888
-        // Gelen isteği karşılayan metod
-        public void ProcessRequest(HttpContext context)
-        {
-            // İstek yapanın IP adresi yetkili mi kontrol et
-            if (csFunction.ValidAdminIP(context.Request.UserHostAddress))
-            {
-                // Yetkiliyse veriyi çekip yanıt olarak gönder
-                context.Response.Write(BallList.Build(context));
-            }
-            else
-            {
-                // Yetkili değilse hata mesajı döndür
-                context.Response.Write("Tabi Efendim!");
-            }
-        }
+		// Token: 0x06000037 RID: 55 RVA: 0x00003938 File Offset: 0x00001B38
+		public static string Bulid(HttpContext context)
+		{
+			bool value = false;
+			string message = "Fail!";
+			XElement result = new XElement("Result");
+			try
+			{
+				using (ProduceBussiness db = new ProduceBussiness())
+				{
+					BallInfo[] infos = db.GetAllBall();
+					foreach (BallInfo info in infos)
+					{
+						result.Add(FlashUtils.CreateBallInfo(info));
+					}
+				}
+				value = true;
+				message = "Success!";
+			}
+			catch (Exception ex)
+			{
+				BallList.log.Error("BallList", ex);
+			}
+			result.Add(new XAttribute("value", value));
+			result.Add(new XAttribute("message", message));
+			return csFunction.CreateCompressXml(context, result, "BallList", true);
+		}
 
-        // Token: 0x0600003A RID: 58 RVA: 0x000046D4 File Offset: 0x000028D4
-        // Veritabanından topları (Ball) çekip XML formatına çeviren metod.
-        // Not: Orijinal kodda metot adı "Build" (Build) olarak hatalı yazılmış, sistemin uyumluluğu için böyle bırakıldı.
-        public static string Build(HttpContext context)
-        {
-            bool isSuccess = false;
-            string message = "Hata!";
+		// Token: 0x1700000C RID: 12
+		// (get) Token: 0x06000038 RID: 56 RVA: 0x00003A30 File Offset: 0x00001C30
+		public bool IsReusable
+		{
+			get
+			{
+				return false;
+			}
+		}
 
-            // Kök XML elementini oluştur
-            XElement resultXml = new XElement("Result");
-
-            try
-            {
-                // Veritabanı işlemleri için bağlantı oluştur
-                using (ProduceBussiness db = new ProduceBussiness())
-                {
-                    // Tüm topları veritabanından çek
-                    BallInfo[] allBalls = db.GetAllBall();
-
-                    // Her bir topu döngüye al
-                    foreach (BallInfo ball in allBalls)
-                    {
-                        // Top bilgilerini XML formatına çevirip sonuç listesine ekle
-                        // FlashUtils, Flash istemcilerine uygun XML oluşturmak için kullanılan bir yardımcı sınıftır.
-                        resultXml.Add(FlashUtils.CreateBallInfo(ball));
-                    }
-                }
-
-                isSuccess = true;
-                message = "Başarılı!";
-            }
-            catch (Exception ex)
-            {
-                // Hata oluşursa logla
-                BallList.log.Error("BallList yüklenirken hata:", ex);
-            }
-
-            // XML'e genel durum bilgilerini (value ve message) ekle
-            resultXml.Add(new XAttribute("value", isSuccess));
-            resultXml.Add(new XAttribute("message", message));
-
-            // Sonucu sıkıştırıp (Compress) döndür
-            return csFunction.CreateCompressXml(context, resultXml, "BallList", true);
-        }
-
-        // Token: 0x1700000C RID: 12
-        // (get) Token: 0x0600003B RID: 59 RVA: 0x00003828 File Offset: 0x00001A28
-        // IHttpHandler arayüzünün zorunlu üyesi.
-        // False döndürmek, bu sınıfın bir pool (havuz) içinde tekrar kullanılmayacağını belirtir.
-        public bool IsReusable
-        {
-            get
-            {
-                return false;
-            }
-        }
-    }
+		// Token: 0x0400000D RID: 13
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	}
 }

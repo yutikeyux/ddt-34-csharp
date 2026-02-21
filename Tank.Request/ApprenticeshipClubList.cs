@@ -3,144 +3,96 @@ using System.Reflection;
 using System.Web;
 using System.Web.Services;
 using System.Xml.Linq;
-using Bussiness; // İş katmanı kütüphanesi
-using log4net; // Loglama kütüphanesi
-using Road.Flash; // Flash istemcisi yardımcı kütüphanesi
-using SqlDataProvider.Data; // Veritabanı veri yapıları
+using Bussiness;
+using log4net;
+using Road.Flash;
+using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-    // Token: 0x0200000D RID: 13
-    // ApprenticeshipClubList sınıfı, çıraklık kulübü oyuncularını listelemek için kullanılan bir HTTP Handler'dır.
-    [WebService(Namespace = "http://tempuri.org/")]
-    [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-    public class ApprenticeshipClubList : IHttpHandler
-    {
-        // Log4net ile loglama nesnesi
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	// Token: 0x0200000C RID: 12
+	[WebService(Namespace = "http://tempuri.org/")]
+	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+	public class ApprenticeshipClubList : IHttpHandler
+	{
+		// Token: 0x1700000A RID: 10
+		// (get) Token: 0x0600002E RID: 46 RVA: 0x00002D8D File Offset: 0x00000F8D
+		public bool IsReusable
+		{
+			get
+			{
+				return false;
+			}
+		}
 
-        // Token: 0x1700000A RID: 10
-        // (get) Token: 0x06000031 RID: 49 RVA: 0x0000215A File Offset: 0x0000035A
-        // IHttpHandler arayüzünün zorunlu üyesi.
-        public bool IsReusable
-        {
-            get
-            {
-                return false;
-            }
-        }
+		// Token: 0x0600002F RID: 47 RVA: 0x00003344 File Offset: 0x00001544
+		public void ProcessRequest(HttpContext context)
+		{
+			bool flag = true;
+			string str = "true!";
+			bool flag2 = false;
+			bool flag3 = false;
+			int num = 0;
+			XElement xelement = new XElement("Result");
+			try
+			{
+				int num2 = int.Parse(context.Request["page"]);
+				int.Parse(context.Request["selfid"]);
+				bool.Parse(context.Request["isReturnSelf"]);
+				string str2 = (context.Request["name"] == null) ? "" : context.Request["name"];
+				bool flag4 = bool.Parse(context.Request["appshipStateType"]);
+				bool flag5 = bool.Parse(context.Request["requestType"]);
+				int num3 = flag5 ? 9 : 3;
+				int num4 = (!flag4) ? 1 : 2;
+				int num5 = (!flag4) ? 8 : 10;
+				int num6 = -1;
+				bool flag6 = !flag5 && !flag4;
+				if (flag6)
+				{
+					num4 = 3;
+					num5 = 9;
+				}
+				else
+				{
+					bool flag7 = !flag5 && flag4;
+					if (flag7)
+					{
+						num4 = 4;
+						num5 = 9;
+					}
+				}
+				using (PlayerBussiness playerBussiness = new PlayerBussiness())
+				{
+					bool flag8 = str2 != null && str2.Length > 0;
+					if (flag8)
+					{
+						PlayerInfo userSingleByNickName = playerBussiness.GetUserSingleByNickName(str2);
+						num6 = ((userSingleByNickName != null) ? userSingleByNickName.ID : 0);
+					}
+					PlayerInfo[] playerPage = playerBussiness.GetPlayerPage(num2, num3, ref num, num5, num4, num6, ref flag);
+					for (int i = 0; i < playerPage.Length; i++)
+					{
+						XElement apprenticeShipInfo = FlashUtils.CreateApprenticeShipInfo(playerPage[i]);
+						xelement.Add(apprenticeShipInfo);
+					}
+					flag = true;
+					str = "Success!";
+				}
+			}
+			catch (Exception ex)
+			{
+				ApprenticeshipClubList.log.Error(ex);
+			}
+			xelement.Add(new XAttribute("total", num));
+			xelement.Add(new XAttribute("value", flag));
+			xelement.Add(new XAttribute("message", str));
+			xelement.Add(new XAttribute("isPlayerRegeisted", flag2));
+			xelement.Add(new XAttribute("isSelfPublishEquip", flag3));
+			context.Response.ContentType = "text/plain";
+			context.Response.Write(xelement.ToString(false));
+		}
 
-        // Token: 0x06000032 RID: 50 RVA: 0x00004124 File Offset: 0x00002324
-        // Gelen isteği karşılayan ve listeyi oluşturan metod
-        public void ProcessRequest(HttpContext context)
-        {
-            // --- DEĞİŞKEN TANIMLAMALARI ---
-            bool isSuccess = false;
-            string message = "true!"; // Varsayılan hata mesajı
-            bool isPlayerRegistered = false; // XML'de kullanılacak ama mantıkta değeri değişmeyen bayrak
-            bool isSelfPublishEquip = false; // XML'de kullanılacak ama mantıkta değeri değişmeyen bayrak
-
-            // Veritabanı sorgusunda kullanılacak filtreleme ve sayfalama değişkenleri
-            int queryType = 0;
-            int queryFilter = 0;
-            int searchUserID = -1;
-
-            int totalCount = 0; // Toplam kayıt sayısı
-            XElement resultXml = new XElement("Result");
-
-            try
-            {
-                // --- 1. PARAMETRELERİ ALMA ---
-                int page = int.Parse(context.Request["page"]); // Hangi sayfa isteniyor
-
-                // Aşağıdaki parametreler orijinal kodda parse edilmiş ancak kullanılmamış.
-                // Muhtemelen sadece parametre doğrulama (boş mu/dolu mu) amacıyla parse edilmiş olabilir.
-                int.Parse(context.Request["selfid"]); // Kendi ID'si (Kullanılmıyor)
-                bool.Parse(context.Request["isReturnSelf"]); // Kendine dönmek mi (Kullanılmıyor)
-
-                // Aranan kullanıcı ismi (Ad filtresi)
-                string searchName = (context.Request["name"] == null) ? "" : context.Request["name"];
-
-                // Filtreleme bayrakları
-                bool appshipStateType = bool.Parse(context.Request["appshipStateType"]);
-                bool requestType = bool.Parse(context.Request["requestType"]);
-
-                // --- 2. SORGU PARAMETRELERİNİ HESAPLAMA ---
-                // Sayfa büyüklüğü: requestType true ise 9, değilse 3
-                int pageSize = requestType ? 9 : 3;
-
-                // Başlangıç filtre değerleri (requestType true varsayımı ile)
-                queryType = 10;
-                queryFilter = 2;
-
-                if (!appshipStateType)
-                {
-                    queryType = 8;
-                    queryFilter = 1;
-                }
-
-                // requestType false ise mantık değişiyor
-                if (!requestType)
-                {
-                    if (!appshipStateType)
-                    {
-                        // !requestType && !appshipStateType durumu
-                        queryFilter = 3;
-                        queryType = 9;
-                    }
-                    else
-                    {
-                        // !requestType && appshipStateType durumu
-                        queryFilter = 4;
-                        queryType = 9;
-                    }
-                }
-
-                // --- 3. VERİTABANI İŞLEMLERİ ---
-                using (PlayerBussiness pb = new PlayerBussiness())
-                {
-                    // Eğer arama yapılacaksa (isim verildi), önce ID'sini bul
-                    if (!string.IsNullOrEmpty(searchName))
-                    {
-                        PlayerInfo user = pb.GetUserSingleByNickName(searchName);
-                        searchUserID = (user != null) ? user.ID : 0;
-                    }
-
-                    // Oyuncuları sayfalama (Paging) mantığı ile çekiyoruz
-                    // Not: isSuccess değişkeni orijinal kodda 'ref' olarak buraya gönderiliyor.
-                    // Ancak hemen ardından 'true' atanıyor, dolayısıyla fonksiyonun ne döndürdüğü
-                    // orijinal kodda görmezden gelinmiş. Bu yüzden yine 'ref isSuccess' gönderiyoruz.
-                    PlayerInfo[] playerList = pb.GetPlayerPage(page, pageSize, ref totalCount, queryType, queryFilter, searchUserID, ref isSuccess);
-
-                    // Çekilen her oyuncuyu XML'e dönüştürüp listeye ekle
-                    for (int i = 0; i < playerList.Length; i++)
-                    {
-                        XElement playerNode = FlashUtils.CreateApprenticeShipInfo(playerList[i]);
-                        resultXml.Add(playerNode);
-                    }
-
-                    isSuccess = true;
-                    message = "Başarılı!";
-                }
-            }
-            catch (Exception ex)
-            {
-                // Hata logla
-                ApprenticeshipClubList.log.Error(ex);
-            }
-
-            // --- 4. YANITI HAZIRLAMA ---
-            resultXml.Add(new XAttribute("total", totalCount));
-            resultXml.Add(new XAttribute("value", isSuccess));
-            resultXml.Add(new XAttribute("message", message));
-
-            // Not: Orijinal kodda bu iki değişken asla true yapılmıyor.
-            // Flash istemcisi bu attribute'ları bekliyor olabilir bu yüzden ekliyoruz.
-            resultXml.Add(new XAttribute("isPlayerRegeisted", isPlayerRegistered)); // Yazım hatası 'Regeisted' korundu
-            resultXml.Add(new XAttribute("isSelfPublishEquip", isSelfPublishEquip));
-
-            context.Response.ContentType = "text/plain";
-            context.Response.Write(resultXml.ToString(false));
-        }
-    }
+		// Token: 0x0400000B RID: 11
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	}
 }

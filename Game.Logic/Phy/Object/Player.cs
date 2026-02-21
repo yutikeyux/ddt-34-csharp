@@ -2863,8 +2863,8 @@ namespace Game.Logic.Phy.Object
                     if (fightBuffByType != null && m_player.UsePayBuff(BuffType.Save_Life))
                     {
                         int num = base.MaxBlood / 100 * fightBuffByType.Value;
-                        AddBlood(num);
-                        m_game.method_53(this, LanguageMgr.GetTranslation("GameServer.PayBuff.ReLife.UseNotice", PlayerDetail.PlayerCharacter.NickName, num));
+                       AddBlood(num);
+                        m_game.method_53(this, LanguageMgr.GetTranslation("Oyuncu " + PlayerDetail.PlayerCharacter.NickName + " Kurtarma Samanını kullanarak " + num + " can kazandı!"));
                     }
                 }
             }

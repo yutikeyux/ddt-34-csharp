@@ -1,113 +1,133 @@
+﻿using Bussiness;
+using Road.Flash;
+using SqlDataProvider.Data;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Web;
 using System.Web.Services;
 using System.Xml.Linq;
-using Bussiness;
-using log4net;
-using Road.Flash;
-using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	[WebService(Namespace = "http://tempuri.org/")]
-	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-	public class GMActivityInfo : IHttpHandler
-	{
-		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    [WebService(Namespace = "http://tempuri.org/")]
+    [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+    public class GMActivityInfo : IHttpHandler
+    {
+        public bool IsReusable => false;
 
-		public bool IsReusable => false;
+        public void ProcessRequest(HttpContext context)
+        {
+            if (csFunction.ValidAdminIP(context.Request.UserHostAddress))
+            {
+                context.Response.Write(Bulid(context));
+            }
+            else
+            {
+                context.Response.Write("IP is not valid!");
+            }
+        }
 
-		public void ProcessRequest(HttpContext context)
-		{
-			if (csFunction.ValidAdminIP(context.Request.UserHostAddress))
-			{
-				context.Response.Write(Bulid(context));
-			}
-			else
-			{
-				context.Response.Write("IP is not valid!");
-			}
-		}
+        public static string Bulid(HttpContext context)
+        {
+            XElement result = new XElement("Result");
+            string message = "Fail!";
+            string success = "false";
 
-		public static string Bulid(HttpContext context)
-		{
-			//IL_001e: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0024: Expected O, but got Unknown
-			XElement xElement = new XElement("Result");
-			string value = "Fail!";
-			string value2 = "false";
-			try
-			{
-				ProduceBussiness val = new ProduceBussiness();
-				try
-				{
-					GmActivityInfo[] allGmActivity = val.GetAllGmActivity();
-					GmGiftInfo[] allGmGift = val.GetAllGmGift();
-					GmActiveConditionInfo[] allGmActiveCondition = val.GetAllGmActiveCondition();
-					GmActiveRewardInfo[] allGmActiveReward = val.GetAllGmActiveReward();
-					GmActivityInfo[] array = allGmActivity;
-					foreach (GmActivityInfo activityInfo in array)
-					{
-						XElement xElement2 = new XElement("ActiveInfo");
-						XElement content = FlashUtils.CreateGMActivityInfo(activityInfo);
-						XElement xElement3 = new XElement("ActiveGiftBag");
-						foreach (GmGiftInfo gmGiftInfo in allGmGift.Where((GmGiftInfo s) => s.activityId == activityInfo.activityId))
-						{
-							XElement content2 = FlashUtils.CreateGMGiftInfo(gmGiftInfo);
-							XElement xElement4 = new XElement("ActiveCondition");
-							XElement xElement5 = new XElement("ActiveReward");
-							bool flag = false;
-							bool flag2 = false;
-							foreach (GmActiveConditionInfo item in allGmActiveCondition.Where((GmActiveConditionInfo s) => s.giftbagId == gmGiftInfo.giftbagId))
-							{
-								xElement4.Add(FlashUtils.CreateGMConditionInfo(item));
-								if (!flag2)
-								{
-									flag2 = true;
-								}
-							}
-							foreach (GmActiveRewardInfo item2 in allGmActiveReward.Where((GmActiveRewardInfo s) => s.giftId == gmGiftInfo.giftbagId))
-							{
-								xElement5.Add(FlashUtils.CreateGMRewardInfo(item2));
-								if (!flag)
-								{
-									flag = true;
-								}
-							}
-							xElement3.Add(content2);
-							if (flag2)
-							{
-								xElement3.Add(xElement4);
-							}
-							if (flag)
-							{
-								xElement3.Add(xElement5);
-							}
-						}
-						xElement2.Add(content);
-						xElement2.Add(xElement3);
-						xElement.Add(xElement2);
-					}
-					value = "Success!";
-					value2 = "true";
-				}
-				finally
-				{
-					((IDisposable)val)?.Dispose();
-				}
-			}
-			catch (Exception ex)
-			{
-				if (Log.IsErrorEnabled)
-				{
-					Log.Error((object)"GMActivityInfo create error", ex);
-				}
-			}
-			xElement.Add(new XAttribute("value", value2));
-			xElement.Add(new XAttribute("message", value));
-			return csFunction.CreateCompressXml(context, xElement, "GMActivityInfo", isCompress: true);
-		}
-	}
+            try
+            {
+                using (var produceBussiness = new ProduceBussiness())
+                {
+                    // Tüm verileri tek seferde al
+                    var allActivities = produceBussiness.GetAllGmActivity();
+                    var allGifts = produceBussiness.GetAllGmGift();
+                    var allConditions = produceBussiness.GetAllGmActiveCondition();
+                    var allRewards = produceBussiness.GetAllGmActiveReward();
+
+                    // Her aktivite için XML oluştur
+                    foreach (var activity in allActivities)
+                    {
+                        var activityElement = CreateActivityElement(activity, allGifts, allConditions, allRewards);
+                        result.Add(activityElement);
+                    }
+
+                    message = "Success!";
+                    success = "true";
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Log.IsErrorEnabled)
+                {
+                    Log.Error("GMActivityInfo create error", ex);
+                }
+            }
+
+            result.Add(new XAttribute("value", success));
+            result.Add(new XAttribute("message", message));
+
+            return csFunction.CreateCompressXml(context, result, "GMActivityInfo", true);
+        }
+
+        private static XElement CreateActivityElement(
+            GmActivityInfo activity,
+            IEnumerable<GmGiftInfo> allGifts,
+            IEnumerable<GmActiveConditionInfo> allConditions,
+            IEnumerable<GmActiveRewardInfo> allRewards)
+        {
+            var activityElement = new XElement("ActiveInfo");
+            activityElement.Add(FlashUtils.CreateGMActivityInfo(activity));
+
+            var giftBagElement = new XElement("ActiveGiftBag");
+
+            // Aktiviteye ait hediyeleri filtrele
+            var activityGifts = allGifts.Where(g => g.activityId == activity.activityId).ToList();
+
+            foreach (var gift in activityGifts)
+            {
+                var giftElement = CreateGiftElement(gift, allConditions, allRewards);
+                giftBagElement.Add(giftElement);
+            }
+
+            activityElement.Add(giftBagElement);
+            return activityElement;
+        }
+
+        private static XElement CreateGiftElement(
+            GmGiftInfo gift,
+            IEnumerable<GmActiveConditionInfo> allConditions,
+            IEnumerable<GmActiveRewardInfo> allRewards)
+        {
+            var giftElement = FlashUtils.CreateGMGiftInfo(gift);
+
+            // Hediyeye ait koşulları ekle
+            var giftConditions = allConditions.Where(c => c.giftbagId == gift.giftbagId);
+            if (giftConditions.Any())
+            {
+                var conditionsElement = new XElement("ActiveCondition");
+                foreach (var condition in giftConditions)
+                {
+                    conditionsElement.Add(FlashUtils.CreateGMConditionInfo(condition));
+                }
+                giftElement.Add(conditionsElement);
+            }
+
+            // Hediyeye ait ödülleri ekle (DÜZELTİLDİ: giftbagId == giftId)
+            var giftRewards = allRewards.Where(r => r.giftId == gift.giftbagId);
+            if (giftRewards.Any())
+            {
+                var rewardsElement = new XElement("ActiveReward");
+                foreach (var reward in giftRewards)
+                {
+                    rewardsElement.Add(FlashUtils.CreateGMRewardInfo(reward));
+                }
+                giftElement.Add(rewardsElement);
+            }
+
+            return giftElement;
+        }
+
+        private static readonly log4net.ILog Log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    }
 }

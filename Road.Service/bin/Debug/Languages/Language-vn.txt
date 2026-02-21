@@ -4082,6 +4082,10 @@ SpaRoomLoginConfirmHandler.NoMoney:Kuponunuz yetersiz.
 UserBagFull.Content:Sırt çantası dolu ve öğeler geçici olarak posta kutusunda saklanacak!
 UserBagFull.Title:Sırt çantası dolu.
 SanXiaoHandler.Title1:Eleme ustası ödülleri
+GamePlayer.Msg1 = Hesabına {0} kupon eklendi. Toplam kupon: {1}
+GamePlayer.Msg2 = {0} kupon harcandı. Kalan kupon: {1}
+GamePlayer.Msg8 = Yeterli kuponun yok. Mevcut kupon: {0}
+GamePlayer.Msg9 = Kupon sayacı maksimum değere ulaştı, daha fazla kupon eklenemiyor.
 SanXiaoHandler.Content1:Eleme ustası ödülleri için tebrikler. Kazanılan:
 Center.Server.ServerClient.WorldBossClose:Düya BOSS<{0}> kapandı.
 GameServerScript.AI.NPC.moban.msg111:<span class='red'>Storm DDT'ye hoş geldiniz, iyi oyunlar dilerim.</span>

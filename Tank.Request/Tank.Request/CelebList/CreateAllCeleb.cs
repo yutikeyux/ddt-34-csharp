@@ -16,29 +16,29 @@ namespace Tank.Request.CelebList
 			bool flag = csFunction.ValidAdminIP(context.Request.UserHostAddress);
 			if (flag)
 			{
-				StringBuilder bulid = new StringBuilder();
-				bulid.Append(CelebByGpList.Build());
-				bulid.Append(CelebByDayGPList.Build());
-				bulid.Append(CelebByWeekGPList.Build());
-				bulid.Append(CelebByOfferList.Build());
-				bulid.Append(CelebByDayOfferList.Build());
-				bulid.Append(CelebByWeekOfferList.Build());
-				bulid.Append(CelebByDayFightPowerList.Build());
-				bulid.Append(CelebByConsortiaRiches.Build());
-				bulid.Append(CelebByConsortiaDayRiches.Build());
-				bulid.Append(CelebByConsortiaWeekRiches.Build());
-				bulid.Append(CelebByConsortiaHonor.Build());
-				bulid.Append(CelebByConsortiaDayHonor.Build());
-				bulid.Append(CelebByConsortiaWeekHonor.Build());
-				bulid.Append(CelebByConsortiaLevel.Build());
-				bulid.Append(CelebByDayBestEquip.Build());
-				bulid.Append(celebbyconsortiafightpower.Build());
+				StringBuilder build = new StringBuilder();
+				build.Append(CelebByGpList.Build());
+				build.Append(CelebByDayGPList.Build());
+				build.Append(CelebByWeekGPList.Build());
+				build.Append(CelebByOfferList.Build());
+				build.Append(CelebByDayOfferList.Build());
+				build.Append(CelebByWeekOfferList.Build());
+				build.Append(CelebByDayFightPowerList.Build());
+				build.Append(CelebByConsortiaRiches.Build());
+				build.Append(CelebByConsortiaDayRiches.Build());
+				build.Append(CelebByConsortiaWeekRiches.Build());
+				build.Append(CelebByConsortiaHonor.Build());
+				build.Append(CelebByConsortiaDayHonor.Build());
+				build.Append(CelebByConsortiaWeekHonor.Build());
+				build.Append(CelebByConsortiaLevel.Build());
+				build.Append(CelebByDayBestEquip.Build());
+				build.Append(celebbyconsortiafightpower.Build());
 				context.Response.ContentType = "text/plain";
-				context.Response.Write(bulid.ToString());
+				context.Response.Write(build.ToString());
 			}
 			else
 			{
-				context.Response.Write("IP is not valid!" + context.Request.UserHostAddress);
+				context.Response.Write("IP loglarda xD!" + context.Request.UserHostAddress);
 			}
 		}
 

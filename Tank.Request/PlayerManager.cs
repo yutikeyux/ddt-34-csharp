@@ -7,23 +7,23 @@ using log4net;
 
 namespace Tank.Request
 {
-	// Token: 0x02000066 RID: 102
+	// Token: 0x02000064 RID: 100
 	public class PlayerManager
 	{
-		// Token: 0x060001D0 RID: 464 RVA: 0x00002A3E File Offset: 0x00000C3E
+		// Token: 0x060001CE RID: 462 RVA: 0x0000E295 File Offset: 0x0000C495
 		public static void Setup()
 		{
-			PlayerManager.m_timeout = int.Parse(ConfigurationManager.AppSettings["LoginSessionTimeOut"]);
+			PlayerManager.m_timeout = int.Parse(ConfigurationSettings.AppSettings["LoginSessionTimeOut"]);
 			PlayerManager.m_timer = new Timer(new TimerCallback(PlayerManager.CheckTimerCallback), null, 0, 60000);
 		}
 
-		// Token: 0x060001D1 RID: 465 RVA: 0x0000DE68 File Offset: 0x0000C068
+		// Token: 0x060001CF RID: 463 RVA: 0x0000E2D0 File Offset: 0x0000C4D0
 		protected static bool CheckTimeOut(DateTime dt)
 		{
 			return (DateTime.Now - dt).TotalMinutes > (double)PlayerManager.m_timeout;
 		}
 
-		// Token: 0x060001D2 RID: 466 RVA: 0x0000DE98 File Offset: 0x0000C098
+		// Token: 0x060001D0 RID: 464 RVA: 0x0000E300 File Offset: 0x0000C500
 		private static void CheckTimerCallback(object state)
 		{
 			object obj = PlayerManager.sys_obj;
@@ -45,7 +45,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x060001D3 RID: 467 RVA: 0x0000DF8C File Offset: 0x0000C18C
+		// Token: 0x060001D1 RID: 465 RVA: 0x0000E3F4 File Offset: 0x0000C5F4
 		public static void Add(string name, string pass)
 		{
 			object obj = PlayerManager.sys_obj;
@@ -70,7 +70,7 @@ namespace Tank.Request
 			}
 		}
 
-		// Token: 0x060001D4 RID: 468 RVA: 0x0000E054 File Offset: 0x0000C254
+		// Token: 0x060001D2 RID: 466 RVA: 0x0000E4BC File Offset: 0x0000C6BC
 		public static bool Login(string name, string pass)
 		{
 			object obj = PlayerManager.sys_obj;
@@ -99,7 +99,7 @@ namespace Tank.Request
 			return result;
 		}
 
-		// Token: 0x060001D5 RID: 469 RVA: 0x0000E0E4 File Offset: 0x0000C2E4
+		// Token: 0x060001D3 RID: 467 RVA: 0x0000E54C File Offset: 0x0000C74C
 		public static bool Update(string name, string pass)
 		{
 			object obj = PlayerManager.sys_obj;
@@ -116,7 +116,7 @@ namespace Tank.Request
 			return false;
 		}
 
-		// Token: 0x060001D6 RID: 470 RVA: 0x0000E164 File Offset: 0x0000C364
+		// Token: 0x060001D4 RID: 468 RVA: 0x0000E5CC File Offset: 0x0000C7CC
 		public static bool Remove(string name)
 		{
 			object obj = PlayerManager.sys_obj;
@@ -128,7 +128,7 @@ namespace Tank.Request
 			return result;
 		}
 
-		// Token: 0x060001D7 RID: 471 RVA: 0x0000E1B0 File Offset: 0x0000C3B0
+		// Token: 0x060001D5 RID: 469 RVA: 0x0000E618 File Offset: 0x0000C818
 		public static bool GetByUserIsFirst(string name)
 		{
 			object obj = PlayerManager.sys_obj;
@@ -143,34 +143,34 @@ namespace Tank.Request
 			return false;
 		}
 
-		// Token: 0x04000068 RID: 104
+		// Token: 0x04000067 RID: 103
 		private static Dictionary<string, PlayerManager.PlayerData> m_players = new Dictionary<string, PlayerManager.PlayerData>();
 
-		// Token: 0x04000069 RID: 105
+		// Token: 0x04000068 RID: 104
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		// Token: 0x0400006A RID: 106
+		// Token: 0x04000069 RID: 105
 		private static object sys_obj = new object();
 
-		// Token: 0x0400006B RID: 107
+		// Token: 0x0400006A RID: 106
 		private static Timer m_timer;
 
-		// Token: 0x0400006C RID: 108
+		// Token: 0x0400006B RID: 107
 		private static int m_timeout = 30;
 
-		// Token: 0x02000067 RID: 103
+		// Token: 0x0200009A RID: 154
 		private class PlayerData
 		{
-			// Token: 0x0400006D RID: 109
+			// Token: 0x040000AE RID: 174
 			public string Name;
 
-			// Token: 0x0400006E RID: 110
+			// Token: 0x040000AF RID: 175
 			public string Pass;
 
-			// Token: 0x0400006F RID: 111
+			// Token: 0x040000B0 RID: 176
 			public DateTime Date;
 
-			// Token: 0x04000070 RID: 112
+			// Token: 0x040000B1 RID: 177
 			public int Count;
 		}
 	}

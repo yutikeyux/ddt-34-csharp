@@ -8,30 +8,30 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request
 {
-	// Token: 0x02000074 RID: 116
+	// Token: 0x02000070 RID: 112
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class ShopItemList : IHttpHandler
 	{
-		// Token: 0x0600020C RID: 524 RVA: 0x0000F5BC File Offset: 0x0000D7BC
+		// Token: 0x06000206 RID: 518 RVA: 0x0000FB74 File Offset: 0x0000DD74
 		public void ProcessRequest(HttpContext context)
 		{
 			bool flag = csFunction.ValidAdminIP(context.Request.UserHostAddress);
 			if (flag)
 			{
-				context.Response.Write(ShopItemList.Build(context));
+				context.Response.Write(ShopItemList.Bulid(context));
 			}
 			else
 			{
-				context.Response.Write("Tabi Efendim!");
+				context.Response.Write("IP is not valid!");
 			}
 		}
 
-		// Token: 0x0600020D RID: 525 RVA: 0x0000F608 File Offset: 0x0000D808
-		public static string Build(HttpContext context)
+		// Token: 0x06000207 RID: 519 RVA: 0x0000FBC0 File Offset: 0x0000DDC0
+		public static string Bulid(HttpContext context)
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "Fail!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -45,7 +45,7 @@ namespace Tank.Request
 					}
 					result.Add(Store);
 					value = true;
-					message = "Başarılı!";
+					message = "Success!";
 				}
 			}
 			catch
@@ -57,7 +57,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x17000072 RID: 114
-		// (get) Token: 0x0600020E RID: 526 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x06000208 RID: 520 RVA: 0x0000FCC0 File Offset: 0x0000DEC0
 		public bool IsReusable
 		{
 			get

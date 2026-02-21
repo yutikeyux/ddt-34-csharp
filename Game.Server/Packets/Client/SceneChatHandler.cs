@@ -20,246 +20,125 @@ namespace Game.Server.Packets.Client
     [PacketHandler(19, "用户场景聊天")]
     public class SceneChatHandler : IPacketHandler
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-        // Python Discord bridge URL (Oyun -> Discord)
-        private static readonly string DISCORD_BRIDGE_URL =
-            ConfigurationManager.AppSettings["DiscordBridgeUrl"] ?? "http://31.11.64.28:9600/game/chat";
-
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             packet.ClientID = client.Player.PlayerCharacter.ID;
-
-            byte channel = packet.ReadByte();       // b
-            bool teamFlag = packet.ReadBoolean();   // flag
-            packet.ReadString();                    // sender name (client'dan gelen, çöpe)
-            string text = packet.ReadString();      // mesaj
-
-            // Ortak paket (çoğu channel aynı formatla gidiyor)
-            GSPacketIn gsp = new GSPacketIn(19, client.Player.PlayerCharacter.ID);
-            gsp.WriteInt(client.Player.ZoneId);
-            gsp.WriteByte(channel);
-            gsp.WriteBoolean(teamFlag);
-            gsp.WriteString(client.Player.PlayerCharacter.NickName);
-            gsp.WriteString(text);
-
-            // Match odası (battle server)
-            if (client.Player.CurrentRoom != null
-                && client.Player.CurrentRoom.RoomType == eRoomType.Match
-                && client.Player.CurrentRoom.Game != null)
+            byte b = packet.ReadByte();
+            bool flag = packet.ReadBoolean();
+            packet.ReadString();
+            string text = packet.ReadString();
+            GSPacketIn gSPacketIn = new GSPacketIn(19, client.Player.PlayerCharacter.ID);
+            gSPacketIn.WriteInt(client.Player.ZoneId);
+            gSPacketIn.WriteByte(b);
+            gSPacketIn.WriteBoolean(flag);
+            gSPacketIn.WriteString(client.Player.PlayerCharacter.NickName);
+            gSPacketIn.WriteString(text);
+            int result;
+            if (client.Player.CurrentRoom != null && client.Player.CurrentRoom.RoomType == eRoomType.Match && client.Player.CurrentRoom.Game != null)
             {
                 if (komutlar(client, packet, text))
+                {
                     return 1;
-
-                client.Player.CurrentRoom.BattleServer.Server.SendChatMessage(text, client.Player, teamFlag);
-                return 1;
+                }
+                client.Player.CurrentRoom.BattleServer.Server.SendChatMessage(text, client.Player, flag);
+                result = 1;
             }
-
-            // Genel ban kontrol (senin kodun)
-            if (client.Player.PlayerCharacter.GoXu == 313131 || client.Player.PlayerCharacter.IsBanChat)
+            else
             {
-                client.Out.SendMessage(eMessageType.ChatERROR, "Konuşman yasaklandı.");
-                return 0;
-            }
-
-            switch (channel)
-            {
-                // =========================
-                // CONSORTIA CHAT
-                // =========================
-                case 3:
-                    {
-                        if (komutlar(client, packet, text))
-                            return 1;
-
-                        if (client.Player.PlayerCharacter.ConsortiaID == 0)
-                            return 0;
-
-                        if (client.Player.PlayerCharacter.IsBanChat)
+                if (client.Player.PlayerCharacter.GoXu == 445566)
+                {
+                    client.Out.SendMessage(eMessageType.ChatERROR, "Konuşman yasaklandı.");
+                    return 0;
+                }
+                switch (b)
+                {
+                    case 3:
                         {
-                            client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("ConsortiaChatHandler.IsBanChat"));
-                            return 1;
-                        }
-
-                        // Guild chat -> Discord (opsiyonel)
-                        if (!text.StartsWith("!"))
-                        {
-                            PythonChatBridge.Send(
-                                client.Player.PlayerCharacter.NickName,
-                                client.Player.PlayerCharacter.Grade,
-                                $"[{client.Player.PlayerCharacter.ConsortiaName}] {text}",
-                                0,
-                                null
-                            );
-                        }
-
-                        gsp.WriteInt(client.Player.PlayerCharacter.ConsortiaID);
-
-                        GamePlayer[] consPlayers = WorldMgr.GetAllPlayers();
-                        foreach (GamePlayer gp in consPlayers)
-                        {
-                            if (gp.PlayerCharacter.ConsortiaID == client.Player.PlayerCharacter.ConsortiaID
-                                && !gp.IsBlackFriend(client.Player.PlayerCharacter.ID))
-                            {
-                                gp.Out.SendTCP(gsp);
-                            }
-                        }
-
-                        return 1;
-                    }
-
-                // =========================
-                // CHURCH (MARRY ROOM) CHAT
-                // =========================
-                case 9:
-                    {
-                        if (komutlar(client, packet, text))
-                            return 1;
-
-                        if (client.Player.CurrentMarryRoom == null)
-                            return 1;
-
-                        client.Player.CurrentMarryRoom.SendToAllForScene(gsp, client.Player.MarryMap);
-                        return 1;
-                    }
-
-                // ============================================================
-                // DISCORD CHAT CHANNEL (ID: 16)
-                // ============================================================
-                case 16:
-                    {
-                        // Komut kontrolü
-                        if (komutlar(client, packet, text))
-                            return 1;
-
-                        // Ban kontrolü (yukarıda var ama burada da kalsın istedin)
-                        if (client.Player.PlayerCharacter.GoXu == 313131 || client.Player.PlayerCharacter.IsBanChat)
-                        {
-                            client.Out.SendMessage(eMessageType.ChatERROR, "Konuşman yasaklandı.");
-                            return 1;
-                        }
-
-                        // 1) OYUNDAN -> DISCORD (Async)
-                        if (!string.IsNullOrEmpty(text) && !text.StartsWith("!"))
-                        {
-                            string nick = client.Player.PlayerCharacter.NickName;
-                            int level = client.Player.PlayerCharacter.Grade;
-                            string msg = text;
-
-                            System.Threading.Tasks.Task.Run(() =>
-                            {
-                                try
-                                {
-                                    using (var wc = new System.Net.WebClient())
-                                    {
-                                        wc.Headers[System.Net.HttpRequestHeader.ContentType] = "application/json";
-
-                                        var payload = new
-                                        {
-                                            username = nick,
-                                            level = level,
-                                            message = msg
-                                        };
-
-                                        string json = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
-
-                                        // Python webhook
-                                        wc.UploadString(DISCORD_BRIDGE_URL, "POST", json);
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    // Servis/road ortamında log4net daha iyi
-                                    log.Error("[Discord Bridge Error] Oyun->Discord gönderilemedi.", ex);
-                                }
-                            });
-                        }
-
-                        // 2) OYUN İÇİ BROADCAST (Discord channel olarak görünsün)
-                        GSPacketIn dcPkg = new GSPacketIn(19, client.Player.PlayerCharacter.ID);
-                        dcPkg.WriteInt(client.Player.ZoneId);
-                        dcPkg.WriteByte(16);        // Discord kanal id
-                        dcPkg.WriteBoolean(false);  // isGM
-                        dcPkg.WriteString(client.Player.PlayerCharacter.NickName);
-                        dcPkg.WriteString(text);
-
-                        foreach (GamePlayer p in WorldMgr.GetAllPlayers())
-                        {
-                            if (!p.IsBlackFriend(client.Player.PlayerCharacter.ID))
-                            {
-                                p.Out.SendTCP(dcPkg);
-                            }
-                        }
-
-                        client.Player.LastChatTime = DateTime.Now;
-                        return 1;
-                    }
-
-                // =========================
-                // DEFAULT / CURRENT ROOM / LOBBY
-                // =========================
-                default:
-                    {
-                        // Oda içi chat
-                        if (client.Player.CurrentRoom != null)
-                        {
-                            if (teamFlag)
-                                client.Player.CurrentRoom.SendToTeam(gsp, client.Player.CurrentRoomTeam, client.Player);
-                            else
-                                client.Player.CurrentRoom.SendToAll(gsp);
-
                             if (komutlar(client, packet, text))
-                                return 1;
-
-                            return 1;
-                        }
-
-                        // Oda yoksa komut check
-                        if (komutlar(client, packet, text))
-                            return 1;
-
-                        // b == 5 için 1 sn rate limit (senin kod)
-                        if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(1.0), DateTime.Now) > 0 && channel == 5)
-                            return 1;
-
-                        // team flag lobbydeyse ignore
-                        if (teamFlag)
-                            return 1;
-
-                        // genel rate limit (3 sn)
-                        if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(3.0), DateTime.Now) > 0)
-                        {
-                            client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("SceneChatHandler.Fast"));
-                            return 1;
-                        }
-
-                        // Lobi (b==0) Discord’a gönder
-                        if (channel == 0 && !text.StartsWith("!"))
-                        {
-                            PythonChatBridge.Send(
-                                client.Player.PlayerCharacter.NickName,
-                                client.Player.PlayerCharacter.Grade,
-                                $"[Lobi] {text}",
-                                0,
-                                null
-                            );
-                        }
-
-                        client.Player.LastChatTime = DateTime.Now;
-
-                        // Lobbyde olan herkese yolla
-                        GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
-                        foreach (GamePlayer gp in allPlayers)
-                        {
-                            if (gp.CurrentRoom == null && gp.CurrentMarryRoom == null && !gp.IsBlackFriend(client.Player.PlayerCharacter.ID))
                             {
-                                gp.Out.SendTCP(gsp);
+                                return 1;
                             }
+                            if (client.Player.PlayerCharacter.ConsortiaID == 0)
+                            {
+                                return 0;
+                            }
+                            if (client.Player.PlayerCharacter.IsBanChat)
+                            {
+                                client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("ConsortiaChatHandler.IsBanChat"));
+                                return 1;
+                            }
+                            gSPacketIn.WriteInt(client.Player.PlayerCharacter.ConsortiaID);
+                            GamePlayer[] allPlayers2 = WorldMgr.GetAllPlayers();
+                            foreach (GamePlayer gamePlayer2 in allPlayers2)
+                            {
+                                if (gamePlayer2.PlayerCharacter.ConsortiaID == client.Player.PlayerCharacter.ConsortiaID && !gamePlayer2.IsBlackFriend(client.Player.PlayerCharacter.ID))
+                                {
+                                    gamePlayer2.Out.SendTCP(gSPacketIn);
+                                }
+                            }
+                            break;
                         }
-
-                        return 1;
-                    }
+                    case 9:
+                        if (komutlar(client, packet, text))
+                        {
+                            return 1;
+                        }
+                        if (client.Player.CurrentMarryRoom == null)
+                        {
+                            return 1;
+                        }
+                        client.Player.CurrentMarryRoom.SendToAllForScene(gSPacketIn, client.Player.MarryMap);
+                        break;
+                    default:
+                        {
+                            if (client.Player.CurrentRoom != null)
+                            {
+                                if (flag)
+                                {
+                                    client.Player.CurrentRoom.SendToTeam(gSPacketIn, client.Player.CurrentRoomTeam, client.Player);
+                                }
+                                else
+                                {
+                                    client.Player.CurrentRoom.SendToAll(gSPacketIn);
+                                }
+                                if (komutlar(client, packet, text))
+                                {
+                                    return 1;
+                                }
+                                break;
+                            }
+                            if (komutlar(client, packet, text))
+                            {
+                                return 1;
+                            }
+                            if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(1.0), DateTime.Now) > 0 && b == 5)
+                            {
+                                return 1;
+                            }
+                            if (flag)
+                            {
+                                return 1;
+                            }
+                            if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(30.0), DateTime.Now) > 0)
+                            {
+                                client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("SceneChatHandler.Fast"));
+                                return 1;
+                            }
+                            client.Player.LastChatTime = DateTime.Now;
+                            GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
+                            foreach (GamePlayer gamePlayer in allPlayers)
+                            {
+                                if (gamePlayer.CurrentRoom == null && gamePlayer.CurrentMarryRoom == null && !gamePlayer.IsBlackFriend(client.Player.PlayerCharacter.ID))
+                                {
+                                    gamePlayer.Out.SendTCP(gSPacketIn);
+                                }
+                            }
+                            break;
+                        }
+                }
+                result = 1;
             }
+            return result;
         }
 
         private List<int> DeleteMailAll(int UserID)
@@ -583,8 +462,7 @@ namespace Game.Server.Packets.Client
             }
             catch (Exception ex)
             {
-                log.Error("Komutlar metodunda hata: ", ex);
-                client.Player.SendMessage("Hatalı Komut");
+             client.Player.SendMessage("Hatalı Komut");
             }
 
             return result;

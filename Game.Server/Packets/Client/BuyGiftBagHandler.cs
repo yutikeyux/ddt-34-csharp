@@ -9,10 +9,10 @@ namespace Game.Server.Packets.Client
     {
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
-			int value = 650*3;
+			int value = 4599;
 			if (client.Player.PlayerCharacter.Money < value)
 			{
-				client.Player.SendMessage($"İşlem başarısız oldu!");
+				client.Player.SendMessage($"Kupon yetersiz!");
 				return 0;
 			}
 			if (client.Player.RemoveMoney(value) > 0)
@@ -43,7 +43,7 @@ namespace Game.Server.Packets.Client
 				itemInfo.ValidDate = 0;
 				itemInfo.IsBinds = true;
 				client.Player.StoreBag.AddItemTo(itemInfo, 4);
-				client.Player.SendMessage($"Hediye Satın Al!");
+				client.Player.SendMessage($"İndirimli Hediye Paketi satın alma başarılı!");
 			}
 			return 0;
         }

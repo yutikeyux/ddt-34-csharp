@@ -10,18 +10,18 @@ using SqlDataProvider.Data;
 
 namespace Tank.Request.CelebList
 {
-	// Token: 0x0200008F RID: 143
+	// Token: 0x0200008B RID: 139
 	[WebService(Namespace = "http://tempuri.org/")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	public class CelebByDayBestEquip : IHttpHandler
 	{
-		// Token: 0x06000296 RID: 662 RVA: 0x00002E5A File Offset: 0x0000105A
+		// Token: 0x06000290 RID: 656 RVA: 0x0001265D File Offset: 0x0001085D
 		public void ProcessRequest(HttpContext context)
 		{
 			context.Response.Write(CelebByDayBestEquip.Build(context));
 		}
 
-		// Token: 0x06000297 RID: 663 RVA: 0x00011BF4 File Offset: 0x0000FDF4
+		// Token: 0x06000291 RID: 657 RVA: 0x00012674 File Offset: 0x00010874
 		public static string Build(HttpContext context)
 		{
 			bool flag = !csFunction.ValidAdminIP(context.Request.UserHostAddress);
@@ -37,11 +37,11 @@ namespace Tank.Request.CelebList
 			return result;
 		}
 
-		// Token: 0x06000298 RID: 664 RVA: 0x00011C2C File Offset: 0x0000FE2C
+		// Token: 0x06000292 RID: 658 RVA: 0x000126AC File Offset: 0x000108AC
 		public static string Build()
 		{
 			bool value = false;
-			string message = "Hata!";
+			string message = "Fail!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -53,7 +53,7 @@ namespace Tank.Request.CelebList
 						result.Add(FlashUtils.CreateBestEquipInfo(info));
 					}
 					value = true;
-					message = "Başarılı!";
+					message = "Success!";
 				}
 			}
 			catch (Exception ex)
@@ -66,7 +66,7 @@ namespace Tank.Request.CelebList
 		}
 
 		// Token: 0x17000089 RID: 137
-		// (get) Token: 0x06000299 RID: 665 RVA: 0x00003828 File Offset: 0x00001A28
+		// (get) Token: 0x06000293 RID: 659 RVA: 0x000127A4 File Offset: 0x000109A4
 		public bool IsReusable
 		{
 			get
@@ -75,7 +75,7 @@ namespace Tank.Request.CelebList
 			}
 		}
 
-		// Token: 0x040000A4 RID: 164
+		// Token: 0x0400009E RID: 158
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 	}
 }
