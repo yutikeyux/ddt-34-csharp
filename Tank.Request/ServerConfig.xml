@@ -496,8 +496,8 @@
   <Item Name="IsOpenChickenBox" Value="True" />
   <Item Name="IsOpenLeftGun" Value="True" />
   <Item Name="IsOpenAtiveLogin" Value="True" />
-  <Item Name="CountHWIDLimit" Value="99" />
-  <Item Name="CountIPLimit" Value="99" />
+  <Item Name="CountHWIDLimit" Value="150" />
+  <Item Name="CountIPLimit" Value="150" />
   <Item Name="IsChickenActiveKeyOpen" Value="True" />
   <Item Name="ChickenActiveKeyLvAwardNeedPrestige" Value="0|0|0|1000|2000|10000|20000|40000|60000|80000|100000|120000" />
   <Item Name="FightSpiritLevelAddDamage" Value="6|2" />

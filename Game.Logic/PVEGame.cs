@@ -16,13 +16,21 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Security.AccessControl;
 using System.Text;
+using System.Web.UI;
+using Game.Server;
+using Game.Server.Managers;
+
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Game.Logic
 {
     public class PVEGame : BaseGame
     {
+        // element
+        public static List<int> LuckyNoticeItems = new List<int>();
+        public static string LuckyNoticeTemplate = "✨ Şanslı El ✨ [{0}] gizemli karttan nadir [{1}] kazandı!";
         public long AllWorldDameBoss;
+
 
         private int BeginPlayersCount;
 
@@ -193,6 +201,8 @@ namespace Game.Logic
                 m_pveGameDelay = value;
             }
         }
+
+
 
         public int CountMosterPlace
         {
@@ -2280,6 +2290,9 @@ namespace Game.Logic
 
         public override bool TakeCard(Player player, int index, bool isAuto)
         {
+            // Debug: Metot tetiklendi mi?
+            Console.WriteLine($"[DEBUG] TakeCard tetiklendi: Oyuncu: {player.PlayerDetail.PlayerCharacter.NickName}, Index: {index}");
+
             if (player.CanTakeOut == 0)
             {
                 player.PlayerDetail.AddLog("PVE", "Error No. 1");
@@ -2290,6 +2303,7 @@ namespace Game.Logic
                 player.PlayerDetail.AddLog("PVE", "Error No. 2");
                 return false;
             }
+
             int gold = 0;
             int money = 0;
             int giftToken = 0;
@@ -2302,51 +2316,86 @@ namespace Game.Logic
             int templateID = 0;
             int count = 0;
             List<ItemInfo> list = null;
-            int id = 0;
-            id = ((TakeCardId == 0) ? m_missionInfo.Id : TakeCardId);
+            int id = ((TakeCardId == 0) ? m_missionInfo.Id : TakeCardId);
+
             if (DropInventory.CopyDrop(id, 1, ref list))
             {
+
                 if (list != null)
                 {
+                    // Debug: Şanslı liste durumu
+                    int luckyCount = (LuckyNoticeItems != null) ? LuckyNoticeItems.Count : -1;
+                    Console.WriteLine($"[DEBUG] Aktif Şanslı Liste Sayısı: {luckyCount}");
+
                     foreach (ItemInfo info in list)
                     {
                         ShopMgr.FindSpecialItemInfo(info, ref gold, ref money, ref giftToken, ref medal, ref honor, ref hardCurrency, ref token, ref dragonToken, ref magicStonePoint);
+
                         if (info != null && info.TemplateID > 0)
                         {
                             templateID = info.TemplateID;
                             count = info.Count;
                             player.PlayerDetail.AddTemplate(info, eBageType.TempBag, info.Count, eGameView.dungeonTypeGet);
+
+                            // --- DISCORD BOTUNDAN GELEN DINAMIK KONTROL ---
+                            if (LuckyNoticeItems != null && LuckyNoticeItems.Contains(info.TemplateID))
+                            {
+                                try
+                                {
+                                    // 1. Şablonu al ve formatla
+                                    string luckyTemplate = LuckyNoticeTemplate;
+                                    string luckyMsg = string.Format(luckyTemplate, player.PlayerDetail.PlayerCharacter.NickName, info.Template.Name);
+
+                                    // 2. Paket 10 (SYS_NOTICE) oluştur
+                                    GSPacketIn pkg = new GSPacketIn((short)10);
+                                    pkg.WriteInt(3); // Sarı sistem duyurusu
+                                    pkg.WriteString(luckyMsg);
+
+                                    // 3. REFERANS HATASIZ GÖNDERİM
+                                    // GameServer.Instance yerine o anki oyuncunun SendTCP metodunu kullanıyoruz.
+                                    // Bu metod paketi LoginServer'a iletir ve tüm sunucuya yayılmasını sağlar.
+                                    player.PlayerDetail.SendTCP(pkg);
+
+                                    Console.WriteLine($"[LUCKY SUCCESS] Duyuru iletildi: {luckyMsg}");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine("[LUCKY ERROR] Hata: " + ex.Message);
+                                }
+                            }
                         }
+
+                        // Mevcut IsTips kontrolü (Database'den gelen sabit duyurular)
                         if (info.IsTips)
                         {
                             player.PlayerDetail.PVERewardNotice($"[{player.PlayerDetail.ZoneName}] oyuncusu değerli [{player.PlayerDetail.PlayerCharacter.NickName}] Keşif rıhtımındaki {MissionInfo.Name} keşiften değerli ödüller kazandı. Kazandıkları ödüller: {info.TemplateID} x{info.Count}. ", info.ItemID, info.TemplateID);
-                            player.PlayerDetail.AddLog("TakeCard PVE: ", "MissionName: " + MissionInfo.Name + "|Name: " + info.Name + "|Count: " + info.Count);
                         }
                     }
                 }
+
                 player.PlayerDetail.AddGold(gold);
                 player.PlayerDetail.AddMoney(money);
                 player.PlayerDetail.LogAddMoney(AddMoneyType.Award, AddMoneyType.Award_TakeCard, player.PlayerDetail.PlayerCharacter.ID, money, player.PlayerDetail.PlayerCharacter.Money);
                 player.PlayerDetail.AddGiftToken(giftToken);
                 player.PlayerDetail.AddHonor(honor);
+
                 if (templateID == 0 && gold > 0)
                 {
                     templateID = -100;
                     count = gold;
                 }
             }
+
             if (base.RoomType == eRoomType.Dungeon)
             {
                 player.CanTakeOut--;
-                if (player.CanTakeOut == 0)
-                {
-                    player.FinishTakeCard = true;
-                }
+                if (player.CanTakeOut == 0) player.FinishTakeCard = true;
             }
             else
             {
                 player.FinishTakeCard = true;
             }
+
             Cards[index] = 1;
             SendGamePlayerTakeCard(player, isAuto, index, templateID, count);
             return true;

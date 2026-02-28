@@ -34,7 +34,7 @@ namespace Tank.Request
 						if (!flag)
 						{
 							total += s.Online;
-							result.Add(FlashUtils.CreateServerInfo(s.Id, s.Name, s.Ip, s.Port - 90, s.State, s.MustLevel, s.LowestLevel, s.Online));
+							result.Add(FlashUtils.CreateServerInfo(s.Id, s.Name, s.Ip, s.Port - 69, s.State, s.MustLevel, s.LowestLevel, s.Online));
 						}
 					}
 				}

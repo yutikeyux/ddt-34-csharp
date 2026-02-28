@@ -29,7 +29,7 @@ namespace Tank.Request
 					XElement node0 = new XElement("customList", new object[]
 					{
 						new XAttribute("ID", 0),
-						new XAttribute("Name", "Bạn bè")
+						new XAttribute("Name", "Arkadaş")
 					});
 					result.Add(node0);
 					foreach (FriendInfo g in infos)

@@ -47,10 +47,10 @@ namespace Game.Base.Packets
 
         // İstemcinin saniyede gönderebileceği maksimum paket sayısı.
         // 500 paket/saniye, normal oyun trafiği için makul; flood/DoS'a karşı sınır.
-        private const int MAX_PACKETS_PER_SECOND = 500;
+        private const int MAX_PACKETS_PER_SECOND = 7500;
 
         // Rate limit penceresi: 1 saniye içindeki paket sayısı kontrol edilir.
-        private const int RATE_LIMIT_WINDOW_MS = 1000;
+        private const int RATE_LIMIT_WINDOW_MS = 7500;
 
         // Bu PacketProcessor'nin bağlı olduğu GameClient örneği.
         // Her oyuncu bağlantısı için ayrı bir PacketProcessor nesnesi vardır.
@@ -115,8 +115,8 @@ namespace Game.Base.Packets
             if (!IsClientAllowedToSendPacket(m_client.TcpEndpoint))
             {
                 m_client.Player?.SendMessage("Tabi efendim.");
+                log.Warn($"{m_client.TcpEndpoint} paket limitlerini aştı. Paket kodu: {code}. İyice bi kontrol et bakalım handlerlardan, nesi yanlış? nesi değil? not: yutikeyu");
                 m_client.Disconnect();
-                log.Warn($"Oyuncu {m_client.TcpEndpoint} paket limitlerini aştı. Paket kodu: {code}. İyice bi kontrol et bakalım handlerlardan, nesi yanlış? nesi değil? not: yutikeyu");
                 return;
             }
 

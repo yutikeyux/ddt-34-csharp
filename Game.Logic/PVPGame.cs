@@ -212,7 +212,7 @@ namespace Game.Logic
                         if (info.IsTips)
                         {
                             
-                            base.PVPÖzelMesaj(player.PlayerDetail.ZoneName + " oyuncusu değerli [" + player.PlayerDetail.PlayerCharacter.NickName + "] Oyun salonundan değerli ödüller kazandı. Kazandıkları ödüller: " + info.Name + " x" + info.Count + ". ");
+                            //base.PVPÖzelMesaj(player.PlayerDetail.ZoneName + " oyuncusu değerli [" + player.PlayerDetail.PlayerCharacter.NickName + "] Oyun salonundan değerli ödüller kazandı. Kazandıkları ödüller: " + info.Name + " x" + info.Count + ". ");
                             player.PlayerDetail.AddLog("TakeCard PVP: ", "MissionName: " + "|Name: " + info.Name + "|Count: " + info.Count);
                         }
                     }

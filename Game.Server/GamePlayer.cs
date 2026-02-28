@@ -2844,6 +2844,23 @@ public class GamePlayer : IGamePlayer
         }
     }
 
+    public void SendLuckyDropNotice(string nick, string itemName) //element
+    {
+        string template = global::Game.Logic.PVEGame.LuckyNoticeTemplate;
+
+        string formattedMsg = string.Format(template, nick, itemName);
+
+        GSPacketIn pkg = new GSPacketIn((short)10);
+        pkg.WriteInt(3); 
+        pkg.WriteString(formattedMsg);
+
+        GameServer.Instance.LoginServer.SendPacket(pkg);
+        foreach (GamePlayer p in WorldMgr.GetAllPlayers())
+        {
+            p.Out.SendTCP(pkg);
+        }
+    }
+
     public void PVPFightMessage(string translation, ItemInfo itemInfo, int areaID)
     {
         if (translation != null)

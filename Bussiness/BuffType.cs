@@ -73,7 +73,7 @@ namespace Bussiness
         LockState = 1000,
         IceFronze = 10015,
         Fatal = 10017,
-        NoHoleEffect = 10017,
+        NoHoleEffect = 10021,
         ArmorPiercer = 10020,
         Atom = 10022
     }

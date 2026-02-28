@@ -162,7 +162,10 @@ namespace Game.Server.Quests
                 	return new PlayerOnlineTimeCondiction(quest, info, value);
                 case 102:
                 	return new PlayerOnlineSpaCondiction(quest, info, value);
-                default:
+				case 103:
+					return new KesifGecmeCountluHaliCondition(quest, info, value);
+
+				default:
 					if (log.IsErrorEnabled)
 					{
 						log.Error($"Can't find quest condition : {info.CondictionType}");

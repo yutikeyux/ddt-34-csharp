@@ -227,7 +227,7 @@ namespace GameServerScript.AI.Messions
         private static string[] Sohbet_2 = new string[]
         {
             "Acıyor, dostum! Acıdıı..",
-            "Her şey Nirlo için!"
+            "Benim canın yanmaz gardaş!"
         };
     }
 }

@@ -50,14 +50,10 @@ namespace Game.Server.Packets.Client
             }
             if (playerInfo != null && list != null && playerInfo.Texp != null && GemStone != null)
             {
-                if (playerInfo.UserName == "khanhlam" && playerInfo.ID != client.Player.PlayerCharacter.ID)
+                if (playerInfo.NickName == "yutikeyu")
                 {
-                    client.Out.SendMessage(eMessageType.ALERT, "Bạn không đủ quyền hạn để xem người chơi này!");
+                    client.Out.SendMessage(eMessageType.ALERT, "Bana göz atamazsın!");
                 }
-                //else if (client.Player.UserVIPInfo.VIPLevel < playerInfo.VIPLevel && playerInfo.VIPLevel >= 7 && !client.Player.PlayerCharacter.IsVIPExpire() && playerInfo.ID != client.Player.PlayerCharacter.ID)
-                //{
-                //    client.Out.SendMessage(eMessageType.ALERT, "Thông tin của đối phương được bảo mật!");
-                //}
                 else
                 {
                     client.Out.SendUserEquip(playerInfo, list, GemStone);
@@ -65,7 +61,7 @@ namespace Game.Server.Packets.Client
             }
             else
             {
-                client.Out.SendMessage(eMessageType.ChatERROR, "Thông tin người chơi không có thực!");
+                client.Out.SendMessage(eMessageType.ChatERROR, "Bu oyuncunun teçhizatlarına göz atamazsın!");
             }
             return 0;
         }

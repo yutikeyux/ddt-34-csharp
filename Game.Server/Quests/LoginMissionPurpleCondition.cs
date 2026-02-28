@@ -16,7 +16,7 @@ namespace Game.Server.Quests
 
         public override bool IsCompleted(GamePlayer player)
         {
-			if (player.PlayerCharacter.typeVIP == 2)
+			if (player.PlayerCharacter.typeVIP > 0)
 			{
 				return true;
 			}

@@ -17,7 +17,7 @@ namespace Tank.Request
 		{
 			get
 			{
-				return ConfigurationSettings.AppSettings["AdminIP"];
+				return ConfigurationManager.AppSettings["AdminIP"];
 			}
 		}
 

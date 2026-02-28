@@ -265,6 +265,76 @@ namespace Game.Server.API
                 }
 
                 // ==========================================
+                // ŞANSLI ITEM VE DUYURU METNİ GÜNCELLEME
+                // ==========================================
+                if (path == "/api/game/setluckyitems" && req.HttpMethod == "POST")
+                {
+                    try
+                    {
+                        var d = ReadJsonBodyJ(req);
+                        var ids = d["ItemIDs"]?.ToObject<List<int>>();
+                        var template = d["Template"]?.ToString();
+
+                        if (ids != null)
+                        {
+                            PVEGame.LuckyNoticeItems = ids;
+
+                            if (!string.IsNullOrEmpty(template))
+                            {
+                                // Discord'dan gelen {nick} -> {0}, {item} -> {1} yapıyoruz
+                                // Böylece string.Format bu verileri tanıyabilir.
+                                string internalTemplate = template
+                                    .Replace("{nick}", "{0}")
+                                    .Replace("{item}", "{1}");
+
+                                PVEGame.LuckyNoticeTemplate = internalTemplate;
+                            }
+                            WriteJson(ctx, new { success = true });
+                            return;
+                        }
+                    }
+                    catch (Exception ex) { WriteJson(ctx, new { error = ex.Message }); }
+                }
+
+                if (path == "/api/game/testlucky" && req.HttpMethod == "POST")
+                {
+                    try
+                    {
+                        var players = WorldMgr.GetAllPlayers();
+                        Console.WriteLine($"[API-TEST] Aktif oyuncu sayisi: {players.Length}");
+
+                        // PVEGame'deki statik şablonu al
+                        string template = global::Game.Logic.PVEGame.LuckyNoticeTemplate;
+                        string testNick = players.Length > 0 ? players[0].PlayerCharacter.NickName : "TestOyuncu";
+                        string testItem = "Saka taşı 1. seviye";
+
+                        // Mesajı hazırla
+                        string formattedMsg = string.Format(template, testNick, testItem);
+
+                        // Paket 10 oluştur
+                        GSPacketIn pkg = new GSPacketIn((short)10);
+                        pkg.WriteInt(3);
+                        pkg.WriteString(formattedMsg);
+
+                        // 1. LoginServer'a gönder (Kesin çözüm)
+                        GameServer.Instance.LoginServer.SendPacket(pkg);
+
+                        // 2. Eğer online oyuncu varsa hepsine tek tek bas
+                        foreach (var p in players)
+                        {
+                            p.SendTCP(pkg);
+                        }
+
+                        WriteJson(ctx, new { success = true, message = "Test duyurusu firlatildi." });
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        WriteJson(ctx, new { success = false, error = ex.Message });
+                    }
+                }
+
+                // ==========================================
                 // YETKİ KONTROLÜ (API KEY GEREKTİRENLER)
                 // ==========================================
                 if (!IsAuthorized(req))
@@ -923,6 +993,8 @@ namespace Game.Server.API
                 WriteJson(ctx, new { error = ex.Message });
             }
         }
+
+
 
         private static bool IsAuthorized(HttpListenerRequest req)
         {

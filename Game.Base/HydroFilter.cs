@@ -30,13 +30,13 @@ namespace Game.Base
 
         // 20 saniye içinde client başına izin verilen maksimum paket sayısı.
         // Çok yüksek değerler flood/DoS'a açık olabilir; burada 10k kullanılıyor.
-        private const int MAX_AVG_PACKETS_PER_CLIENT_IN_20SEC = 10000;
+        private const int MAX_AVG_PACKETS_PER_CLIENT_IN_20SEC = 40000;
 
         // Scan aşamasında bir IP'nin 10 saniyede yapabileceği maksimum bağlantı sayısı.
         private const int SCAN_MAX_CONNECTIONS_PER_IP = 2000;
 
         // Scan aşamasında bir IP'nin 10 saniyede gönderebileceği maksimum paket sayısı.
-        private const int SCAN_MAX_PACKETS_PER_IP = 10000;
+        private const int SCAN_MAX_PACKETS_PER_IP = 15000;
 
         // Aktifken, trafiğin normal seviyeye düşmesi durumunda HydroFilter'in
         // kaç kez daha "normal" ölçüm gelirse devre dışı kalacağını belirtir.

@@ -139,7 +139,7 @@
   <Item ID="1012" Order="188" Show="1" Name="Usta Büyücü" Pic="2012" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikten elde et" />
   <Item ID="1013" Order="33" Show="1" Name="Patron Benim" Pic="1035" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlik Olsun" />
   <Item ID="1014" Order="182" Show="1" Name="Sıradışı Adam" Pic="1042" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikten elde et" />
-  <Item ID="1016" Order="183" Show="1" Name="Merry Xmas" Pic="1061" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikten elde et" />
+  <Item ID="1016" Order="183" Show="1" Name="Mutlu Noeller" Pic="1061" Att="0" Def="0" Agi="10" Luck="10" Desc="Kış Etkinliği" />
   <Item ID="1017" Order="184" Show="1" Name="Çalışkan" Pic="1049" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikten elde et" />
   <Item ID="1018" Order="185" Show="1" Name="Muhbir" Pic="2013" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikten elde et" />
   <Item ID="1021" Order="189" Show="1" Name="Heykel Sahibi" Pic="2014" Att="0" Def="0" Agi="0" Luck="0" Desc="Etkinlikten elde et" />
