@@ -107,6 +107,34 @@ namespace Game.Server.Rooms
                     }
 
                 }
+                else if (mapId == 12)
+                {
+                    if (m_hardLevel == eHardLevel.Terror)
+                    {
+                        m_currentFloor = 3;
+                        m_pic = "show4.jpg";
+                    }
+                    else if (m_hardLevel == eHardLevel.Hard)
+                    {
+                        m_currentFloor = 3;
+                        m_pic = "show4.jpg";
+                    }
+                    else if (m_hardLevel == eHardLevel.Normal)
+                    {
+                        m_currentFloor = 3;
+                        m_pic = "show4.jpg";
+                    }
+                    else if (m_hardLevel == eHardLevel.Easy)
+                    {
+                        m_currentFloor = 3;
+                        m_pic = "show4.jpg";
+                    }
+                    else
+                    {
+                        m_currentFloor = 1;
+                        m_pic = "show1.jpg";
+                    }
+                }
                 else
                 {
                     List<int> lastFloorData = GetLastFloor(mapId, (int)m_hardLevel);

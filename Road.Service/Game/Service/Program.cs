@@ -227,18 +227,18 @@ namespace Game.Service
 
             int num = Program._random.Next(1, 101);
 
-            // Sadece hafta sonu ise ödül verme mantığını çalıştır
-            if (haftaSonuMu && num <= 5)
-            {
-                Program.RastgeleOdul rastgeleOdul = Program._rastgeleOduller[Program._random.Next(Program._rastgeleOduller.Count)];
-                Console.WriteLine("Rastgele ödül zamanı! '" + rastgeleOdul.KazanmaMesaji + "' ödülü tüm oyunculara gönderiliyor.");
-                foreach (GamePlayer gamePlayer in allPlayers)
-                {
-                    gamePlayer.SendMessage(rastgeleOdul.KazanmaMesaji);
-                    new PlayerBussiness().SendMailAndItem("Tebrikler, sunucunun bu saatinde bu ödüle denk geldin! İyi oyunlar.!", "Online Etkinlik Sistemi", gamePlayer.PlayerCharacter.ID, rastgeleOdul.ItemID, rastgeleOdul.Sayi, 0, 0, 0, 0, 0, 0, 0, 0, true);
-                }
-                return;
-            }
+            //// Sadece hafta sonu ise ödül verme mantığını çalıştır
+            //if (haftaSonuMu && num <= 5)
+            //{
+            //    Program.RastgeleOdul rastgeleOdul = Program._rastgeleOduller[Program._random.Next(Program._rastgeleOduller.Count)];
+            //    Console.WriteLine("Rastgele ödül zamanı! '" + rastgeleOdul.KazanmaMesaji + "' ödülü tüm oyunculara gönderiliyor.");
+            //    foreach (GamePlayer gamePlayer in allPlayers)
+            //    {
+            //        gamePlayer.SendMessage(rastgeleOdul.KazanmaMesaji);
+            //        new PlayerBussiness().SendMailAndItem("Tebrikler, sunucunun bu saatinde bu ödüle denk geldin! İyi oyunlar.!", "Online Etkinlik Sistemi", gamePlayer.PlayerCharacter.ID, rastgeleOdul.ItemID, rastgeleOdul.Sayi, 0, 0, 0, 0, 0, 0, 0, 0, true);
+            //    }
+            //    return;
+            //}
 
             // Sunucu mesajları (her gün gönderilir)
             if (num <= 25)
@@ -273,532 +273,532 @@ namespace Game.Service
 		private static ArrayList _actions;
 
 		// Token: 0x04000006 RID: 6
-		private static readonly List<Program.RastgeleOdul> _rastgeleOduller = new List<Program.RastgeleOdul>
-		{
-			new Program.RastgeleOdul
-			{
-				ItemID = 11101,
-				Sayi = 5,
-				KazanmaMesaji = "Şanslı saat! Herkes 5 adet 'Küçük Hoparlör' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 11102,
-				Sayi = 3,
-				KazanmaMesaji = "Şanslı saat! Herkes 3 adet 'Büyük Hoparlör' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 11019,
-				Sayi = 5,
-				KazanmaMesaji = "Şanslı saat! Herkes 5 adet '1. Seviye Güçlendirme Taşı' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 11021,
-				Sayi = 4,
-				KazanmaMesaji = "Şanslı saat! Herkes 4 adet '2. Seviye Güçlendirme Taşı' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 11022,
-				Sayi = 3,
-				KazanmaMesaji = "Şanslı saat! Herkes 3 adet '3. Seviye Güçlendirme Taşı' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 11023,
-				Sayi = 2,
-				KazanmaMesaji = "Şanslı saat! Herkes 2 adet '4. Seviye Güçlendirme Taşı' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 11024,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '5. Seviye Güçlendirme Taşı' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 11020,
-				Sayi = 3,
-				KazanmaMesaji = "Şanslı saat! Herkes 3 adet 'Kutsallık Sembolü' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 311199,
-				Sayi = 4,
-				KazanmaMesaji = "Şanslı saat! Herkes 4 adet '1. Seviye Saldırı İncisi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 312199,
-				Sayi = 4,
-				KazanmaMesaji = "Şanslı saat! Herkes 4 adet '1. Seviye Savunma İncisi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 313199,
-				Sayi = 4,
-				KazanmaMesaji = "Şanslı saat! Herkes 4 adet '1. Seviye Nitelik İncisi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 311299,
-				Sayi = 3,
-				KazanmaMesaji = "Şanslı saat! Herkes 3 adet '2. Seviye Saldırı İncisi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 312299,
-				Sayi = 3,
-				KazanmaMesaji = "Şanslı saat! Herkes 3 adet '2. Seviye Savunma İncisi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 313299,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '2. Seviye Nitelik İncisi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 311399,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '3. Seviye Saldırı İncisi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 312399,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '3. Seviye Savunma İncisi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 313399,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '3. Seviye Nitelik İncisi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 311499,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '4. Seviye Saldırı İncisi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 312499,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '4. Seviye Savunma İncisi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 313499,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '4. Seviye Nitelik İncisi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 40001,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '1. Seviye Eğitim İksiri' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 40002,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '2. Seviye Eğitim İksiri' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 40003,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '3. Seviye Eğitim İksiri' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 40004,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '4. Seviye Eğitim İksiri' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 315001,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '1. Seviye Kutsal Taşı Yenile' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 315002,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '2. Seviye Kutsal Taşı Yenile' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 315003,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '3. Seviye Kutsal Taşı Yenile' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 315004,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '4. Seviye Kutsal Taşı Yenile' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 315005,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '5. Seviye Kutsal Taşı Yenile' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 315006,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet '6. Seviye Kutsal Taşı Yenile' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 8002,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Şans Künyesi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 8003,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Çeviklik Künyesi' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 8004,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Canavar Saldırısı' kazandı!"
-			},
-            new Program.RastgeleOdul
-            {
-                ItemID = 8006,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Sağlam Zincir' kazandı!"
-            },
-            new Program.RastgeleOdul
-			{
-				ItemID = 9002,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kanatlı Yüzük' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 9003,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Şans Yüzüğü' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 9005,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Okyanus Yüzüğü' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 9006,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Alevli Yüzük' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20101,
-				Sayi = 25,
-				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kırmızı Sihirli Karınca Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20102,
-				Sayi = 25,
-				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Mavi Sihirli Karınca Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20103,
-				Sayi = 25,
-				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Sihirli Karınca Kraliçesi Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20104,
-				Sayi = 25,
-				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Pembe Bogolu Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20105,
-				Sayi = 25,
-				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Bogo Eliti Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20106,
-				Sayi = 25,
-				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Bogo Lideri Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20107,
-				Sayi = 25,
-				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Bogo Kralı Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20108,
-				Sayi = 25,
-				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kabile Savaşçısı Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20109,
-				Sayi = 25,
-				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kabile Askeri Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20110,
-				Sayi = 25,
-				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kabile Kardeşinin Abi Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20111,
-				Sayi = 25,
-				KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kabile Kardeşinin Kardeş Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20112,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kabile Reisi Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20113,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Sihirli Kartal Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20114,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Sihirli Kurt Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20115,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kırmızı Cüppeli Şeytan Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20116,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Minotar Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20117,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'İlahi Fırtına Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20118,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bom Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20119,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Öfke Ateşi Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20120,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Yıldırım Kart Kutusu' kazandı!"
-			},
-			new Program.RastgeleOdul
-			{
-				ItemID = 20121,
-				Sayi = 1,
-				KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Barabran Kölesi Kart Kutusu' kazandı!"
-			},
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Barabran teknikeri kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Barabran savaşçısı kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Barabran askeri kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Barabran komandanı kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kabuklu civciv kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Şişman tavuk kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'İnci boyunlu horoz kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Pis Benben kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bogolu sporcu kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bogo antrenörü kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bogolu izleyici kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bogolu boksör kralı kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bogolu hakem kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Fıçı kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Newton elması kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'FA kutusu kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Keskin kılıç kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'SB TV kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Civciv birliği kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kurt komando lideri kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Karasakal kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Dalov Albay kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Rigri kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Karanlık kraliyet kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Solan reis kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Çift bomba kralı kart kutusu' kazandı!"
-            },
-            new Program.RastgeleOdul
-            {
-                ItemID = 20121,
-                Sayi = 1,
-                KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'En iyi partner kart kutusu' kazandı!"
-            },
-        };
+		//private static readonly List<Program.RastgeleOdul> _rastgeleOduller = new List<Program.RastgeleOdul>
+		//{
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 11101,
+		//		Sayi = 5,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 5 adet 'Küçük Hoparlör' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 11102,
+		//		Sayi = 3,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 3 adet 'Büyük Hoparlör' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 11019,
+		//		Sayi = 5,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 5 adet '1. Seviye Güçlendirme Taşı' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 11021,
+		//		Sayi = 4,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 4 adet '2. Seviye Güçlendirme Taşı' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 11022,
+		//		Sayi = 3,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 3 adet '3. Seviye Güçlendirme Taşı' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 11023,
+		//		Sayi = 2,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 2 adet '4. Seviye Güçlendirme Taşı' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 11024,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '5. Seviye Güçlendirme Taşı' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 11020,
+		//		Sayi = 3,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 3 adet 'Kutsallık Sembolü' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 311199,
+		//		Sayi = 4,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 4 adet '1. Seviye Saldırı İncisi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 312199,
+		//		Sayi = 4,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 4 adet '1. Seviye Savunma İncisi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 313199,
+		//		Sayi = 4,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 4 adet '1. Seviye Nitelik İncisi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 311299,
+		//		Sayi = 3,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 3 adet '2. Seviye Saldırı İncisi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 312299,
+		//		Sayi = 3,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 3 adet '2. Seviye Savunma İncisi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 313299,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '2. Seviye Nitelik İncisi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 311399,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '3. Seviye Saldırı İncisi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 312399,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '3. Seviye Savunma İncisi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 313399,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '3. Seviye Nitelik İncisi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 311499,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '4. Seviye Saldırı İncisi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 312499,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '4. Seviye Savunma İncisi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 313499,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '4. Seviye Nitelik İncisi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 40001,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '1. Seviye Eğitim İksiri' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 40002,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '2. Seviye Eğitim İksiri' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 40003,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '3. Seviye Eğitim İksiri' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 40004,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '4. Seviye Eğitim İksiri' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 315001,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '1. Seviye Kutsal Taşı Yenile' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 315002,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '2. Seviye Kutsal Taşı Yenile' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 315003,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '3. Seviye Kutsal Taşı Yenile' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 315004,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '4. Seviye Kutsal Taşı Yenile' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 315005,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '5. Seviye Kutsal Taşı Yenile' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 315006,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet '6. Seviye Kutsal Taşı Yenile' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 8002,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Şans Künyesi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 8003,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Çeviklik Künyesi' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 8004,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Canavar Saldırısı' kazandı!"
+		//	},
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 8006,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Sağlam Zincir' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+		//	{
+		//		ItemID = 9002,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kanatlı Yüzük' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 9003,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Şans Yüzüğü' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 9005,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Okyanus Yüzüğü' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 9006,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Alevli Yüzük' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20101,
+		//		Sayi = 25,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kırmızı Sihirli Karınca Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20102,
+		//		Sayi = 25,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Mavi Sihirli Karınca Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20103,
+		//		Sayi = 25,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Sihirli Karınca Kraliçesi Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20104,
+		//		Sayi = 25,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Pembe Bogolu Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20105,
+		//		Sayi = 25,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Bogo Eliti Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20106,
+		//		Sayi = 25,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Bogo Lideri Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20107,
+		//		Sayi = 25,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Bogo Kralı Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20108,
+		//		Sayi = 25,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kabile Savaşçısı Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20109,
+		//		Sayi = 25,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kabile Askeri Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20110,
+		//		Sayi = 25,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kabile Kardeşinin Abi Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20111,
+		//		Sayi = 25,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 25 adet 'Kabile Kardeşinin Kardeş Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20112,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kabile Reisi Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20113,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Sihirli Kartal Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20114,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Sihirli Kurt Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20115,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kırmızı Cüppeli Şeytan Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20116,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Minotar Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20117,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'İlahi Fırtına Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20118,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bom Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20119,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Öfke Ateşi Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20120,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Yıldırım Kart Kutusu' kazandı!"
+		//	},
+		//	new Program.RastgeleOdul
+		//	{
+		//		ItemID = 20121,
+		//		Sayi = 1,
+		//		KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Barabran Kölesi Kart Kutusu' kazandı!"
+		//	},
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Barabran teknikeri kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Barabran savaşçısı kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Barabran askeri kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Barabran komandanı kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kabuklu civciv kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Şişman tavuk kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'İnci boyunlu horoz kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Pis Benben kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bogolu sporcu kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bogo antrenörü kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bogolu izleyici kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bogolu boksör kralı kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Bogolu hakem kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Fıçı kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Newton elması kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'FA kutusu kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Keskin kılıç kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'SB TV kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Civciv birliği kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Kurt komando lideri kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Karasakal kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Dalov Albay kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Rigri kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Karanlık kraliyet kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Solan reis kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'Çift bomba kralı kart kutusu' kazandı!"
+  //          },
+  //          new Program.RastgeleOdul
+  //          {
+  //              ItemID = 20121,
+  //              Sayi = 1,
+  //              KazanmaMesaji = "Şanslı saat! Herkes 1 adet 'En iyi partner kart kutusu' kazandı!"
+  //          },
+  //      };
 
 		// Token: 0x04000007 RID: 7
 		private static readonly List<string> _sunucuMesajlari = new List<string>
 		{
 			"[Duyuru] Sunucumuzda hile, bug veya 3. parti yazılım kullanımı kalıcı olarak yasaklanma sebebidir. Lütfen adil bir oyun ortamı için kurallara uyun.",
 			"[İpucu] Günlük görevleri tamamlayarak değerli ödüller kazanabileceğinizi unutmayın!",
-			"[Hatırlatma] Takım arkadaşlarınızla iletişim kurmak zaferin anahtarıdır!",
+			"[Hatırlatma] Discordumuza katılarak değerli itemler hatta kupon bile kazanabilirsin!",
 			"[Duyuru] Herhangi bir sorunla karşılaşırsanız oyun yöneticilerine bildirmekten çekinmeyin. Keyifli oyunlar!",
 			"[Bilgi] Unutma, en güçlü silah bilgidir! Sitemizdeki rehberlere göz atarak oyununu geliştirebilirsin."
 		};

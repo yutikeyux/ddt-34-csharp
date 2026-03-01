@@ -28,7 +28,7 @@ namespace Game.Logic
     {
         // element
         public static List<int> LuckyNoticeItems = new List<int>();
-        public static string LuckyNoticeTemplate = "✨ Şanslı El ✨ [{0}] gizemli karttan nadir [{1}] kazandı!";
+        public static string LuckyNoticeTemplate = "✨ Şanslı El ✨ {0} gizemli karttan nadir {1} kazandı!";
         public long AllWorldDameBoss;
 
 
@@ -526,49 +526,21 @@ namespace Game.Logic
 
         public void CanStopGame()
         {
-            // 1. KRİTİK DÜZELTME: Oyun biterken zamanlayıcıyı DURDUR.
-            //ClearWaitTimer();
-
-            if (!IsWin)
+            if (!this.IsWin)
             {
-                // --- KAYBETME DURUMU ---
-                // Koşullar: 1. Oturumdan sonraysa, 2. Dungeon ise, 3. Labyrinth değilse
-                if (SessionId > 1 && GameType == eGameType.Dungeon && RoomType != eRoomType.Labyrinth)
-                {
-                    // 2. DÜZELTME: Maliyeti hesapla.
-                    // Eğer görev bilgisi varsa ve tekrar deneme maliyeti tanımlıysa onu al, yoksa 2 gönder.
-                    // Not: Sabit 2 yerine gerçek maliyeti göndermek daha doğrudur.
-                    if (m_missionInfo != null)
-                    {
-                        WantTryAgain = m_missionInfo.TryAgainCost;
-                        // Eğer TryAgainCost yoksa veya 0 ise, senin istediğin 2'yi fallback olarak kullanabilirsin:
-                        if (WantTryAgain == 0) WantTryAgain = 2;
-                    }
-                    else
-                    {
-                        WantTryAgain = 2;
-                    }
-
-                    SendMissionInfo();
-                    SendMissionTryAgain();
-                }
+                if (this.GameType != eGameType.Dungeon)
+                    return;
+                this.ClearWaitTimer();
             }
             else
             {
-                // --- KAZANMA DURUMU (Eksikti, geri eklendi) ---
-                // Kazanıldığında da genellikle mission info güncellenir (özellikle sonraki aşama için).
-                // Eğer kazanınca info göndermek istemiyorsan bu bloğu silebilirsin ama
-                // genellikle nextSession varsa bilgi güncellemesi yapılır.
-                int nextSessionId = 1 + this.SessionId;
-                if (this.Misssions.ContainsKey(nextSessionId) && (m_info.ID == 5 || m_info.ID == 14))
-                {
-                    this.WantTryAgain = 1; // Özel harita mantığı
-                                           // Gerekirse buraya da SendMissionInfo() eklenebilir.
-                }
+                if (!this.IsShowLargeCards())
+                    return;
+                this.WantTryAgain = 1;
             }
-
-            SetupStyle(0);
         }
+
+
 
         public bool IsShowLargeCards()
         {
@@ -2342,21 +2314,34 @@ namespace Game.Logic
                             {
                                 try
                                 {
-                                    // 1. Şablonu al ve formatla
+                                    // 1. Şablondaki parantezleri Discord panelinden veya koddan sildiğinden emin ol!
+                                    // template şuna dönmeli: "✨ Şanslı ✨ {0} gizemli karttan nadir {1} kazandı!"
                                     string luckyTemplate = LuckyNoticeTemplate;
-                                    string luckyMsg = string.Format(luckyTemplate, player.PlayerDetail.PlayerCharacter.NickName, info.Template.Name);
+                                    string nick = player.PlayerDetail.PlayerCharacter.NickName;
+                                    string itemName = info.Template.Name;
 
-                                    // 2. Paket 10 (SYS_NOTICE) oluştur
-                                    GSPacketIn pkg = new GSPacketIn((short)10);
-                                    pkg.WriteInt(3); // Sarı sistem duyurusu
-                                    pkg.WriteString(luckyMsg);
+                                    // 2. Paket 14 (ITEM_NOTICE) - Manuel Link Oluşturma
+                                    GSPacketIn pkg = new GSPacketIn(14);
+                                    pkg.WriteString(nick);          // {0} -> Oyuncu
+                                    pkg.WriteInt(1);                // Duyuru Tipi
+                                    pkg.WriteInt(info.TemplateID);  // {1} -> Eşya (TIKLANABİLİRLİĞİ BU SAĞLAR)
+                                    pkg.WriteBoolean(info.IsBinds); // Bağlılık durumu
+                                    pkg.WriteInt(1);                // Adet
 
-                                    // 3. REFERANS HATASIZ GÖNDERİM
-                                    // GameServer.Instance yerine o anki oyuncunun SendTCP metodunu kullanıyoruz.
-                                    // Bu metod paketi LoginServer'a iletir ve tüm sunucuya yayılmasını sağlar.
-                                    player.PlayerDetail.SendTCP(pkg);
+                                    // Şablonu içine gömüyoruz
+                                    pkg.WriteString(string.Format(luckyTemplate, nick, itemName));
 
-                                    Console.WriteLine($"[LUCKY SUCCESS] Duyuru iletildi: {luckyMsg}");
+                                    // 3. TÜM SUNUCUYA DAĞITIM
+                                    // Savaştaki her oyuncunun bağlantısını kullanarak tüm dünyaya paketi yayıyoruz
+                                    foreach (Player p in GetAllFightPlayers())
+                                    {
+                                        if (p.PlayerDetail != null)
+                                        {
+                                            p.PlayerDetail.SendTCP(pkg);
+                                        }
+                                    }
+
+                                    Console.WriteLine($"[LUCKY SUCCESS] Paket 14 Basildi: {itemName}");
                                 }
                                 catch (Exception ex)
                                 {

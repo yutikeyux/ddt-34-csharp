@@ -281,8 +281,7 @@ namespace Game.Server.API
 
                             if (!string.IsNullOrEmpty(template))
                             {
-                                // Discord'dan gelen {nick} -> {0}, {item} -> {1} yapıyoruz
-                                // Böylece string.Format bu verileri tanıyabilir.
+                                
                                 string internalTemplate = template
                                     .Replace("{nick}", "{0}")
                                     .Replace("{item}", "{1}");

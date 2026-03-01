@@ -13,9 +13,9 @@ namespace GameServerScript.AI.NPC
 
 		private static string[] listChat = new string[]
 		{
-			"Biệt đội người máy, đang tiến đến",
-			"Tiến lên nào các người máy A",
-			"Chỉ là một tên nhóc, giết！"
+			"Bu evrende seni yaşatmayız!",
+			"Robot abimiz seni ele geçirecek!",
+			"Sen kendini ne sanıyorsun da buradasın?！"
 		};
 
 		public override void OnBeginSelfTurn()

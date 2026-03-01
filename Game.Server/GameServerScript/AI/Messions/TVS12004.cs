@@ -48,13 +48,23 @@ namespace GameServerScript.AI.Messions
             return 1;
         }
 
+        // DÜZELTİLMİŞ CanGameOver METODU
         public override bool CanGameOver()
         {
-            base.CanGameOver();
+            // 1. Oyun süresi dolduysa (örneğin 200 tur bittiyse) oyunu bitir.
             if (Game.TurnIndex > Game.TotalTurn)
                 return true;
-            if (Game.TotalKillCount >= (Game.TotalMissionCount - 3))
+
+            // 2. Tüm oyuncular öldüyse oyunu bitir (Kaybetme durumu).
+            if (Game.GetAllLivingPlayers().Count == 0)
                 return true;
+
+            // 3. Son Boss (Boss3) varsa ve öldüyse oyunu bitir (Kazanma durumu).
+            // Boss3 henüz doğmadıysa (null ise) oyun devam etmelidir.
+            if (Boss3 != null && !Boss3.IsLiving)
+                return true;
+
+            // Hiçbir koşul sağlanmıyorsa (Boss1 veya Boss2 yaşıyor, oyuncular yaşıyor) oyun devam etsin.
             return false;
         }
 
@@ -62,19 +72,23 @@ namespace GameServerScript.AI.Messions
         {
             base.OnBeginNewTurn();
         }
+
         public override void OnDied()
         {
             base.OnDied();
+            // Boss1 öldüyse 4 saniye sonra Boss2'yi oluştur
             if (Boss1 != null)
             {
                 if (!Boss1.IsLiving)
                     Boss1.CallFuction(CreateSecondBoss, 4000);
             }
+            // Boss2 öldüyse 4 saniye sonra Boss3'ü (Son Boss) oluştur
             if (Boss2 != null)
             {
                 if (!Boss2.IsLiving)
                     Boss2.CallFuction(CreateFinalBoss, 4000);
             }
+            // Boss3 öldüyse 4 saniye bekle (Oyun bitiş animasyonu için)
             if (Boss3 != null)
             {
                 if (!Boss3.IsLiving)
@@ -82,13 +96,20 @@ namespace GameServerScript.AI.Messions
             }
         }
 
+        // DÜZELTİLMİŞ OnGameOver METODU
         public override void OnGameOver()
         {
             base.OnGameOver();
-            if (Game.TotalKillCount >= (Game.TotalMissionCount - 3))
-                Game.IsWin = true;
-            else
-                Game.IsWin = false;
+
+            // Kazanma koşulu sadece Boss3'ün ölmesiyle gerçekleşir.
+            bool isWin = false;
+
+            if (Boss3 != null && !Boss3.IsLiving)
+            {
+                isWin = true;
+            }
+
+            Game.IsWin = isWin;
         }
 
         public override void OnNewTurnStarted()
@@ -110,18 +131,24 @@ namespace GameServerScript.AI.Messions
             Game.LoadResources(int1);
             Game.LoadNpcGameOverResources(int1);
             Game.SetMap(1210);
+
+            // ÖNEMLİ: Toplam görev süresini(turn) buradan ayarlayabilirsiniz, 
+            // ancak kodda belirtilmediği için varsayılan değer kullanılır.
         }
+
         public override void OnPrepareStartGame()
         {
             base.OnPrepareStartGame();
             CreateChickenFriend();
         }
+
         public override void OnStartGame()
         {
             base.OnStartGame();
             CreateFirstBoss();
             Game.SendFreeFocus(950, 300, 1, 1, 1);
         }
+
         private void CreateChickenFriend()
         {
             LivingConfig livingConfig = base.Game.BaseLivingConfig();
@@ -132,29 +159,30 @@ namespace GameServerScript.AI.Messions
             livingConfig.CanCollied = false;
             livingConfig.isShowBlood = false;
             chickenFriend = Game.CreateNpc(ChickenFriendID, 219, 750, 1, 1, "", livingConfig);
-
-
         }
+
         private void CreateSecondBoss()
         {
             Game.SendFreeFocus(987, 342, 1, 1, 1);
-            Boss1 = null;
+            Boss1 = null; // Önceki boss'ı temizle
             LivingConfig livingConfig = base.Game.BaseLivingConfig();
             livingConfig.IsFly = true;
             livingConfig.CanCountKill = false;
             livingConfig.isBotom = 0;
             Boss2 = Game.CreateBoss(BossID2, 987, 342, -1, 1, "born", livingConfig);
         }
+
         private void CreateFinalBoss()
         {
             Game.SendFreeFocus(987, 342, 1, 1, 1);
-            Boss2 = null;
+            Boss2 = null; // Önceki boss'ı temizle
             LivingConfig livingConfig = Game.BaseLivingConfig();
             livingConfig.IsFly = true;
-            livingConfig.CanCountKill = true;
+            livingConfig.CanCountKill = true; // Son boss öldüğünde sayılsın
             livingConfig.isBotom = 0;
             Boss3 = Game.CreateBoss(BossID3, 987, 342, -1, 1, "born", livingConfig);
         }
+
         private void CreateFirstBoss()
         {
             LivingConfig livingConfig = Game.BaseLivingConfig();

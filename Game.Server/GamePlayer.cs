@@ -2844,22 +2844,6 @@ public class GamePlayer : IGamePlayer
         }
     }
 
-    public void SendLuckyDropNotice(string nick, string itemName) //element
-    {
-        string template = global::Game.Logic.PVEGame.LuckyNoticeTemplate;
-
-        string formattedMsg = string.Format(template, nick, itemName);
-
-        GSPacketIn pkg = new GSPacketIn((short)10);
-        pkg.WriteInt(3); 
-        pkg.WriteString(formattedMsg);
-
-        GameServer.Instance.LoginServer.SendPacket(pkg);
-        foreach (GamePlayer p in WorldMgr.GetAllPlayers())
-        {
-            p.Out.SendTCP(pkg);
-        }
-    }
 
     public void PVPFightMessage(string translation, ItemInfo itemInfo, int areaID)
     {
@@ -3535,7 +3519,6 @@ public class GamePlayer : IGamePlayer
                     Out.SendEnthrallLight();
                     this.Out.SendAvatarCollect(this.AvatarCollect);
                     this.AvatarCollect.ScanAvatarVaildDate();
-
                     Out.SendEdictumVersion();
                     m_playerState = ePlayerState.Manual;
                     Out.SendBufferList(this, m_bufferList.GetAllBufferByTemplate());
@@ -3552,10 +3535,10 @@ public class GamePlayer : IGamePlayer
                     ChargeToUser();
                     ConsortiaTaskMgr.AddPlayer(this);
                     Out.SendOpenWorldBoss(X, Y);
-                  //  if (DateTime.Parse(GameProperties.LeftRouterEndDate) > DateTime.Now)
-                   // {
-                     //   Out.SendLeftRouleteOpen(Extra.Info);
-                   // }
+                    if (DateTime.Parse(GameProperties.LeftRouterEndDate) > DateTime.Now)
+                    {
+                        Out.SendLeftRouleteOpen(Extra.Info);
+                    }
                     Extra.BeginPingOnlineTimer();
                     if (userWonderFulActivityManager == null)
                     {

@@ -1165,9 +1165,9 @@ namespace Game.Server.Rooms
                 case eHardLevel.Terror:
                     id = 200622;// Arena Kah Bileti Template_ID si
                     break;
-                case eHardLevel.Epic:
-                    id = 201105;// Arena Destan Bileti Template_ID si
-                    break;
+               // case eHardLevel.Epic:
+                 //   id = 201105;// Arena Destan Bileti Template_ID si
+                   // break;
             }
             return id;
         }
