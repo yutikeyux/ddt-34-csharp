@@ -15,11 +15,11 @@ namespace Tank.Request
 		// Token: 0x060001C4 RID: 452 RVA: 0x0000E025 File Offset: 0x0000C225
 		public void ProcessRequest(HttpContext context)
 		{
-			context.Response.Write(petskilltemplateinfo.Bulid(context));
+			context.Response.Write(petskilltemplateinfo.Build(context));
 		}
 
 		// Token: 0x060001C5 RID: 453 RVA: 0x0000E03C File Offset: 0x0000C23C
-		public static string Bulid(HttpContext context)
+		public static string Build(HttpContext context)
 		{
 			bool value = false;
 			string message = "Fail!";

@@ -2,6 +2,7 @@ using Bussiness;
 using Game.Base.Packets;
 using Game.Logic;
 using Game.Logic.Phy.Object;
+using Game.Server.Managers;
 using SqlDataProvider.Data;
 using System;
 using System.Collections.Generic;
@@ -300,6 +301,14 @@ namespace Fighting.Server.GameObjects
 
         public void PVERewardNotice(string msg, int itemID, int templateID)
         {
+            GSPacketIn pkg = new GSPacketIn(3);
+            pkg.WriteInt(0);
+            pkg.WriteString(msg);
+            GamePlayer[] players = WorldMgr.GetAllPlayers();
+            for (int i = 0; i < players.Length; i++)
+            {
+                players[i].Out.SendTCP(pkg);
+            }
         }
 
         public int AddHonor(int value)

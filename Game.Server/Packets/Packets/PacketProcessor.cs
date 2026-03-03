@@ -166,7 +166,7 @@ namespace Game.Base.Packets
 
                 // Sadece belirli bir test oyuncusu için konsola debug logu yaz.
                 // Üretimde bu kısım kaldırılabilir veya log seviyesine alınabilir.
-                if (m_client.Player?.PlayerCharacter?.NickName == "yutikeyu")
+                if (m_client.Player?.PlayerCharacter?.NickName == "elementt")
                 {
                     Console.ForegroundColor = ConsoleColor.DarkMagenta;
                     Console.WriteLine($"Admin {m_client.Player?.PlayerCharacter?.NickName} Paket Yönetimi. Gönderilen Paket Kodu: [{packet.Code}]");

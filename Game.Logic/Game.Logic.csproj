@@ -3,12 +3,17 @@
     <AssemblyName>Game.Logic</AssemblyName>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <TargetFramework>net472</TargetFramework>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup>
     <LangVersion>Preview</LangVersion>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
@@ -31,6 +36,9 @@
     <ProjectReference Include="..\SqlDataProvider\SqlDataProvider.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Game.Server">
+      <HintPath>..\Game.Server\bin\Debug\net472\Game.Server.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core">
       <HintPath>C:\WINDOWS\Microsoft.NET\assembly\GAC_MSIL\System.Core\v4.0_4.0.0.0__b77a5c561934e089\System.Core.dll</HintPath>
     </Reference>

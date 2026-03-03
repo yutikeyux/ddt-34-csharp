@@ -16,25 +16,25 @@ namespace Tank.Request.CelebList
 			bool flag = csFunction.ValidAdminIP(context.Request.UserHostAddress);
 			if (flag)
 			{
-				StringBuilder bulid = new StringBuilder();
-				bulid.Append(CelebByGpList.Build());
-				bulid.Append(CelebByDayGPList.Build());
-				bulid.Append(CelebByWeekGPList.Build());
-				bulid.Append(CelebByOfferList.Build());
-				bulid.Append(CelebByDayOfferList.Build());
-				bulid.Append(CelebByWeekOfferList.Build());
-				bulid.Append(CelebByDayFightPowerList.Build());
-				bulid.Append(CelebByConsortiaRiches.Build());
-				bulid.Append(CelebByConsortiaDayRiches.Build());
-				bulid.Append(CelebByConsortiaWeekRiches.Build());
-				bulid.Append(CelebByConsortiaHonor.Build());
-				bulid.Append(CelebByConsortiaDayHonor.Build());
-				bulid.Append(CelebByConsortiaWeekHonor.Build());
-				bulid.Append(CelebByConsortiaLevel.Build());
-				bulid.Append(CelebByDayBestEquip.Build());
-				bulid.Append(celebbyconsortiafightpower.Build());
+				StringBuilder Build = new StringBuilder();
+				Build.Append(CelebByGpList.Build());
+				Build.Append(CelebByDayGPList.Build());
+				Build.Append(CelebByWeekGPList.Build());
+				Build.Append(CelebByOfferList.Build());
+				Build.Append(CelebByDayOfferList.Build());
+				Build.Append(CelebByWeekOfferList.Build());
+				Build.Append(CelebByDayFightPowerList.Build());
+				Build.Append(CelebByConsortiaRiches.Build());
+				Build.Append(CelebByConsortiaDayRiches.Build());
+				Build.Append(CelebByConsortiaWeekRiches.Build());
+				Build.Append(CelebByConsortiaHonor.Build());
+				Build.Append(CelebByConsortiaDayHonor.Build());
+				Build.Append(CelebByConsortiaWeekHonor.Build());
+				Build.Append(CelebByConsortiaLevel.Build());
+				Build.Append(CelebByDayBestEquip.Build());
+				Build.Append(celebbyconsortiafightpower.Build());
 				context.Response.ContentType = "text/plain";
-				context.Response.Write(bulid.ToString());
+				context.Response.Write(Build.ToString());
 			}
 			else
 			{

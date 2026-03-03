@@ -3106,7 +3106,8 @@ public class GamePlayer : IGamePlayer
                     DateTime stopDate = Convert.ToDateTime(GameProperties.EndEventOldPlayer);
                     if (DateTime.Now >= startDate && DateTime.Now < stopDate)
                     {
-                        int Money = 1000; //3000000 olan değer 1000e düşürüldü not: yuti
+                        //int Money = 1000; //3000000 olan değer 1000e düşürüldü not: yuti
+                        string msg = "Eski oyuncumuz [" + m_character.NickName + "] Bombom'a geri hoşgeldi. Eski oyuncu loncasına büyük miktarda varlık getirebilir."; //türkçeleştirildi not: yuti
                         string Title = "Eski Oyuncu Geri Dönüşü"; //türkçeleştirildi not: yuti
                         string Cotent = "Tebrikler! 🎉 Uzun bir aradan sonra aramıza geri döndüğün için seni özel olarak karşılıyoruz! Bu ödüllerle macerana daha güçlü devam edebilirsin. Yeniden aramızda olman bizi çok mutlu etti! İyi oyunlar dileriz!"; //türkçeleştirildi not: yuti
                         List<ItemInfo> items = new List<ItemInfo>();
@@ -3114,12 +3115,16 @@ public class GamePlayer : IGamePlayer
                         {
                             items.Add(oldPlayerAward.itemInfo);
                         }
-                        AddMoneyLock(Money);
+                        //AddMoneyLock(Money);
                         m_character.IsOldPlayer = true;
                         m_character.isOldPlayerHasValidEquitAtLogin = true;
                         SendItemsToMail(items, Cotent, Title, eMailType.ItemOverdue);
                         Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
-                        SendMessage($"Eski oyuncu geri dönüş ödülleri kapsamında hesabınıza {Money} kupon eklendi!"); //türkçeleştirildi not: yuti
+                        GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
+                        for (int i = 0; i < allPlayers.Length; i++)
+                        {
+                            allPlayers[i].Out.SendMessage(eMessageType.SYS_NOTICE, msg);
+                        }
                     }
                 }
                 //this.QuestInventory.Restart();

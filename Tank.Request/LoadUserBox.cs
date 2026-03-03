@@ -16,7 +16,7 @@ namespace Tank.Request
 			bool flag = csFunction.ValidAdminIP(context.Request.UserHostAddress);
 			if (flag)
 			{
-				context.Response.Write(LoadUserBox.Bulid(context));
+				context.Response.Write(LoadUserBox.Build(context));
 			}
 			else
 			{
@@ -25,7 +25,7 @@ namespace Tank.Request
 		}
 
 		// Token: 0x06000160 RID: 352 RVA: 0x0000AED0 File Offset: 0x000090D0
-		public static string Bulid(HttpContext context)
+		public static string Build(HttpContext context)
 		{
 			bool value = false;
 			string message = "Fail!";

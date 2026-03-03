@@ -113,6 +113,7 @@ namespace GameServerScript.AI.NPC
             {
                 this.BuffAtağı();
                 base.Body.CallFuction(new LivingCallBack(this.NormalAtak), 2000);
+                this.morruhlar++;
             }, 2000);
         }
 

@@ -18,7 +18,7 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Web.UI;
 using Game.Server;
-using Game.Server.Managers;
+//using Game.Server.Managers;
 
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
@@ -2353,7 +2353,7 @@ namespace Game.Logic
                         // Mevcut IsTips kontrolü (Database'den gelen sabit duyurular)
                         if (info.IsTips)
                         {
-                            player.PlayerDetail.PVERewardNotice($"[{player.PlayerDetail.ZoneName}] oyuncusu değerli [{player.PlayerDetail.PlayerCharacter.NickName}] Keşif rıhtımındaki {MissionInfo.Name} keşiften değerli ödüller kazandı. Kazandıkları ödüller: {info.TemplateID} x{info.Count}. ", info.ItemID, info.TemplateID);
+                            player.PlayerDetail.PVERewardNotice($"~" + player.PlayerDetail.ZoneName +"~ oyuncusu değerli [" + player.PlayerDetail.PlayerCharacter.NickName + "] Keşif rıhtımındaki " + MissionInfo.Name + " keşiften değerli ödüller kazandı. Kazandıkları ödüller: " + info.Name + " x" + info.Count+ ".", info.ItemID, info.TemplateID);
                         }
                     }
                 }

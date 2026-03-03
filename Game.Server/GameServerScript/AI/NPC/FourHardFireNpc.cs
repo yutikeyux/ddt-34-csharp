@@ -1,68 +1,42 @@
-using Game.Logic;
 using Game.Logic.AI;
-using Game.Logic.Phy.Object;
-using System;
 
 namespace GameServerScript.AI.NPC
 {
-	public class FourHardFireNpc : ABrain
-	{
-		private int m_turn = 0;
+    public class FourHardFireNpc : ABrain
+    {
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		private int m_attackTurn = 0;
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            base.Body.CurrentDamagePlus = 1f;
+            base.Body.CurrentShootMinus = 1f;
+        }
 
-		private PhysicalObj m_moive = null;
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            base.Body.Properties1 = 0;
+        }
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            int num = base.Game.Random.Next(base.Body.X - 300, base.Body.X + 300);
+            int num2 = base.Game.Random.Next(base.Body.Y - 300, base.Body.Y + 300);
+            num = ((num < 50) ? 50 : num);
+            num = ((num > base.Game.Map.Info.DeadWidth - 50) ? (base.Game.Map.Info.DeadWidth - 50) : num);
+            num2 = ((num2 > 750) ? 750 : num2);
+            num2 = ((num2 < 50) ? 50 : num2);
+            base.Body.MoveTo(num, num2, "fly", 1000);
+        }
 
-		public override void OnStartAttacking()
-		{
-			base.OnStartAttacking();
-			if (this.m_attackTurn == 0)
-			{
-				this.Move();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 1)
-			{
-				this.Move();
-				this.m_attackTurn++;
-			}
-			else
-			{
-				this.Die();
-				this.m_attackTurn = 0;
-			}
-		}
-
-		private void Move()
-		{
-			base.Body.MoveTo(base.Game.Random.Next(300, 980), base.Game.Random.Next(300, 600), "fly", 500, "", 6, new LivingCallBack(this.CreateChild));
-		}
-
-		public void Die()
-		{
-			base.Body.PlayMovie("cry", 1000, 0);
-			base.Body.PlayMovie("die", 2000, 0);
-			base.Body.Die(3000);
-		}
-
-		private void CreateChild()
-		{
-			this.m_moive = ((PVEGame)base.Game).Createlayer(base.Body.X, base.Body.Y + 20, "moive", "game.living.Living141", "stand", 1, 0);
-		}
-
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			if (this.m_moive != null)
-			{
-				base.Game.RemovePhysicalObj(this.m_moive, true);
-				this.m_moive = null;
-			}
-		}
-	}
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
+    }
 }

@@ -128,7 +128,7 @@ namespace GameServerScript.AI.NPC
 
         private void CreateDiancipaoEffect(Player player)
         { 
-            Body.CurrentDamagePlus = 10f;
+            Body.CurrentDamagePlus = 1f;
             ((PVEGame)Game).Createlayer(player.X, player.Y, "", "asset.game.nine.diancipao", "", 1, 0, false);
             Body.BeatDirect(player, "", 1, 1, 1);
             player.AddEffect(new ContinueReduceBloodEffect(2, reduceBlood, Body), 100);

@@ -3,12 +3,17 @@
     <AssemblyName>Fighting.Server</AssemblyName>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <TargetFramework>net472</TargetFramework>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup>
     <LangVersion>Preview</LangVersion>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
@@ -20,6 +25,7 @@
     <ProjectReference Include="..\Bussiness\Bussiness.csproj" />
     <ProjectReference Include="..\Game.Base\Game.Base.csproj" />
     <ProjectReference Include="..\Game.Logic\Game.Logic.csproj" />
+    <ProjectReference Include="..\Game.Server\Game.Server.csproj" />
     <ProjectReference Include="..\SqlDataProvider\SqlDataProvider.csproj" />
   </ItemGroup>
   <ItemGroup>

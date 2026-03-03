@@ -20,7 +20,7 @@ namespace Tank.Request
         {
             if (csFunction.ValidAdminIP(context.Request.UserHostAddress))
             {
-                context.Response.Write(Bulid(context));
+                context.Response.Write(Build(context));
             }
             else
             {
@@ -28,7 +28,7 @@ namespace Tank.Request
             }
         }
 
-        public static string Bulid(HttpContext context)
+        public static string Build(HttpContext context)
         {
             XElement result = new XElement("Result");
             string message = "Fail!";
