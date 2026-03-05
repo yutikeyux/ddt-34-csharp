@@ -6,6 +6,7 @@ using Game.Server.Rooms;
 using SqlDataProvider.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Game.Server.GameRoom.Handle
 {
@@ -185,10 +186,10 @@ namespace Game.Server.GameRoom.Handle
                                 if (Player == currentRoom.Host)
                                 {
                                     // Host'a özel uyarı (Alert Info)
-                                    
-                                    Player.SendMessage(eMessageType.ALERT, string.Format("Yetersiz savaşma gücüne sahip oyuncular bulunmaktadır.\n(Oyunun Başlaması için oyuncularda gereken biresel Savaşma Gücü: {0}\nOyuncu: {1} - Kendisinin Savaşma Gücü {2})\n\nYine de başlamak istiyorsanız 'Başla' butonuna tekrar basın.", gerekengüç, p.PlayerCharacter.NickName, p.PlayerCharacter.FightPower));
-                                    currentRoom.SendMessage(eMessageType.SYS_NOTICE, string.Format("Oyuna başlanabilmesi için her bir oyuncunun minimum {0} Savaşma Gücü'ne sahip olması gereklidir. Savaşma Gücü yetersiz olan oyuncu {1}! Oyuncunun şu anki savaşma gücü: {2}. Eğer Oda sahibi {3} bu durumu kabullenirse başlamak isteyip istemediğine karar verecek!", gerekengüç, p.PlayerCharacter.NickName, p.PlayerCharacter.FightPower, currentRoom.Host.PlayerCharacter.NickName));
-                                    
+
+                                    Player.SendMessage(eMessageType.ALERT, string.Format("Gereken Güç: {0}. Oyuncu: {1} ({2}). Devam etmek için tekrar 'Başla' butonuna basın.", gerekengüç, p.PlayerCharacter.NickName, p.PlayerCharacter.FightPower));
+
+                                    currentRoom.SendMessage(eMessageType.SYS_NOTICE, string.Format("Gereken Güç: {0}. Oyuncu {1} yetersiz ({2}). Karar oda sahibi: {3}.", gerekengüç, p.PlayerCharacter.NickName, p.PlayerCharacter.FightPower, currentRoom.Host.PlayerCharacter.NickName));
                                     // Odayı onay listesine ekle
                                     _onaylistesi.Add(currentRoom.RoomId);
 
@@ -236,7 +237,7 @@ namespace Game.Server.GameRoom.Handle
                         {
                             foreach (GamePlayer p in players)
                             {
-                                p.SendMessage(string.Format("Oda sahibinde bilet bulunması gerekli. Marketten bilet alabilirsin."));
+                                p.SendMessage(string.Format("Oda sahibinde arena bileti bulunması gerekli. Marketten bilet alabilirsin."));
                                 return true;
                             }
                         }
@@ -244,9 +245,46 @@ namespace Game.Server.GameRoom.Handle
                         //Player.PropBag.RemoveTemplate(tempIdTicket, 1);
                         Player.RemoveTemplate(tempIdTicket, 1);
                     }
+                    if (currentRoom.MapId == 14)
+                    {
+                        var tempIdTicket = currentRoom.KupaBiletİsterKardeşimYa(currentRoom.HardLevel);
+                        ItemInfo info = Player.GetItemByTemplateID(tempIdTicket);
+                        if (info == null)
+                        {
+                            foreach (GamePlayer p in players)
+                            {
+                                p.SendMessage(string.Format("Oda sahibinde dünya kupası bileti bulunması gerekli. Marketten bilet alabilirsin."));
+                                return true;
+                            }
+                        }
+
+                        //Player.PropBag.RemoveTemplate(tempIdTicket, 1);
+                        Player.RemoveTemplate(tempIdTicket, 1);
+                    }
+                    // Harika Zindan için geçerli olacak harita ID'lerinin listesi
+                    int[] harikaZindanMapIds = { 13, 14, 20, 21, 22, 23, 24, 27, 29, 30, 15001, 16001 };
+
+                    // Eğer mevcut oda ID'si bu listedeki herhangi birine eşitse:
+                    if (harikaZindanMapIds.Contains(currentRoom.MapId))
+                    {
+                        var tempIdTicket = currentRoom.HarikaZindanBiletİsterKardeşimYa(currentRoom.HardLevel);
+                        ItemInfo info = Player.GetItemByTemplateID(tempIdTicket);
+
+                        if (info == null)
+                        {
+                            foreach (GamePlayer p in players)
+                            {
+                                p.SendMessage(string.Format("Oda sahibinde Harika Zindan boss bileti bulunması gerekli. Marketten bilet alabilirsin."));
+                            }
+                            return true;
+                        }
+
+                        //Player.PropBag.RemoveTemplate(tempIdTicket, 1);
+                        Player.RemoveTemplate(tempIdTicket, 1);
+                    }
                 }
 
-                if (!flag)
+                    if (!flag)
                 {
                     foreach (GamePlayer item in players)
                     {

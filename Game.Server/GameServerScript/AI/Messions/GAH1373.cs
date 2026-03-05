@@ -105,7 +105,7 @@ namespace GameServerScript.AI.Messions
 			base.OnNewTurnStarted();
 			if (base.Game.CurrentLiving != null)
 			{
-				//((Player)base.Game.CurrentLiving).Seal((Player)base.Game.CurrentLiving, 0, 0);
+				((Player)base.Game.CurrentLiving).Seal((Player)base.Game.CurrentLiving, 0, 0);
 			}
         }
 

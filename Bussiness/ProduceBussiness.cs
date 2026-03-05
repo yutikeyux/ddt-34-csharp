@@ -51,6 +51,48 @@ namespace Bussiness
             return infos.ToArray();
         }
 
+        public MysteryShopInfo[] GetAllMysteryShop()
+        {
+            List<MysteryShopInfo> list = new List<MysteryShopInfo>();
+            SqlDataReader ResultDataReader = null;
+            try
+            {
+                db.GetReader(ref ResultDataReader, "SP_Mystery_Shop_Items_All");
+                while (ResultDataReader.Read())
+                {
+                    list.Add(InitMysteryShopInfo(ResultDataReader));
+                }
+            }
+            catch (Exception ex)
+            {
+                //if (BaseBussiness.log.IsErrorEnabled)
+                //{
+                //    BaseBussiness.log.Error((object)"InitMysteryShopInfo", ex);
+                //}
+            }
+            finally
+            {
+                if (ResultDataReader != null && !ResultDataReader.IsClosed)
+                {
+                    ResultDataReader.Close();
+                }
+            }
+            return list.ToArray();
+        }
+        public MysteryShopInfo InitMysteryShopInfo(SqlDataReader dr)
+        {
+            MysteryShopInfo mysteryShopInfo = new MysteryShopInfo();
+            mysteryShopInfo.ID = (int)dr["ID"];
+            mysteryShopInfo.LableType = (int)dr["LableType"];
+            mysteryShopInfo.InfoID = (int)dr["InfoID"];
+            mysteryShopInfo.Unit = (int)dr["Unit"];
+            mysteryShopInfo.Num = (int)dr["Num"];
+            mysteryShopInfo.Price = (int)dr["Price"];
+            mysteryShopInfo.CanBuy = (int)dr["CanBuy"];
+            mysteryShopInfo.Random = (int)dr["Random"];
+            return mysteryShopInfo;
+        }
+
         public CardGroupInfo[] GetAllCardGroup()
         {
             List<CardGroupInfo> infos = new List<CardGroupInfo>();

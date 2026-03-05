@@ -3,6 +3,7 @@ using Bussiness.Managers;
 using Game.Base.Packets;
 using Game.Logic;
 using Game.Server.Games;
+using Game.Server.GypsyShop;
 using Game.Server.LittleGame;
 using Game.Server.Managers;
 using Game.Server.Packets;
@@ -94,6 +95,163 @@ namespace Game.Server.GameUtils
             set
             {
                 m_activeInfo = value;
+            }
+        }
+
+        public GSPacketIn SendGypsyShopOpenClose(bool open)
+        {
+            GSPacketIn gSPacketIn = new GSPacketIn(278, m_player.PlayerId);
+            gSPacketIn.WriteByte(1);
+            gSPacketIn.WriteBoolean(open);
+            m_player.SendTCP(gSPacketIn);
+            return gSPacketIn;
+        }
+        public void ResetMysteryShop()
+        {
+            if (m_activeInfo == null)
+            {
+                return;
+            }
+            lock (m_lock)
+            {
+                m_activeInfo.CurRefreshedTimes = 0;
+            }
+        }
+        public GypsyItemDataInfo GetMysteryShopByID(int ID)
+        {
+            GypsyItemDataInfo[] mysteryShop = MysteryShop;
+            GypsyItemDataInfo[] array = mysteryShop;
+            foreach (GypsyItemDataInfo gypsyItemDataInfo in array)
+            {
+                if (gypsyItemDataInfo.GypsyID == ID)
+                {
+                    return gypsyItemDataInfo;
+                }
+            }
+            return null;
+        }
+        public bool UpdateMysteryShopByID(int ID)
+        {
+            lock (m_lock)
+            {
+                for (int i = 0; i < MysteryShop.Length; i++)
+                {
+                    if (m_mysteryShop[i].GypsyID == ID)
+                    {
+                        m_mysteryShop[i].CanBuy = 0;
+                    }
+                }
+            }
+            return true;
+        }
+        private bool bool_0;
+        public virtual bool LoadGypsyItemDataFromDatabase()
+        {
+            if (bool_0)
+            {
+                using PlayerBussiness playerBussiness = new PlayerBussiness();
+                try
+                {
+                    if (m_mysteryShop == null)
+                    {
+                        m_mysteryShop = playerBussiness.GetAllGypsyItemDataByID(Player.PlayerCharacter.ID);
+                        if (MysteryShop.Length < 8)
+                        {
+                            m_mysteryShop = null;
+                            RefreshMysteryShop();
+                        }
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        public GSPacketIn SendGypsyShopPlayerInfo()
+        {
+            GSPacketIn gSPacketIn = new GSPacketIn(278, Player.PlayerCharacter.ID);
+            gSPacketIn.WriteByte(2);
+            gSPacketIn.WriteInt(Info.CurRefreshedTimes);
+            gSPacketIn.WriteInt(MysteryShop.Length);
+            GypsyItemDataInfo[] mysteryShop = MysteryShop;
+            GypsyItemDataInfo[] array = mysteryShop;
+            foreach (GypsyItemDataInfo gypsyItemDataInfo in array)
+            {
+                gSPacketIn.WriteInt(gypsyItemDataInfo.GypsyID);
+                gSPacketIn.WriteInt(gypsyItemDataInfo.Unit);
+                gSPacketIn.WriteInt(gypsyItemDataInfo.Price);
+                gSPacketIn.WriteInt(gypsyItemDataInfo.Num);
+                gSPacketIn.WriteInt(gypsyItemDataInfo.InfoID);
+                gSPacketIn.WriteInt(gypsyItemDataInfo.CanBuy);
+            }
+            Player.Out.SendTCP(gSPacketIn);
+            return gSPacketIn;
+        }
+        public void RefreshMysteryShopByHour()
+        {
+            DateTime now = DateTime.Now;
+            if (GameProperties.MysteryShopFreshTime == now.Hour && Info.LastRefresh.Date < now.Date)
+            {
+                Info.LastRefresh = now;
+                RefreshMysteryShop();
+            }
+        }
+        private GypsyItemDataInfo[] m_mysteryShop;
+        public GypsyItemDataInfo[] MysteryShop
+        {
+            get
+            {
+                return m_mysteryShop;
+            }
+            set
+            {
+                m_mysteryShop = value;
+            }
+        }
+        public void RefreshMysteryShop()
+        {
+            List<MysteryShopInfo> mysteryShop = GypsyShopMgr.GetMysteryShop();
+            bool flag = false;
+            lock (m_lock)
+            {
+                if (m_mysteryShop == null)
+                {
+                    m_mysteryShop = new GypsyItemDataInfo[8];
+                    flag = true;
+                }
+                int num = 0;
+                foreach (MysteryShopInfo item in mysteryShop)
+                {
+                    if (num < MysteryShop.Length)
+                    {
+                        if (flag)
+                        {
+                            GypsyItemDataInfo gypsyItemDataInfo = new GypsyItemDataInfo();
+                            gypsyItemDataInfo.UserID = m_player.PlayerId;
+                            gypsyItemDataInfo.GypsyID = item.ID;
+                            gypsyItemDataInfo.InfoID = item.InfoID;
+                            gypsyItemDataInfo.Unit = item.Unit;
+                            gypsyItemDataInfo.Num = item.Num;
+                            gypsyItemDataInfo.Price = item.Price;
+                            gypsyItemDataInfo.CanBuy = item.CanBuy;
+                            gypsyItemDataInfo.Quality = item.Quality;
+                            m_mysteryShop[num] = gypsyItemDataInfo;
+                        }
+                        else
+                        {
+                            m_mysteryShop[num].GypsyID = item.ID;
+                            m_mysteryShop[num].InfoID = item.InfoID;
+                            m_mysteryShop[num].Unit = item.Unit;
+                            m_mysteryShop[num].Num = item.Num;
+                            m_mysteryShop[num].Price = item.Price;
+                            m_mysteryShop[num].CanBuy = item.CanBuy;
+                            m_mysteryShop[num].Quality = item.Quality;
+                        }
+                    }
+                    num++;
+                }
             }
         }
         public PyramidConfigInfo PyramidConfig

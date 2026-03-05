@@ -1171,5 +1171,31 @@ namespace Game.Server.Rooms
             }
             return id;
         }
+        public int KupaBiletİsterKardeşimYa(eHardLevel level)
+        {
+            int id = 0;
+            switch (level)
+            {
+                case eHardLevel.Easy:
+                    id = 201278;// Dünya Kupa Kolay Bileti Template_ID si
+                    break;
+                
+            }
+            return id;
+        }
+
+        public int HarikaZindanBiletİsterKardeşimYa(eHardLevel level)
+        {
+            int id = 0;
+            switch (level)
+            {
+                case eHardLevel.Easy:
+                    id = 11573;// Harika Zindan Bileti Template_ID si
+                    break;
+
+            }
+            return id;
+        }
+
     }
 }

@@ -73,6 +73,56 @@ namespace Bussiness
                 }
                 return flag;
             }
+
+        }
+
+        public GypsyItemDataInfo InitGypsyItemDataInfo(SqlDataReader dr)
+        {
+            return new GypsyItemDataInfo
+            {
+                ID = (int)dr["ID"],
+                UserID = (int)dr["UserID"],
+                GypsyID = (int)dr["GypsyID"],
+                InfoID = (int)dr["InfoID"],
+                Unit = (int)dr["Unit"],
+                Num = (int)dr["Num"],
+                Price = (int)dr["Price"],
+                CanBuy = (int)dr["CanBuy"],
+                Quality = (int)dr["Quality"]
+            };
+        }
+        public GypsyItemDataInfo[] GetAllGypsyItemDataByID(int ID)
+        {
+            List<GypsyItemDataInfo> list = new List<GypsyItemDataInfo>();
+            SqlDataReader ResultDataReader = null;
+            try
+            {
+                SqlParameter[] array = new SqlParameter[1]
+                {
+                    new SqlParameter("@ID", SqlDbType.Int, 4)
+                };
+                array[0].Value = ID;
+                db.GetReader(ref ResultDataReader, "SP_Gypsy_Item_Data_All", array);
+                while (ResultDataReader.Read())
+                {
+                    list.Add(InitGypsyItemDataInfo(ResultDataReader));
+                }
+            }
+            catch (Exception ex)
+            {
+                if (BaseBussiness.log.IsErrorEnabled)
+                {
+                    BaseBussiness.log.Error((object)"InitGypsyItemDataInfo", ex);
+                }
+            }
+            finally
+            {
+                if (ResultDataReader != null && !ResultDataReader.IsClosed)
+                {
+                    ResultDataReader.Close();
+                }
+            }
+            return list.ToArray();
         }
 
         public bool DeleteQuestUser(int UserID, int QuestID)

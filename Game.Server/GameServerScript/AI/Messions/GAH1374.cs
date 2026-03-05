@@ -2,6 +2,7 @@ using Bussiness;
 using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
+using System;
 using System.Collections.Generic;
 
 namespace GameServerScript.AI.Messions
@@ -37,12 +38,12 @@ namespace GameServerScript.AI.Messions
         private int direction;
 
         private static string[] KillChat = {
-                "Tôi cuối cùng cũng thoát <br/> khỏi khống chế của <br/> Matthias, thật nhức đầu! "
+                "Sonunda Matthias'ın kontrolünden kurtuldum, ne büyük bir baş ağrısı!"
         };
 
         private static string[] ShootedChat = {
-                "Ai ya, các bạn <br/> sao lại đánh tôi? <br/> Tôi làm gì ?... ",
-                "Ui~đau quá, sao phải đánh nhau, mình phải chiến đấu ?"
+                "Aman Tanrım, neden bana vuruyorsunuz? Ne yaptım ki?... ",
+                "Ah! Çok acıyor! Neden kavga ediyoruz? Kavga etmeliyiz!"
         };
 
         public override int CalculateScoreGrade(int score)
@@ -87,7 +88,7 @@ namespace GameServerScript.AI.Messions
             m_king.FallFrom(m_king.X, 0, "", 0, 2, 2000);
             m_king.SetRelateDemagemRect(-21, -87, 72, 59);
             m_king.AddDelay(10);
-            m_king.Say(LanguageMgr.GetTranslation("Tất cả các bạn dân thường thấp hèn, dám tự tin trong cung điện của tôi!"), 0, 3000);
+            m_king.Say(LanguageMgr.GetTranslation("Ey zavallı halk, benim sarayımda böylesine özgüvenli olmaya nasıl cüret edersiniz!"), 0, 3000);
             m_kingMoive.PlayMovie("in", 9000, 0);
             m_kingFront.PlayMovie("in", 9000, 0);
             m_kingMoive.PlayMovie("out", 13000, 0);
@@ -135,7 +136,7 @@ namespace GameServerScript.AI.Messions
                     m_secondKing.SetRect(-21, -87, 72, 59);
                 }
                 m_secondKing.SetRelateDemagemRect(-21, -87, 72, 59);
-                m_secondKing.Say(LanguageMgr.GetTranslation("Bạn tức giận tôi, tôi không tha thứ cho bạn!"), 0, 3000);
+                m_secondKing.Say(LanguageMgr.GetTranslation("Bana kızgınsın ve seni affetmeyeceğim!"), 0, 3000);
                 List<Player> allFightPlayers = base.Game.GetAllFightPlayers();
                 Player player = base.Game.FindRandomPlayer();
                 int minDelay = 0;

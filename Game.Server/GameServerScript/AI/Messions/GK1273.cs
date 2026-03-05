@@ -77,7 +77,7 @@ namespace GameServerScript.AI.Messions
             this.m_king.FallFrom(this.m_king.X, 0, "", 0, 2, 2000);
             this.m_king.SetRelateDemagemRect(-21, -87, 72, 59);
             this.m_king.AddDelay(10);
-            this.m_king.Say(LanguageMgr.GetTranslation("Tất cả các bạn dân thường thấp hèn, dám tự tin trong cung điện của tôi!", Array.Empty<object>()), 0, 3000);
+            this.m_king.Say(LanguageMgr.GetTranslation("Ey zavallı halk, benim sarayımda böylesine özgüvenli olmaya nasıl cüret edersiniz!", Array.Empty<object>()), 0, 3000);
             this.m_kingMoive.PlayMovie("in", 9000, 0);
             this.m_kingFront.PlayMovie("in", 9000, 0);
             this.m_kingMoive.PlayMovie("out", 13000, 0);
@@ -134,7 +134,7 @@ namespace GameServerScript.AI.Messions
                     this.m_secondKing.SetRect(-21, -87, 72, 59);
                 }
                 this.m_secondKing.SetRelateDemagemRect(-21, -87, 72, 59);
-                this.m_secondKing.Say(LanguageMgr.GetTranslation("Bạn tức giận tôi, tôi không tha thứ cho bạn!", Array.Empty<object>()), 0, 3000);
+                this.m_secondKing.Say(LanguageMgr.GetTranslation("Bana kızgınsınız ve sizi affetmeyeceğim!", Array.Empty<object>()), 0, 3000);
                 List<Player> allFightPlayers = base.Game.GetAllFightPlayers();
                 Player player = base.Game.FindRandomPlayer();
                 int minDelay = 0;
@@ -303,14 +303,14 @@ namespace GameServerScript.AI.Messions
         // Token: 0x0400116D RID: 4461
         private static string[] KillChat = new string[]
         {
-            "Tôi cuối cùng cũng thoát <br/> khỏi khống chế của <br/> Matthias, thật nhức đầu! "
+            "Sonunda Matthias'ın kontrolünden kurtuldum, ne büyük bir baş ağrısıydı!"
         };
 
         // Token: 0x0400116E RID: 4462
         private static string[] ShootedChat = new string[]
         {
-            "Ai ya, các bạn <br/> sao lại đánh tôi? <br/> Tôi làm gì ?... ",
-            "Ui~đau quá, sao phải đánh nhau, mình phải chiến đấu ?"
+            "Aman Tanrım, neden bana vuruyorsunuz? Ne yaptım ki?... ",
+            "Ah! Çok acıyor! Neden kavga ediyoruz? Kavga etmeliyiz!"    
         };
     }
 }

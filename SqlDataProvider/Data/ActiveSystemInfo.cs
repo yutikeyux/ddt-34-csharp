@@ -47,7 +47,32 @@ namespace SqlDataProvider.Data
 				_isDirty = true;
 			}
         }
-
+        private int _curRefreshedTimes;
+        public int CurRefreshedTimes
+        {
+            get
+            {
+                return _curRefreshedTimes;
+            }
+            set
+            {
+                _curRefreshedTimes = value;
+                _isDirty = true;
+            }
+        }
+        private DateTime _lastRefresh;
+        public DateTime LastRefresh
+        {
+            get
+            {
+                return _lastRefresh;
+            }
+            set
+            {
+                _lastRefresh = value;
+                _isDirty = true;
+            }
+        }
         public int canEagleEyeCounts
         {
 			get

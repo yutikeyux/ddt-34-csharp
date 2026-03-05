@@ -42,7 +42,7 @@ namespace Game.Server.Packets.Client
                 return 0;
             }
 
-            
+
             StringBuilder str = new StringBuilder();
             int mustGold = GameProperties.PRICE_COMPOSE_GOLD;
             if (client.Player.PlayerCharacter.HasBagPassword && client.Player.PlayerCharacter.IsLocked)
@@ -151,9 +151,17 @@ namespace Game.Server.Packets.Client
                 int rand = random.Next(100);
                 switch (stone.Template.Property3)
                 {
-                    case 1:
+                    case 1: // Saldırı (Attack)
                         if (stone.Template.Property4 > item.AttackCompose)
                         {
+                            // EKLENEN KONTROL: Sıralı sentez kontrolü ve dinamik hata mesajı
+                            if (stone.Template.Property4 != item.AttackCompose + 10)
+                            {
+                                int gerekliSeviye = item.AttackCompose + 10;
+                                client.Out.SendMessage(eMessageType.ERROR, string.Format("Önce +{0} sentezini başarıyla basmanız gerekir.", gerekliSeviye));
+                                return 0;
+                            }
+
                             result = true;
                             if (probability > rand)
                             {
@@ -163,9 +171,17 @@ namespace Game.Server.Packets.Client
 
                         }
                         break;
-                    case 2:
+                    case 2: // Savunma (Defend)
                         if (stone.Template.Property4 > item.DefendCompose)
                         {
+                            // EKLENEN KONTROL
+                            if (stone.Template.Property4 != item.DefendCompose + 10)
+                            {
+                                int gerekliSeviye = item.DefendCompose + 10;
+                                client.Out.SendMessage(eMessageType.ERROR, string.Format("Önce +{0} sentezini başarıyla basmanız gerekir.", gerekliSeviye));
+                                return 0;
+                            }
+
                             result = true;
                             if (probability > rand)
                             {
@@ -175,9 +191,17 @@ namespace Game.Server.Packets.Client
 
                         }
                         break;
-                    case 3:
+                    case 3: // Çeviklik (Agility)
                         if (stone.Template.Property4 > item.AgilityCompose)
                         {
+                            // EKLENEN KONTROL
+                            if (stone.Template.Property4 != item.AgilityCompose + 10)
+                            {
+                                int gerekliSeviye = item.AgilityCompose + 10;
+                                client.Out.SendMessage(eMessageType.ERROR, string.Format("Önce +{0} sentezini başarıyla basmanız gerekir.", gerekliSeviye));
+                                return 0;
+                            }
+
                             result = true;
                             if (probability > rand)
                             {
@@ -187,9 +211,17 @@ namespace Game.Server.Packets.Client
 
                         }
                         break;
-                    case 4:
+                    case 4: // Şans (Luck)
                         if (stone.Template.Property4 > item.LuckCompose)
                         {
+                            // EKLENEN KONTROL
+                            if (stone.Template.Property4 != item.LuckCompose + 10)
+                            {
+                                int gerekliSeviye = item.LuckCompose + 10;
+                                client.Out.SendMessage(eMessageType.ERROR, string.Format("Önce +{0} sentezini başarıyla basmanız gerekir.", gerekliSeviye));
+                                return 0;
+                            }
+
                             result = true;
                             if (probability > rand)
                             {
@@ -253,5 +285,4 @@ namespace Game.Server.Packets.Client
             return 0;
         }
     }
-
 }

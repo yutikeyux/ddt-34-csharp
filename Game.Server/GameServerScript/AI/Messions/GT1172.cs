@@ -67,7 +67,7 @@ namespace GameServerScript.AI.Messions
             this.Balufu.FallFrom(this.Balufu.X, this.Balufu.Y, "fall", 0, 2, 1000);
             this.Balufu.SetRelateDemagemRect(34, -35, 11, 18);
             this.Balufu.AddDelay(10);
-            this.Balufu.Say("Dám xâm phạm địa bàn của ta, chán sống rồi à?", 0, 6000);
+            this.Balufu.Say("Canınıza susamış olmalısınız!", 0, 6000);
             this.Balufu.PlayMovie("call", 5900, 0);
             this.ArkaPlan_Efekti.PlayMovie("in", 9000, 0);
             this.Balufu.PlayMovie("weakness", 10000, 5000);
@@ -224,15 +224,15 @@ namespace GameServerScript.AI.Messions
         // Token: 0x0400118A RID: 4490
         private static string[] string_0 = new string[]
         {
-            "Gửi cho bạn trở về nhà!",
-            "Một mình, bạn có ảo tưởng có thể đánh bại tôi?"
+            "Geçmiş olsun!",
+            "Yaşamana izin vermeyeceğim!"
         };
 
         // Token: 0x0400118B RID: 4491
         private static string[] string_1 = new string[]
         {
-            " Đau ah! Đau ...",
-            "Quốc vương vạn tuế ..."
+            " Ahh bu acıdı ...",
+            " benim canım yanmaz gardaş"
         };
     }
 }

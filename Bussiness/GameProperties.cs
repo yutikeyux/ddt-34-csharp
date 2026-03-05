@@ -19,6 +19,12 @@ namespace Bussiness
         [ConfigProperty("BoxAppearCondition", "Ïä×ÓÎïÆ·ÌáÊ¾µÄµÈ¼¶", 4)]
 		public static readonly int BOX_APPEAR_CONDITION;
 
+        [ConfigProperty("MysteryShopOpenTime", "MysteryShopOpenTime", "12|0")]
+        public static readonly string MysteryShopOpenTime;
+
+        [ConfigProperty("MysteryShopFreshTime", "MysteryShopFreshTime", 18)]
+        public static int MysteryShopFreshTime; //MysteryShopFreshTime	18
+
         [ConfigProperty("Cess", "½»Ò×¿ÛË°", 0.1)]
 		public static readonly double Cess;
         [ConfigProperty("HappyRechargeOpenClose", "HappyRechargeOpenClose", true)]

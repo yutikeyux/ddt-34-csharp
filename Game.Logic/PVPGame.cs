@@ -7,6 +7,7 @@ using Game.Logic.Actions;
 using Game.Logic.Phy.Maps;
 using Game.Logic.Phy.Object;
 using Game.Server.Managers;
+using Game.Server;
 using log4net;
 using SqlDataProvider.Data;
 using System;
@@ -215,7 +216,7 @@ namespace Game.Logic
                             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
                             for (int i = 0; i < allPlayers.Length; i++)
                             {
-                                allPlayers[i].Out.SendMessage(eMessageType.SYS_NOTICE, msg);
+                                allPlayers[i].SendMessage(eMessageType.SYS_NOTICE, msg);
                             }
                             player.PlayerDetail.AddLog("TakeCard PVP: ", "MissionName: " + "|Name: " + info.Name + "|Count: " + info.Count);
                         }

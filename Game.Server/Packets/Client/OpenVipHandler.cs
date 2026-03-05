@@ -100,7 +100,7 @@ namespace Game.Server.Packets.Client
 							{
 								player.ContinuousVIP(renewval_days, now);
 								msg = "Oyuncu:" + nickname + " için VIP süresi yenileme başlarılı!";
-								message2 = client.Player.PlayerCharacter.NickName + ", Tebrikler!";
+								message2 = "Arkadaşın " + client.Player.PlayerCharacter.NickName + ", sana VIP hediyesinde bulundu!";
 							}
 							player.AddExpVip(money);
 							if (player.PlayerCharacter.typeVIP > 0)

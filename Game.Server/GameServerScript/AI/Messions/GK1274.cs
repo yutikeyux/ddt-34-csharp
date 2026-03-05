@@ -210,15 +210,15 @@ namespace GameServerScript.AI.Messions
         // Token: 0x04001178 RID: 4472
         private static string[] KillChat = new string[]
         {
-            "Chỉ được zậy thôi sao ?",
-            "Ai ya~đánh đau quá! Ah hahahaha ?",
-            "A~cũng được lấm."
+            "Hepsi bu kadar mı?",
+            "Ouch! Acıyor! Hahaha?",
+            "Ah, oldukça iyi."
         };
 
         // Token: 0x04001179 RID: 4473
         private static string[] ShootedChat = new string[]
         {
-            "Tưởng thắng rồi sao ? Chưa kết thúc đâu! Tôi còn quay lại!"
+            "Kazandığını mı sandın? Henüz bitmedi! Geri dönüyorum!"
         };
     }
 }
