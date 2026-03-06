@@ -10,7 +10,7 @@ namespace GameServerScript.AI.Messions
 		//civciv kolay etap 1
 		private List<SimpleNpc> CivcivListe;
 
-		private List<SimpleNpc> DoðdurListe;
+		private List<SimpleNpc> Doï¿½durListe;
 
 		private List<Point> KabukluListe;
 
@@ -18,17 +18,17 @@ namespace GameServerScript.AI.Messions
 
 		private PhysicalObj efekt;
 
-		private int MaxDoðmaSayýsý;
+		private int MaxDoï¿½maSayï¿½sï¿½;
 
-		private int ÝdealDoðmaSayýsý;
+		private int ï¿½dealDoï¿½maSayï¿½sï¿½;
 
-		private int KabuksuzDoðmaSayýsý;
+		private int KabuksuzDoï¿½maSayï¿½sï¿½;
 
-		private int KabukluDoðmaSayýsý;
+		private int KabukluDoï¿½maSayï¿½sï¿½;
 
-		private int KabukluArttýr;
+		private int KabukluArttï¿½r;
 
-		private int KabuksuzArttýr;
+		private int KabuksuzArttï¿½r;
 
 		private int KabukluCivciv;
 
@@ -70,11 +70,11 @@ namespace GameServerScript.AI.Messions
 		{
 			base.OnStartGame();
 			efekt = base.Game.Createlayer(1200, 955, "kingmoive", "game.living.Living176", "in", 1, 0);
-			DoðdurCivciv2(KabukluDoðmaSayýsý);
-			DoðdurCivciv1(KabuksuzDoðmaSayýsý);
+			Doï¿½durCivciv2(KabukluDoï¿½maSayï¿½sï¿½);
+			Doï¿½durCivciv1(KabuksuzDoï¿½maSayï¿½sï¿½);
 		}
 
-		private void DoðdurCivciv1(int int_8)
+		private void Doï¿½durCivciv1(int int_8)
 		{
 			for (int i = 0; i < int_8; i++)
 			{
@@ -83,32 +83,32 @@ namespace GameServerScript.AI.Messions
 			}
 		}
 
-		private void DoðdurCivciv2(int int_8)
+		private void Doï¿½durCivciv2(int int_8)
 		{
 			for (int i = 0; i < int_8; i++)
 			{
 				Point point = ((i < KabuksuzListe.Count) ? KabuksuzListe[i] : KabuksuzListe[base.Game.Random.Next(KabuksuzListe.Count)]);
-				DoðdurListe.Add(base.Game.CreateNpc(KabukluCivciv, point.X, point.Y, 0, -1));
+				Doï¿½durListe.Add(base.Game.CreateNpc(KabukluCivciv, point.X, point.Y, 0, -1));
 			}
 		}
 
 		public override void OnNewTurnStarted()
 		{
 			base.OnNewTurnStarted();
-			if (KabukluArttýr < KabuksuzDoðmaSayýsý && CivcivListe.Count < MaxDoðmaSayýsý)
+			if (KabukluArttï¿½r < KabuksuzDoï¿½maSayï¿½sï¿½ && CivcivListe.Count < MaxDoï¿½maSayï¿½sï¿½)
 			{
-				int num = ((KabuksuzDoðmaSayýsý - KabukluArttýr > MaxDoðmaSayýsý - CivcivListe.Count) ? (MaxDoðmaSayýsý - CivcivListe.Count) : (KabuksuzDoðmaSayýsý - KabukluArttýr));
+				int num = ((KabuksuzDoï¿½maSayï¿½sï¿½ - KabukluArttï¿½r > MaxDoï¿½maSayï¿½sï¿½ - CivcivListe.Count) ? (MaxDoï¿½maSayï¿½sï¿½ - CivcivListe.Count) : (KabuksuzDoï¿½maSayï¿½sï¿½ - KabukluArttï¿½r));
 				if (num > 0)
 				{
-					DoðdurCivciv1(num);
+					Doï¿½durCivciv1(num);
 				}
 			}
-			if (KabuksuzArttýr < KabukluDoðmaSayýsý && DoðdurListe.Count < ÝdealDoðmaSayýsý)
+			if (KabuksuzArttï¿½r < KabukluDoï¿½maSayï¿½sï¿½ && Doï¿½durListe.Count < ï¿½dealDoï¿½maSayï¿½sï¿½)
 			{
-				int num2 = ((KabukluDoðmaSayýsý - KabuksuzArttýr > ÝdealDoðmaSayýsý - DoðdurListe.Count) ? (ÝdealDoðmaSayýsý - DoðdurListe.Count) : (KabukluDoðmaSayýsý - KabuksuzArttýr));
+				int num2 = ((KabukluDoï¿½maSayï¿½sï¿½ - KabuksuzArttï¿½r > ï¿½dealDoï¿½maSayï¿½sï¿½ - Doï¿½durListe.Count) ? (ï¿½dealDoï¿½maSayï¿½sï¿½ - Doï¿½durListe.Count) : (KabukluDoï¿½maSayï¿½sï¿½ - KabuksuzArttï¿½r));
 				if (num2 > 0)
 				{
-					DoðdurCivciv2(num2);
+					Doï¿½durCivciv2(num2);
 				}
 			}
 		}
@@ -125,23 +125,23 @@ namespace GameServerScript.AI.Messions
 			{
 				base.Game.PveGameDelay = 0;
 			}
-			KabuksuzArttýr = 0;
-			KabukluArttýr = 0;
+			KabuksuzArttï¿½r = 0;
+			KabukluArttï¿½r = 0;
 			foreach (SimpleNpc item in CivcivListe)
 			{
 				if (item.IsLiving)
 				{
-					KabukluArttýr++;
+					KabukluArttï¿½r++;
 				}
 			}
-			foreach (SimpleNpc item2 in DoðdurListe)
+			foreach (SimpleNpc item2 in Doï¿½durListe)
 			{
 				if (item2.IsLiving)
 				{
-					KabuksuzArttýr++;
+					KabuksuzArttï¿½r++;
 				}
 			}
-			if (DoðdurListe.Count >= ÝdealDoðmaSayýsý && CivcivListe.Count >= MaxDoðmaSayýsý && base.Game.GetLivedLivings().Count <= 0)
+			if (Doï¿½durListe.Count >= ï¿½dealDoï¿½maSayï¿½sï¿½ && CivcivListe.Count >= MaxDoï¿½maSayï¿½sï¿½ && base.Game.GetLivedLivings().Count <= 0)
 			{
 				return true;
 			}
@@ -174,7 +174,7 @@ namespace GameServerScript.AI.Messions
 		public GCGCD1161()
         {
 			CivcivListe = new List<SimpleNpc>();
-			DoðdurListe = new List<SimpleNpc>();
+			Doï¿½durListe = new List<SimpleNpc>();
 			KabukluListe = new List<Point>
 			{
 				new Point(958, 950),
@@ -187,12 +187,13 @@ namespace GameServerScript.AI.Messions
 				new Point(1150, 950),
 				new Point(1346, 950)
 			};
-			MaxDoðmaSayýsý = 11;
-			ÝdealDoðmaSayýsý = 5;
-			KabuksuzDoðmaSayýsý = 4;
-			KabukluDoðmaSayýsý = 2;
+			MaxDoï¿½maSayï¿½sï¿½ = 11;
+			ï¿½dealDoï¿½maSayï¿½sï¿½ = 5;
+			KabuksuzDoï¿½maSayï¿½sï¿½ = 4;
+			KabukluDoï¿½maSayï¿½sï¿½ = 2;
 			KabukluCivciv = 7002;
 			KabuksuzCivciv = 7001;
         }
     }
 }
+//civciv kolay etap 1
