@@ -529,4 +529,6 @@
   <Item Name="WorshipTheMoonStartDate" Value="2010/1/1 0:00:00" />
   <Item Name="FreeMoonCount" Value="3" />
   <Item Name="HappyRechargeOpenClose" Value="True" />
+  <Item Name="MysteryShopOpenTime" Value="12|0" />
+  <Item Name="MysteryShopFreshTime" Value="18" />
 </Result>

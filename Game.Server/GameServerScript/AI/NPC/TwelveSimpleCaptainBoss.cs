@@ -5,7 +5,7 @@ using System;
 
 namespace GameServerScript.AI.NPC
 {
-	public class TwelveSimpleCaptainBoss : ABrain
+    public class TwelveSimpleCaptainBoss : ABrain
     {
         private int m_attackTurn = 0;
 
@@ -38,11 +38,13 @@ namespace GameServerScript.AI.NPC
         public override void OnStartAttacking()
         {
             base.OnStartAttacking();
+            // Eðer donma efekti sürüyorsa (Properties1 > 0)
             if (Body.Properties1 > 0)
             {
                 Body.Properties1--;
                 return;
             }
+
             if (m_attackTurn == 0)
             {
                 SayToPlayer();
@@ -52,7 +54,6 @@ namespace GameServerScript.AI.NPC
             {
                 MoveToPlayerAndAttack();
             }
-            //Body.Direction = Game.FindlivingbyDir(Body);
         }
 
         private void SayToPlayer()
@@ -72,6 +73,7 @@ namespace GameServerScript.AI.NPC
 
                 if (m_dis > Body.MaxBeatDis)
                 {
+                    // Living.cs'deki metod adý CallFuction olduðu için bu þekilde kullanýyoruz
                     Body.CallFuction(MoveToTarget, 1000);
                 }
                 else
@@ -83,6 +85,7 @@ namespace GameServerScript.AI.NPC
 
         private void MoveToTarget()
         {
+            // Rastgele mesafe hesaplamasý (Min ve Max ayný deðerde, doðrudan o deðeri alýr)
             int ramdis = Game.Random.Next(((SimpleBoss)Body).NpcInfo.MoveMax, ((SimpleBoss)Body).NpcInfo.MoveMax);
 
             if (m_dis < ramdis)
@@ -96,7 +99,8 @@ namespace GameServerScript.AI.NPC
         public override void OnAfterTakedFrozen()
         {
             base.OnAfterTakedFrozen();
-            Body.Properties1 = 2;
+            Body.Properties1 = 2; // 2 tur boyunca donuk kal (sýrasýný atla)
+            Body.PlayMovie("cry", 0, 22); // Düzeltilen kýsým: Buz yediðinde 'cry' (aðlama/donma) animasyonunu oynat
         }
 
         private void Beat()

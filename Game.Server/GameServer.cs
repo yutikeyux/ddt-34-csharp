@@ -436,8 +436,8 @@ namespace Game.Server
                 }
 
                 Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-                DateTime startTime = Convert.ToDateTime("00:00:00"); //lig başlama saatleri şimdilik 7/24 şekilde not: yuti
-                DateTime stopTime = Convert.ToDateTime("23:59:59"); //lig başlama saatleri şimdilik 7/24 şekilde not: yuti
+                DateTime startTime = Convert.ToDateTime("19:00:00"); //lig başlama saatleri şimdilik 7/24 şekilde not: yuti
+                DateTime stopTime = Convert.ToDateTime("20:59:59"); //lig bitme saatleri şimdilik 7/24 şekilde not: yuti
 
                 List<DayOfWeek> opendays = new List<DayOfWeek>
                 {
@@ -445,9 +445,7 @@ namespace Game.Server
                     DayOfWeek.Tuesday,
                     DayOfWeek.Wednesday,
                     DayOfWeek.Thursday,
-                    DayOfWeek.Friday,
-                    DayOfWeek.Saturday, //bunları iptal edebiliriz haftasonu lig iptal şeklinde not: yuti
-                    DayOfWeek.Sunday    //bunları iptal edebiliriz haftasonu lig iptal şeklinde not: yuti
+                    DayOfWeek.Friday,   
                 };
 
                 if (opendays.Contains(DateTime.Now.DayOfWeek))
@@ -493,8 +491,8 @@ namespace Game.Server
                 lock (RoomMgr.WorldBossRoom)
                 {
                     GamePlayer[] players = WorldMgr.GetAllPlayers();
-                    DateTime startTime = Convert.ToDateTime("00:00:00");//world boss başlama saatleri şimdilik 7/24 şekilde not: yuti
-                    DateTime stopTime = Convert.ToDateTime("23:59:59");//world boss başlama saatleri şimdilik 7/24 şekilde not: yuti
+                    DateTime startTime = Convert.ToDateTime("15:00:00");//world boss başlama saatleri şimdilik 7/24 şekilde not: yuti
+                    DateTime stopTime = Convert.ToDateTime("16:00:00");//world boss bitme saatleri şimdilik 7/24 şekilde not: yuti
                     DateTime closeTime = stopTime.AddMinutes(1.0);
                     int npcID = 1243;
                     int configblood = NPCInfoMgr.GetNpcInfoById(npcID).Blood;
@@ -621,43 +619,68 @@ namespace Game.Server
 
                 Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
-                // Gün kontrolünü (opendays) kaldırdık çünkü "her gün açık" olacak.
-                // Zaman kontrolünü Dakika bazlı yaptık ki "her saat yenilensin".
+                // --- AYARLAR ---
+                // Etkinliğin başlayacağı ve biteceği saatleri buradan ayarlayabilirsiniz.
+                DateTime startTime = Convert.ToDateTime("12:00:00"); // Başlangıç Saati (Örnek: 12:00)
+                DateTime stopTime = Convert.ToDateTime("13:00:00");  // Bitiş Saati (Örnek: 13:00)
+                DateTime closeTime = stopTime.AddMinutes(1.0);       // Tamamen Kapanış/Temizlik Zamanı
 
-                int currentMinute = DateTime.Now.Minute;
-
-                // 1. BAŞLANGIÇ: Saat başı (Dakika 0) oyun kapalıysa açar.
-                if (currentMinute >= 0 && !LittleGameWorldMgr.IsOpen)
+                // Etkinliğin açık olacağı günler
+                List<DayOfWeek> opendays = new List<DayOfWeek>
                 {
-                    LittleGameWorldMgr.OpenLittleGameSetup();
+                    DayOfWeek.Monday,
+                    DayOfWeek.Tuesday,
+                    DayOfWeek.Wednesday,
+                    DayOfWeek.Thursday,
+                    DayOfWeek.Friday,
+                    DayOfWeek.Saturday,
+                    DayOfWeek.Sunday
+                };
 
-                    // Oyun başladığında oyunculara bildirim
-                    foreach (var player in WorldMgr.GetAllPlayers())
+                // Eğer bugün izin verilen günlerden biriyse
+                if (opendays.Contains(DateTime.Now.DayOfWeek))
+                {
+                    // 1. BAŞLANGIÇ: Saat geldiğinde ve oyun kapalıysa açar.
+                    if (!LittleGameWorldMgr.IsOpen && DateTime.Now >= startTime && DateTime.Now < stopTime)
                     {
-                        player.Actives.SendLittleGameActived();
-                        player.Out.SendMessage(eMessageType.SYS_NOTICE, "Bogo Savaşı başladı! (Süre: 1 Saat)");
+                        LittleGameWorldMgr.OpenLittleGameSetup();
+
+                        foreach (var player in WorldMgr.GetAllPlayers())
+                        {
+                            player.Actives.SendLittleGameActived();
+                            player.Out.SendMessage(eMessageType.SYS_NOTICE, "Bogo Savaşı başladı! (Süre: 1 Saat)");
+                        }
+
+                        if (log.IsInfoEnabled) log.Info("LittleGame Start triggered.");
                     }
-
-                    if (log.IsInfoEnabled) log.Info("LittleGame Hourly Start triggered.");
-                }
-                // 2. BİTİŞ UYARISI: Saatin 55'inde oyun açıksa uyarı verir.
-                else if (currentMinute == 55 && LittleGameWorldMgr.IsOpen)
-                {
-                    // Dinamik geri sayım mesajı (60 - 55 = 5 dakika)
-                    string message = $"Bogo Savaşı {(60 - currentMinute)} dakika sonra sona erecek!";
-
-                    foreach (var player in WorldMgr.GetAllPlayers())
+                    // 2. BİTİŞ UYARISI & KAPANIŞ: Süre dolduğunda (stopTime) kapatır.
+                    else if (DateTime.Now >= stopTime && DateTime.Now < closeTime && LittleGameWorldMgr.IsOpen)
                     {
-                        player.Actives.SendLittleGameActived();
-                        player.Out.SendMessage(eMessageType.SYS_NOTICE, message);
-                    }
-                }
-                // 3. KAPANIŞ: Saatin 59'unda oyun açıksa kapatır (Bir sonraki saat için temizlik).
-                else if (currentMinute == 59 && LittleGameWorldMgr.IsOpen)
-                {
-                    LittleGameWorldMgr.CloseLittleGame();
+                        LittleGameWorldMgr.CloseLittleGame();
 
-                    if (log.IsInfoEnabled) log.Info("LittleGame Hourly Stop triggered.");
+                        foreach (var player in WorldMgr.GetAllPlayers())
+                        {
+                            player.Out.SendMessage(eMessageType.SYS_NOTICE, "Bogo Savaşı sona erdi.");
+                        }
+
+                        if (log.IsInfoEnabled) log.Info("LittleGame Stop triggered.");
+                    }
+                    // 3. TEMİZLİK/RESET: Kapanış süresi (closeTime) geçtiyse emin olmak için tekrar kontrol eder.
+                    else if (DateTime.Now >= closeTime && LittleGameWorldMgr.IsOpen)
+                    {
+                        // Gerekiyorsa ekstra temizlik işlemleri
+                        LittleGameWorldMgr.CloseLittleGame();
+
+                        if (log.IsInfoEnabled) log.Info("LittleGame Hard Close/Reset triggered.");
+                    }
+                    // 4. ÖN BİLDİRİM: Başlamaya 5 dakika ve daha az kaldıysa ve henüz başlamadıysa uyarı verir.
+                    else if (startTime.Subtract(DateTime.Now).TotalMinutes <= 5 && startTime.Subtract(DateTime.Now).TotalMinutes > 0 && !LittleGameWorldMgr.IsOpen && DateTime.Now < closeTime)
+                    {
+                        foreach (var player in WorldMgr.GetAllPlayers())
+                        {
+                            player.Out.SendMessage(eMessageType.GM_NOTICE, $"Bogo Savaşı {(int)startTime.Subtract(DateTime.Now).TotalMinutes} dakika sonra başlayacaktır.");
+                        }
+                    }
                 }
 
                 if (log.IsInfoEnabled)

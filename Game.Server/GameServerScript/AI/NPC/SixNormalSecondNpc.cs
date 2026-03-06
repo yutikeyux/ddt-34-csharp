@@ -1,114 +1,134 @@
+using Game.Logic;
 using Game.Logic.AI;
-using Game.Logic.Phy.Object;
-using System;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace GameServerScript.AI.NPC
 {
-	public class SixNormalSecondNpc : ABrain
-	{
-		private int m_attackTurn = 0;
+    public class SixNormalSecondNpc : ABrain
+    {
+        private int turnCount;
+        private int currentPathIndex;
+        private List<Point> pathPoints;
+        private List<Point> targetSlots;
+        private int maxStepIndex;
+        private bool isFirstTurn;
 
-		public int currentCount = 0;
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+            if (base.Body.Blood != 1)
+            {
+                ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "stand");
+                base.Body.PlayMovie("stand", 0, 0);
+            }
+        }
 
-		public int Dander = 0;
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            m_body.CurrentDamagePlus = 1f;
+            m_body.CurrentShootMinus = 1f;
+            if (base.Body.Blood == 1)
+            {
+                ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "standB");
+                base.Body.PlayMovie("standB", 0, 0);
+            }
+        }
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            currentPathIndex = 0; // DÜZELTME: 1'den 0'a çevrildi. Yolun en başından başlamalı.
+            maxStepIndex = base.Body.Config.MaxStepMove;
+            base.Body.Config.CompleteStep = false;
+        }
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			base.Body.CurrentDamagePlus = 1f;
-			base.Body.CurrentShootMinus = 1f;
-			base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			if (base.Body.Direction == -1)
-			{
-				base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
-			else
-			{
-				base.Body.SetRect(-((SimpleBoss)base.Body).NpcInfo.X - ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
-		}
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+            // Görevi tamamladıysa işlem yapma
+            if (base.Body.Config.CompleteStep) return;
 
-		public override void OnStartAttacking()
-		{
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			bool flag = false;
-			int num = 0;
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				if (current.IsLiving && current.X > 480 && current.X < 1000)
-				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
-					{
-						num = num2;
-					}
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				this.KillAttack(base.Body.X - 10000, base.Body.X + 10000);
-			}
-			else if (this.m_attackTurn == 0)
-			{
-				this.PersonalAttack();
-				this.m_attackTurn++;
-			}
-			else
-			{
-				this.AllAttack();
-				this.m_attackTurn = 0;
-			}
-		}
+            turnCount++;
+            if (isFirstTurn)
+            {
+                maxStepIndex = base.Body.Config.FirstStepMove;
+            }
+            isFirstTurn = false;
 
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-		}
+            if (base.Body.Blood > 1)
+            {
+                ProcessMovement();
+            }
+        }
 
-		private void KillAttack(int fx, int tx)
-		{
-			this.ChangeDirection(3);
-			base.Body.CurrentDamagePlus = 10f;
-			base.Body.PlayMovie("stand", 3000, 0);
-			base.Body.RangeAttacking(fx, tx, "cry", 5000, null);
-		}
+        private void ProcessMovement()
+        {
+            // Yolun sonuna geldiysek slotlara yerleş
+            if (currentPathIndex >= pathPoints.Count)
+            {
+                if ((base.Game as PVEGame).CountMosterPlace < targetSlots.Count && !base.Body.Config.CompleteStep)
+                {
+                    Point targetSlot = targetSlots[(base.Game as PVEGame).CountMosterPlace];
+                    (base.Game as PVEGame).CountMosterPlace++;
+                    ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "happy");
+                    base.Body.BoltMove(targetSlot.X, targetSlot.Y, 0);
+                    base.Body.PlayMovie("happy", 0, 0);
+                    base.Body.Config.CompleteStep = true;
+                }
+                return;
+            }
 
-		private void AllAttack()
-		{
-			this.ChangeDirection(3);
-			base.Body.CurrentDamagePlus = 0.5f;
-			base.Body.PlayMovie("stand", 1000, 0);
-			base.Body.RangeAttacking(base.Body.X - 1000, base.Body.X + 1000, "cry", 4000, null);
-		}
+            if (currentPathIndex == pathPoints.Count - 1) maxStepIndex++;
 
-		private void PersonalAttack()
-		{
-			this.ChangeDirection(3);
-			int x = base.Game.Random.Next(550, 1200);
-			int direction = base.Body.Direction;
-			base.Body.MoveTo(x, base.Body.Y, "walk", 1000, "", ((SimpleBoss)base.Body).NpcInfo.speed);
-			base.Body.ChangeDirection(base.Game.FindlivingbyDir(base.Body), 9000);
-		}
+            Point nextPoint = pathPoints[currentPathIndex];
+            string action = "walk";
 
-		private void ChangeDirection(int count)
-		{
-			int direction = base.Body.Direction;
-			for (int i = 0; i < count; i++)
-			{
-				base.Body.ChangeDirection(-direction, i * 200 + 100);
-				base.Body.ChangeDirection(direction, (i + 1) * 100 + i * 200);
-			}
-		}
-	}
+            if (nextPoint.X == base.Body.X && (nextPoint.Y == 920 || nextPoint.Y == 760)) action = "flyUp";
+            else if (nextPoint.X >= 620) action = "flyLR";
+
+            currentPathIndex++;
+
+            if (currentPathIndex <= maxStepIndex && currentPathIndex <= pathPoints.Count)
+            {
+                base.Body.MoveTo(nextPoint.X, nextPoint.Y, action, 0, ProcessMovement, 5);
+            }
+            else
+            {
+                maxStepIndex = currentPathIndex + base.Body.Config.MaxStepMove;
+                base.Body.MoveTo(nextPoint.X, nextPoint.Y, action, 0, 5);
+            }
+        }
+
+        public SixNormalSecondNpc()
+        {
+            pathPoints = new List<Point>
+            {
+                new Point(620, 1080), new Point(620, 980), new Point(720, 980), new Point(820, 980),
+                new Point(920, 980), new Point(1020, 980), new Point(1120, 980), new Point(1220, 980),
+                new Point(1320, 980), new Point(1420, 980), new Point(1520, 980), new Point(1620, 980),
+                new Point(1620, 830), new Point(1520, 830), new Point(1420, 830), new Point(1320, 830),
+                new Point(1220, 830), new Point(1120, 830), new Point(1020, 830), new Point(920, 830),
+                new Point(820, 830), new Point(720, 830), new Point(620, 830), new Point(620, 680),
+                new Point(720, 680), new Point(820, 680), new Point(920, 680), new Point(1020, 680),
+                new Point(1120, 680), new Point(1220, 680), new Point(1320, 680), new Point(1420, 680),
+                new Point(1520, 680), new Point(1620, 680), new Point(1620, 530), new Point(1520, 530),
+                new Point(1420, 530), new Point(1320, 530), new Point(1220, 530), new Point(1120, 530),
+                new Point(1020, 530), new Point(920, 530), new Point(820, 530), new Point(720, 530),
+                new Point(620, 530), new Point(620, 380), new Point(720, 380), new Point(820, 380),
+                new Point(920, 380), new Point(1020, 380), new Point(1120, 380), new Point(1220, 380),
+                new Point(1320, 380), new Point(1420, 380), new Point(1520, 380), new Point(1620, 380),
+                new Point(1620, 260)
+            };
+            targetSlots = new List<Point>
+            {
+                new Point(700, 260), new Point(800, 260), new Point(900, 260), new Point(1000, 260),
+                new Point(1100, 260), new Point(1200, 260), new Point(1300, 260), new Point(1400, 260),
+                new Point(1400, 260), new Point(1500, 260)
+            };
+            isFirstTurn = true;
+        }
+    }
 }

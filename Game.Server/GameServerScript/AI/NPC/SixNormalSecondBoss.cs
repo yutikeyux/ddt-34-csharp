@@ -1,16 +1,23 @@
+﻿using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using System;
+using System.Collections.Generic;
 
 namespace GameServerScript.AI.NPC
 {
 	public class SixNormalSecondBoss : ABrain
 	{
-		private int m_attackTurn = 0;
+		private int int_0;
 
-		public int currentCount = 0;
+		private int int_1;
 
-		public int Dander = 0;
+		private SimpleNpc[] simpleNpc_0;
+
+		private SimpleNpc[] simpleNpc_1;
+
+		private int int_2;
+
+		private List<PhysicalObj> list_0;
 
 		public override void OnBeginSelfTurn()
 		{
@@ -20,17 +27,8 @@ namespace GameServerScript.AI.NPC
 		public override void OnBeginNewTurn()
 		{
 			base.OnBeginNewTurn();
-			base.Body.CurrentDamagePlus = 1f;
-			base.Body.CurrentShootMinus = 1f;
-			base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			if (base.Body.Direction == -1)
-			{
-				base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
-			else
-			{
-				base.Body.SetRect(-((SimpleBoss)base.Body).NpcInfo.X - ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
-			}
+			m_body.CurrentDamagePlus = 1f;
+			m_body.CurrentShootMinus = 1f;
 		}
 
 		public override void OnCreated()
@@ -40,35 +38,88 @@ namespace GameServerScript.AI.NPC
 
 		public override void OnStartAttacking()
 		{
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			bool flag = false;
-			int num = 0;
-			foreach (Player current in base.Game.GetAllFightPlayers())
+			base.OnStartAttacking();
+			if (simpleNpc_0 == null || simpleNpc_1 == null)
 			{
-				if (current.IsLiving && current.X > 480 && current.X < 1000)
+				simpleNpc_0 = base.Game.GetNPCLivingWithID(int_1);
+				simpleNpc_1 = base.Game.GetNPCLivingWithID(int_0);
+			}
+			SimpleNpc[] array = simpleNpc_0;
+			int num = 0;
+			while (true)
+			{
+				if (num < array.Length)
 				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
+					if (array[num].Blood <= 1)
 					{
-						num = num2;
+						break;
 					}
-					flag = true;
+					num++;
+					continue;
+				}
+				base.Body.PlayMovie("beatA", 1000, 0);
+				(base.Game as PVEGame).SendFreeFocus(1100, 650, 1, 2500, 3000);
+				base.Body.CallFuction(method_0, 3500);
+				return;
+			}
+			base.Body.PlayMovie("beat", 1000, 0);
+			(base.Game as PVEGame).SendFreeFocus(1100, 650, 1, 2500, 3000);
+			base.Body.CallFuction(method_2, 3500);
+		}
+
+		private void method_0()
+		{
+			SimpleNpc[] array = simpleNpc_1;
+			foreach (SimpleNpc simpleNpc in array)
+			{
+				if (!simpleNpc.Config.CompleteStep)
+				{
+					list_0.Add((base.Game as PVEGame).Createlayer(simpleNpc.X, simpleNpc.Y, "front", "asset.game.six.qunti", "", 1, 0));
 				}
 			}
-			if (flag)
+			base.Body.CallFuction(method_1, 500);
+		}
+
+		private void method_1()
+		{
+			SimpleNpc[] array = simpleNpc_1;
+			foreach (SimpleNpc simpleNpc in array)
 			{
-				this.KillAttack(base.Body.X - 10000, base.Body.X + 10000);
+				if (!simpleNpc.Config.CompleteStep)
+				{
+					base.Body.BeatDirect(simpleNpc, "", 100, 1, 1);
+				}
 			}
-			else if (this.m_attackTurn == 0)
+		}
+
+		private void method_2()
+		{
+			SimpleNpc[] array = simpleNpc_0;
+			foreach (SimpleNpc simpleNpc in array)
 			{
-				this.PersonalAttack();
-				this.m_attackTurn++;
+				if (!simpleNpc.Config.CompleteStep)
+				{
+					list_0.Add((base.Game as PVEGame).Createlayer(simpleNpc.X, simpleNpc.Y, "front", "asset.game.six.qunjia", "", 1, 0));
+				}
 			}
-			else
+			base.Body.CallFuction(method_3, 500);
+		}
+
+		private void method_3()
+		{
+			SimpleNpc[] array = simpleNpc_0;
+			foreach (SimpleNpc simpleNpc in array)
 			{
-				this.AllAttack();
-				this.m_attackTurn = 0;
+				if (!simpleNpc.Config.CompleteStep)
+				{
+					simpleNpc.AddBlood(int_2);
+				}
 			}
+		}
+
+		public override void OnDie()
+		{
+			base.OnDie();
 		}
 
 		public override void OnStopAttacking()
@@ -76,39 +127,14 @@ namespace GameServerScript.AI.NPC
 			base.OnStopAttacking();
 		}
 
-		private void KillAttack(int fx, int tx)
+		public SixNormalSecondBoss()
 		{
-			this.ChangeDirection(3);
-			base.Body.CurrentDamagePlus = 10f;
-			base.Body.PlayMovie("stand", 3000, 0);
-			base.Body.RangeAttacking(fx, tx, "cry", 5000, null);
-		}
 
-		private void AllAttack()
-		{
-			this.ChangeDirection(3);
-			base.Body.CurrentDamagePlus = 0.5f;
-			base.Body.PlayMovie("stand", 1000, 0);
-			base.Body.RangeAttacking(base.Body.X - 1000, base.Body.X + 1000, "cry", 4000, null);
-		}
+			int_0 = 6121;
+			int_1 = 6122;
+			int_2 = 1000;
+			list_0 = new List<PhysicalObj>();
 
-		private void PersonalAttack()
-		{
-			this.ChangeDirection(3);
-			int x = base.Game.Random.Next(550, 1200);
-			int direction = base.Body.Direction;
-			base.Body.MoveTo(x, base.Body.Y, "walk", 1000, "", ((SimpleBoss)base.Body).NpcInfo.speed);
-			base.Body.ChangeDirection(base.Game.FindlivingbyDir(base.Body), 9000);
-		}
-
-		private void ChangeDirection(int count)
-		{
-			int direction = base.Body.Direction;
-			for (int i = 0; i < count; i++)
-			{
-				base.Body.ChangeDirection(-direction, i * 200 + 100);
-				base.Body.ChangeDirection(direction, (i + 1) * 100 + i * 200);
-			}
 		}
 	}
 }
