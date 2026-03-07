@@ -262,7 +262,7 @@ namespace Game.Server.GameRoom.Handle
                         Player.RemoveTemplate(tempIdTicket, 1);
                     }
                     // Harika Zindan için geçerli olacak harita ID'lerinin listesi
-                    int[] harikaZindanMapIds = { 13, 14, 20, 21, 22, 23, 24, 27, 29, 30, 15001, 16001 };
+                    int[] harikaZindanMapIds = { 13, 14, 20, 21, 22, 23, 24, 27, 29, 30, 15, 16 };
 
                     // Eğer mevcut oda ID'si bu listedeki herhangi birine eşitse:
                     if (harikaZindanMapIds.Contains(currentRoom.MapId))
@@ -274,7 +274,7 @@ namespace Game.Server.GameRoom.Handle
                         {
                             foreach (GamePlayer p in players)
                             {
-                                p.SendMessage(string.Format("Oda sahibinde Harika Zindan boss bileti bulunması gerekli. Marketten bilet alabilirsin."));
+                                p.SendMessage(string.Format("Oda sahibinde süper boss bileti bulunması gerekli. Marketten bilet alabilirsin."));
                             }
                             return true;
                         }

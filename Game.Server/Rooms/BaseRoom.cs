@@ -1177,7 +1177,7 @@ namespace Game.Server.Rooms
             switch (level)
             {
                 case eHardLevel.Easy:
-                    id = 201278;// Dünya Kupa Kolay Bileti Template_ID si
+                    id = 201279;// Dünya Kupa Kolay Bileti Template_ID si
                     break;
                 
             }
