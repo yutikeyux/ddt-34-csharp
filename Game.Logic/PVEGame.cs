@@ -1676,7 +1676,7 @@ namespace Game.Logic
             this.WantTryAgain = 0;
             if (!Misssions.ContainsKey(SessionId))
             {
-                BaseGame.log.ErrorFormat("[HATA] Mission Info bulunamadı! SessionId: {0}, Toplam Session Sayısı: {2}", SessionId, Misssions.Count);
+                log.ErrorFormat("[HATA] Mission Info bulunamadı!");
                 m_gameState = eGameState.ALLSessionStopped;
                 base.IsWrong = true;
                 return;

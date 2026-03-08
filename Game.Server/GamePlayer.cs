@@ -3758,6 +3758,11 @@ public class GamePlayer : IGamePlayer
                         string NoticeOnline = string.Format("Yönetici [element] oyuna giriş yaptı!");
                         WorldMgr.SendMessageAll(NoticeOnline);
                     }
+                    if (PlayerCharacter.NickName == "elementt")
+                    {
+                        string NoticeOnline = string.Format("Yönetici [elementt] oyuna giriş yaptı!");
+                        WorldMgr.SendMessageAll(NoticeOnline);
+                    }
                     if (this.PlayerCharacter.Grade >= 13 && this.Actives.IsPyramidOpen())
                     {
                         this.Out.SendPyramidOpenClose(this.Actives.PyramidConfig);
@@ -3826,21 +3831,21 @@ public class GamePlayer : IGamePlayer
         {
             case 1: // 1. sıra
                 reward.Gold = 100000;
-                reward.Coins = 50000;
+                reward.Coins = 50;
                 reward.Items.Add(new RewardItem(11025, 10));
                 reward.Items.Add(new RewardItem(11026, 5)); 
                 reward.Title = "Haftanın Şampiyonu";
                 break;
             case 2: // 2. sıra
                 reward.Gold = 80000;
-                reward.Coins = 40000;
+                reward.Coins = 40;
                 reward.Items.Add(new RewardItem(11025, 8));
                 reward.Items.Add(new RewardItem(11026, 4));
                 reward.Title = "Haftanın İkincisi";
                 break;
             case 3: // 3. sıra
                 reward.Gold = 60000;
-                reward.Coins = 30000;
+                reward.Coins = 30;
                 reward.Items.Add(new RewardItem(11025, 6));
                 reward.Items.Add(new RewardItem(11026, 3));
                 reward.Title = "Haftanın Üçüncüsü";
@@ -3848,7 +3853,7 @@ public class GamePlayer : IGamePlayer
             case 4: // 4. sıra
             case 5: // 5. sıra
                 reward.Gold = 40000;
-                reward.Coins = 20000;
+                reward.Coins = 20;
                 reward.Items.Add(new RewardItem(11025, 5));
                 reward.Title = "Haftanın En İyi 5'i";
                 break;
@@ -3858,13 +3863,13 @@ public class GamePlayer : IGamePlayer
             case 9: // 9. sıra
             case 10: // 10. sıra
                 reward.Gold = 20000;
-                reward.Coins = 10000;
+                reward.Coins = 10;
                 reward.Items.Add(new RewardItem(11025, 3));
                 reward.Title = "Haftanın En İyi 10'u";
                 break;
             default:
                 reward.Gold = 10000;
-                reward.Coins = 5000;
+                reward.Coins = 5;
                 break;
         }
 
