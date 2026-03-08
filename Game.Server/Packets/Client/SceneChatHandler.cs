@@ -884,25 +884,19 @@ namespace Game.Server.Packets.Client
 
         private void SendAdminHelp(GameClient client)
         {
-            string help = @"!mesaj <mesaj> - Oyun içine mesaj gönderir
-!mormesaj <mesaj> - Oyun içine uyarı mesaj gönderir (Sadece SuperAdmin)
-!banat <nick> - Oyuncuyu banlar (Sadece SuperAdmin)
-!banaç <nick> - Oyuncunun banını açar (Sadece SuperAdmin)
-!kickle <nick> - Oyuncuyu kickler (Sadece SuperAdmin)
-!sustur <nick> <dakika> - Oyuncuyu susturur
-!uyar <nick> <mesaj> - Oyuncuyu uyarır
-!onlinekupon <miktar> - Online oyunculara kupon gönderir (Max 100k)
-!onlineöz <miktar> - Online oyunculara onur özü gönderir (Max 100k)
-!onlinebaglikupon <miktar> - Online oyunculara bağlı kupon gönderir (Max 100k)
-!onlineexp <miktar> - Online oyunculara EXP gönderir (Max 10M)
-!onlineitem <itemid> <adet> - Online oyunculara item gönderir (Max 1000)
-!item <itemid> <adet> - Kendinize item gönderir (Sadece SuperAdmin)
-!herkes - Online oyuncu listesini gösterir
-!karalisteekle <kelime> - Yasaklı kelime ekle (SuperAdmin)
-!karalistesil <kelime> - Yasaklı kelime sil (SuperAdmin)
-!karalistereload - Listeyi yenile (SuperAdmin)";
+            string help = @"*** Admin Komutları ***
+!mesaj <msg> - Genel duyuru
+!mormesaj <msg> - Uyarı mesajı
+!sustur <nick> <dk> - Susturur
+!uyar <nick> <msg> - Uyarır
+!banat / !banaç / !kickle <nick>
+!online(kupon/öz/exp/baglikupon) <miktar>
+!onlineitem <id> <adet>
+!herkes - Online listesi
+!item <id> <adet> [SA]
+!karaliste(ekle/sil/reload)";
 
-            client.Out.SendMessage(eMessageType.ChatERROR, help);
+            client.Out.SendMessage(eMessageType.ALERT, help);
         }
 
         private void BanPlayer(string nickName, string adminName)
@@ -1204,7 +1198,7 @@ namespace Game.Server.Packets.Client
                 {
                     client.Out.SendMessage(
                         eMessageType.ALERT,
-                        "Bu hesap zaten bir Discord hesabına bağlı. Bağlantıyı kaldırmak için Discord üzerinden !ayrıl komutunu kullanın."
+                        "Bu hesap zaten bir Discord hesabına bağlı. Bağlantıyı kaldırmak için Discord üzerinden !baglantimisil komutunu kullanın."
                     );
                     return;
                 }

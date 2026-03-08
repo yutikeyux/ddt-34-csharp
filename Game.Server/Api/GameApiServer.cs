@@ -281,7 +281,7 @@ namespace Game.Server.API
 
                             if (!string.IsNullOrEmpty(template))
                             {
-                                
+
                                 string internalTemplate = template
                                     .Replace("{nick}", "{0}")
                                     .Replace("{item}", "{1}");
@@ -724,6 +724,28 @@ namespace Game.Server.API
                                 style = info.Style;
                                 colors = info.Colors;
                                 sex = info.Sex;
+
+                                // ==========================================
+                                // GÖREV EVENT TETİKLEYİCİ (EKLENEN KISIM)
+                                // ==========================================
+                                try
+                                {
+                                    // Bağlanan oyuncunun Client'ını bul
+                                    var onlineClient = WorldMgr.GetClientByPlayerNickName(nick);
+
+                                    // Client ve Player null kontrolü
+                                    if (onlineClient != null && onlineClient.Client.Player != null)
+                                    {
+                                        // GamePlayer sınıfına eklediğimiz metod ile eventi tetikle
+                                        onlineClient.Client.Player.OnDiscordLinkSuccess();
+                                        log.Info($"[API] Discord bağlantı görevi tetiklendi: {nick}");
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    log.Error("[API] Discord görev event hatası: ", ex);
+                                }
+                                // ==========================================
                             }
                         }
 
@@ -993,8 +1015,6 @@ namespace Game.Server.API
             }
         }
 
-
-
         private static bool IsAuthorized(HttpListenerRequest req)
         {
             var headerKey = req.Headers["X-API-Key"];
@@ -1033,6 +1053,7 @@ namespace Game.Server.API
             foreach (var pl in WorldMgr.GetAllPlayers())
                 pl.SendMessage(msg);
         }
+
 
         private static void TryStaticBool(string typeFullName, string methodName, object[] args = null)
         {

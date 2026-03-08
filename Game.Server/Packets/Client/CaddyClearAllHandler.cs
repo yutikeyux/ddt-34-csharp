@@ -34,11 +34,11 @@ namespace Game.Server.Packets.Client
 			}
 			if (num2 > 0)
 			{
-				str = LanguageMgr.GetTranslation("Kazanılan Altın: {0}", num2);
+				str = LanguageMgr.GetTranslation("Kazanılan Altın: " + num2);
 			}
 			if (num3 > 0)
 			{
-				str2 = LanguageMgr.GetTranslation("Kazanılan Kupon: {0}", num3);
+				str2 = LanguageMgr.GetTranslation("Kazanılan Kupon: " + num3);
 			}
 			client.Player.BeginChanges();
 			client.Player.AddGold(num2);

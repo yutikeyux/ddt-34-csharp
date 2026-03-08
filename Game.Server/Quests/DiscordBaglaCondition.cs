@@ -1,4 +1,5 @@
-﻿using SqlDataProvider.Data;
+﻿using Game.Logic;
+using SqlDataProvider.Data;
 
 namespace Game.Server.Quests
 {
@@ -7,23 +8,32 @@ namespace Game.Server.Quests
         public DiscordBaglaCondition(BaseQuest quest, QuestConditionInfo info, int value)
             : base(quest, info, value)
         {
-            //xD
         }
 
-        //public override void AddTrigger(GamePlayer player)
-        //{
-            //xD 
-        //}
+        // Görev aktif olduğunda event'i bağlar
+        public override void AddTrigger(GamePlayer player)
+        {
+            player.DiscordBaglaEvent += Player_DiscordBaglaEvent;
+        }
 
-        //public override bool IsCompleted(GamePlayer player)
-        //{
-          //  return base.Value <= 0;
-        //}
+        // Görevin tamamlanıp tamamlanmadığını kontrol eder
+        // Value (Kalan Hedef) 0 veya daha aşağısıysa tamamlanmış sayılır.
+        public override bool IsCompleted(GamePlayer player)
+        {
+            return base.Value <= 0;
+        }
 
+        // Event tetiklendiğinde çalışır (Discord bağlandığında)
+        private void Player_DiscordBaglaEvent(GamePlayer player)
+        {
+            // Hedef sayısını 1 azalt
+            base.Value--;
+        }
 
-        //public override void RemoveTrigger(GamePlayer player)
-        //{
-            //xD  
-        //}
+        // Görev bittiğinde veya iptal edildiğinde event'i temizler
+        public override void RemoveTrigger(GamePlayer player)
+        {
+            player.DiscordBaglaEvent -= Player_DiscordBaglaEvent;
+        }
     }
 }

@@ -70,6 +70,8 @@ public class GamePlayer : IGamePlayer
 
     public delegate void PlayerGameKillEventHandel(AbstractGame game, int type, int id, bool isLiving, int demage, bool isSpanArea);
 
+   
+
     public delegate void PlayerGoldCollection(int value);
 
     public delegate void PlayerGiftTokenCollection(int value);
@@ -962,6 +964,20 @@ public class GamePlayer : IGamePlayer
     public event PlayerGameKillBossEventHandel AfterKillingBoss;
 
     public event PlayerGameKillEventHandel AfterKillingLiving;
+
+    // GamePlayer.cs içinde
+
+    public event DiscordBaglaCondition DiscordBaglaEvent;
+    public delegate void DiscordBaglaCondition(GamePlayer player);
+
+    // BU METODU EKLEYİN (Event'i dışarıdan tetiklemek için)
+    public void OnDiscordLinkSuccess()
+    {
+        if (DiscordBaglaEvent != null)
+        {
+            DiscordBaglaEvent(this);
+        }
+    }
 
     public event PlayerItemPropertyEventHandle AfterUsingItem;
 

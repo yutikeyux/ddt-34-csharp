@@ -11,7 +11,7 @@ namespace Bussiness
 	{
 
 
-		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 		protected Sql_DbObject db;
 		public BaseBussiness()
 		{

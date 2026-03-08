@@ -164,6 +164,8 @@ namespace Game.Server.Quests
                 	return new PlayerOnlineSpaCondiction(quest, info, value);
 				case 103:
 					return new KesifGecmeCountluHaliCondition(quest, info, value);
+				case 104:
+					return new DiscordBaglaCondition(quest, info, value);
 
 				default:
 					if (log.IsErrorEnabled)

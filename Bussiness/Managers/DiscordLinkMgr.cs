@@ -26,6 +26,15 @@ namespace Bussiness.Managers
             }
         }
 
+        // DiscordLinkMgr.cs içine eklenecek metod
+public static bool IsUserLinked(int userId)
+{
+    using (var db = new ManageBussiness())
+    {
+        return db.IsUserAlreadyLinked(userId);
+    }
+}
+
         private static string CreateCode(int len)
         {
             const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";

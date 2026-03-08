@@ -26,7 +26,7 @@ namespace Game.Server.Packets.Client
 				foreach (ConsortiaUserInfo consortiaUserInfo in array2)
 				{
 					mailInfo.SenderID = client.Player.PlayerCharacter.ID;
-					mailInfo.Sender = "Chủ Guild " + consortiaInfo.ConsortiaName;
+					mailInfo.Sender = "Birlik " + consortiaInfo.ConsortiaName;
 					mailInfo.ReceiverID = consortiaUserInfo.UserID;
 					mailInfo.Receiver = consortiaUserInfo.UserName;
 					mailInfo.Title = title;

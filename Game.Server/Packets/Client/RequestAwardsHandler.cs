@@ -7,8 +7,8 @@ namespace Game.Server.Packets.Client
     {
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
-			packet.ReadInt();
-			packet.ReadInt();
+			packet.ReadInt(); //player name
+			packet.ReadInt(); //item name
 			return 0;
         }
     }
