@@ -152,29 +152,29 @@ namespace Game.Server.Games
 
         public static BaseGame StartPVEGame(int roomId, List<IGamePlayer> players, int copyId, eRoomType roomType, eGameType gameType, int timeType, eHardLevel hardLevel, int levelLimits, int currentFloor)
         {
-			try
-			{
-				PveInfo pveInfo = ((copyId != 0 && copyId != 100000) ? PveInfoMgr.GetPveInfoById(copyId) : PveInfoMgr.GetPveInfoByType(roomType, levelLimits));
-				if (pveInfo != null)
-				{
-					PVEGame pVEGame = new PVEGame(m_gameId++, roomId, pveInfo, players, null, roomType, gameType, timeType, hardLevel, currentFloor);
-					lock (m_games)
-					{
-						m_games.Add(pVEGame);
-					}
-					pVEGame.Prepare();
-					Console.ForegroundColor = ConsoleColor.Magenta;
-					Console.WriteLine("StartPVE type {0} with {1} player, <{2}>game count:: {5}, <{3}>{4}", pVEGame.RoomType, pVEGame.PlayerCount, pVEGame.Id, copyId, "hi", m_games.Count);
-					Console.ResetColor();
-					return pVEGame;
-				}
-				return null;
-			}
-			catch (Exception exception)
-			{
-				log.Error("Create game error:", exception);
-				return null;
-			}
+            try
+            {
+                PveInfo pveInfo = ((copyId != 0 && copyId != 100000) ? PveInfoMgr.GetPveInfoById(copyId) : PveInfoMgr.GetPveInfoByType(roomType, levelLimits));
+                if (pveInfo != null)
+                {
+                    PVEGame pVEGame = new PVEGame(m_gameId++, roomId, pveInfo, players, null, roomType, gameType, timeType, hardLevel, currentFloor);
+                    lock (m_games)
+                    {
+                        m_games.Add(pVEGame);
+                    }
+                    pVEGame.Prepare();
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.WriteLine("PVE Başlatıldı - Tip {0}, {1} Oyuncu, <{2}> Oyun Sayısı: {5}, <{3}>{4}", pVEGame.RoomType, pVEGame.PlayerCount, pVEGame.Id, copyId, "Keşif Oyun!", m_games.Count);
+                    Console.ResetColor();
+                    return pVEGame;
+                }
+                return null;
+            }
+            catch (Exception exception)
+            {
+                log.Error("Oyun oluşturma hatası:", exception);
+                return null;
+            }
         }
 
         public static BaseGame StartPVPGame(int roomId, List<IGamePlayer> red, List<IGamePlayer> blue, int mapIndex, eRoomType roomType, eGameType gameType, int timeType)

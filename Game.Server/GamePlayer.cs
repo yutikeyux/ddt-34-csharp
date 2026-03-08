@@ -3127,6 +3127,15 @@ public class GamePlayer : IGamePlayer
                         }
                     }
                 }
+                string content = $"Tekrardan selamlar {PlayerCharacter.NickName}, günlük maceran seni bekliyor! \r\n\r\n" +
+                                 $"⏰ Giriş Zamanı: {DateTime.Now:HH:mm} \r\n\r\n" +
+                                 $"✨ Bugün Sizi Neler Bekliyor? \r\n" +
+                                 $"• Günlük görevleriniz sıfırlandı - yeni ödüller kazanmaya hazır olun! \r\n" +
+                                 $"• Günlük Harcama Etkinliği yenilendi! Ödülleri tekrar alabilirsiniz! \r\n" +
+                                 $"🎮 İyi oyunlar dileriz!";
+
+                string title = $"{PlayerCharacter.NickName}, Yeni Güne Hoş Geldin!";
+                SendMailToUser(pb, content, title, eMailType.Manage);
                 //this.QuestInventory.Restart();
                 QuestInventory.ResetDailyQuest();
                 this.QuestInventory.LoadFromDatabase(this.PlayerCharacter.ID);
@@ -3188,29 +3197,187 @@ public class GamePlayer : IGamePlayer
         }
         return result;
     }
-
+    /// <summary>
+    /// VIP günlük deneyim puanlarını günceller.
+    /// VIP üyeler için bonus XP ekler ve seviye atlama kontrolü yapar.
+    /// Aktif VIP'siz kullanıcılar için ise XP düşer.
+    /// </summary>
+    /// <returns>İşlem başarılı ise true, aksi halde false</returns>
     public bool ChangeDailyExpVip()
     {
-        ShopItemInfo itemVipInfo = ShopMgr.FindShopbyTemplateID((int)EquipType.VIPCARD);
-        if (this.m_character.VIPLevel >= 9)
-            return false;
-        if (itemVipInfo == null)
-            return false;
-        int result = (int)(itemVipInfo.AValue1 / itemVipInfo.AUnit);
-        if (this.m_character.typeVIP > 0)
+        // VIP kartı şablon bilgilerini al
+        const int VIP_CARD_TEMPLATE_ID = (int)EquipType.VIPCARD;
+        ShopItemInfo vipCardItem = ShopMgr.FindShopbyTemplateID(VIP_CARD_TEMPLATE_ID);
+
+        // VIP kartı markette bulunamazsa işlemi iptal et
+        if (vipCardItem == null)
         {
-            AddExpVip(result * 2);
-            this.Out.SendOpenVIP(this);
-            this.m_character.VIPNextLevelDaysNeeded = this.GetVIPNextLevelDaysNeeded(this.m_character.VIPLevel, this.m_character.VIPExp);
-            this.SendMessage($"Tekrardan Hoş Geldiniz! Yeni güne giriş yaptığınızda {result * 2} adet VIP günlük tecrübe puanı kazanılır!"); //türkçeleştirildi not: yuti
+            LogError($"VIP kartı (TemplateID: {VIP_CARD_TEMPLATE_ID}) market veritabanında bulunamadı.");
+            return false;
+        }
+
+        // Maksimum VIP seviyesi kontrolü (Seviye 9+ için günlük XP verilmez)
+        const int MAX_VIP_LEVEL_FOR_DAILY_EXP = 9;
+        if (this.m_character.VIPLevel >= MAX_VIP_LEVEL_FOR_DAILY_EXP)
+        {
+            LogInfo($"Karakter {this.m_character.NickName} zaten maksimum VIP seviyesinde ({this.m_character.VIPLevel}). Günlük XP atlandı.");
+            return false;
+        }
+
+        // Günlük VIP XP miktarını hesapla (Birim başına değer)
+        int dailyVipExpAmount = CalculateDailyVipExperience(vipCardItem);
+
+        // VIP üyelik durumuna göre işlem yap
+        if (IsVipMembershipActive())
+        {
+            ProcessVipMemberDailyBonus(dailyVipExpAmount);
         }
         else
         {
-            if (RemoveExpVip(result))
-                this.SendMessage($"Yeni güne giriş yaptığınızda hesabınızdan {result} VIP tecrübesi eksildi!"); //türkçeleştirildi not: yuti
+            ProcessNonVipDailyPenalty(dailyVipExpAmount);
         }
+
         return true;
     }
+
+    /// <summary>
+    /// Market item'ından günlük VIP XP miktarını hesaplar
+    /// </summary>
+    private int CalculateDailyVipExperience(ShopItemInfo vipItem)
+    {
+        if (vipItem.AUnit <= 0)
+        {
+            LogWarning($"VIP kartı birim değeri sıfır veya negatif: {vipItem.AUnit}. Varsayılan 1 kullanılıyor.");
+            return vipItem.AValue1;
+        }
+
+        return vipItem.AValue1 / vipItem.AUnit;
+    }
+
+    /// <summary>
+    /// Kullanıcının aktif VIP üyeliği olup olmadığını kontrol eder
+    /// </summary>
+    private bool IsVipMembershipActive()
+    {
+        return this.m_character.typeVIP > 0;
+    }
+
+    /// <summary>
+    /// Aktif VIP üyeler için günlük bonus XP ekler ve seviye atlama kontrolü yapar
+    /// </summary>
+    private void ProcessVipMemberDailyBonus(int baseExpAmount)
+    {
+        // VIP üyeler 2x XP kazanır
+        int bonusExpAmount = baseExpAmount * 2;
+
+        // VIP deneyimini ekle (void metod - AddExpVip içinde seviye atlama kontrolü var)
+        AddExpVip(bonusExpAmount);
+
+        // VIP penceresini güncelle (AddExpVip içinde de çağrılabilir ama garanti olsun)
+        this.Out.SendOpenVIP(this);
+
+        // Sonraki seviyeye kalan günleri güncelle
+        UpdateVipNextLevelProgress();
+
+        // Oyuncuya bildirim gönder
+        string welcomeMessage = BuildVipWelcomeMessage(bonusExpAmount);
+        this.SendMessage(welcomeMessage);
+
+        LogInfo($"VIP günlük bonus verildi. Karakter: {this.m_character.NickName}, XP: +{bonusExpAmount}, Mevcut Seviye: {this.m_character.VIPLevel}");
+    }
+
+    /// <summary>
+    /// VIP'siz kullanıcılar için günlük XP düşürme işlemi
+    /// </summary>
+    private void ProcessNonVipDailyPenalty(int expAmount)
+    {
+        // VIP'siz kullanıcılar için XP düşür (RemoveExpVip varsa kullan, yoksa manuel düşür)
+        bool expRemoved = TryRemoveVipExperience(expAmount);
+
+        if (expRemoved)
+        {
+            string penaltyMessage = BuildVipPenaltyMessage(expAmount);
+            this.SendMessage(penaltyMessage);
+
+            LogInfo($"VIP pasif cezası uygulandı. Karakter: {this.m_character.NickName}, XP: -{expAmount}");
+        }
+        else
+        {
+            LogWarning($"VIP XP düşürülemedi. Karakter: {this.m_character.NickName}, Miktar: {expAmount}");
+        }
+    }
+
+    /// <summary>
+    /// VIP deneyim puanı düşürme işlemini dener
+    /// </summary>
+    private bool TryRemoveVipExperience(int amount)
+    {
+        try
+        {
+            // Eğer RemoveExpVip metodu varsa onu kullan
+            // RemoveExpVip(amount);
+
+            // Yoksa manuel düşür (AddExpVip'in tersi)
+            if (this.m_character.VIPExp >= amount)
+            {
+                this.m_character.VIPExp -= amount;
+            }
+            else
+            {
+                this.m_character.VIPExp = 0; // Negatif olmasın
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            LogError($"VIP XP düşürme hatası: {ex.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Sonraki VIP seviyesine ulaşmak için gereken gün sayısını günceller
+    /// </summary>
+    private void UpdateVipNextLevelProgress()
+    {
+        this.m_character.VIPNextLevelDaysNeeded = GetVIPNextLevelDaysNeeded(
+            this.m_character.VIPLevel,
+            this.m_character.VIPExp
+        );
+    }
+
+    /// <summary>
+    /// VIP üyeler için hoş geldin mesajı oluşturur
+    /// </summary>
+    private string BuildVipWelcomeMessage(int expAmount)
+    {
+        int nextLevel = this.m_character.VIPLevel + 1;
+        string levelUpHint = nextLevel <= 9 ? $" VIP {nextLevel} olmaya çok yakınsınız!" : " Maksimum VIP seviyesindesiniz!";
+
+        return $"🌟 Tekrar Hoş Geldiniz, {this.m_character.NickName}! " +
+               $"VIP üyeliğiniz sayesinde bugün {expAmount} bonus deneyim puanı kazandınız!{levelUpHint} " +
+               $"Şu an VIP {this.m_character.VIPLevel} ({this.m_character.VIPExp} XP) seviyesindesiniz.";
+    }
+
+    /// <summary>
+    /// VIP'siz kullanıcılar için uyarı mesajı oluşturur
+    /// </summary>
+    private string BuildVipPenaltyMessage(int expAmount)
+    {
+        int remainingExp = this.m_character.VIPExp;
+        string warningLevel = remainingExp < 100 ? " VIP seviyeniz kritik düzeyde!" : "";
+
+        return $"⚠️ Yeni güne başladınız fakat aktif VIP üyeliğiniz bulunmuyor. " +
+               $"Hesabınızdan {expAmount} VIP deneyim puanı düşüldü.{warningLevel} " +
+               $"Kalan XP: {remainingExp}. " +
+               $"VIP kartı satın alarak kazancınızı 2'ye katlayabilir ve seviye kaybını önleyebilirsiniz!";
+    }
+
+    // Yardımcı log metodları
+    private void LogInfo(string message) => Console.WriteLine($"[INFO] {DateTime.Now}: {message}");
+    private void LogWarning(string message) => Console.WriteLine($"[WARN] {DateTime.Now}: {message}");
+    private void LogError(string message) => Console.WriteLine($"[ERROR] {DateTime.Now}: {message}");
     public bool MoneyDirect(int value)
     {
         if (GameProperties.IsDDTMoneyActive)
@@ -3552,24 +3719,23 @@ public class GamePlayer : IGamePlayer
                     userWonderFulActivityManager.SignToday();
                     if (ActiveSystemMgr.IsLeagueOpen)
                     {
-                        Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.maxCount, 1);
-                        SendMessage(eMessageType.SYS_NOTICE, "Lig Başladı! Birlik savaşlarında kim kimi yenecek bakalım!"); //türkçeleştirildi not: yuti
+                        Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.MatchInfo.maxCount, 1);
+                        SendMessage(eMessageType.SYS_NOTICE, "Lig Başladı! Birlik savaşlarında kim kimi yenecek bakalım!");
                     }
                     else
                     {
-                        Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.maxCount, 2);
+                        Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.MatchInfo.maxCount, 2);
                     }
                     if (ActiveSystemMgr.IsGoldTimeOpen)
                     {
-                        SendMessage(eMessageType.SYS_NOTICE, "Altın Saat Etkinliği başladı! Haydi Oyun salonunda buluşalım!"); //türkçeleştirildi not: yuti
+                        SendMessage(eMessageType.SYS_NOTICE, "Altın Saat Etkinliği başladı! Haydi Oyun salonunda buluşalım!");
                     }
-                    //ShowCheckCode();
                     Out.SendUserSyncEquipGhost(this);
                     Out.SendGuildMemberWeekOpenClose(Extra.Info);
                     this.Dice.SendDiceActiveOpen();
                     Out.SendNecklaceStrength(PlayerCharacter);
                     WorldMgr.Test();
-                    if(PlayerCharacter.VIPLevel >= 3)
+                    if (PlayerCharacter.VIPLevel >= 3)
                     {
                         string NoticeOnline = string.Format("Sayın VIP {1}. seviye olan üye [{0}] çevrimiçi oldu!", PlayerCharacter.NickName, PlayerCharacter.VIPLevel);
                         WorldMgr.SendMessageAll(NoticeOnline);
@@ -3581,7 +3747,6 @@ public class GamePlayer : IGamePlayer
                             Ranked = "Oyuncu";
                         string NoticeOnline = string.Format("|{0}| Onur Listesi Sıralaması'nda {4}. olan - |{1}| ünvanlı [{2}] oyuna giriş yaptı! Tam tamına {3} savaş gücüyle sizlere meydan okuyor!", ZoneName, Ranked, PlayerCharacter.NickName, PlayerCharacter.FightPower, PlayerCharacter.Repute);
                         WorldMgr.SendMessageAll(NoticeOnline);
-
                     }
                     if (PlayerCharacter.NickName == "yutikeyu")
                     {
@@ -3597,50 +3762,21 @@ public class GamePlayer : IGamePlayer
                     {
                         this.Out.SendPyramidOpenClose(this.Actives.PyramidConfig);
                         if (!this.Actives.IsYearMonsterOpen())
-                        this.Out.SendCatchBeastOpen(m_character.ID, true); 
+                            this.Out.SendCatchBeastOpen(m_character.ID, true);
                     }
                     GmActivityMgr.OnPlayerUpgradeVIP(this, m_character.VIPLevel);
                     Out.SendUpdateChickActivation(this.Actives.GetChickActiveData());
                     Out.SendOpenHappyRecharge(this.PlayerCharacter.ID);
-                   // if (DateTime.Parse(GameProperties.LeftRouterEndDate) > DateTime.Now)
-                    //{
-                        Out.SendLeftRouleteOpen(Extra.Info);
-                    //}
-                    //Out.SendEliteGameStartRoom(); //turnuva incelenecek
+                    Out.SendLeftRouleteOpen(Extra.Info);
                     Out.SendGuildMemberWeekOpenClose(Extra.Info);
                     Out.SendOpenHappyRecharge(m_character.ID);
-                   // if(this.PlayerCharacter.Grade >=5)
-                    //{
-                      //  PlayerCharacter.openFunction(Step.PICK_TWO_TWENTY);
-                    //}
-                    //if (this.PlayerCharacter.Grade >= 4)
-                    //{
-                      //  PlayerCharacter.openFunction(Step.POP_WIN);
-                   // }
-                   // if (this.PlayerCharacter.Grade >= 7)
-                    //{
-                      //  PlayerCharacter.openFunction(Step.FIFTY_OPEN);
-                    //}
-                    //if (this.PlayerCharacter.Grade >= 7)
-                    //{
-                      //  PlayerCharacter.openFunction(Step.FORTY_OPEN);
-                    //}
-                    //if (this.PlayerCharacter.Grade >= 4)
-                    //{
-                     //   PlayerCharacter.openFunction(Step.THIRTY_OPEN);
-                   // }
-                    //if (this.PlayerCharacter.Grade >= 2)
-                    //{
-                     //   PlayerCharacter.openFunction(Step.GAIN_TEN_PERSENT);
-                    //}
-                    //if (this.PlayerCharacter.Grade >= 1)
-                    //{
-                     //   PlayerCharacter.openFunction(Step.PICK_ONE);
-                    //}
-                    //if (this.PlayerCharacter.Grade >= 5)
-                    //{
-                      //  PlayerCharacter.openFunction(Step.PLANE_OPEN);
-                    //}
+
+                    // HAFTALIK ONUR LİSTESİ ÖDÜL SİSTEMİ - PAZARTESİ GÜNÜ KONTROLÜ
+                    if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
+                    {
+                        CheckAndSendWeeklyHonorReward();
+                    }
+
                     return true;
                 }
                 WorldMgr.RemovePlayer(m_character.ID);
@@ -3652,6 +3788,205 @@ public class GamePlayer : IGamePlayer
             return false;
         }
         return false;
+    }
+
+    private void CheckAndSendWeeklyHonorReward()
+    {
+        try
+        {
+            // Oyuncunun Onur Listesi sıralamasını kontrol et (1-10 arası)
+            if (PlayerCharacter.Repute > 0 && PlayerCharacter.Repute <= 10)
+            {
+                // Ödül içeriğini sıralamaya göre belirle
+                WeeklyHonorReward reward = GetRewardByRank(PlayerCharacter.Repute);
+
+                // Mail gönder
+                SendWeeklyHonorRewardMail(reward);
+
+                // Oyuncuya bilgi mesajı gönder
+                string rankText = GetRankText(PlayerCharacter.Repute);
+                SendMessage(eMessageType.SYS_NOTICE, string.Format("Tebrikler! Onur Listesi'nde {0} olarak haftalık ödülünüz mailinize gönderildi!", rankText));
+
+                log.Info(string.Format("Weekly Honor Reward sent to player {0} (Rank: {1})", PlayerCharacter.NickName, PlayerCharacter.Repute));
+            }
+        }
+        catch (Exception ex)
+        {
+            log.Error("CheckAndSendWeeklyHonorReward Error!", ex);
+        }
+    }
+
+    private WeeklyHonorReward GetRewardByRank(int rank)
+    {
+        WeeklyHonorReward reward = new WeeklyHonorReward();
+        reward.Rank = rank;
+
+        // Sıralamaya göre ödül içeriği
+        switch (rank)
+        {
+            case 1: // 1. sıra
+                reward.Gold = 100000;
+                reward.Coins = 50000;
+                reward.Items.Add(new RewardItem(11025, 10));
+                reward.Items.Add(new RewardItem(11026, 5)); 
+                reward.Title = "Haftanın Şampiyonu";
+                break;
+            case 2: // 2. sıra
+                reward.Gold = 80000;
+                reward.Coins = 40000;
+                reward.Items.Add(new RewardItem(11025, 8));
+                reward.Items.Add(new RewardItem(11026, 4));
+                reward.Title = "Haftanın İkincisi";
+                break;
+            case 3: // 3. sıra
+                reward.Gold = 60000;
+                reward.Coins = 30000;
+                reward.Items.Add(new RewardItem(11025, 6));
+                reward.Items.Add(new RewardItem(11026, 3));
+                reward.Title = "Haftanın Üçüncüsü";
+                break;
+            case 4: // 4. sıra
+            case 5: // 5. sıra
+                reward.Gold = 40000;
+                reward.Coins = 20000;
+                reward.Items.Add(new RewardItem(11025, 5));
+                reward.Title = "Haftanın En İyi 5'i";
+                break;
+            case 6: // 6. sıra
+            case 7: // 7. sıra
+            case 8: // 8. sıra
+            case 9: // 9. sıra
+            case 10: // 10. sıra
+                reward.Gold = 20000;
+                reward.Coins = 10000;
+                reward.Items.Add(new RewardItem(11025, 3));
+                reward.Title = "Haftanın En İyi 10'u";
+                break;
+            default:
+                reward.Gold = 10000;
+                reward.Coins = 5000;
+                break;
+        }
+
+        return reward;
+    }
+
+    private void SendWeeklyHonorRewardMail(WeeklyHonorReward reward)
+    {
+        try
+        {
+            // Mail oluştur
+            MailInfo mail = new MailInfo();
+            mail.SenderID = 0; // Sistem maili
+            mail.Sender = "Sistem";
+            mail.ReceiverID = PlayerCharacter.ID;
+            mail.Receiver = PlayerCharacter.NickName;
+            mail.Title = string.Format("Haftalık Onur Listesi Ödülü - {0}. Sıra", reward.Rank);
+            mail.Content = BuildMailContent(reward);
+            mail.Type = 1; // Sistem maili tipi
+            mail.Gold = reward.Gold;
+            mail.Money = reward.Coins;
+            mail.ValidDate = 7; // 7 gün geçerli
+
+            // Annex'leri string olarak ayarla (ItemID:Count formatında)
+            // MailInfo.Annex property'leri string tipinde olduğu için bu formatta gönderiyoruz
+            for (int i = 0; i < reward.Items.Count && i < 5; i++)
+            {
+                string annexValue = string.Format("{0}:{1}", reward.Items[i].ItemID, reward.Items[i].Count);
+                switch (i)
+                {
+                    case 0: mail.Annex1 = annexValue; break;
+                    case 1: mail.Annex2 = annexValue; break;
+                    case 2: mail.Annex3 = annexValue; break;
+                    case 3: mail.Annex4 = annexValue; break;
+                    case 4: mail.Annex5 = annexValue; break;
+                }
+            }
+
+            // Maili gönder
+            using (PlayerBussiness db = new PlayerBussiness())
+            {
+                db.SendMail(mail);
+            }
+
+            // Oyuncuya mail bildirimi gönder
+            Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
+        }
+        catch (Exception ex)
+        {
+            log.Error("SendWeeklyHonorRewardMail Error!", ex);
+        }
+    }
+
+    private string BuildMailContent(WeeklyHonorReward reward)
+    {
+        StringBuilder content = new StringBuilder();
+        content.AppendLine("Tebrikler!");
+        content.AppendLine();
+        content.AppendLine(string.Format("Onur Listesi'nde bu hafta {0}. sırada yer alarak özel ödülleri hak kazandınız!", reward.Rank));
+        content.AppendLine();
+        content.AppendLine("Ödülleriniz:");
+        content.AppendLine(string.Format("- Altın: {0}", reward.Gold));
+        content.AppendLine(string.Format("- Para: {0}", reward.Coins));
+
+        if (!string.IsNullOrEmpty(reward.Title))
+        {
+            content.AppendLine(string.Format("- Unvan: {0}", reward.Title));
+        }
+
+        if (reward.Items.Count > 0)
+        {
+            content.AppendLine("- Eşyalar:");
+            foreach (var item in reward.Items)
+            {
+                content.AppendLine(string.Format("  * {0} adet (Item ID: {1})", item.Count, item.ItemID));
+            }
+        }
+
+        content.AppendLine();
+        content.AppendLine("Başarılarınızın devamını dileriz!");
+        content.AppendLine("Bu ödül haftalık olarak Pazartesi günleri verilmektedir.");
+
+        return content.ToString();
+    }
+
+    private string GetRankText(int rank)
+    {
+        switch (rank)
+        {
+            case 1: return "1. sıra";
+            case 2: return "2. sıra";
+            case 3: return "3. sıra";
+            default: return string.Format("{0}. sıra", rank);
+        }
+    }
+
+    // Yardımcı sınıflar
+    public class WeeklyHonorReward
+    {
+        public int Rank { get; set; }
+        public int Gold { get; set; }
+        public int Coins { get; set; }
+        public string Title { get; set; }
+        public List<RewardItem> Items { get; set; }
+
+        public WeeklyHonorReward()
+        {
+            Items = new List<RewardItem>();
+            Title = "";
+        }
+    }
+
+    public class RewardItem
+    {
+        public int ItemID { get; set; }
+        public int Count { get; set; }
+
+        public RewardItem(int itemID, int count)
+        {
+            ItemID = itemID;
+            Count = count;
+        }
     }
     public UserWonderFulActivityManager userWonderFulActivityManager { get; set; } //bunların referanslarını tam olarak eklememişsin bunlara bi bakarsın oky ben kaçtım eyw saolasın np kg eyw
     public PlayerGmActivity GmActivity

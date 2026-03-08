@@ -1674,7 +1674,14 @@ namespace Game.Logic
             ClearMissionData();
             m_gameOverResources.Clear();
             this.WantTryAgain = 0;
-            m_missionInfo = Misssions[SessionId];
+            if (!Misssions.ContainsKey(SessionId))
+            {
+                BaseGame.log.ErrorFormat("[HATA] Mission Info bulunamadı! SessionId: {0}, Toplam Session Sayısı: {2}", SessionId, Misssions.Count);
+                m_gameState = eGameState.ALLSessionStopped;
+                base.IsWrong = true;
+                return;
+            }
+            m_missionInfo = Misssions[SessionId]; // line 1677 misson info bulamama hatasıxD 
             if (m_missionInfo == null)
             {
                 m_gameState = eGameState.ALLSessionStopped;

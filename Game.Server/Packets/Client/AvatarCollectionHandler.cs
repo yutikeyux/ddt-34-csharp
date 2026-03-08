@@ -2,200 +2,377 @@
 using Game.Server.Managers;
 using SqlDataProvider.Data;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Game.Server.Packets.Client
 {
-    [PacketHandler((short)ePackageType.AVATAR_COLLECTION, "场景用户离开")]
+    [PacketHandler((short)ePackageType.AVATAR_COLLECTION, "Avatar Collection Handler")]
     public class AvatarCollectionHandler : IPacketHandler
     {
+        #region Constants
+
+        private const byte CMD_ACTIVATE_ITEM = 3;
+        private const byte CMD_RENEW_COLLECTION = 4;
+        private const int PACKET_ID = 402;
+        private const int DEFAULT_ACTIVATE_DAYS = 7;
+        private const string ERROR_ITEM_NOT_FOUND = "Böyle bir çizim bulunamadı.";
+        private const string ERROR_SET_NOT_AVAILABLE = "Bu çizim seti mevcut değil.";
+        private const string ERROR_INSUFFICIENT_GOLD = "Yetersiz altın.";
+        private const string ERROR_BAG_FULL = "Envanter dolu! Mail kutunuzu kontrol edin.";
+        private const string ERROR_ACTIVATION_FAILED = "Çizim etkinleştirme hatası.";
+        private const string ERROR_NOT_ACTIVATED = "Bu kıyafeti henüz etkinleştirmediniz.";
+        private const string ERROR_RENEW_NOT_ENOUGH_ITEMS = "Yenileme için çizim setinin yarısından fazlasını aktifleştirmeniz gerekmektedir.";
+        private const string ERROR_CANNOT_RENEW = "Bu çizim seti yenilenemez!";
+        private const string ERROR_FEATURE_DISABLED = "Bu özellik şu an aktif değil.";
+        private const string SUCCESS_ACTIVATION = "Çizim başarıyla etkinleştirildi!";
+        private const string SUCCESS_RENEWAL = "{0} çizim seti başarıyla yenilendi.";
+
+        #endregion
+
+        #region Packet Handler
+
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
-            byte b = packet.ReadByte();
-            int result;
-            switch (b)
+            if (client == null || client.Player == null)
             {
-                case 3:
-                    {
-                        int num = packet.ReadInt();
-                        int num2 = packet.ReadInt();
-                        int num3 = packet.ReadInt();
-                        if (client.Player.EquipBag.GetItemByTemplateID(0, num2) != null)
-                        {
-                            ClothGroupTemplateInfo clothGroup = ClothGroupTemplateInfoMgr.GetClothGroup(num, num2, num3);
-                            if (clothGroup == null)
-                            {
-                                client.Player.SendMessage("Böyle bir çizim yok.");
-                            }
-                            else
-                            {
-                                ClothPropertyTemplateInfo clothPropertyWithID = ClothPropertyTemplateInfoMgr.GetClothPropertyWithID(clothGroup.ID);
-                                if (clothPropertyWithID == null)
-                                {
-                                    client.Player.SendMessage("Bu çizimi içeren set mevcut değil.");
-                                }
-                                else if (client.Player.PlayerCharacter.Gold < clothGroup.Cost)
-                                {
-                                    client.Player.SendMessage("Altın yetersiz.");
-                                }
-                                else
-                                {
-                                    client.Player.RemoveGold(clothGroup.Cost);
-                                    bool flag = false;
-                                    bool flag2 = false;
-                                    UserAvatarCollectionInfo userAvatarCollectionInfo = client.Player.AvatarCollect.GetAvatarCollectWithAvatarID(clothGroup.ID);
-                                    if (userAvatarCollectionInfo == null)
-                                    {
-                                        userAvatarCollectionInfo = new UserAvatarCollectionInfo(client.Player.PlayerCharacter.ID, clothPropertyWithID.ID, clothPropertyWithID.Sex, false, DateTime.Now);
-                                        client.Player.AvatarCollect.AddAvatarCollection(userAvatarCollectionInfo);
-                                    }
-                                    UserAvatarCollectionDataInfo item = new UserAvatarCollectionDataInfo(clothGroup.TemplateID, clothGroup.Sex);
-                                    if (!userAvatarCollectionInfo.AddItem(item))
-                                    {
-                                        client.Player.AddGold(clothGroup.Cost);
-                                        client.Player.SendMessage("Çizim etkinleştirme hatası.");
-                                    }
-                                    else
-                                    {
-                                        int num4 = ClothGroupTemplateInfoMgr.CountClothGroupWithID(userAvatarCollectionInfo.AvatarID);
-                                        if (userAvatarCollectionInfo.Items.Count == num4 / 2 && !userAvatarCollectionInfo.IsActive)
-                                        {
-                                            userAvatarCollectionInfo.ActiveAvatar(10);
-                                            flag = true;
-                                        }
-                                        if (userAvatarCollectionInfo.Items.Count == num4 / 2 || userAvatarCollectionInfo.Items.Count == num4)
-                                        {
-                                            flag2 = true;
-                                        }
-                                        if (flag)
-                                        {
-                                            GSPacketIn gSPacketIn = new GSPacketIn(402);
-                                            gSPacketIn.WriteByte(4);
-                                            gSPacketIn.WriteInt(userAvatarCollectionInfo.AvatarID);
-                                            gSPacketIn.WriteInt(userAvatarCollectionInfo.Sex);
-                                            gSPacketIn.WriteDateTime(userAvatarCollectionInfo.TimeEnd);
-                                            client.Player.SendTCP(gSPacketIn);
-                                        }
-                                        GSPacketIn gSPacketIn2 = new GSPacketIn(402);
-                                        gSPacketIn2.WriteByte(3);
-                                        gSPacketIn2.WriteInt(num);
-                                        gSPacketIn2.WriteInt(num2);
-                                        gSPacketIn2.WriteInt(num3);
-                                        client.Player.SendTCP(gSPacketIn2);
-                                        if (flag2)
-                                        {
-                                            client.Player.EquipBag.UpdatePlayerProperties();
-                                        }
-                                        client.Player.SendMessage("Başarılı!");
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            client.Player.SendMessage("Sırt çantan doldu! Mailini kontrol et!");
-                        }
-                        result = 1;
-                        break;
-                    }
-                case 4:
-                    {
-                        int num5 = packet.ReadInt();
-                        int num6 = packet.ReadInt();
-                        if (num6 <= 0)
-                        {
-                            result = 0;
-                        }
-                        else if (num5 == -1)
-                        {
-                            int num7 = 0;
-                            foreach (UserAvatarCollectionInfo current in client.Player.AvatarCollect.AvatarCollect)
-                            {
-                                if (!current.IsAvailable())
-                                {
-                                    ClothPropertyTemplateInfo clothPropertyWithID2 = ClothPropertyTemplateInfoMgr.GetClothPropertyWithID(current.AvatarID);
-                                    if (clothPropertyWithID2 != null)
-                                    {
-                                        //int num8 = clothPropertyWithID2.Cost * num6;
-                                        //if (client.Player.PlayerCharacter.myHonor < num8 || num8 <= 0)
-                                        //{
-                                        //	client.Player.SendMessage("Vinh dự không đủ để tiếp phí");
-                                        //	break;
-                                        //}
-                                        //client.Player.RemovemyHonor(num8);
-                                        //current.ActiveAvatar(num6);
-                                        //num7++;
-
-                                        client.Player.SendMessage("Özellik Henüz açılmadı.");
-                                        break;
-                                    }
-                                }
-                            }
-                            if (num7 > 0)
-                            {
-                                client.Player.Out.SendAvatarCollect(client.Player.AvatarCollect);
-                                client.Player.SendMessage("" + num7 + " çizim seti başarıyla yenilendi.");
-                            }
-                            result = 1;
-                        }
-                        else
-                        {
-                            UserAvatarCollectionInfo avatarCollectWithAvatarID = client.Player.AvatarCollect.GetAvatarCollectWithAvatarID(num5);
-                            if (avatarCollectWithAvatarID != null)
-                            {
-                                if (avatarCollectWithAvatarID.Items == null)
-                                {
-                                    avatarCollectWithAvatarID.UpdateItems();
-                                }
-                                int num9 = ClothGroupTemplateInfoMgr.CountClothGroupWithID(avatarCollectWithAvatarID.AvatarID);
-                                if (avatarCollectWithAvatarID.Items.Count >= num9 / 2)
-                                {
-                                    ClothPropertyTemplateInfo clothPropertyWithID3 = ClothPropertyTemplateInfoMgr.GetClothPropertyWithID(num5);
-                                    if (clothPropertyWithID3 == null)
-                                    {
-                                        client.Player.SendMessage("Bu çizim seti yenilenemez!");
-                                    }
-                                    else
-                                    {
-                                        //int num10 = clothPropertyWithID3.Cost * num6;
-                                        //if (client.Player.PlayerCharacter.myHonor < num10 || num10 <= 0)
-                                        //{
-                                        //    client.Player.SendMessage("Vinh dự của bạn không đủ.");
-                                        //}
-                                        //else
-                                        //{
-                                        //    client.Player.RemovemyHonor(num10);
-                                        //    avatarCollectWithAvatarID.ActiveAvatar(num6);
-                                        //    GSPacketIn gSPacketIn2 = new GSPacketIn(402);
-                                        //    gSPacketIn2.WriteByte(4);
-                                        //    gSPacketIn2.WriteInt(avatarCollectWithAvatarID.AvatarID);
-                                        //    gSPacketIn2.WriteInt(avatarCollectWithAvatarID.Sex);
-                                        //    gSPacketIn2.WriteDateTime(avatarCollectWithAvatarID.TimeEnd);
-                                        //    client.Player.SendTCP(gSPacketIn2);
-                                        //    client.Player.SendMessage("Gia hạn thành công.");
-                                        //}
-
-                                        client.Player.SendMessage("Özellik Aktif Değil!");
-                                    }
-                                }
-                                else
-                                {
-                                    client.Player.SendMessage("Yenileme için çizim setinin yarısından fazlasını aktifleştirmeniz gerekmektedir.");
-                                }
-                            }
-                            else
-                            {
-                                client.Player.SendMessage("Bu kıyafeti henüz etkinleştirmediniz.");
-                            }
-                            result = 1;
-                        }
-                        break;
-                    }
-                default:
-                    Console.WriteLine("cmd_avatar_collection: " + b);
-                    result = 1;
-                    break;
+                Console.WriteLine("[AvatarCollectionHandler] Null client or player");
+                return 0;
             }
-            return result;
+
+            try
+            {
+                byte subCommand = packet.ReadByte();
+                Console.WriteLine("[AvatarCollectionHandler] Command received: " + subCommand);
+
+                switch (subCommand)
+                {
+                    case CMD_ACTIVATE_ITEM:
+                        return HandleActivateItem(client, packet);
+
+                    case CMD_RENEW_COLLECTION:
+                        return HandleRenewCollection(client, packet);
+
+                    default:
+                        Console.WriteLine("[AvatarCollectionHandler] Unknown command: " + subCommand);
+                        return 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[AvatarCollectionHandler] Exception: " + ex);
+                client.Player.SendMessage("İşlem sırasında bir hata oluştu.");
+                return 0;
+            }
         }
+
+        #endregion
+
+        #region Command Handlers
+
+        /// <summary>
+        /// Handles item activation (subCommand = 3)
+        /// </summary>
+        private int HandleActivateItem(GameClient client, GSPacketIn packet)
+        {
+            // Read packet data
+            int groupId = packet.ReadInt();
+            int templateId = packet.ReadInt();
+            int sex = packet.ReadInt();
+
+            // Validate input
+            if (groupId <= 0 || templateId <= 0)
+            {
+                client.Player.SendMessage(ERROR_ITEM_NOT_FOUND);
+                return 1;
+            }
+
+            // Check if player has the item
+            var playerItem = client.Player.EquipBag.GetItemByTemplateID(0, templateId);
+            if (playerItem == null)
+            {
+                client.Player.SendMessage(ERROR_BAG_FULL);
+                return 1;
+            }
+
+            // Get cloth group info
+            var clothGroup = ClothGroupTemplateInfoMgr.GetClothGroup(groupId, templateId, sex);
+            if (clothGroup == null)
+            {
+                client.Player.SendMessage(ERROR_ITEM_NOT_FOUND);
+                return 1;
+            }
+
+            // Get property info
+            var clothProperty = ClothPropertyTemplateInfoMgr.GetClothPropertyWithID(clothGroup.ID);
+            if (clothProperty == null)
+            {
+                client.Player.SendMessage(ERROR_SET_NOT_AVAILABLE);
+                return 1;
+            }
+
+            // Check gold
+            if (client.Player.PlayerCharacter.Gold < clothGroup.Cost)
+            {
+                client.Player.SendMessage(ERROR_INSUFFICIENT_GOLD);
+                return 1;
+            }
+
+            // Execute activation
+            return ExecuteActivation(client, clothGroup, clothProperty);
+        }
+
+        /// <summary>
+        /// Handles collection renewal (subCommand = 4)
+        /// </summary>
+        private int HandleRenewCollection(GameClient client, GSPacketIn packet)
+        {
+            int avatarId = packet.ReadInt();
+            int days = packet.ReadInt();
+
+            if (days <= 0)
+            {
+                return 0;
+            }
+
+            // Mass renewal (avatarId = -1)
+            if (avatarId == -1)
+            {
+                return HandleMassRenewal(client, days);
+            }
+
+            // Single renewal
+            return HandleSingleRenewal(client, avatarId, days);
+        }
+
+        #endregion
+
+        #region Activation Logic
+
+        private int ExecuteActivation(GameClient client, ClothGroupTemplateInfo clothGroup, ClothPropertyTemplateInfo clothProperty)
+        {
+            bool isNewlyActivated = false;
+            bool shouldUpdateProperties = false;
+
+            // Deduct gold first
+            int removeResult = client.Player.RemoveGold(clothGroup.Cost);
+            if (removeResult <= 0)
+            {
+                client.Player.SendMessage(ERROR_INSUFFICIENT_GOLD);
+                return 1;
+            }
+
+            try
+            {
+                // Get or create collection
+                var collection = GetOrCreateCollection(client, clothProperty);
+
+                // Add item to collection
+                var newItem = new UserAvatarCollectionDataInfo(clothGroup.TemplateID, clothGroup.Sex);
+
+                if (!collection.AddItem(newItem))
+                {
+                    // Rollback gold
+                    client.Player.AddGold(clothGroup.Cost);
+                    client.Player.SendMessage(ERROR_ACTIVATION_FAILED);
+                    return 1;
+                }
+
+                // Check activation conditions
+                int totalItems = ClothGroupTemplateInfoMgr.CountClothGroupWithID(collection.AvatarID);
+                int requiredForActivation = totalItems / 2;
+                int currentCount = collection.Items != null ? collection.Items.Count : 0;
+
+                // Activate if half collection is complete and not already active
+                if (currentCount == requiredForActivation && !collection.IsActive)
+                {
+                    collection.ActiveAvatar(DEFAULT_ACTIVATE_DAYS);
+                    isNewlyActivated = true;
+                }
+
+                // Check if we should update player properties
+                if (currentCount == requiredForActivation || currentCount == totalItems)
+                {
+                    shouldUpdateProperties = true;
+                }
+
+                // Send packets
+                SendActivationPackets(client, collection, clothGroup, isNewlyActivated);
+
+                // Update properties if needed
+                if (shouldUpdateProperties)
+                {
+                    client.Player.EquipBag.UpdatePlayerProperties();
+                }
+
+                client.Player.SendMessage(SUCCESS_ACTIVATION);
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                // Rollback gold on exception
+                client.Player.AddGold(clothGroup.Cost);
+                Console.WriteLine("[AvatarCollectionHandler] Activation error: " + ex);
+                client.Player.SendMessage(ERROR_ACTIVATION_FAILED);
+                return 0;
+            }
+        }
+
+        private UserAvatarCollectionInfo GetOrCreateCollection(GameClient client, ClothPropertyTemplateInfo clothProperty)
+        {
+            var collection = client.Player.AvatarCollect.GetAvatarCollectWithAvatarID(clothProperty.ID);
+
+            if (collection == null)
+            {
+                collection = new UserAvatarCollectionInfo(
+                    client.Player.PlayerCharacter.ID,
+                    clothProperty.ID,
+                    clothProperty.Sex,
+                    false,
+                    DateTime.Now
+                );
+                client.Player.AvatarCollect.AddAvatarCollection(collection);
+            }
+
+            return collection;
+        }
+
+        private void SendActivationPackets(GameClient client, UserAvatarCollectionInfo collection,
+            ClothGroupTemplateInfo clothGroup, bool isNewlyActivated)
+        {
+            // Send activation notification if newly activated
+            if (isNewlyActivated)
+            {
+                GSPacketIn activationPacket = new GSPacketIn(PACKET_ID);
+                activationPacket.WriteByte(4);
+                activationPacket.WriteInt(collection.AvatarID);
+                activationPacket.WriteInt(collection.Sex);
+                activationPacket.WriteDateTime(collection.TimeEnd);
+                client.Player.SendTCP(activationPacket);
+            }
+
+            // Send item activation confirmation
+            GSPacketIn confirmPacket = new GSPacketIn(PACKET_ID);
+            confirmPacket.WriteByte(3);
+            confirmPacket.WriteInt(clothGroup.ID);
+            confirmPacket.WriteInt(clothGroup.TemplateID);
+            confirmPacket.WriteInt(clothGroup.Sex);
+            client.Player.SendTCP(confirmPacket);
+        }
+
+        #endregion
+
+        #region Renewal Logic
+
+        private int HandleMassRenewal(GameClient client, int days)
+        {
+            // Feature disabled - can be enabled later
+            client.Player.SendMessage(ERROR_FEATURE_DISABLED);
+            return 1;
+
+            /* 
+            // Implementation when feature is enabled:
+            int renewedCount = 0;
+            
+            foreach (var collection in client.Player.AvatarCollect.AvatarCollect.ToList())
+            {
+                if (!collection.IsAvailable())
+                {
+                    var property = ClothPropertyTemplateInfoMgr.GetClothPropertyWithID(collection.AvatarID);
+                    if (property != null && CanRenewCollection(collection))
+                    {
+                        // Calculate cost and deduct
+                        int cost = property.Cost * days;
+                        if (client.Player.PlayerCharacter.myHonor >= cost && cost > 0)
+                        {
+                            client.Player.RemovemyHonor(cost);
+                            collection.ActiveAvatar(days);
+                            renewedCount++;
+                        }
+                    }
+                }
+            }
+
+            if (renewedCount > 0)
+            {
+                client.Player.Out.SendAvatarCollect(client.Player.AvatarCollect);
+                client.Player.SendMessage(string.Format(SUCCESS_RENEWAL, renewedCount));
+            }
+            
+            return 1;
+            */
+        }
+
+        private int HandleSingleRenewal(GameClient client, int avatarId, int days)
+        {
+            // Feature disabled - can be enabled later
+            client.Player.SendMessage(ERROR_FEATURE_DISABLED);
+            return 1;
+
+            /*
+            // Implementation when feature is enabled:
+            var collection = client.Player.AvatarCollect.GetAvatarCollectWithAvatarID(avatarId);
+            
+            if (collection == null)
+            {
+                client.Player.SendMessage(ERROR_NOT_ACTIVATED);
+                return 1;
+            }
+
+            // Ensure items are loaded
+            if (collection.Items == null)
+            {
+                collection.UpdateItems();
+            }
+
+            // Check if can renew
+            if (!CanRenewCollection(collection))
+            {
+                client.Player.SendMessage(ERROR_RENEW_NOT_ENOUGH_ITEMS);
+                return 1;
+            }
+
+            var property = ClothPropertyTemplateInfoMgr.GetClothPropertyWithID(avatarId);
+            if (property == null)
+            {
+                client.Player.SendMessage(ERROR_CANNOT_RENEW);
+                return 1;
+            }
+
+            // Calculate and check cost
+            int cost = property.Cost * days;
+            if (client.Player.PlayerCharacter.myHonor < cost || cost <= 0)
+            {
+                client.Player.SendMessage("Yetersiz onur puanı.");
+                return 1;
+            }
+
+            // Execute renewal
+            client.Player.RemovemyHonor(cost);
+            collection.ActiveAvatar(days);
+
+            // Send confirmation
+            GSPacketIn packet = new GSPacketIn(PACKET_ID);
+            packet.WriteByte(4);
+            packet.WriteInt(collection.AvatarID);
+            packet.WriteInt(collection.Sex);
+            packet.WriteDateTime(collection.TimeEnd);
+            client.Player.SendTCP(packet);
+
+            client.Player.SendMessage("Başarıyla yenilendi.");
+            return 1;
+            */
+        }
+
+        private bool CanRenewCollection(UserAvatarCollectionInfo collection)
+        {
+            int totalItems = ClothGroupTemplateInfoMgr.CountClothGroupWithID(collection.AvatarID);
+            int requiredItems = totalItems / 2;
+            int currentItems = collection.Items != null ? collection.Items.Count : 0;
+
+            return currentItems >= requiredItems;
+        }
+
+        #endregion
     }
 }

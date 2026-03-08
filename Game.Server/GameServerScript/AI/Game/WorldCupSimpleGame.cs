@@ -25,8 +25,8 @@ namespace Game.Server.GameServerScript.AI.Game
         public override void OnCreated()
         {
             base.OnCreated();
-            base.Game.SetupMissions("14001,14002");
-            base.Game.TotalMissionCount = 2;
+            base.Game.SetupMissions("14001");
+            base.Game.TotalMissionCount = 1;
         }
 
         public override void OnGameOverAllSession()

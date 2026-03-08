@@ -34,7 +34,7 @@ namespace Game.Logic.Actions
 				if (handler != null)
 				{
 					Console.ForegroundColor = ConsoleColor.Yellow;
-					Console.WriteLine("[-" + ((eTankCmdType)type) + "-] " + handler.GetType().FullName + " :=> Pack : " + type);
+					//Console.WriteLine("[-" + ((eTankCmdType)type) + "-] " + handler.GetType().FullName + " :=> Pack : " + type);
 					Console.ResetColor();
 					handler.HandleCommand(game, m_player, m_packet);
 				}
