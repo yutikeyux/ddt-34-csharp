@@ -19,7 +19,7 @@ namespace Tank.Request
 		public static string Build(HttpContext context)
 		{
 			bool flag = false;
-			string str = "Fail!";
+			string str = "Başarısız!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -32,7 +32,7 @@ namespace Tank.Request
 					}
 				}
 				flag = true;
-				str = "Success!";
+				str = "Başarılı!";
 			}
 			catch (Exception exception)
 			{

@@ -28,7 +28,7 @@ namespace Tank.Request.CelebList
 			string result;
 			if (flag)
 			{
-				result = "CelebByDayGPList Fail!";
+				result = "CelebByDayGPList Başarısız!";
 			}
 			else
 			{
@@ -41,7 +41,7 @@ namespace Tank.Request.CelebList
 		public static string Build()
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -53,12 +53,12 @@ namespace Tank.Request.CelebList
 						result.Add(FlashUtils.CreateBestEquipInfo(info));
 					}
 					value = true;
-					message = "Success!";
+					message = "Başarılı!";
 				}
 			}
 			catch (Exception ex)
 			{
-				CelebByDayBestEquip.log.Error("Load CelebByDayBestEquip is fail!", ex);
+				CelebByDayBestEquip.log.Error("Load CelebByDayBestEquip is Başarısız!", ex);
 			}
 			result.Add(new XAttribute("value", value));
 			result.Add(new XAttribute("message", message));

@@ -38,7 +38,7 @@ namespace Game.Server.Packets.Client
 			}
 			if (num3 > 0)
 			{
-				str2 = LanguageMgr.GetTranslation("Kazanılan Kupon: " + num3);
+				str2 = LanguageMgr.GetTranslation("Kazanılan Hediye Altın: " + num3);
 			}
 			client.Player.BeginChanges();
 			client.Player.AddGold(num2);

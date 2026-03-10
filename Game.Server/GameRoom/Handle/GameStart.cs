@@ -274,7 +274,7 @@ namespace Game.Server.GameRoom.Handle
                         {
                             foreach (GamePlayer p in players)
                             {
-                                p.SendMessage(string.Format("Oda sahibinde süper boss bileti bulunması gerekli. Marketten bilet alabilirsin."));
+                                p.SendMessage(string.Format("Oda sahibinde süper bilet bulunması gerekli. Marketten bilet alabilirsin."));
                             }
                             return true;
                         }

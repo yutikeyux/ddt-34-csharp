@@ -47,13 +47,13 @@ namespace Fighting.Server
 
         public void Load()
         {
-			LogConfigFile = ConfigurationSettings.AppSettings["Logconfig"];
-			Ip = ConfigurationSettings.AppSettings["Ip"];
-			ServerName = ConfigurationSettings.AppSettings["ServerName"];
-			Port = int.Parse(ConfigurationSettings.AppSettings["Port"]);
-			ScriptAssemblies = ConfigurationSettings.AppSettings["ScriptAssemblies"];
-			ScriptCompilationTarget = ConfigurationSettings.AppSettings["ScriptAssemblies"];
-			ZoneId = int.Parse(ConfigurationSettings.AppSettings["ServerID"]);
+			LogConfigFile = ConfigurationManager.AppSettings["Logconfig"];
+			Ip = ConfigurationManager.AppSettings["Ip"];
+			ServerName = ConfigurationManager.AppSettings["ServerName"];
+			Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+			ScriptAssemblies = ConfigurationManager.AppSettings["ScriptAssemblies"];
+			ScriptCompilationTarget = ConfigurationManager.AppSettings["ScriptAssemblies"];
+			ZoneId = int.Parse(ConfigurationManager.AppSettings["ServerID"]);
 			RootDirectory = new FileInfo(Assembly.GetEntryAssembly().Location).DirectoryName;
         }
     }

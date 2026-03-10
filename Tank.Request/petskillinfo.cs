@@ -22,7 +22,7 @@ namespace Tank.Request
 		public static string Build(HttpContext context)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -34,12 +34,12 @@ namespace Tank.Request
 						result.Add(FlashUtils.CreatePetSkillInfo(info));
 					}
 					value = true;
-					message = "Success!";
+					message = "Başarılı!";
 				}
 			}
 			catch (Exception ex)
 			{
-				petskillinfo.log.Error("Load petskillinfo is fail!", ex);
+				petskillinfo.log.Error("Load petskillinfo is Başarısız!", ex);
 			}
 			result.Add(new XAttribute("value", value));
 			result.Add(new XAttribute("message", message));

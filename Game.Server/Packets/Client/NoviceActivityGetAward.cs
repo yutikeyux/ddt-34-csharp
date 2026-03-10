@@ -75,24 +75,17 @@ namespace Game.Server.Packets.Client
             {
                 if (awardGot != 999)
                 {
-                    //if (ActivityType == 7 || ActivityType == 8)
-                    //{
-                    //    translateId = "Sự kiện không hoạt động!";
-                    //}
-                    //else
-                    //{
                     EventRewardProcessInfo info2 = client.Player.Extra.GetEventProcess(ActivityType);
                     if (eventRewardInfo.Condition <= info2.Conditions)
                     {
                         client.Player.Extra.UpdateEventCondition(ActivityType, eventRewardInfo.Condition, isPlus, awardGot);
                         translateId = "Ödül alma başarılı!";
-                        client.Player.SendItemsToMail(list, $"Bu, Sunucu Açılış Hediyesi ödülünden gelen otomatik bir e-postadır, oyuncular lütfen yanıtlamasın.", LanguageMgr.GetTranslation("Etkinlik Yöneticisi"), eMailType.Manage);
+                        client.Player.SendItemsToMail(list, $"Bu ödüller, Yeni Sunucu Etkinliklerinden gelen otomatik bir e-postadır, oyuncular lütfen yanıtlamasın.", LanguageMgr.GetTranslation("Yeni Sunucu Etkinlikleri"), eMailType.Manage);
                     }
                     else
                     {
                         translateId = "Yetersiz koşul! İşlem başarısız oldu.";
                     }
-                    //}
                 }
             }
             client.Player.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation(translateId));

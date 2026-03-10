@@ -18,7 +18,7 @@ namespace Tank.Request
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			bool sex = bool.Parse(context.Request["sex"]);
 			XElement result = new XElement("Result");
 			try
@@ -26,7 +26,7 @@ namespace Tank.Request
 				string content = ConfigurationSettings.AppSettings[sex ? "BoyVisualizeItem" : "GrilVisualizeItem"];
 				result.Add(new XAttribute("content", content));
 				value = true;
-				message = "Success!";
+				message = "Başarılı!";
 			}
 			catch (Exception ex)
 			{

@@ -2,6 +2,7 @@ using Bussiness;
 using Bussiness.Managers;
 using Game.Base.Packets;
 using Game.Logic;
+using Game.Logic.Actions;
 using Game.Logic.Phy.Object;
 using Game.Logic.Protocol;
 using Game.Server;
@@ -2407,14 +2408,14 @@ public class GamePlayer : IGamePlayer
             }
         }
         Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
-        if (Extra.CheckNoviceActiveOpen(NoviceActiveType.RECHANGE_MONEY_ACTIVE))
-        {
-            Extra.UpdateEventCondition((int)NoviceActiveType.RECHANGE_MONEY_ACTIVE, money, isPlus: true, 0);
-        }
-        if (Extra.CheckNoviceActiveOpen(NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK))
-        {
-            Extra.UpdateEventCondition((int)NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK, money, isPlus: true, 0);
-        }
+        //if (Extra.CheckNoviceActiveOpen(NoviceActiveType.GUNLUK YUKLEME))
+        //{
+          //  Extra.UpdateEventCondition((int)NoviceActiveType.GUNLUK YUKLEME money, isPlus: true, 0);
+        //}
+        //f (Extra.CheckNoviceActiveOpen(NoviceActiveType.HAFTALIK YUKLEME)
+        //{
+        //    Extra.UpdateEventCondition((int)NoviceActiveType.HAFTALIK YUKLEME, money, isPlus: true, 0);
+        //}
         if (!PlayerCharacter.IsRecharged)
         {
             PlayerCharacter.IsRecharged = true;
@@ -2427,7 +2428,7 @@ public class GamePlayer : IGamePlayer
             {
                 SendMoneyMailToUser(LanguageMgr.GetTranslation("GameServer.LeftRotterMail.Title"), LanguageMgr.GetTranslation("GameServer.LeftRotterMail.Content", MoneyRate), MoneyRate, eMailType.BuyItem);
             }
-            Extra.Info.LeftRoutteRate = 0f;
+            Extra.Info.LeftRoutteRate = 1f;
             Out.SendLeftRouleteOpen(Extra.Info);
         }
         this.SaveIntoDatabase();
@@ -3116,6 +3117,10 @@ public class GamePlayer : IGamePlayer
             if (m_character.CheckNewDay())
             {
                 TimeSpan diff = DateTime.Now - m_character.NewDay;
+                if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
+                {
+                    CheckAndSendWeeklyHonorReward();
+                }
                 if ((int)Math.Ceiling(diff.TotalDays) >= 7)//15 gün girilmez sayan değer 7'ye düşürüldü eski oyuncu ödülü not: yuti
                 {
                     DateTime startDate = Convert.ToDateTime(GameProperties.StartEventOldPlayer);
@@ -3143,11 +3148,10 @@ public class GamePlayer : IGamePlayer
                         }
                     }
                 }
-                string content = $"Tekrardan selamlar {PlayerCharacter.NickName}, günlük maceran seni bekliyor! \r\n\r\n" +
-                                 $"⏰ Giriş Zamanı: {DateTime.Now:HH:mm} \r\n\r\n" +
+                string content = $"Tekrardan selamlar {PlayerCharacter.NickName}, günlük maceran seni bekliyor! \r\n" +
+                                 $"⏰ Giriş Zamanı: {DateTime.Now:HH:mm} \r\n" +
                                  $"✨ Bugün Sizi Neler Bekliyor? \r\n" +
                                  $"• Günlük görevleriniz sıfırlandı - yeni ödüller kazanmaya hazır olun! \r\n" +
-                                 $"• Günlük Harcama Etkinliği yenilendi! Ödülleri tekrar alabilirsiniz! \r\n" +
                                  $"🎮 İyi oyunlar dileriz!";
 
                 string title = $"{PlayerCharacter.NickName}, Yeni Güne Hoş Geldin!";
@@ -3166,11 +3170,11 @@ public class GamePlayer : IGamePlayer
                 m_extra.Info.FreeSendMailCount = 0;
                 m_extra.Info.LeftRoutteCount = GameProperties.LeftRouterMaxDay;
                 m_extra.Info.LeftRoutteRate = 0f;
-                Extra.ResetNoviceEvent(NoviceActiveType.RECHANGE_MONEY_ACTIVE);
+                //Extra.ResetNoviceEvent(NoviceActiveType.DISCORD_HOPARLORU);
                 Extra.ResetNoviceEvent(NoviceActiveType.USE_MONEY_ACTIVE);
                 if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
                 {
-                    Extra.ResetNoviceEvent(NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK);
+                    //Extra.ResetNoviceEvent(NoviceActiveType.IKI_VS_IKI_SAVAS);
                     Extra.ResetNoviceEvent(NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK);
                 }
                 m_character.MaxBuyHonor = 0;
@@ -3733,6 +3737,10 @@ public class GamePlayer : IGamePlayer
                         userWonderFulActivityManager = new UserWonderFulActivityManager(this);
                     }
                     userWonderFulActivityManager.SignToday();
+                   // userWonderFulActivityManager.MountUp(15);
+                   // userWonderFulActivityManager.TempleUp(15);
+                   // userWonderFulActivityManager.ConsumeMoney(1);
+                    //userWonderFulActivityManager.ChargeMoney(1);
                     if (ActiveSystemMgr.IsLeagueOpen)
                     {
                         Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.MatchInfo.maxCount, 1);
@@ -3792,11 +3800,7 @@ public class GamePlayer : IGamePlayer
                     Out.SendGuildMemberWeekOpenClose(Extra.Info);
                     Out.SendOpenHappyRecharge(m_character.ID);
 
-                    // HAFTALIK ONUR LİSTESİ ÖDÜL SİSTEMİ - PAZARTESİ GÜNÜ KONTROLÜ
-                    if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
-                    {
-                        CheckAndSendWeeklyHonorReward();
-                    }
+
 
                     return true;
                 }
@@ -3847,41 +3851,53 @@ public class GamePlayer : IGamePlayer
         {
             case 1: // 1. sıra
                 reward.Gold = 100000;
-                reward.Coins = 50;
-                reward.Items.Add(new RewardItem(11025, 10));
-                reward.Items.Add(new RewardItem(11026, 5)); 
+                reward.Coins = 120;
                 reward.Title = "Haftanın Şampiyonu";
                 break;
             case 2: // 2. sıra
                 reward.Gold = 80000;
-                reward.Coins = 40;
-                reward.Items.Add(new RewardItem(11025, 8));
-                reward.Items.Add(new RewardItem(11026, 4));
+                reward.Coins = 100;
                 reward.Title = "Haftanın İkincisi";
                 break;
             case 3: // 3. sıra
                 reward.Gold = 60000;
-                reward.Coins = 30;
-                reward.Items.Add(new RewardItem(11025, 6));
-                reward.Items.Add(new RewardItem(11026, 3));
+                reward.Coins = 90;
                 reward.Title = "Haftanın Üçüncüsü";
                 break;
             case 4: // 4. sıra
+                reward.Gold = 50000;
+                reward.Coins = 75;
+                reward.Title = "Haftanın Dördüncüsü";
+                break;
             case 5: // 5. sıra
                 reward.Gold = 40000;
-                reward.Coins = 20;
-                reward.Items.Add(new RewardItem(11025, 5));
-                reward.Title = "Haftanın En İyi 5'i";
+                reward.Coins = 50;
+                reward.Title = "Haftanın Beşincisi";
                 break;
             case 6: // 6. sıra
+                reward.Gold = 30000;
+                reward.Coins = 45;
+                reward.Title = "Haftanın Altıncısı";
+                break;
             case 7: // 7. sıra
+                reward.Gold = 25000;
+                reward.Coins = 40;
+                reward.Title = "Haftanın Yedincisi";
+                break;
             case 8: // 8. sıra
+                    reward.Gold = 22000;
+                    reward.Coins = 30;
+                    reward.Title = "Haftanın Sekizincisi";
+                    break;
             case 9: // 9. sıra
+                reward.Gold = 21000;
+                reward.Coins = 20;
+                reward.Title = "Haftanın Dokuzuncusu";
+                break;
             case 10: // 10. sıra
                 reward.Gold = 20000;
-                reward.Coins = 10;
-                reward.Items.Add(new RewardItem(11025, 3));
-                reward.Title = "Haftanın En İyi 10'u";
+                reward.Coins = 15;
+                reward.Title = "Haftanın En İyi 10.su";
                 break;
             default:
                 reward.Gold = 10000;
@@ -3896,33 +3912,33 @@ public class GamePlayer : IGamePlayer
     {
         try
         {
-            // Mail oluştur
             MailInfo mail = new MailInfo();
             mail.SenderID = 0; // Sistem maili
             mail.Sender = "Sistem";
             mail.ReceiverID = PlayerCharacter.ID;
             mail.Receiver = PlayerCharacter.NickName;
             mail.Title = string.Format("Haftalık Onur Listesi Ödülü - {0}. Sıra", reward.Rank);
+
+            // İçerik kısmında ödülleri yazıyla belirtelim
             mail.Content = BuildMailContent(reward);
+
             mail.Type = 1; // Sistem maili tipi
+
+            // BURASI ÖNEMLİ: Altın ve Para direkt ekleniyor (Hatasız çalışır)
             mail.Gold = reward.Gold;
             mail.Money = reward.Coins;
+
             mail.ValidDate = 7; // 7 gün geçerli
 
-            // Annex'leri string olarak ayarla (ItemID:Count formatında)
-            // MailInfo.Annex property'leri string tipinde olduğu için bu formatta gönderiyoruz
-            for (int i = 0; i < reward.Items.Count && i < 5; i++)
-            {
-                string annexValue = string.Format("{0}:{1}", reward.Items[i].ItemID, reward.Items[i].Count);
-                switch (i)
-                {
-                    case 0: mail.Annex1 = annexValue; break;
-                    case 1: mail.Annex2 = annexValue; break;
-                    case 2: mail.Annex3 = annexValue; break;
-                    case 3: mail.Annex4 = annexValue; break;
-                    case 4: mail.Annex5 = annexValue; break;
-                }
-            }
+            // DİKKAT: Annex alanlarını BOŞ BIRAKIYORUZ.
+            // Çünkü Annex alanı "ItemID:Count" formatını kabul etmiyor, 
+            // sadece veritabanındaki Item Instance ID'sini (integer) kabul ediyor.
+            // Eğer eşya göndermek istersen, önce UserItem tablosuna kayıt atıp ID'sini alman gerekir.
+            mail.Annex1 = "";
+            mail.Annex2 = "";
+            mail.Annex3 = "";
+            mail.Annex4 = "";
+            mail.Annex5 = "";
 
             // Maili gönder
             using (PlayerBussiness db = new PlayerBussiness())
@@ -3943,28 +3959,10 @@ public class GamePlayer : IGamePlayer
     {
         StringBuilder content = new StringBuilder();
         content.AppendLine("Tebrikler!");
-        content.AppendLine();
         content.AppendLine(string.Format("Onur Listesi'nde bu hafta {0}. sırada yer alarak özel ödülleri hak kazandınız!", reward.Rank));
-        content.AppendLine();
         content.AppendLine("Ödülleriniz:");
         content.AppendLine(string.Format("- Altın: {0}", reward.Gold));
-        content.AppendLine(string.Format("- Para: {0}", reward.Coins));
-
-        if (!string.IsNullOrEmpty(reward.Title))
-        {
-            content.AppendLine(string.Format("- Unvan: {0}", reward.Title));
-        }
-
-        if (reward.Items.Count > 0)
-        {
-            content.AppendLine("- Eşyalar:");
-            foreach (var item in reward.Items)
-            {
-                content.AppendLine(string.Format("  * {0} adet (Item ID: {1})", item.Count, item.ItemID));
-            }
-        }
-
-        content.AppendLine();
+        content.AppendLine(string.Format("- Kupon: {0}", reward.Coins));
         content.AppendLine("Başarılarınızın devamını dileriz!");
         content.AppendLine("Bu ödül haftalık olarak Pazartesi günleri verilmektedir.");
 
@@ -4009,7 +4007,8 @@ public class GamePlayer : IGamePlayer
             Count = count;
         }
     }
-    public UserWonderFulActivityManager userWonderFulActivityManager { get; set; } //bunların referanslarını tam olarak eklememişsin bunlara bi bakarsın oky ben kaçtım eyw saolasın np kg eyw
+    public UserWonderFulActivityManager userWonderFulActivityManager { get; set; } 
+
     public PlayerGmActivity GmActivity
     {
         get
@@ -6330,10 +6329,150 @@ public class GamePlayer : IGamePlayer
         if (isCouple && this.GameMarryTeam != null) this.GameMarryTeam(game, isWin, gainXp, playerCount);
         if (this.GameOverCountTeam != null) this.GameOverCountTeam(game, isWin, gainXp, playerCount);
         if (this.GameOver != null) this.GameOver(game, isWin, gainXp, isSpanArea, isCouple);
-
         ClearFightBuffOneMatch();
+        if (isWin)
+        {
+            this.winningStreak++;
+        }
+        else
+        {
+            this.winningStreak = 0;
+        }
+        if (m_character.ConsortiaID > 0)
+        {
+            int richesAdd = 0;
+            if (isWin)
+            {
+                richesAdd = (int)(gainXp * 0.1);
+                var info = Client.Player.Extra.GetEventProcess((int)NoviceActiveType.BIRLIK_SAVASI);
+                Client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.BIRLIK_SAVASI, info.Conditions + 1);
+            }
+            else
+            {
+                richesAdd = (int)(gainXp * 0.02);
+            }
 
-        // DISCORD MAC SONU SKORBORDU - PYTHON ICIN HAM VERI (SON KEZ BUILD ALACAKSIN)
+            if (richesAdd > 0)
+            {
+                AddRichesOffer(richesAdd);
+                OnDonateRiches(richesAdd, 2);
+            }
+        }
+        int totalDamage = 0;
+        if (this.Players != null)
+        {
+            totalDamage = this.Players.TotalAllHurt;
+        }
+        switch (game.RoomType)
+        {
+            case eRoomType.Match:
+                var info = Extra.GetEventProcess((int)NoviceActiveType.PVP_MATCH_COUNT);
+                if (info != null)
+                {
+                    Extra.UpdateEventCondition((int)NoviceActiveType.PVP_MATCH_COUNT, info.Conditions + 1);
+                }
+                break;
+            case eRoomType.Dungeon:
+                // Zindan Görevleri
+                if (isWin) // Genelde zindan görevleri kazanma şartına bağlıdır
+                {
+                    // game parametresi AbstractGame geldiği için, PVEGame özelliklerine erişmek için dönüştürüyoruz.
+                    if (game is PVEGame pveGame)
+                    {
+                        // 1. Ana Zindan ID'sini (PveID) alıyoruz. (Örn: Karınca Mağarası, Ejderha İnişi vb.)
+                        int pveId = pveGame.Info != null ? pveGame.Info.ID : 0;
+
+                        // 2. Zorluk Seviyesini (HardLevel) alıyoruz. (YENİ EKLEME)
+                        eHardLevel hardLevel = pveGame.HandLevel;
+
+                        // 3. İçerideki Mission (Harita/Kat) ID'sini alıyoruz.
+                        int missionId = pveGame.MissionInfo != null ? pveGame.MissionInfo.Id : 0;
+
+                        // --- GÖREV KONTROLLERİ ---
+
+                        // A) Genel Zindan Tamamlama Görevi (Tüm zindanlar için)
+                        var dungeonInfo = Extra.GetEventProcess((int)NoviceActiveType.DUNGEON_COMPLETE);
+                        if (dungeonInfo != null)
+                        {
+                            Extra.UpdateEventCondition((int)NoviceActiveType.DUNGEON_COMPLETE, dungeonInfo.Conditions + 1);
+                        }
+
+                        // B) Belirli Zindan ID'sine Göre Özel Görevler
+
+                        // BOGO KEŞİFİ (ID: 1)
+                        //if (pveId == 1)
+                        //{
+                            // 1. Genel Bogo Görevi (Tüm zorluklar için)
+                           // var bogoInfo = Extra.GetEventProcess((int)NoviceActiveType.BOGO_KESIFI);
+                           // if (bogoInfo != null)
+                           // {
+                           //     Extra.UpdateEventCondition((int)NoviceActiveType.BOGO_KESIFI, bogoInfo.Conditions + 1);
+                           // }
+
+                            // 2. Zorluk Seviyesine Göre Görevler
+                            // Not: NoviceActiveType enum'ına BOGO_KESIFI_ZOR vb. tanımlamalısınız.
+                          //  if (hardLevel == eHardLevel.Normal)
+                           // {
+                                // Normal zorluk görevi (Örnek)
+                                // var info = Extra.GetEventProcess((int)NoviceActiveType.BOGO_KESIFI_NORMAL);
+                                // if (info != null) Extra.UpdateEventCondition((int)NoviceActiveType.BOGO_KESIFI_NORMAL, info.Conditions + 1);
+                           // }
+                           // else if (hardLevel == eHardLevel.Hard) // Zor Mod
+                           // {
+                            //    if (Extra.CheckNoviceActiveOpen(NoviceActiveType.BOGO_KESIFI_ZOR))
+                             //   {
+                              //      Extra.UpdateEventCondition((int)NoviceActiveType.BOGO_KESIFI_ZOR, 1);
+                               // }
+                           // }
+                            //else if (hardLevel == eHardLevel.Terror) // Dehşet/Ejderha Modu
+                            //{
+                                // Terror zorluk görevi (Örnek)
+                            //}
+                        //}
+
+                        // KARINCA KEŞİFİ (ID: 2)
+//                        if (pveId == 2)
+  //                      {
+                            // 1. Genel Karınca Görevi
+    //                        var karincaInfo = Extra.GetEventProcess((int)NoviceActiveType.KARINCA_KESIFI);
+      //                      if (karincaInfo != null)
+        //                    {
+          //                      Extra.UpdateEventCondition((int)NoviceActiveType.KARINCA_KESIFI, karincaInfo.Conditions + 1);
+            //                }
+
+                            // 2. Zorluk Seviyesine Göre Görevler
+              //              if (hardLevel == eHardLevel.Normal)
+                //            {
+                                // Normal zorluk görevi
+                  //          }
+                    //        else if (hardLevel == eHardLevel.Hard) // Zor Mod
+                      //      {
+                        //        if (Extra.CheckNoviceActiveOpen(NoviceActiveType.KARINCA_KESIFI_ZOR))
+                          //      {
+                            //        Extra.UpdateEventCondition((int)NoviceActiveType.KARINCA_KESIFI_ZOR, 1);
+                              //  }
+                          //  }
+                       // }
+                    }
+                }
+                break;
+            case eRoomType.Freshman:
+                break;
+        }
+
+        if (DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday)
+        {
+            int bonusGold = isWin ? 500 : 100;
+            AddGold(bonusGold);
+             SendMessage("Hafta Sonu Bonusu: +" + bonusGold + " Altın!");
+        }
+        if (isWin && blood == 1)
+        {
+         //    if (Extra.CheckNoviceActiveOpen(NoviceActiveType.PERFECT_WIN))
+          //   {
+           //      Extra.UpdateEventCondition((int)NoviceActiveType.PERFECT_WIN, 1);
+            // }
+        }
         ThreadPool.QueueUserWorkItem(delegate (object state)
         {
             try
@@ -6394,8 +6533,10 @@ public class GamePlayer : IGamePlayer
     public void OnGameOver2v2(bool isWin)
     {
         if (this.GameOver2v2 != null)
-        {
+        {     
             this.GameOver2v2(isWin);
+          //  var info = Client.Player.Extra.GetEventProcess((int)NoviceActiveType.IKI_VS_IKI);
+           // Client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.IKI_VS_IKI, info.Conditions + 1);
         }
     }
 
@@ -6921,8 +7062,4 @@ public class GamePlayer : IGamePlayer
     public DateTime ComposePacketWindowStart { get; set; } = DateTime.MinValue;
     public int CountFunction2 { get; internal set; }
 
-    public static implicit operator GamePlayer(VirtualGamePlayer v)
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -25,7 +25,7 @@ namespace Tank.Request
 		public static string Build(HttpContext context)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -37,12 +37,12 @@ namespace Tank.Request
 						result.Add(FlashUtils.CreatNPCInfo(info));
 					}
 					value = true;
-					message = "Success!";
+					message = "Başarılı!";
 				}
 			}
 			catch (Exception ex)
 			{
-				NPCInfoList.log.Error("Load NPCInfoList is fail!", ex);
+				NPCInfoList.log.Error("Load NPCInfoList is Başarısız!", ex);
 			}
 			result.Add(new XAttribute("value", value));
 			result.Add(new XAttribute("message", message));

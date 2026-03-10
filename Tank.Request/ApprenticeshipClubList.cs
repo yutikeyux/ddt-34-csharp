@@ -76,7 +76,7 @@ namespace Tank.Request
 						xelement.Add(apprenticeShipInfo);
 					}
 					flag = true;
-					str = "Success!";
+					str = "Başarılı!";
 				}
 			}
 			catch (Exception ex)

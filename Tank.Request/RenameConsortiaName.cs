@@ -30,7 +30,7 @@ namespace Tank.Request
 		public void ProcessRequest(HttpContext context)
 		{
 			bool flag = false;
-			string translation = LanguageMgr.GetTranslation("Tank.Request.RenameConsortiaName.Fail1", Array.Empty<object>());
+			string translation = LanguageMgr.GetTranslation("Tank.Request.RenameConsortiaName.Başarısız1", Array.Empty<object>());
 			XElement xelement = new XElement("Result");
 			try
 			{
@@ -65,7 +65,7 @@ namespace Tank.Request
 							{
 								PlayerManager.Update(name, pass2);
 								flag = true;
-								translation = LanguageMgr.GetTranslation("Tank.Request.RenameConsortiaName.Success", Array.Empty<object>());
+								translation = LanguageMgr.GetTranslation("Tank.Request.RenameConsortiaName.Başarılı", Array.Empty<object>());
 							}
 						}
 					}
@@ -75,7 +75,7 @@ namespace Tank.Request
 			{
 				RenameConsortiaName.log.Error("RenameConsortiaName", ex);
 				flag = false;
-				translation = LanguageMgr.GetTranslation("Tank.Request.RenameConsortiaName.Fail2", Array.Empty<object>());
+				translation = LanguageMgr.GetTranslation("Tank.Request.RenameConsortiaName.Başarısız2", Array.Empty<object>());
 			}
 			xelement.Add(new XAttribute("value", flag));
 			xelement.Add(new XAttribute("message", translation));

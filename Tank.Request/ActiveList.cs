@@ -33,7 +33,7 @@ namespace Tank.Request
 		public static string Build(HttpContext context)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -45,12 +45,12 @@ namespace Tank.Request
 						result.Add(FlashUtils.CreateActiveInfo(info));
 					}
 					value = true;
-					message = "Success!";
+					message = "Başarılı!";
 				}
 			}
 			catch (Exception ex)
 			{
-				ActiveList.log.Error("Load Active is fail!", ex);
+				ActiveList.log.Error("Load Active is Başarısız!", ex);
 			}
 			result.Add(new XAttribute("value", value));
 			result.Add(new XAttribute("message", message));

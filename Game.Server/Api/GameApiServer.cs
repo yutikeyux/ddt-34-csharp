@@ -812,7 +812,7 @@ namespace Game.Server.API
                         {
                             GSPacketIn pkg = new GSPacketIn(3);
                             pkg.WriteInt(3);
-                            pkg.WriteString("[YÜCE ADMIN]: " + message);
+                            pkg.WriteString("[YÜCE ADMIN]: " + message); //:ASD:AS:DAS:D:ASDA:D:AS:D:ASD: amkkkkk
                             room.SendToAll(pkg);
 
                             WriteJson(ctx, new { success = true, message = "Odaya mesaj iletildi." });

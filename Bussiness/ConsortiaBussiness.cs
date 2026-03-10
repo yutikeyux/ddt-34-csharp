@@ -3149,7 +3149,7 @@ namespace Bussiness
             try
             {
 				Console.WriteLine("GetRankDayOnlineConsortias sorununu çöz amk");
-				return infos.ToArray();
+				//return infos.ToArray();
                 db.GetReader(ref reader, "SP_Consortia_Rank_Online");
                 while (reader.Read())
                 {

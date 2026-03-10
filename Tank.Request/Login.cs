@@ -44,7 +44,7 @@ namespace Tank.Request
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
-			string message = LanguageMgr.GetTranslation("Tank.Request.Login.Fail1", Array.Empty<object>());
+			string message = LanguageMgr.GetTranslation("Tank.Request.Login.Başarısız1", Array.Empty<object>());
 			bool isError = false;
 			XElement result = new XElement("Result");
 			string p = context.Request["p"];
@@ -140,7 +140,7 @@ namespace Tank.Request
 							});
 							result.Add(xelement2);
 							value = true;
-							message = LanguageMgr.GetTranslation("Tank.Request.Login.Success", Array.Empty<object>());
+							message = LanguageMgr.GetTranslation("Tank.Request.Login.Başarılı", Array.Empty<object>());
 						}
 						else
 						{
@@ -156,7 +156,7 @@ namespace Tank.Request
 				Login.log.Error("User Login error: (--" + StaticFunction.RsaCryptor.KeySize.ToString() + "--)" + ex.ToString());
 				Login.log.Error("--dataarray: " + Marshal.ToHexDump("fuckingbitch " + numArray.Length.ToString(), numArray));
 				value = false;
-				message = LanguageMgr.GetTranslation("Tank.Request.Login.Fail2", Array.Empty<object>());
+				message = LanguageMgr.GetTranslation("Tank.Request.Login.Başarısız2", Array.Empty<object>());
 			}
 			finally
 			{

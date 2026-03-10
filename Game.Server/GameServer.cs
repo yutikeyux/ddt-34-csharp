@@ -735,15 +735,15 @@ namespace Game.Server
                 {
                     if (player.PlayerCharacter.ID > 0)
                     {
-                        var RECHANGE_MONEY_ACTIVE_OFWEEK = player.Extra.GetEventProcess((int)NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK).IsReset;
+                        //var IKI_VS_IKI_SAVAS = player.Extra.GetEventProcess((int)NoviceActiveType.IKI_VS_IKI_SAVAS).IsReset;
                         var USE_MONEY_ACTIVE_OFWEEK = player.Extra.GetEventProcess((int)NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK).IsReset;                       
                             if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
                             {
-                            if (!RECHANGE_MONEY_ACTIVE_OFWEEK)
-                            {
-                                player.Extra.ResetNoviceEvent(NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK);
-                                result = true;
-                            }
+                            //if (!IKI_VS_IKI_SAVAS)
+                            //{
+                               // player.Extra.ResetNoviceEvent(NoviceActiveType.IKI_VS_IKI_SAVAS);
+                                //result = true;
+                           // }
                             if (!USE_MONEY_ACTIVE_OFWEEK)
                             {
                                 player.Extra.ResetNoviceEvent(NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK);
@@ -753,21 +753,21 @@ namespace Game.Server
                             {
                                 isReset = true;
                                 player.SendMessage("Haftalık harcama etkinliği sıfırlandı!");
-                                player.Extra.ResetUsersEventProcess((int)NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK, isReset);
+                                //player.Extra.ResetUsersEventProcess((int)NoviceActiveType.IKI_VS_IKI_SAVAS, isReset);
                                 player.Extra.ResetUsersEventProcess((int)NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK, isReset);
                             }
                         }
                         else
                         {
-                            if (RECHANGE_MONEY_ACTIVE_OFWEEK)
-                            {
-                                isReset = false;
-                            }
+                           // if (IKI_VS_IKI_SAVAS)
+                            //{
+                            //    isReset = false;
+                           // }
                             if (USE_MONEY_ACTIVE_OFWEEK)
                             {
                                 isReset = false;
                             }
-                            player.Extra.ResetUsersEventProcess((int)NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK, isReset);
+                            //player.Extra.ResetUsersEventProcess((int)NoviceActiveType.IKI_VS_IKI_SAVAS, isReset);
                             player.Extra.ResetUsersEventProcess((int)NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK, isReset);
                         }
                     }

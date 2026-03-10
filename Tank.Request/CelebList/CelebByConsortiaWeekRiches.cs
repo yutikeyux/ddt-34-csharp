@@ -24,7 +24,7 @@ namespace Tank.Request.CelebList
 			string result;
 			if (flag)
 			{
-				result = "CelebByConsortiaWeekRiches Fail!";
+				result = "CelebByConsortiaWeekRiches Başarısız!";
 			}
 			else
 			{

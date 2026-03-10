@@ -41,7 +41,7 @@ namespace Tank.Request
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
-			string message = LanguageMgr.GetTranslation("Tank.Request.VisualizeRegister.Fail1", Array.Empty<object>());
+			string message = LanguageMgr.GetTranslation("Tank.Request.VisualizeRegister.Başarısız1", Array.Empty<object>());
 			XElement result = new XElement("Result");
 			try
 			{
@@ -124,7 +124,7 @@ namespace Tank.Request
 								if (flag5)
 								{
 									value = true;
-									message = LanguageMgr.GetTranslation("Tank.Request.VisualizeRegister.Success", Array.Empty<object>());
+									message = LanguageMgr.GetTranslation("Tank.Request.VisualizeRegister.Başarılı", Array.Empty<object>());
 								}
 							}
 						}

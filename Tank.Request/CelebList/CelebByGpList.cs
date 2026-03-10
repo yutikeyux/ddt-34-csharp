@@ -24,7 +24,7 @@ namespace Tank.Request.CelebList
 			string result;
 			if (flag)
 			{
-				result = "CelebByGpList Fail!";
+				result = "CelebByGpList Başarısız!";
 			}
 			else
 			{

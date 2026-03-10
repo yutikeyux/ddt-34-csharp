@@ -31,8 +31,8 @@ namespace Tank.Request
         public static string Build(HttpContext context)
         {
             XElement result = new XElement("Result");
-            string message = "Fail!";
-            string success = "false";
+            string message = "Başarısız!";
+            string Başarılı = "false";
 
             try
             {
@@ -51,8 +51,8 @@ namespace Tank.Request
                         result.Add(activityElement);
                     }
 
-                    message = "Success!";
-                    success = "true";
+                    message = "Başarılı!";
+                    Başarılı = "true";
                 }
             }
             catch (Exception ex)
@@ -63,7 +63,7 @@ namespace Tank.Request
                 }
             }
 
-            result.Add(new XAttribute("value", success));
+            result.Add(new XAttribute("value", Başarılı));
             result.Add(new XAttribute("message", message));
 
             return csFunction.CreateCompressXml(context, result, "GMActivityInfo", true);

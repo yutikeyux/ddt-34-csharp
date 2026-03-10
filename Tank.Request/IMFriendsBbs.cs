@@ -25,7 +25,7 @@ namespace Tank.Request
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			IMFriendsBbs.IAgentFriends friendsClass = new IMFriendsBbs.Normal();
 			StringBuilder friendUserName = new StringBuilder();
@@ -113,7 +113,7 @@ namespace Tank.Request
 						}
 					}
 					value = true;
-					message = "Success!";
+					message = "Başarılı!";
 				}
 				catch (Exception ex2)
 				{

@@ -18,7 +18,7 @@ namespace Tank.Request
 		{
 			XElement result = new XElement("Result");
 			bool value = true;
-			string message = "Success!";
+			string message = "Başarılı!";
 			result.Add(new XAttribute("value", value));
 			result.Add(new XAttribute("message", message));
 			context.Response.ContentType = "text/plain";

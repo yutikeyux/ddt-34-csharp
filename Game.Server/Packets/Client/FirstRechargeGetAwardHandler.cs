@@ -19,22 +19,22 @@ namespace Game.Server.Packets.Client
 			}
 			string translateId = "FirstRechargeGetAward.Successfull";
 			ProduceBussiness pb = new ProduceBussiness();
-			EventRewardInfo[] infos = pb.GetEventRewardInfoByType((int)NoviceActiveType.FIRST_RECHARGE, 1);
-			EventRewardGoodsInfo[] goods = pb.GetEventRewardGoodsByType((int)NoviceActiveType.FIRST_RECHARGE, 1);
+			//EventRewardInfo[] infos = pb.GetEventRewardInfoByType((int)NoviceActiveType.FIRST_RECHARGE, 1);
+			////EventRewardGoodsInfo[] goods = pb.GetEventRewardGoodsByType((int)NoviceActiveType.FIRST_RECHARGE, 1);
 			List<ItemInfo> items = new List<ItemInfo>();
-			foreach (EventRewardGoodsInfo item in goods)
-			{
-				ItemInfo info = ItemInfo.CreateFromTemplate(ItemMgr.FindItemTemplate(item.TemplateId), 1, 104);
-				info.StrengthenLevel = item.StrengthLevel;
-				info.AttackCompose = item.AttackCompose;
-				info.DefendCompose = item.DefendCompose;
-				info.AgilityCompose = item.AgilityCompose;
-				info.LuckCompose = item.LuckCompose;
-				info.IsBinds = item.IsBind;
-				info.Count = item.Count;
-				info.ValidDate = item.ValidDate;
-				items.Add(info);
-			}
+			//foreach (EventRewardGoodsInfo item in goods)
+			//{
+			//	ItemInfo info = ItemInfo.CreateFromTemplate(ItemMgr.FindItemTemplate(item.TemplateId), 1, 104);
+			//	info.StrengthenLevel = item.StrengthLevel;
+		//	info.AttackCompose = item.AttackCompose;
+			//	info.DefendCompose = item.DefendCompose;
+			//	info.AgilityCompose = item.AgilityCompose;
+			//	info.LuckCompose = item.LuckCompose;
+			//	info.IsBinds = item.IsBind;
+			//	info.Count = item.Count;
+			//	info.ValidDate = item.ValidDate;
+			//	items.Add(info);
+			//}
 			if (!client.Player.PlayerCharacter.IsRecharged)
 			{
 				translateId = "FirstRechargeGetAward.NotCharge";
@@ -45,20 +45,20 @@ namespace Game.Server.Packets.Client
 				translateId = "FirstRechargeGetAward.AlreadyGetAward";
 				return 0;
 			}
-			EventRewardInfo[] list = infos;
-			for (int i = 0; i < list.Length; i++)
-			{
-				_ = list[i];
-				if (client.Player.PlayerCharacter.IsRecharged && !client.Player.PlayerCharacter.IsGetAward)
-				{
-					if (!client.Player.SendItemsToMail(items, LanguageMgr.GetTranslation("FirstRechargeGetAward.Content"), LanguageMgr.GetTranslation("FirstRechargeGetAward.Title"), eMailType.Manage))
-					{
-						translateId = "FirstRechargeGetAward.Error";
-						return 0;
-					}
-					client.Player.PlayerCharacter.IsGetAward = true;
-				}
-			}
+			//EventRewardInfo[] list = infos;
+			//for (int i = 0; i < list.Length; i++)
+			//{
+			//	_ = list[i];
+			//	if (client.Player.PlayerCharacter.IsRecharged && !client.Player.PlayerCharacter.IsGetAward)
+			//	{
+			//		if (!client.Player.SendItemsToMail(items, LanguageMgr.GetTranslation("FirstRechargeGetAward.Content"), LanguageMgr.GetTranslation("FirstRechargeGetAward.Title"), eMailType.Manage))
+			//		{
+			//			translateId = "FirstRechargeGetAward.Error";
+			//			return 0;
+			//		}
+			//		client.Player.PlayerCharacter.IsGetAward = true;
+			//	}
+			//}
 			client.Player.Out.SendUpdateFirstRecharge(client.Player.PlayerCharacter.IsRecharged, client.Player.PlayerCharacter.IsGetAward);
 			client.Player.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation(translateId));
 			client.Player.LastOpenCard = DateTime.Now;

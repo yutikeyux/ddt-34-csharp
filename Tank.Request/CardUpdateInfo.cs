@@ -25,7 +25,7 @@ namespace Tank.Request
         public static string Build(HttpContext context)
         {
             bool value = false;
-            string message = "Fail!";
+            string message = "Başarısız!";
             XElement result = new XElement("Result");
             try
             {
@@ -37,12 +37,12 @@ namespace Tank.Request
                         result.Add(FlashUtils.CreateCardUpdateInfo(info));
                     }
                     value = true;
-                    message = "Success!";
+                    message = "Başarılı!";
                 }
             }
             catch (Exception ex)
             {
-                CardUpdateInfo.log.Error("Load CardUpdateInfo is fail!", ex);
+                CardUpdateInfo.log.Error("Load CardUpdateInfo is Başarısız!", ex);
             }
             result.Add(new XAttribute("value", value));
             result.Add(new XAttribute("message", message));

@@ -503,13 +503,13 @@ namespace Game.Server.GameUtils
             {
                 case NoviceActiveType.GRADE_UP_ACTIVE:
                     return true;
-                case NoviceActiveType.RECHANGE_MONEY_ACTIVE:
+                case NoviceActiveType.DISCORD_HOPARLORU:
                     return true;
                 case NoviceActiveType.STRENGTHEN_WEAPON_ACTIVE:
                     return true;
                 case NoviceActiveType.Kıyafet_Guclendirme:
                     return true;
-                case NoviceActiveType.Sapka_Guclendirme:   
+                case NoviceActiveType.Sapka_Guclendirme:
                     return true;
                 case NoviceActiveType.UPGRADE_VIP_ACTIVE:
                     return true;
@@ -519,45 +519,28 @@ namespace Game.Server.GameUtils
                     return true;
                 case NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK:
                     return true;
-                case NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK:
+                case NoviceActiveType.DestekEkipmanıGuclendirme:
+                    return true;
+                case NoviceActiveType.Ilk_Yukleme:
+                    return true;
+                case NoviceActiveType.TohumEkme:
+                    return true;
+                case NoviceActiveType.TohumToplama:
+                    return true;
+                case NoviceActiveType.ArkadasindanEkinCalma:
+                    return true;
+                case NoviceActiveType.BIRLIK_SAVASI:
+                    return true;
+                case NoviceActiveType.PVP_MATCH_COUNT:
+                    return true;
+                case NoviceActiveType.DUNGEON_COMPLETE:
                     return true;
                 default:
                     return false;
             }
         }
 
-        //public string GetNoviceActivityName(NoviceActiveType activeType)
-        //{
-        //string format = "Unknown";
-        //switch (activeType)
-        //{
-        //case NoviceActiveType.GRADE_UP_ACTIVE:
-        //format = "Tăng cấp nhận thưởng";
-        //break;
-        //case NoviceActiveType.STRENGTHEN_WEAPON_ACTIVE:
-        //format = "Cường hóa tặng quà";
-        //break;
-        //case NoviceActiveType.USE_MONEY_ACTIVE:
-        //format = "Tiêu phí thưởng mỗi ngày";
-        //break;
-        //case NoviceActiveType.RECHANGE_MONEY_ACTIVE:
-        //format = "Nạp thưởng mỗi ngày";
-        //break;
-        //case NoviceActiveType.UPGRADE_VIP_ACTIVE:
-        //format = "Tăng vip nhận quà";
-        // break;
-        //case NoviceActiveType.UPDATE_FIGHTPOWER:
-        //format = "Quà lực chiến";
-        //break;
-        // case NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK:
-        // format = "Tiêu xu thưởng hằng tuần";
-        // break;
-        // case NoviceActiveType.RECHANGE_MONEY_ACTIVE_OFWEEK:
-        //format = "Nạp xu thưởng hằng tuần";
-        //        break;
-        //  }
-        //  return string.Format(format);
-        //}
+
 
         private EventRewardProcessInfo setValue(int activeType) => new EventRewardProcessInfo()
         {

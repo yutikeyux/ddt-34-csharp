@@ -291,9 +291,13 @@ namespace Game.Server.Packets.Client
                         {
                             client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.Kıyafet_Guclendirme, item.StrengthenLevel);
                         }
-                        if (item.Template.CategoryID == 1 && client.Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.Sapka_Guclendirme))
+                        else if (item.Template.CategoryID == 1 && client.Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.Sapka_Guclendirme))
                         {
                             client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.Sapka_Guclendirme, item.StrengthenLevel);
+                        }
+                        if (item.Template.CategoryID == 17 && client.Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.DestekEkipmanıGuclendirme))
+                        {
+                            client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.DestekEkipmanıGuclendirme, item.StrengthenLevel);
                         }
                     }
                     else

@@ -67,7 +67,7 @@ namespace Tank.Request
 						}
 					}
 					flag = true;
-					str = "Success!";
+					str = "Başarılı!";
 				}
 			}
 			catch (Exception ex)

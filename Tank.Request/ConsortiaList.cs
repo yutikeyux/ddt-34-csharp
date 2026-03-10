@@ -19,7 +19,7 @@ namespace Tank.Request
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			int total = 0;
 			try
@@ -39,7 +39,7 @@ namespace Tank.Request
 						result.Add(FlashUtils.CreateConsortiaInfo(info));
 					}
 					value = true;
-					message = "Success!";
+					message = "Başarılı!";
 				}
 			}
 			catch (Exception ex)

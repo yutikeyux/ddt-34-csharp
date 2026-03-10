@@ -24,7 +24,7 @@ namespace Tank.Request.CelebList
 			string result;
 			if (flag)
 			{
-				result = "CelebByWeekGPList Fail!";
+				result = "CelebByWeekGPList Başarısız!";
 			}
 			else
 			{

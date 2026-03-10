@@ -1,27 +1,23 @@
 namespace Game.Server.Packets
 {
     public enum NoviceActiveType
-    { 
-        GRADE_UP_ACTIVE = 1, //seviye atlama aktif çalýþýyor not: yuti
-        STRENGTHEN_WEAPON_ACTIVE = 2, //silaha + basma aktif çalýþýyor not: yuti
-        USE_MONEY_ACTIVE = 3, // kupon harcama aktif çalýþýyor not: yuti
-        RECHANGE_MONEY_ACTIVE = 4, // kupon yükleme sistemimiz yok çalýþmýyor not: yuti
-        UPGRADE_VIP_ACTIVE = 5, // VIP çalýþmýyor kupon harcama olarak geçiyor. not: yuti
-        UPDATE_FIGHTPOWER = 6, // savaþma gücü bi týk bozuk gibi tam test edip anlayamadým not: yuti
-        USE_MONEY_ACTIVE_OFWEEK = 7, // haftalýk kupon harcama aktif çalýþýyor. not: yuti
-        RECHANGE_MONEY_ACTIVE_OFWEEK = 8, //haftalýk kupon yükleme sistemimiz yok çalýþmýyor. not: yuti
-        FIRST_RECHARGE = 9, // ilk yükleme etkinliði sistemimiz yok çalýþmýyor. not: yuti
-        OZGUR_SAVAS = 10, //referans olarak eklenmedi henüz
-        BIRLIK_SAVAS = 11, //referans olarak eklenmedi henüz
-        IKILI_SAVAS = 12, //referans olarak eklenmedi henüz
-        KARINCA_KOLAY = 13, //referans olarak eklenmedi henüz
-        KARINCA_NORMAL = 14, //referans olarak eklenmedi henüz
-        CÝVCÝV_KOLAY = 15, //referans olarak eklenmedi henüz
-        CÝVCÝV_NORMAL = 16, //referans olarak eklenmedi henüz
-        CÝVCÝV_ZOR = 17, //referans olarak eklenmedi henüz
-        BOGO_KOLAY = 18,//referans olarak eklenmedi henüz
-        Kýyafet_Guclendirme = 19, //referans olarak eklenmedi henüz
-        Sapka_Guclendirme = 20 //referans olarak eklenmedi henüz
-
+    {
+        GRADE_UP_ACTIVE = 1, // Seviye atlama etkinliði. Oyuncu seviye atladýðýnda tetiklenir.
+        STRENGTHEN_WEAPON_ACTIVE = 2, // Silah güçlendirme (+basma) etkinliði. Silaha baþarýyla güçlendirme yapýldýðýnda tetiklenir.
+        USE_MONEY_ACTIVE = 3, // Günlük kupon harcama etkinliði. Oyuncu kupon harcadýðýnda tetiklenir.
+        DISCORD_HOPARLORU = 4, // Discord entegrasyonu (Sistem aktif deðil - Kupon yükleme eksik).
+        UPGRADE_VIP_ACTIVE = 5, // VIP seviyesi yükseltme etkinliði. VIP kartý kullanýldýðýnda veya seviye atlandýðýnda tetiklenir.
+        UPDATE_FIGHTPOWER = 6, // Savaþ gücü güncelleme etkinliði. Savaþ gücü belirli bir eþiði geçtiðinde tetiklenir.
+        USE_MONEY_ACTIVE_OFWEEK = 7, // Haftalýk kupon harcama etkinliði. Haftalýk toplam harcamayý takip eder.
+        Kýyafet_Guclendirme = 8, // Kýyafet/giysi güçlendirme etkinliði. 
+        Ilk_Yukleme = 31, // Ýlk para yükleme (Ýlk Kez Yükleyenler) etkinliði. 
+        Sapka_Guclendirme = 9, // Þapka güçlendirme etkinliði. 
+        DestekEkipmanýGuclendirme = 10, // Destek ekipmaný güçlendirme etkinliði. 
+        TohumEkme = 11, // Çiftlik sistemi - Tohum ekme etkinliði.
+        TohumToplama = 12, // Çiftlik sistemi - Ürün toplama etkinliði.
+        ArkadasindanEkinCalma = 13, // Çiftlik sistemi - Arkadaþtan ekin çalma etkinliði.
+        BIRLIK_SAVASI = 14, // Lonca/Birlik savaþý etkinliði. Lonca savaþlarýna katýlýmda tetiklenir.
+        PVP_MATCH_COUNT = 15, // PvP Maç Sayýsý. Belirli sayýda PvP maçý oynama.
+        DUNGEON_COMPLETE = 16, // Keþif Rýhtýmý Etap Mantýðý - Belirli bir sayýda keþif rýhtýmý etabý tamamlama.
     }
 }

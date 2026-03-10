@@ -77,7 +77,7 @@ namespace Tank.Request
 		{
 			string Url = "http://" + HttpContext.Current.Request.Url.Authority.ToString() + "/MapServerList.ashx";
 			string strRlt = BaseInterface.RequestContent(Url);
-			bool flag = strRlt.Contains("Success");
+			bool flag = strRlt.Contains("Başarılı");
 			int result;
 			if (flag)
 			{

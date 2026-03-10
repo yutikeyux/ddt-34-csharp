@@ -14,7 +14,7 @@ namespace Tank.Request
 		public void ProcessRequest(HttpContext context)
 		{
 			bool flag = false;
-			string str = "fail!";
+			string str = "Başarısız!";
 			XElement node = new XElement("Result");
 			string str2 = context.Request["friendID"];
 			try
@@ -26,7 +26,7 @@ namespace Tank.Request
 				});
 				node.Add(xelement);
 				flag = true;
-				str = "Success!";
+				str = "Başarılı!";
 			}
 			catch (Exception ex)
 			{

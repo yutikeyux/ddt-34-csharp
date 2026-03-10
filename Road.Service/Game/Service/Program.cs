@@ -796,11 +796,11 @@ namespace Game.Service
 		// Token: 0x04000007 RID: 7
 		private static readonly List<string> _sunucuMesajlari = new List<string>
 		{
-			"[Duyuru] Sunucumuzda hile, bug veya 3. parti yazılım kullanımı kalıcı olarak yasaklanma sebebidir. Lütfen adil bir oyun ortamı için kurallara uyun.",
-			"[İpucu] Günlük görevleri tamamlayarak değerli ödüller kazanabileceğinizi unutmayın!",
-			"[Hatırlatma] Discordumuza katılarak değerli itemler hatta kupon bile kazanabilirsin!",
-			"[Duyuru] Herhangi bir sorunla karşılaşırsanız oyun yöneticilerine bildirmekten çekinmeyin. Keyifli oyunlar!",
-			"[Bilgi] Unutma, en güçlü silah bilgidir! Sitemizdeki rehberlere göz atarak oyununu geliştirebilirsin."
+			"Duyuru! Sunucumuzda hile, bug veya 3. parti yazılım kullanımı kalıcı olarak yasaklanma sebebidir. Lütfen adil bir oyun ortamı için kurallara uyun.",
+			"İpucu: Günlük görevleri tamamlayarak değerli ödüller kazanabileceğinizi unutmayın!",
+			"Hatırlatma! Discordumuza katılarak değerli itemler hatta kupon bile kazanabilirsin!",
+			"Duyuru! Herhangi bir sorunla karşılaşırsanız oyun yöneticilerine bildirmekten çekinmeyin. Keyifli oyunlar!",
+			"Bilgi; Unutma, en güçlü silah bilgidir! Sitemizdeki rehberlere göz atarak oyununu geliştirebilirsin."
 		};
 
 		// Token: 0x04000008 RID: 8

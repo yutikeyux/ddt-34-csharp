@@ -19,7 +19,7 @@ namespace Tank.Request
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -59,7 +59,7 @@ namespace Tank.Request
 						}
 					}
 					value = true;
-					message = "Success!";
+					message = "Başarılı!";
 				}
 			}
 			catch (Exception ex)
@@ -72,27 +72,37 @@ namespace Tank.Request
 			context.Response.BinaryWrite(StaticFunction.Compress(result.ToString(false)));
 		}
 
-		// Token: 0x0600016C RID: 364 RVA: 0x0000B924 File Offset: 0x00009B24
-		public static void AddAnnex(XElement node, string value)
-		{
-			using (PlayerBussiness pb = new PlayerBussiness())
-			{
-				bool flag = !string.IsNullOrEmpty(value);
-				if (flag)
-				{
-					ItemInfo pr = pb.GetUserItemSingle(int.Parse(value));
-					bool flag2 = pr != null;
-					if (flag2)
-					{
-						node.Add(FlashUtils.CreateGoodsInfo(pr));
-					}
-				}
-			}
-		}
+        // Token: 0x0600016C RID: 364 RVA: 0x0000B924 File Offset: 0x00009B24
+        public static void AddAnnex(XElement node, string value)
+        {
+            using (PlayerBussiness pb = new PlayerBussiness())
+            {
+                // Değer boş değilse devam et
+                if (!string.IsNullOrEmpty(value))
+                {
+                    int itemId;
+                    // GÜVENLİ DÖNÜŞTÜRME: Değer gerçekten bir sayı mı diye kontrol et.
+                    // Eğer "11025:10" gibi bir metin gelirse TryParse false döner ve çökmez, sadece atlar.
+                    if (int.TryParse(value, out itemId))
+                    {
+                        ItemInfo pr = pb.GetUserItemSingle(itemId);
+                        if (pr != null)
+                        {
+                            node.Add(FlashUtils.CreateGoodsInfo(pr));
+                        }
+                    }
+                    else
+                    {
+                        // Hatalı formatı loglayabilirsiniz ama sistem çökmeyecek.
+                        log.ErrorFormat("AddAnnex Error: Annex value '{0}' is not a valid Item ID format.", value);
+                    }
+                }
+            }
+        }
 
-		// Token: 0x17000050 RID: 80
-		// (get) Token: 0x0600016D RID: 365 RVA: 0x0000B98C File Offset: 0x00009B8C
-		public bool IsReusable
+        // Token: 0x17000050 RID: 80
+        // (get) Token: 0x0600016D RID: 365 RVA: 0x0000B98C File Offset: 0x00009B8C
+        public bool IsReusable
 		{
 			get
 			{

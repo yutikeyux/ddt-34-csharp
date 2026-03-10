@@ -22,15 +22,27 @@ namespace Game.Server.Farm.Handle
             int userId = packet.ReadInt();
             int fieldId = packet.ReadInt();//param1.fieldID
             string msg = LanguageMgr.GetTranslation("EnterFarmHandler.Msg2");
+
             if (userId == Player.PlayerCharacter.ID && Player.Farm.GainField(fieldId))
             {
                 msg = LanguageMgr.GetTranslation("Ekin Toplama Baþarýlý!"); //türkçeleþtirildi not: yuti
+
+                // Etkinlik Mantýðý: Tohum Toplama (Kendi tarlasýndan hasat yapma)
+                var info = Player.Client.Player.Extra.GetEventProcess((int)NoviceActiveType.TohumToplama);
+                Player.Client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.TohumToplama, info.Conditions + 1);
             }
             else if (userId != Player.PlayerCharacter.ID)
             {
                 if (Player.Farm.GainFriendFields(userId, fieldId))
                 {
                     msg = LanguageMgr.GetTranslation("Ekin Çalma Baþarýlý!"); //türkçeleþtirildi not: yuti
+
+                    // Etkinlik Mantýðý: Arkadaþtan Ekin Çalma
+                    if (Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.ArkadasindanEkinCalma))
+                    {
+                        var info2 = Player.Client.Player.Extra.GetEventProcess((int)NoviceActiveType.ArkadasindanEkinCalma);
+                        Player.Extra.UpdateEventCondition((int)NoviceActiveType.ArkadasindanEkinCalma, info2.Conditions + 1);
+                    }
                 }
                 else
                 {

@@ -39,7 +39,7 @@ namespace Tank.Request
 			});
 			ranks.Add(myRank);
 			bool value = true;
-			string message = "Success!";
+			string message = "Başarılı!";
 			ranks.Add(new XAttribute("lastUpdateTime", DateTime.Now.ToString("MM-dd hh:mm")));
 			ranks.Add(new XAttribute("value", value));
 			ranks.Add(new XAttribute("message", message));

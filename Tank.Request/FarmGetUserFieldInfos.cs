@@ -57,7 +57,7 @@ namespace Tank.Request
 			int int32 = Convert.ToInt32(context.Request["selfid"]);
 			string str = context.Request["key"];
 			bool flag = true;
-			string str2 = "Success!";
+			string str2 = "Başarılı!";
 			XElement node = new XElement("Result");
 			using (PlayerBussiness playerBussiness = new PlayerBussiness())
 			{

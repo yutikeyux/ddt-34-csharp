@@ -24,7 +24,7 @@ namespace Tank.Request
 			string result;
 			if (flag)
 			{
-				result = "elitematchplayerlist Fail!";
+				result = "elitematchplayerlist Başarısız!";
 			}
 			else
 			{
