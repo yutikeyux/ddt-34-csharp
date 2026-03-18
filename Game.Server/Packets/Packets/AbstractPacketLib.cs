@@ -2730,7 +2730,7 @@ namespace Game.Base.Packets
             packet.WriteByte((byte)WorldBossPackageType.OPEN);
             packet.WriteString(world.BossResourceId); //this._bossResourceId = event.pkg.readUTF();1:rong 2:dracula 4:Captain
             packet.WriteInt(world.CurrentPve); //_currentPVE_ID = event.pkg.readInt();1243 30002 30001 30004
-            packet.WriteString("Thần thú"); //event.pkg.readUTF();
+            packet.WriteString("BOSS"); //event.pkg.readUTF();
             packet.WriteString(world.Name); //_bossInfo.name = event.pkg.readUTF();
             packet.WriteInt(world.MaxBlood); //_bossInfo.total_Blood = event.pkg.readLong(); 100bilion
             packet.WriteInt(0); //var _loc_2:* = event.pkg.readInt();
@@ -2757,9 +2757,9 @@ namespace Game.Base.Packets
                                 //while (_loc_5 < _loc_4)
                                 //{  
             packet.WriteInt(1);    //_loc_6.ID = event.pkg.readInt();
-            packet.WriteString("Tăng Sát Thương");    //_loc_6.name = event.pkg.readUTF();
+            packet.WriteString("Otomatik Buff");    //_loc_6.name = event.pkg.readUTF();
             packet.WriteInt(30);    //_loc_6.price = event.pkg.readInt();
-            packet.WriteString("Sát thương cơ bản tăng 200.");    //_loc_6.decription = event.pkg.readUTF();  
+            packet.WriteString("30 Kupona 1 kez satın al ve mükemmel hasar ver.");    //_loc_6.decription = event.pkg.readUTF();  
             packet.WriteInt(-1);//_loc_8.costID = event.pkg.readInt();
                                 //}
                                 //foreach (var item in WorldBossBuffInfo)

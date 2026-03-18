@@ -85,10 +85,10 @@ namespace Game.Service.actions
 				GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
 				for (int j = 0; j < allPlayers.Length; j++)
 				{
-					allPlayers[j].SendMessage(string.Format("Sistem : Şuanda oyunda {0} kişi online !. [Dandantank 2022]", num));
+					allPlayers[j].SendMessage(string.Format("Sistem : Şuanda oyunda {0} kişi online !. |TrBombom 2027|", num));
 				}
 				Console.WriteLine("Online sayısı gönderildi");
-				ConsoleStart._count2 = 31;
+				ConsoleStart._count2 = 1;
 			}
 		}
 
@@ -108,11 +108,11 @@ namespace Game.Service.actions
 		public void OnAction(Hashtable parameters)
 		{
 			bool flag = true;
-			Console.Title = "Road Service";
+			Console.Title = "TrBombom Main Service";
 			Console.ForegroundColor = ConsoleColor.Green;
 			GameServer.CreateInstance(this.config = new GameServerConfig());
 			Console.ForegroundColor = ConsoleColor.Cyan;
-			Console.WriteLine("Road Başlatılıyor...");
+			Console.WriteLine("Road Başlatılıyor");
 			GameServer.Instance.Start();
 			Console.ForegroundColor = ConsoleColor.Cyan;
 			GameServer.KeepRunning = true;
@@ -126,7 +126,6 @@ namespace Game.Service.actions
 			else
 			{
 				Console.WriteLine("Server Online!");
-				Console.WriteLine("Yönetim Konsolunu Açmak İçin (admin) Yazıp Enter Tuşuna Basınız.");
 			}
 			ConsoleClient client = new ConsoleClient();
 			new Thread(new ThreadStart(ConsoleStart.NewForm)).Start();

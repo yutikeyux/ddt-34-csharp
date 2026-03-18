@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Game.Logic.Phy.Object;
+﻿using Game.Logic.Phy.Object;
 
 namespace Game.Logic.PetEffects.ContinueElement
 {
@@ -41,7 +39,7 @@ namespace Game.Logic.PetEffects.ContinueElement
 
         protected override void OnAttachedToPlayer(Player player)
         {
-            player.BeginNextTurn += Player_BeginNextTurn;
+          //  player.BeginNextTurn += Player_BeginNextTurn;
             player.BeginSelfTurn += Player_BeginSelfTurn;
             player.PlayerClearBuffSkillPet += Player_PlayerClearBuffSkillPet;
         }
@@ -60,8 +58,9 @@ namespace Game.Logic.PetEffects.ContinueElement
                 {
                     m_added = (int)living.BaseDamage - 1;
                 }
+
                 living.BaseDamage -= m_added;
-            }           
+            }
         }
 
         private void Player_BeginSelfTurn(Living living)
@@ -69,7 +68,6 @@ namespace Game.Logic.PetEffects.ContinueElement
             m_count--;
             if (m_count < 0)
             {
-               
                 Stop();
             }
         }
@@ -78,8 +76,7 @@ namespace Game.Logic.PetEffects.ContinueElement
         {
             player.BaseDamage += m_added;
             m_added = 0;
-            //player.Game.SendPetBuff(player, ElementInfo, false);
-            player.BeginNextTurn -= Player_BeginNextTurn;
+          //  player.BeginNextTurn -= Player_BeginNextTurn;
             player.BeginSelfTurn -= Player_BeginSelfTurn;
         }
     }

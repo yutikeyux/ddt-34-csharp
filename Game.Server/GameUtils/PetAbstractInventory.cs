@@ -448,7 +448,7 @@ namespace Game.Server.GameUtils
 
 					if (currSlot.Split(',')[0] == killId.ToString())
 					{
-						msg = "PetHandler.Msg18";
+						msg = "Yavaşla!";
 						return false;
 					}
 				}

@@ -17,10 +17,10 @@ namespace Game.Server.Farm.Handle
                 Player.OnSeedFoodPetEvent();
 
                 // Etkinlik Mantığı: Tohum Ekme
-                if (Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.TohumEkme))
+                if (Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.TOHUM_EKME))
                 {
-                    var info = Player.Client.Player.Extra.GetEventProcess((int)NoviceActiveType.TohumEkme);
-                    Player.Client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.TohumEkme, info.Conditions + 1);
+                    var info = Player.Client.Player.Extra.GetEventProcess((int)NoviceActiveType.TOHUM_EKME);
+                    Player.Client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.TOHUM_EKME, info.Conditions + 1);
                 }
             }
             return true;

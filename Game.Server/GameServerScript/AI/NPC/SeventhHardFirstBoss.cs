@@ -40,8 +40,8 @@ namespace GameServerScript.AI.NPC
 
             private static string[] KillAttackChat = new string[]
             {
-            LanguageMgr.GetTranslation("GameServerScript.AI.NPC.SimpleQueenAntAi.msg13", new object[0]),
-            LanguageMgr.GetTranslation("GameServerScript.AI.NPC.SimpleQueenAntAi.msg14", new object[0])
+            LanguageMgr.GetTranslation("Gebermeyi seviyorsun heralde!", new object[0]),
+            LanguageMgr.GetTranslation("İntihar etmeyi bu kadar istiyosan burda ne işin var?", new object[0])
             };
 
             private static string[] ShootedChat = new string[]

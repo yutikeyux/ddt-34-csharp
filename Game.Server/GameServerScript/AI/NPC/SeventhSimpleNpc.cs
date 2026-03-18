@@ -13,15 +13,15 @@ namespace GameServerScript.AI.NPC
 
 		private static string[] listChat = new string[]
 		{
-			"Bunu aşmalarına izin verme!",
-			"Silahlarını hızla ele geçirin",
-			"Kahrolsun tüm silahlar!",
-			"Düşmanı yok edin!",
-			"İnat edersek bizi affetmeyiz",
-			"Boo minderinin kazanması için! Kardeşler ücreti!",
-			"Düşmanı hızla yok edin! ",
-			"1 numaralı güçle! "
-		};
+            "Cik cik cik!",
+            "Bu kümesi size zehir edeceğiz!",
+            "Her şey şişman tavuk ablalarım için!",
+            "Pis benbenin götünü kafanıza güm diye geçireceğiz!",
+            "Çürümüş yumurtalar midene iyi gelmeyecek!",
+            "Haydi kardeşlerim! Yenelim şunları!",
+            "Kabuklu civivlerin kaskı seni yener! ",
+            "Ben hızlı koşarım! "
+        };
 
 		public override void OnBeginSelfTurn()
 		{

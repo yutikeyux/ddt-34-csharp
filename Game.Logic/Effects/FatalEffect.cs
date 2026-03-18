@@ -72,8 +72,6 @@ namespace Game.Logic.Effects
 			IsTrigger = false;
 			if (m_probability == 15112004)
 			{
-				if (!player.CurrentBall.IsSpecial())
-				{
 					player.ShootMovieDelay = 50;
 					IsTrigger = true;
 					if (player.CurrentBall.ID != 3)
@@ -83,13 +81,12 @@ namespace Game.Logic.Effects
 					if (m_saycount == 1)
 					{
 						player.EffectTrigger = true;
-						player.Game.SendEquipEffect(player, "Rehber Özelliği aktif edildi!");
-					}
-				}
+						player.PlayerDetail.SendMessage("Rehber Özelliği aktif edildi");
+                }
 			}
 			else
 			{
-				if (!player.CurrentBall.IsSpecial() && rand.Next(100) < m_probability && player.AttackGemLimit == 0)
+				if (rand.Next(100) < m_probability && player.AttackGemLimit == 0)
 				{
 					player.AttackGemLimit = 4;
 					player.ShootMovieDelay = 50;

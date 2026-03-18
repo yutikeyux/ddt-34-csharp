@@ -322,6 +322,8 @@ namespace Game.Server
                 m_worldBossScanTimer.Change(num, num);
             }
 
+            // Bogo Savaşı (LittleGame) Timer Başlatma Kısmı Kapatıldı
+            /*
             if (m_LittleGameScanTimer == null)
             {
                 m_LittleGameScanTimer = new Timer(LittleGameScan, null, 60000 - DateTime.Now.Second * 1000, 60000);
@@ -330,6 +332,7 @@ namespace Game.Server
             {
                 m_LittleGameScanTimer.Change(num, num);
             }
+            */
 
             if (m_weekScanTimer == null)
             {
@@ -436,8 +439,8 @@ namespace Game.Server
                 }
 
                 Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-                DateTime startTime = Convert.ToDateTime("19:00:00"); //lig başlama saatleri şimdilik 7/24 şekilde not: yuti
-                DateTime stopTime = Convert.ToDateTime("20:59:59"); //lig bitme saatleri şimdilik 7/24 şekilde not: yuti
+                DateTime startTime = Convert.ToDateTime("19:00:00");
+                DateTime stopTime = Convert.ToDateTime("20:59:59");
 
                 List<DayOfWeek> opendays = new List<DayOfWeek>
                 {
@@ -445,7 +448,7 @@ namespace Game.Server
                     DayOfWeek.Tuesday,
                     DayOfWeek.Wednesday,
                     DayOfWeek.Thursday,
-                    DayOfWeek.Friday,   
+                    DayOfWeek.Friday,
                 };
 
                 if (opendays.Contains(DateTime.Now.DayOfWeek))
@@ -474,7 +477,7 @@ namespace Game.Server
         }
 
 
-        protected void WorldBossScan(object sender) //sadece game server rebuild attım otomatikmen roada işlemiyor o
+        protected void WorldBossScan(object sender)
         {
             try
             {
@@ -487,12 +490,11 @@ namespace Game.Server
 
                 Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
-                // --- KİLİT BAŞLANGICI (WorldBossRoom nesnesinin kendisi kilitlendi) ---
                 lock (RoomMgr.WorldBossRoom)
                 {
                     GamePlayer[] players = WorldMgr.GetAllPlayers();
-                    DateTime startTime = Convert.ToDateTime("15:00:00");//world boss başlama saatleri şimdilik 7/24 şekilde not: yuti
-                    DateTime stopTime = Convert.ToDateTime("16:00:00");//world boss bitme saatleri şimdilik 7/24 şekilde not: yuti
+                    DateTime startTime = Convert.ToDateTime("15:00:00");
+                    DateTime stopTime = Convert.ToDateTime("16:00:00");
                     DateTime closeTime = stopTime.AddMinutes(1.0);
                     int npcID = 1243;
                     int configblood = NPCInfoMgr.GetNpcInfoById(npcID).Blood;
@@ -565,7 +567,6 @@ namespace Game.Server
                         }
                     }
                 }
-                // --- KİLİT BİTİŞİ ---
 
                 if (log.IsInfoEnabled)
                 {
@@ -610,6 +611,7 @@ namespace Game.Server
 
         protected void LittleGameScan(object sender)
         {
+            /* Bogo Savaşı Başlamasın Diye Kapatıldı
             try
             {
                 if (log.IsInfoEnabled)
@@ -722,6 +724,7 @@ namespace Game.Server
                     log.Info("GameMgr Scan complete!");
                 }
             }
+            */
         }
 
         protected void WeekScan(object sender)
@@ -736,17 +739,17 @@ namespace Game.Server
                     if (player.PlayerCharacter.ID > 0)
                     {
                         //var IKI_VS_IKI_SAVAS = player.Extra.GetEventProcess((int)NoviceActiveType.IKI_VS_IKI_SAVAS).IsReset;
-                        var USE_MONEY_ACTIVE_OFWEEK = player.Extra.GetEventProcess((int)NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK).IsReset;                       
-                            if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
-                            {
+                        var Haftalık_Harcama = player.Extra.GetEventProcess((int)NoviceActiveType.Haftalık_Harcama).IsReset;
+                        if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
+                        {
                             //if (!IKI_VS_IKI_SAVAS)
                             //{
-                               // player.Extra.ResetNoviceEvent(NoviceActiveType.IKI_VS_IKI_SAVAS);
-                                //result = true;
-                           // }
-                            if (!USE_MONEY_ACTIVE_OFWEEK)
+                            // player.Extra.ResetNoviceEvent(NoviceActiveType.IKI_VS_IKI_SAVAS);
+                            //result = true;
+                            // }
+                            if (!Haftalık_Harcama)
                             {
-                                player.Extra.ResetNoviceEvent(NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK);
+                                player.Extra.ResetNoviceEvent(NoviceActiveType.Haftalık_Harcama);
                                 result = true;
                             }
                             if (result)
@@ -754,21 +757,21 @@ namespace Game.Server
                                 isReset = true;
                                 player.SendMessage("Haftalık harcama etkinliği sıfırlandı!");
                                 //player.Extra.ResetUsersEventProcess((int)NoviceActiveType.IKI_VS_IKI_SAVAS, isReset);
-                                player.Extra.ResetUsersEventProcess((int)NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK, isReset);
+                                player.Extra.ResetUsersEventProcess((int)NoviceActiveType.Haftalık_Harcama, isReset);
                             }
                         }
                         else
                         {
-                           // if (IKI_VS_IKI_SAVAS)
+                            // if (IKI_VS_IKI_SAVAS)
                             //{
                             //    isReset = false;
-                           // }
-                            if (USE_MONEY_ACTIVE_OFWEEK)
+                            // }
+                            if (Haftalık_Harcama)
                             {
                                 isReset = false;
                             }
                             //player.Extra.ResetUsersEventProcess((int)NoviceActiveType.IKI_VS_IKI_SAVAS, isReset);
-                            player.Extra.ResetUsersEventProcess((int)NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK, isReset);
+                            player.Extra.ResetUsersEventProcess((int)NoviceActiveType.Haftalık_Harcama, isReset);
                         }
                     }
                 }
@@ -1362,7 +1365,7 @@ namespace Game.Server
                 }
                 if (!InitComponent(InitOtherLoginServer(), "Login To OtherCenterServer"))
                 {
-                 return false;
+                    return false;
                 }
                 if (!InitComponent(HotSpringMgr.Init(), "HotSpringMgr Init"))
                 {
@@ -1418,10 +1421,10 @@ namespace Game.Server
                     return false;
                 if (!InitComponent(TotemHonorMgr.Init(), "TotemHonorMgr Init"))
                     return false;
-                if (!InitComponent(DailyLeagueAwardMgr.Init(), "DailyLeagueAwardMgr Init")) //kaldırıldı not: yuti
-                 return false;
+                if (!InitComponent(DailyLeagueAwardMgr.Init(), "DailyLeagueAwardMgr Init"))
+                    return false;
                 if (!InitComponent(SpiritInfoMgr.Init(), "SpiritInfoMgr Int"))
-                    return false; //buralarda ne geziyon la :D
+                    return false;
                 if (!InitComponent(SetsBuildTempMgr.Init(), "SetsBuildTempMgr Init"))
                     return false;
                 if (!InitComponent(OldPlayerAwardMgr.Init(), "OldPlayerAwardMgr Init"))

@@ -283,9 +283,9 @@ namespace Game.Server.Packets.Client
                         {
                             GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice(eMessageType.ChatNormal, LanguageMgr.GetTranslation("ItemStrengthenHandler.congratulation2", client.Player.ZoneName, client.Player.PlayerCharacter.NickName, item.TemplateID, item.StrengthenLevel), item.ItemID, item.TemplateID, null));
                         }
-                        if (item.Template.CategoryID == 7 && client.Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.STRENGTHEN_WEAPON_ACTIVE))
+                        if (item.Template.CategoryID == 7 && client.Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.Silah_Guclendirme))
                         {
-                            client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.STRENGTHEN_WEAPON_ACTIVE, item.StrengthenLevel);
+                            client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.Silah_Guclendirme, item.StrengthenLevel);
                         }
                         if (item.Template.CategoryID == 5 && client.Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.Kıyafet_Guclendirme))
                         {

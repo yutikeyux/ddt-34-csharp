@@ -1,19 +1,21 @@
-using Game.Logic;
+﻿using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
 using System.Collections.Generic;
 
 namespace GameServerScript.AI.Messions
 {
-    public class KT1120 : AMissionControl
+    public class UZ17001 : AMissionControl
     {
         private List<SimpleNpc> someNpc = new List<SimpleNpc>();
 
         private int dieRedCount;
 
-        private int[] npcIDs = { 2101, 2102 };
+        
+        private int[] npcIDs = { 10015, 71087 };
 
-        private int[] birthX = { 52, 115, 183, 253, 320, 1206, 1275, 1342, 1410, 1475 };
+        // Sadece haritanın en sağındaki doğuş noktaları (Sol taraf kaldırıldı)
+        private int[] birthX = { 1206, 1275, 1342, 1410, 1475 };
 
         public override int CalculateScoreGrade(int score)
         {
@@ -40,32 +42,30 @@ namespace GameServerScript.AI.Messions
             int[] gameOverResources = { npcIDs[1], npcIDs[0], npcIDs[0], npcIDs[0] };
             base.Game.LoadResources(resources);
             base.Game.LoadNpcGameOverResources(gameOverResources);
-            base.Game.SetMap(1120);
+            base.Game.SetMap(1316);
         }
 
         public override void OnStartGame()
         {
             base.OnStartGame();
-            int index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 52, 206, 1, 1));
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 100, 207, 1, 1));
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 155, 208, 1, 1));
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 210, 207, 1, 1));
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 253, 207, 1, 1));
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1275, 208, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1325, 206, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1360, 208, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1410, 206, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1475, 208, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
+
+            // Oyun başında 10 NPC doğuruluyor (Hepsi sağdan, 5'i uçan 5'i yürüyen)
+
+            // 5 Tane Uçan NPC (38204) - Sağ Üstte
+            for (int i = 0; i < 5; i++)
+            {
+                int x = birthX[base.Game.Random.Next(0, birthX.Length)];
+                // Y=210 Havada doğması için. Direction=1 yere düşmemesi için yerçekimi kapatma girişimi (AI'a bağlı)
+                someNpc.Add(base.Game.CreateNpc(npcIDs[0], x, 210, -1, 1));
+            }
+
+            // 5 Tane Yürüyen NPC (71087) - Sağ Altta
+            for (int i = 0; i < 5; i++)
+            {
+                int x = birthX[base.Game.Random.Next(0, birthX.Length)];
+                // Y=506 Zeminde
+                someNpc.Add(base.Game.CreateNpc(npcIDs[1], x, 506, -1, 1));
+            }
         }
 
         public override void OnNewTurnStarted()
@@ -75,37 +75,41 @@ namespace GameServerScript.AI.Messions
             {
                 base.Game.PveGameDelay = 0;
             }
+
+            // Standart canlı kontrolü
             if (base.Game.TurnIndex <= 1 || base.Game.CurrentPlayer.Delay <= base.Game.PveGameDelay || base.Game.GetLivedLivings().Count >= 10)
             {
                 return;
             }
+
+            // Eksik NPC sayısı kadar döngü
             for (int i = 0; i < 10 - base.Game.GetLivedLivings().Count; i++)
             {
                 if (someNpc.Count == base.Game.MissionInfo.TotalCount)
                 {
                     break;
                 }
+
+                // Rastgele X koordinatı (Sadece sağ taraf)
                 int index = base.Game.Random.Next(0, birthX.Length);
                 int NpcX = birthX[index];
+
+                // Rastgele NPC ID seç
                 index = base.Game.Random.Next(0, npcIDs.Length);
-                if (index == 1 && GetNpcCountByID(npcIDs[1]) < 10)
+                int selectedNpcId = npcIDs[index];
+
+                // Seçilen ID'ye göre konum belirleme
+                if (selectedNpcId == npcIDs[0]) // 38204 Uçan NPC
                 {
-                    if (NpcX > 700)
-                    {
-                        someNpc.Add(base.Game.CreateNpc(npcIDs[1], NpcX, 506, -1, 1));
-                    }
-                    else
-                    {
-                        someNpc.Add(base.Game.CreateNpc(npcIDs[1], NpcX, 506, 1, 1));
-                    }
+                    // Sağ üstte doğacak (Havada)
+                    // Direction -1 veriyoruz ki sola (oyuncuya) baksın ve uçsun.
+                    // Not: NPC'nin DB ayarlarında "Fly" özelliği açık olmalıdır, yoksa yere düşebilir.
+                    someNpc.Add(base.Game.CreateNpc(selectedNpcId, NpcX, 210, -1, 1));
                 }
-                else if (NpcX > 700)
+                else // 71087 Yürüyen NPC
                 {
-                    someNpc.Add(base.Game.CreateNpc(npcIDs[1], NpcX, 506, -1, 1));
-                }
-                else
-                {
-                    someNpc.Add(base.Game.CreateNpc(npcIDs[1], NpcX, 506, 1, 1));
+                    // Sağ aşağıda doğacak (Zeminde)
+                    someNpc.Add(base.Game.CreateNpc(selectedNpcId, NpcX, 506, -1, 1));
                 }
             }
         }
@@ -136,10 +140,6 @@ namespace GameServerScript.AI.Messions
                 base.Game.IsWin = true;
                 return true;
             }
-            if (base.Game.TurnIndex > base.Game.MissionInfo.TotalTurn)
-            {
-                return true;
-            }
             return false;
         }
 
@@ -154,9 +154,6 @@ namespace GameServerScript.AI.Messions
             if (base.Game.GetLivedLivings().Count == 0)
             {
                 base.Game.IsWin = true;
-                List<LoadingFileInfo> loadingFileInfos = new List<LoadingFileInfo>();
-                loadingFileInfos.Add(new LoadingFileInfo(2, "image/map/2/show2", ""));
-                base.Game.SendLoadResource(loadingFileInfos);
             }
             else
             {

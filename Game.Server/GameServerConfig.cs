@@ -53,7 +53,7 @@ namespace Game.Server
 
         public int MaxPlayerCount = 2000;
 
-        public int MaxRoomCount = 1000;
+        public int MaxRoomCount = 100000;
 
         [ConfigProperty("PingCheckInterval", "PING检查时间间隔,分钟为单位", 5)]
 		public int PingCheckInterval;

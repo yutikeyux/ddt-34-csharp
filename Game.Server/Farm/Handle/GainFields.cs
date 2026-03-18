@@ -28,8 +28,8 @@ namespace Game.Server.Farm.Handle
                 msg = LanguageMgr.GetTranslation("Ekin Toplama Baþarýlý!"); //türkçeleþtirildi not: yuti
 
                 // Etkinlik Mantýðý: Tohum Toplama (Kendi tarlasýndan hasat yapma)
-                var info = Player.Client.Player.Extra.GetEventProcess((int)NoviceActiveType.TohumToplama);
-                Player.Client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.TohumToplama, info.Conditions + 1);
+                var info = Player.Client.Player.Extra.GetEventProcess((int)NoviceActiveType.TOHUM_TOPLAMA);
+                Player.Client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.TOHUM_TOPLAMA, info.Conditions + 1);
             }
             else if (userId != Player.PlayerCharacter.ID)
             {
@@ -38,10 +38,10 @@ namespace Game.Server.Farm.Handle
                     msg = LanguageMgr.GetTranslation("Ekin Çalma Baþarýlý!"); //türkçeleþtirildi not: yuti
 
                     // Etkinlik Mantýðý: Arkadaþtan Ekin Çalma
-                    if (Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.ArkadasindanEkinCalma))
+                    if (Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.Arkadasdan_Ekin_Clalma))
                     {
-                        var info2 = Player.Client.Player.Extra.GetEventProcess((int)NoviceActiveType.ArkadasindanEkinCalma);
-                        Player.Extra.UpdateEventCondition((int)NoviceActiveType.ArkadasindanEkinCalma, info2.Conditions + 1);
+                        var info2 = Player.Client.Player.Extra.GetEventProcess((int)NoviceActiveType.Arkadasdan_Ekin_Clalma);
+                        Player.Extra.UpdateEventCondition((int)NoviceActiveType.Arkadasdan_Ekin_Clalma, info2.Conditions + 1);
                     }
                 }
                 else

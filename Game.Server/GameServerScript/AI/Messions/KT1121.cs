@@ -104,7 +104,12 @@ namespace GameServerScript.AI.Messions
                 kill++;
                 return true;
             }
+            if (base.Game.TurnIndex > base.Game.MissionInfo.TotalTurn)
+            {
+                return true;
+            }
             return false;
+
         }
 
         public override int UpdateUIData()

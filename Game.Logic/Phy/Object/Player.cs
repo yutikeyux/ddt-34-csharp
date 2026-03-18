@@ -648,7 +648,13 @@ namespace Game.Logic.Phy.Object
                     }
                     return false;
                 case 10025:
-                    if (ItemFightBag.ContainsKey(10003) || ItemFightBag.ContainsKey(10024))
+                    if (ItemFightBag.ContainsKey(10003) || ItemFightBag.ContainsKey(10024) || ItemFightBag.ContainsKey(10015))
+                    {
+                        return false;
+                    }
+                    break;
+                case 10015:
+                    if (ItemFightBag.ContainsKey(10003) || ItemFightBag.ContainsKey(10024) || ItemFightBag.ContainsKey(10025))
                     {
                         return false;
                     }
@@ -2477,7 +2483,7 @@ namespace Game.Logic.Phy.Object
 
         public bool Shoot(int x, int y, int force, int angle)
         {
-            if (m_game.FreeFatal && PlayerDetail.PlayerCharacter.Grade <= 15)
+            if (m_game.FreeFatal && PlayerDetail.PlayerCharacter.Grade <= 9)
             {
                 new FatalEffect(0, 15112004).Start(this);
             }
@@ -2503,27 +2509,24 @@ namespace Game.Logic.Phy.Object
                 }
                 OnPlayerAnyShellThrow();
                 OnBeforePlayerShoot();
-                if (IsSpecialSkill)
+                if (IsSpecialSkill) //pow 
                 {
-                    ControlBall = false;
+                    //ControlBall = false;
                     base.SpecialSkillDelay = 2000;
                 }
-                //quydeptrai
                 int tmpID = iD;
                 if (m_isBombOrIgnoreArmor > 0)
                 {
-                    if (m_isBombOrIgnoreArmor == 1)//xuyên
+                    if (m_isBombOrIgnoreArmor == 1)
                     {
-                        IgnoreArmor = true;
+                        IgnoreArmor = true; //zırh delici
                     }
-                    else if (m_isBombOrIgnoreArmor == 2)//hạt nhân
+                    else if (m_isBombOrIgnoreArmor == 2)
                     {
                         iD = 4;
                     }
                 }
-
-                //ts
-                if (BallMgr.GetBallType(iD) == BombType.CURE)
+                if (BallMgr.GetBallType(iD) == BombType.CURE) //melek
                 {
                     m_ballCount = 1;
                     ShootCount = 1;
@@ -2536,7 +2539,6 @@ namespace Game.Logic.Phy.Object
                     {
                         m_game.AddAction(new FightAchievementAction(this, eFightAchievementType.SuperMansNuclearExplosion, base.Direction, 1200));
                     }
-                    //quydeptrai
                     if (m_isBombOrIgnoreArmor > 0)
                     {
                         if (m_isBombOrIgnoreArmor == 1)//xuyên
@@ -2633,14 +2635,14 @@ namespace Game.Logic.Phy.Object
                 PetSkillInfo skillInfo = _petSkillCd[skillId];
                 if (skillInfo.NewBallID != -1 && m_useitemCount > 0)
                 {
-                    m_player.SendMessage("Không thể sử dụng kỹ năng pet.");
+                    m_player.SendMessage("Aksesuar kullandığınız için bu skill basılamaz.");
                     return;
                 }
                 if (PetMP > 0 && PetMP >= skillInfo.CostMP)
                 {
                     if (GetSealStatePet())
                     {
-                        m_player.SendMessage(LanguageMgr.GetTranslation("Player.Msg1a"));//Lỗi thời gian chờ chưa đến
+                        m_player.SendMessage(LanguageMgr.GetTranslation("Player.Msg1a"));
                     }
                     else
                     {
@@ -2842,29 +2844,43 @@ namespace Game.Logic.Phy.Object
 
         public override bool TakeDamage(Living source, ref int damageAmount, ref int criticalAmount, string msg)
         {
+            // Eğer saldıran kendisi veya takım arkadaşıysa:
             if (source == this || source.Team == base.Team)
             {
-                int remainingHealth = m_blood - damageAmount - criticalAmount;
-                if (remainingHealth <= 0)
-                {
-                    damageAmount = m_blood - 1;
-                    criticalAmount = 0;
-                }
+                // Hasarı ve kritik hasarı sıfırla
+                damageAmount = 0;
+                criticalAmount = 0;
+
+                // İşlemi burada bitir (base.TakeDamage'ı 0 hasarla çağırıp sonucu döndür).
+                // Böylece aşağıdaki Dander (Öfke) veya Buff işlemleri çalışmaz.
+                return base.TakeDamage(source, ref damageAmount, ref criticalAmount, msg);
             }
+
             bool result = base.TakeDamage(source, ref damageAmount, ref criticalAmount, msg);
             if (base.IsLiving)
             {
-                int currDander = Math.Max(MaxBlood / 1000 * 4, 1);
-                int currDamage = Math.Max(LastBlood - Blood, 1);
-                AddDander(currDamage / currDander * 2);
+                int currDamage = Math.Max(LastBlood - Blood, 0);
+
+                // ZORLUK AYARI 1: Hasar, maksimum canın %5'inden az ise öfke kazanmasın.
+                if (currDamage > MaxBlood / 20)
+                {
+                    // ZORLUK AYARI 2: Öfke kazanım formülünü zorlaştırdık.
+                    // Eski Kod: currDamage / currDander * 2 (Çok hızlı doluyordu)
+                    // Yeni Kod: Bölümü büyütüp (MaxBlood / 100) çarpanı kaldırdık.
+                    // Artık aynı hasar için çok daha az öfke puanı kazanacak.
+                    int currDander = Math.Max(MaxBlood / 100, 1);
+
+                    // En az 1 birim kazanması için Math.Max kullanıyoruz.
+                    AddDander(Math.Max(currDamage / currDander, 1));
+                }
                 if (!base.Game.IsSpecialPVE() && base.Blood < base.MaxBlood / 100 * 30)
                 {
                     BufferInfo fightBuffByType = GetFightBuffByType(BuffType.Save_Life);
                     if (fightBuffByType != null && m_player.UsePayBuff(BuffType.Save_Life))
                     {
                         int num = base.MaxBlood / 100 * fightBuffByType.Value;
-                       AddBlood(num);
-                        m_game.method_53(this, LanguageMgr.GetTranslation("Oyuncu " + PlayerDetail.PlayerCharacter.NickName + " Kurtarma Samanını kullanarak " + num + " can kazandı!"));
+                        AddBlood(num);
+                        m_game.method_53(this, LanguageMgr.GetTranslation("Oyuncu " + PlayerDetail.PlayerCharacter.NickName + " Kurtarma Samanını kullandı ve " + num + " canını yeniledi!"));
                     }
                 }
             }
@@ -3021,7 +3037,7 @@ namespace Game.Logic.Phy.Object
             m_useitemCount = 9999;
             Game.SendSkipNext(this);
             m_prop = 0;
-            AddDelay(25);
+            AddDelay(10);
             base.Skip(1000);
         }
 
@@ -3060,27 +3076,41 @@ namespace Game.Logic.Phy.Object
         }
         public virtual Point StartFalling(bool direct, int delay, int speed)
         {
+            // 1. Düşülecek noktayı bul
             Point p = this.m_map.FindYLineNotEmptyPointDown(this.X, this.Y);
+
+            // Eğer yer bulunamazsa (boşluksa), haritanın en altına bir nokta ata
             if (p == Point.Empty)
             {
                 p = new Point(this.X, this.m_game.Map.Bound.Height + 1);
             }
+
+            // Oyuncu zaten o noktadaysa işlem yapma
             if (p.Y == this.Y)
             {
                 return Point.Empty;
             }
-            if (direct)
+
+            // 2. ÖNEMLİ DÜZELTME: Hedef nokta harita dışındaysa (boşluğa düşüyorsa)
+            // animasyonlu geçişi beklemeden direkt ölümü tetikle.
+            bool isOutMap = this.m_map.IsOutMap(p.X, p.Y);
+
+            if (direct || isOutMap)
             {
                 base.SetXY(p);
-                if (this.m_map.IsOutMap(p.X, p.Y))
+
+                // Harita dışındaysa öldür
+                if (isOutMap)
                 {
                     base.Die();
                 }
             }
             else
             {
+                // Normal düşüş animasyonu (harita içi geçerli zeminler için)
                 this.m_game.AddAction(new LivingFallingAction(this, p.X, p.Y, speed, null, delay, 0, null));
             }
+
             return p;
         }
     }

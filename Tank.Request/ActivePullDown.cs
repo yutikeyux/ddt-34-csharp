@@ -34,7 +34,7 @@ namespace Tank.Request
 			string key = context.Request["key"];
 			string activeKey = context.Request["activeKey"];
 			bool value = false;
-			string message = "ActivePullDownHandler.Başarısız";
+			string message = "Ödül Alma başarısız!";
 			string awardID = "";
 			XElement result = new XElement("Result");
 			bool flag = activeKey != "";

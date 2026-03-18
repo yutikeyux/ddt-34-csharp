@@ -32,7 +32,7 @@ namespace GameServerScript.AI.NPC
 
 		private static string[] KillAttackChat = new string[]
 		{
-			"Đến nộp mạng à ?? Sức mạnh tối cao!!..."
+			"Seni geberteceğim!!..."
 		};
 
 		public override void OnBeginSelfTurn()

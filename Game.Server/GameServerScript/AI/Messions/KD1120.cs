@@ -57,15 +57,15 @@ namespace GameServerScript.AI.Messions
             index = base.Game.Random.Next(0, npcIDs.Length);
             someNpc.Add(base.Game.CreateNpc(npcIDs[index], 253, 207, 1, 1));
             index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1275, 208, -1, 1));
+            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1275, 208, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
             index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1325, 206, -1, 1));
+            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1325, 206, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
             index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1360, 208, -1, 1));
+            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1360, 208, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
             index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1410, 206, -1, 1));
+            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1410, 206, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
             index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1475, 208, -1, 1));
+            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1475, 208, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
         }
 
         public override void OnNewTurnStarted()
@@ -134,6 +134,10 @@ namespace GameServerScript.AI.Messions
             if (result && dieRedCount == base.Game.MissionInfo.TotalCount)
             {
                 base.Game.IsWin = true;
+                return true;
+            }
+            if (base.Game.TurnIndex > base.Game.MissionInfo.TotalTurn)
+            {
                 return true;
             }
             return false;

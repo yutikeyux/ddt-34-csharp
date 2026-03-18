@@ -13,14 +13,14 @@ namespace GameServerScript.AI.NPC
 
 		private static string[] listChat = new string[]
 		{
-			"Đừng để họ vượt qua !",
-			"Cướp vũ khí của chúng mau lên",
-			"Hạ hết vũ khí xuống!",
-			"Tiêu diệt kẻ thù!",
-			"Còn ngoan cố chúng tôi sẻ không tha",
-			"Đối với chiến thắng đệm Boo! Brothers phí!",
-			"Nhanh chóng tiêu diệt kẻ thù! ",
-			"Với sức mạnh số 1! "
+			"Cik cik cik!",
+			"Bu kümesi size zehir edeceğiz!",
+			"Her şey şişman tavuk ablalarım için!",
+			"Pis benbenin götünü kafanıza güm diye geçireceğiz!",
+			"Çürümüş yumurtalar midene iyi gelmeyecek!",
+			"Haydi kardeşlerim! Yenelim şunları!",
+			"Kabuklu civivlerin kaskı seni yener! ",
+			"Ben hızlı koşarım! "
 		};
 
 		public override void OnBeginSelfTurn()

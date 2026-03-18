@@ -501,39 +501,39 @@ namespace Game.Server.GameUtils
         {
             switch (activeType)
             {
-                case NoviceActiveType.GRADE_UP_ACTIVE:
+                case NoviceActiveType.Level_Atlama:
                     return true;
                 case NoviceActiveType.DISCORD_HOPARLORU:
                     return true;
-                case NoviceActiveType.STRENGTHEN_WEAPON_ACTIVE:
+                case NoviceActiveType.Silah_Guclendirme:
                     return true;
                 case NoviceActiveType.Kıyafet_Guclendirme:
                     return true;
                 case NoviceActiveType.Sapka_Guclendirme:
                     return true;
-                case NoviceActiveType.UPGRADE_VIP_ACTIVE:
+                case NoviceActiveType.VIP_LEVEL:
                     return true;
-                case NoviceActiveType.UPDATE_FIGHTPOWER:
+                case NoviceActiveType.SAVAS_GUCU:
                     return true;
-                case NoviceActiveType.USE_MONEY_ACTIVE:
+                case NoviceActiveType.Gunluk_Harcama:
                     return true;
-                case NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK:
+                case NoviceActiveType.Haftalık_Harcama:
                     return true;
                 case NoviceActiveType.DestekEkipmanıGuclendirme:
                     return true;
                 case NoviceActiveType.Ilk_Yukleme:
                     return true;
-                case NoviceActiveType.TohumEkme:
+                case NoviceActiveType.TOHUM_EKME:
                     return true;
-                case NoviceActiveType.TohumToplama:
+                case NoviceActiveType.TOHUM_TOPLAMA:
                     return true;
-                case NoviceActiveType.ArkadasindanEkinCalma:
+                case NoviceActiveType.Arkadasdan_Ekin_Clalma:
                     return true;
                 case NoviceActiveType.BIRLIK_SAVASI:
                     return true;
-                case NoviceActiveType.PVP_MATCH_COUNT:
+                case NoviceActiveType.Ozgur_Savas:
                     return true;
-                case NoviceActiveType.DUNGEON_COMPLETE:
+                case NoviceActiveType.Kesif_Tamamlama:
                     return true;
                 default:
                     return false;

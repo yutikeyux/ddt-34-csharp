@@ -1,6 +1,5 @@
 ﻿using Game.Logic.PetEffects.ContinueElement;
 using Game.Logic.Phy.Object;
-using System;
 
 namespace Game.Logic.PetEffects.Element.Actives
 {
@@ -42,7 +41,7 @@ namespace Game.Logic.PetEffects.Element.Actives
         protected override void OnAttachedToPlayer(Player player)
         {
             player.AfterKillingLiving += Player_AfterKillingLiving;
-            player.PlayerBuffSkillPet += Player_PlayerBuffSkillPet;      
+            player.PlayerBuffSkillPet += Player_PlayerBuffSkillPet;
         }
 
         private void Player_PlayerBuffSkillPet(Player player)
@@ -52,12 +51,14 @@ namespace Game.Logic.PetEffects.Element.Actives
                 IsTrigger = true;
             }
         }
+
         private void Player_AfterKillingLiving(Living living, Living target, int damageAmount, int criticalAmount)
         {
             if (IsTrigger)
             {
                 IsTrigger = false;
-                target.AddPetEffect(new CE1201(3, m_probability, m_type, m_currentId, m_delay, ElementInfo.ID.ToString()), 0);
+                target.AddPetEffect(
+                    new CE1201(3, m_probability, m_type, m_currentId, m_delay, ElementInfo.ID.ToString()), 0);
             }
         }
 
@@ -65,6 +66,6 @@ namespace Game.Logic.PetEffects.Element.Actives
         {
             player.AfterKillingLiving -= Player_AfterKillingLiving;
             player.PlayerBuffSkillPet -= Player_PlayerBuffSkillPet;
-        }         
+        }
     }
 }

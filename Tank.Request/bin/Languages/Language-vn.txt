@@ -217,16 +217,16 @@ Game.Service.actions.ShutDown2: phút, hãy nhanh chóng thoát khỏi.
 
 
 
-ActiveBussiness.Msg0:Nhận lãnh thành công, vật phẩm đã gửi đến thư người dùng.
-ActiveBussiness.Msg1:Lỗi không xác định.
-ActiveBussiness.Msg2:Tên người dùngkhông tồn tại.
-ActiveBussiness.Msg3:Nhận vật phẩm  thất bại.
-ActiveBussiness.Msg4:Số này không tồn tại, hãy kiểm tra lại.
-ActiveBussiness.Msg5:Số này đã nhận thưởng, không thể nhận nữa.
-ActiveBussiness.Msg6:Bạn đã nhận phần thưởng này rồi.
-ActiveBussiness.Msg7:Hoạt động chưa bắt đầu.
-ActiveBussiness.Msg8:Hoạt động đã quá hạn.
-ActiveBussiness.Msg9:Nhận thưởng thất bại.
+ActiveBussiness.Msg0:Talep başarılı, ürün kullanıcının posta kutusuna gönderildi.
+ActiveBussiness.Msg1:Bilinmeyen hata.
+ActiveBussiness.Msg2:Kullanıcı adı mevcut değil.
+ActiveBussiness.Msg3:Ürün talebi başarısız oldu.
+ActiveBussiness.Msg4:Bu numara mevcut değil, lütfen tekrar kontrol edin.
+ActiveBussiness.Msg5:Bu numara zaten ödül aldı, tekrar talep edilemez.
+ActiveBussiness.Msg6:Bu ödülü zaten aldınız.
+ActiveBussiness.Msg7:Etkinlik başlamadı.
+ActiveBussiness.Msg8:Etkinlik sona erdi.
+ActiveBussiness.Msg9:Ödül talebi başarısız oldu.
 
 
 ConsortiaBussiness.AddConsortia.Msg2:Tên này đã được đăng ký.

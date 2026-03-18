@@ -787,7 +787,7 @@ public class GamePlayer : IGamePlayer
                     Value = $"{m_character.Grade},{value}"
                 };
                 new PlayerBussiness().AddDailyRecord(info);
-                Extra.UpdateEventCondition((int)NoviceActiveType.GRADE_UP_ACTIVE, value);
+                Extra.UpdateEventCondition((int)NoviceActiveType.Level_Atlama, value);
                 m_character.Grade = value;
                 if (value == 6)
                 {
@@ -802,9 +802,13 @@ public class GamePlayer : IGamePlayer
                 {
                     AcademyMgr.UpdateAwardApp(this, grade);
                 }
+                EquipBag.UpdatePlayerProperties();
+
+                // Sonra bu yeni değerlere göre Savaş Gücünü (FightPower) güncelle.
+                UpdateFightPower();
+
                 OnLevelUp(value);
                 OnPropertiesChanged();
-                UpdateFightPower(); //ekledim bi test etmek lazım ama yaa sanki not:yuti
             }
         }
     }
@@ -1366,7 +1370,7 @@ public class GamePlayer : IGamePlayer
                 new PlayerBussiness().AddDailyRecord(info);
             }
         }
-        Extra.UpdateEventCondition((int)NoviceActiveType.UPGRADE_VIP_ACTIVE, PlayerCharacter.VIPLevel);
+        Extra.UpdateEventCondition((int)NoviceActiveType.VIP_LEVEL, PlayerCharacter.VIPLevel);
         if (m_character.IsVIPExpire())
         {
             Out.SendOpenVIP(this);
@@ -3171,11 +3175,11 @@ public class GamePlayer : IGamePlayer
                 m_extra.Info.LeftRoutteCount = GameProperties.LeftRouterMaxDay;
                 m_extra.Info.LeftRoutteRate = 0f;
                 //Extra.ResetNoviceEvent(NoviceActiveType.DISCORD_HOPARLORU);
-                Extra.ResetNoviceEvent(NoviceActiveType.USE_MONEY_ACTIVE);
+                Extra.ResetNoviceEvent(NoviceActiveType.Gunluk_Harcama);
                 if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
                 {
                     //Extra.ResetNoviceEvent(NoviceActiveType.IKI_VS_IKI_SAVAS);
-                    Extra.ResetNoviceEvent(NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK);
+                    Extra.ResetNoviceEvent(NoviceActiveType.Haftalık_Harcama);
                 }
                 m_character.MaxBuyHonor = 0;
                 Farm.ResetFarmProp();
@@ -3959,7 +3963,7 @@ public class GamePlayer : IGamePlayer
     {
         StringBuilder content = new StringBuilder();
         content.AppendLine("Tebrikler!");
-        content.AppendLine(string.Format("Onur Listesi'nde bu hafta {0}. sırada yer alarak özel ödülleri hak kazandınız!", reward.Rank));
+        content.AppendLine(string.Format("Onur Listesi'nde bu hafta {0}. sırada yer alarak özel ödülleri almaya hak kazandınız!", reward.Rank));
         content.AppendLine("Ödülleriniz:");
         content.AppendLine(string.Format("- Altın: {0}", reward.Gold));
         content.AppendLine(string.Format("- Kupon: {0}", reward.Coins));
@@ -4347,9 +4351,9 @@ public class GamePlayer : IGamePlayer
         m_character.VIPLastDate = DateTime.Now;
         m_character.VIPNextLevelDaysNeeded = 10;
         m_character.CanTakeVipReward = true;
-        if (Extra.CheckNoviceActiveOpen(NoviceActiveType.UPGRADE_VIP_ACTIVE))
+        if (Extra.CheckNoviceActiveOpen(NoviceActiveType.VIP_LEVEL))
         {
-            Extra.UpdateEventCondition((int)NoviceActiveType.UPGRADE_VIP_ACTIVE, PlayerCharacter.VIPLevel);
+            Extra.UpdateEventCondition((int)NoviceActiveType.VIP_LEVEL, PlayerCharacter.VIPLevel);
         }
     }
 
@@ -4371,9 +4375,9 @@ public class GamePlayer : IGamePlayer
             m_character.VIPExpireDay = ExpireDayOut;
             m_character.typeVIP = SetTypeVIP(days);
         }
-        if (Extra.CheckNoviceActiveOpen(NoviceActiveType.UPGRADE_VIP_ACTIVE))
+        if (Extra.CheckNoviceActiveOpen(NoviceActiveType.VIP_LEVEL))
         {
-            Extra.UpdateEventCondition((int)NoviceActiveType.UPGRADE_VIP_ACTIVE, PlayerCharacter.VIPLevel);
+            Extra.UpdateEventCondition((int)NoviceActiveType.VIP_LEVEL, PlayerCharacter.VIPLevel);
         }
     }
 
@@ -4637,13 +4641,13 @@ public class GamePlayer : IGamePlayer
         if (value > 0 && value <= m_character.Money)
         {
             m_character.Money -= value;
-            if (Extra.CheckNoviceActiveOpen(NoviceActiveType.USE_MONEY_ACTIVE))
+            if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Gunluk_Harcama))
             {
-                Extra.UpdateEventCondition((int)NoviceActiveType.USE_MONEY_ACTIVE, value, isPlus: true, 0);
+                Extra.UpdateEventCondition((int)NoviceActiveType.Gunluk_Harcama, value, isPlus: true, 0);
             }
-            if (Extra.CheckNoviceActiveOpen(NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK))
+            if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Haftalık_Harcama))
             {
-                Extra.UpdateEventCondition((int)NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK, value, isPlus: true, 0);
+                Extra.UpdateEventCondition((int)NoviceActiveType.Haftalık_Harcama, value, isPlus: true, 0);
             }
             OnPropertiesChanged();
             UpdateProperties();
@@ -4667,13 +4671,13 @@ public class GamePlayer : IGamePlayer
             m_character.Money -= value;
             if (!isNoviceActive)
             {
-                if (Extra.CheckNoviceActiveOpen(NoviceActiveType.USE_MONEY_ACTIVE))
+                if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Gunluk_Harcama))
                 {
-                    Extra.UpdateEventCondition((int)NoviceActiveType.USE_MONEY_ACTIVE, value, isPlus: true, 0);
+                    Extra.UpdateEventCondition((int)NoviceActiveType.Gunluk_Harcama, value, isPlus: true, 0);
                 }
-                if (Extra.CheckNoviceActiveOpen(NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK))
+                if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Haftalık_Harcama))
                 {
-                    Extra.UpdateEventCondition((int)NoviceActiveType.USE_MONEY_ACTIVE_OFWEEK, value, isPlus: true, 0);
+                    Extra.UpdateEventCondition((int)NoviceActiveType.Haftalık_Harcama, value, isPlus: true, 0);
                 }
             }
             OnPropertiesChanged();
@@ -5928,8 +5932,8 @@ public class GamePlayer : IGamePlayer
         }
         PlayerCharacter.FightPower = FightPower;
         OnPlayerPropertyChanged(m_character);
-        Extra.CheckNoviceActiveOpen(NoviceActiveType.UPDATE_FIGHTPOWER);
-        Extra.UpdateEventCondition((int)NoviceActiveType.UPDATE_FIGHTPOWER, m_character.FightPower);
+        Extra.CheckNoviceActiveOpen(NoviceActiveType.SAVAS_GUCU);
+        Extra.UpdateEventCondition((int)NoviceActiveType.SAVAS_GUCU, m_character.FightPower);
     }
 
     public void UpdateHealstone(ItemInfo item)
@@ -6032,9 +6036,9 @@ public class GamePlayer : IGamePlayer
         Level = LevelMgr.GetLevel(m_character.GP);
         int maxLevel = LevelMgr.MaxLevel;
         LevelInfo levelInfo = LevelMgr.FindLevel(maxLevel);
-        if (Extra.CheckNoviceActiveOpen(NoviceActiveType.GRADE_UP_ACTIVE))
+        if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Level_Atlama))
         {
-            Extra.UpdateEventCondition((int)NoviceActiveType.GRADE_UP_ACTIVE, Level);
+            Extra.UpdateEventCondition((int)NoviceActiveType.Level_Atlama, Level);
         }
         //if (Level == 25 && !EventSeven.IsFirstLv)
         //{
@@ -6366,10 +6370,10 @@ public class GamePlayer : IGamePlayer
         switch (game.RoomType)
         {
             case eRoomType.Match:
-                var info = Extra.GetEventProcess((int)NoviceActiveType.PVP_MATCH_COUNT);
+                var info = Extra.GetEventProcess((int)NoviceActiveType.Ozgur_Savas);
                 if (info != null)
                 {
-                    Extra.UpdateEventCondition((int)NoviceActiveType.PVP_MATCH_COUNT, info.Conditions + 1);
+                    Extra.UpdateEventCondition((int)NoviceActiveType.Ozgur_Savas, info.Conditions + 1);
                 }
                 break;
             case eRoomType.Dungeon:
@@ -6391,10 +6395,10 @@ public class GamePlayer : IGamePlayer
                         // --- GÖREV KONTROLLERİ ---
 
                         // A) Genel Zindan Tamamlama Görevi (Tüm zindanlar için)
-                        var dungeonInfo = Extra.GetEventProcess((int)NoviceActiveType.DUNGEON_COMPLETE);
+                        var dungeonInfo = Extra.GetEventProcess((int)NoviceActiveType.Kesif_Tamamlama);
                         if (dungeonInfo != null)
                         {
-                            Extra.UpdateEventCondition((int)NoviceActiveType.DUNGEON_COMPLETE, dungeonInfo.Conditions + 1);
+                            Extra.UpdateEventCondition((int)NoviceActiveType.Kesif_Tamamlama, dungeonInfo.Conditions + 1);
                         }
 
                         // B) Belirli Zindan ID'sine Göre Özel Görevler

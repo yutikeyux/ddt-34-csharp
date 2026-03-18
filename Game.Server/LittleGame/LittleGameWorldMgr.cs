@@ -248,15 +248,14 @@ namespace Game.Server.LittleGame
 
         public static void AddPlayer(GamePlayer player)
         {
-            
             try
             {
                 lock (ScenariObjects)
                 {
-                    player.LittleGameInfo.ID = player.PlayerCharacter.ID;
+                    player.LittleGameInfo.ID = ScenariObjects.Keys.Max() + 1;
                     player.LittleGameInfo.Actions.DidEnqueue += Actions_DidEnqueue;
                     ScenariObjects.Add(player.LittleGameInfo.ID, player);
-                    playerCount += 1;
+                    playerCount++;
                     Out.SendEnterWorld(player);
                     Out.SendAddPlayerToAll(player);
                 }

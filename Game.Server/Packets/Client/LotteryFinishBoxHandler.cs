@@ -26,7 +26,7 @@ namespace Game.Server.Packets.Client
 			}
 			if (list.Count > 0)
 			{
-				client.Player.SendItemsToMail(list, "İade edilen öğeler", "Malezya Ruleti", eMailType.BuyItem);
+				client.Player.SendItemsToMail(list, "İade edilen öğeler", "Hayal Ruleti", eMailType.BuyItem);
 			}
 			if (client.Player.Lottery != -1 && client.Player.LotteryAwardList.Count > 0)
 			{
@@ -40,8 +40,8 @@ namespace Game.Server.Packets.Client
 				}
 				if (list2.Count > 0)
 				{
-					client.Player.SendItemsToMail(list2, "Çantanızın dolu olması nedeniyle öğeler iade edildi.", "Malezya Rulet Ödülü", eMailType.BuyItem);
-					client.Player.SendMessage("Çanta dolusu eşyayı geri postayla gönder.");
+					client.Player.SendItemsToMail(list2, "Çantanızın dolu olması nedeniyle öğeler iade edildi.", "Hayal Ruleti Ödülü", eMailType.BuyItem);
+					client.Player.SendMessage("Çanta dolu! Ödüller E-Posta ile iade edildi.");
 				}
 				client.Player.ResetLottery();
 			}

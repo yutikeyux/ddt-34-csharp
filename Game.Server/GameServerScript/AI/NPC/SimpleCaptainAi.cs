@@ -35,8 +35,8 @@ namespace GameServerScript.AI.NPC
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-            base.Body.CurrentDamagePlus = 1f;
-            base.Body.CurrentShootMinus = 1f;
+            base.Body.CurrentDamagePlus = 2f;
+            base.Body.CurrentShootMinus = 2f;
 
             // NPC'nin çarpışma alanını (Rect) ayarlama
             base.Body.SetRect(((SimpleBoss)base.Body).NpcInfo.X, ((SimpleBoss)base.Body).NpcInfo.Y, ((SimpleBoss)base.Body).NpcInfo.Width, ((SimpleBoss)base.Body).NpcInfo.Height);
@@ -112,7 +112,7 @@ namespace GameServerScript.AI.NPC
             PlayShakeEffect(3);
             int messageIndex = base.Game.Random.Next(0, ProximityMessages.Length);
             base.Body.Say(ProximityMessages[messageIndex], 1, 1000);
-            base.Body.CurrentDamagePlus = 100f;
+            base.Body.CurrentDamagePlus = 9999f;
             base.Body.PlayMovie("beat2", 3000, 0);
             base.Body.RangeAttacking(minRange, maxRange, "cry", 5000, null);
         }
@@ -123,7 +123,7 @@ namespace GameServerScript.AI.NPC
         private void PerformGroundSlamAttack()
         {
             PlayShakeEffect(3);
-            base.Body.CurrentDamagePlus = 2f;
+            base.Body.CurrentDamagePlus = 4f;
             int messageIndex = base.Game.Random.Next(0, GroundSlamMessages.Length);
             base.Body.Say(GroundSlamMessages[messageIndex], 1, 0);
             base.Body.FallFrom(base.Body.X, 509, null, 1000, 1, 12);
@@ -179,7 +179,7 @@ namespace GameServerScript.AI.NPC
                     base.Body.ChangeDirection(-1, 500);
                 }
 
-                base.Body.CurrentDamagePlus = 1f;
+                base.Body.CurrentDamagePlus = 2f;
 
                 int targetX = base.Game.Random.Next(player.X - 50, player.X + 50);
 
