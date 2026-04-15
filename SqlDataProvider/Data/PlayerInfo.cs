@@ -328,6 +328,19 @@ namespace SqlDataProvider.Data
 
         //public int GoldenReduceDamage { get; set; }
 
+        // PlayerInfo.cs dosyası içine
+        private int m_DailyMoneyUsed;
+
+        public int DailyMoneyUsed
+        {
+            get { return m_DailyMoneyUsed; }
+            set
+            {
+                m_DailyMoneyUsed = value;
+                IsDirty = true; // Değişince kaydedilmesi için işaretle
+            }
+        }
+
         public DateTime LastRefreshPet
         {
             get

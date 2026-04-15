@@ -2,26 +2,25 @@ using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
 
-
 namespace GameServerScript.AI.Messions
 {
     public class PDHAAH1143 : AMissionControl
     {
-        private SimpleBoss _mHawkBoss;
+        private SimpleBoss simpleBoss_0;
 
-        private SimpleBoss _mBoss;
+        private SimpleBoss simpleBoss_1;
 
-        private readonly int _bossId = 4305;
+        private int int_0;
 
-        private readonly int _bossId2 = 4306;
+        private int int_1;
 
-        private readonly int _npcId = 4302;
+        private int int_2;
 
-        private bool m_canWin = false;
+        private int int_3;
 
-        private PhysicalObj _mMoive;
+        private PhysicalObj physicalObj_0;
 
-        private PhysicalObj _mFront;
+        private PhysicalObj physicalObj_1;
 
         public override int CalculateScoreGrade(int score)
         {
@@ -30,138 +29,129 @@ namespace GameServerScript.AI.Messions
             {
                 return 3;
             }
-            else if (score > 1675)
+            if (score > 1675)
             {
                 return 2;
             }
-            else if (score > 1600)
+            if (score > 1600)
             {
                 return 1;
             }
-            else
-            {
-                return 0;
-            }
+            return 0;
         }
 
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-            int[] resources = { _bossId, _bossId2, _npcId };
-            int[] gameOverResource = { _bossId, _bossId2, _npcId };
-            Game.AddLoadingFile(2, "image/game/effect/4/feather.swf", "asset.game.4.feather");
-            Game.AddLoadingFile(2, "image/game/thing/bossbornbgasset.swf", "game.asset.living.BossBgAsset");
-            Game.AddLoadingFile(2, "image/game/thing/bossbornbgasset.swf", "game.asset.living.tingyuanlieshouAsset");
-            Game.LoadResources(resources);
-            Game.LoadNpcGameOverResources(gameOverResource);
-            Game.SetMap(1143);
+            int[] npcIds = new int[3]
+            {
+                int_0,
+                int_1,
+                int_2
+            };
+            int[] npcIds2 = new int[2]
+            {
+                int_0,
+                int_1
+            };
+            base.Game.AddLoadingFile(2, "image/game/effect/4/feather.swf", "asset.game.4.feather");
+            base.Game.AddLoadingFile(2, "image/game/thing/bossbornbgasset.swf", "game.asset.living.BossBgAsset");
+            base.Game.AddLoadingFile(2, "image/game/thing/bossbornbgasset.swf", "game.asset.living.tingyuanlieshouAsset");
+            base.Game.LoadResources(npcIds);
+            base.Game.LoadNpcGameOverResources(npcIds2);
+            base.Game.SetMap(1143);
         }
 
         public override void OnStartGame()
         {
             base.OnStartGame();
-
-
-            _mMoive = Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
-            _mFront = Game.Createlayer(658, 607, "front", "game.asset.living.tingyuanlieshouAsset", "out", 1, 0);
-
-            LivingConfig config = Game.BaseLivingConfig();
-            config.IsFly = true;
-            config.IsShowBloodBar = true;
-            config.FriendlyBoss = new LivingConfig.FriendlyLiving(_bossId2, true);
-
-            _mHawkBoss = Game.CreateBoss(_bossId, 354, 344, -1, 1, "", config);
-            _mHawkBoss.SetRelateDemagemRect(_mHawkBoss.NpcInfo.X, _mHawkBoss.NpcInfo.Y, _mHawkBoss.NpcInfo.Width, _mHawkBoss.NpcInfo.Height);
-            _mHawkBoss.DoAction = 2;
-
-            Game.SendObjectFocus(_mHawkBoss, 1, 100, 0);
-
-            Game.SendFreeFocus(1460, 962, 1, 3000, 0);
-
-            _mHawkBoss.CallFuction(CreateBoss, 4000);
+            physicalObj_0 = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
+            physicalObj_1 = base.Game.Createlayer(1098, 706, "front", "game.asset.living.tingyuanlieshouAsset", "out", 1, 0);
+            LivingConfig livingConfig = base.Game.BaseLivingConfig();
+            livingConfig.IsFly = true;
+            simpleBoss_0 = base.Game.CreateBoss(int_0, 354, 344, -1, 1, "born", livingConfig);
+            simpleBoss_0.SetRelateDemagemRect(simpleBoss_0.NpcInfo.X, simpleBoss_0.NpcInfo.Y, simpleBoss_0.NpcInfo.Width, simpleBoss_0.NpcInfo.Height);
+            base.Game.SendObjectFocus(simpleBoss_0, 1, 100, 0);
+            base.Game.SendFreeFocus(1460, 962, 1, 3000, 0);
+            simpleBoss_0.CallFuction(method_0, 4000);
         }
 
-        private void CreateBoss()
+        private void method_0()
         {
-            LivingConfig config = Game.BaseLivingConfig();
-            config.IsShowBloodBar = true;
-            config.FriendlyBoss = new LivingConfig.FriendlyLiving(_bossId, true);
+            simpleBoss_1 = base.Game.CreateBoss(int_1, 1460, 962, -1, 1, "born");
+            simpleBoss_1.SetRelateDemagemRect(simpleBoss_1.NpcInfo.X, simpleBoss_1.NpcInfo.Y, simpleBoss_1.NpcInfo.Width, simpleBoss_1.NpcInfo.Height);
+            physicalObj_0.PlayMovie("in", 3000, 0);
+            physicalObj_1.PlayMovie("in", 3200, 0);
+            physicalObj_0.PlayMovie("out", 6000, 0);
+            physicalObj_1.PlayMovie("out", 6000, 0);
+        }
 
-            _mBoss = Game.CreateBoss(_bossId2, 1460, 962, -1, 1, "", config);
-            _mBoss.SetRelateDemagemRect(_mBoss.NpcInfo.X, _mBoss.NpcInfo.Y, _mBoss.NpcInfo.Width, _mBoss.NpcInfo.Height);
-            _mBoss.DoAction = 2;
-            _mBoss.Delay++;
-
-            Game.SendFreeFocus(740, 680, 1, 2500, 0);
-
-            _mBoss.Config.FriendlyBoss.FriendBoss = _mHawkBoss;
-            _mBoss.Config.FriendlyBoss.ActionStr = "shield";
-
-            _mHawkBoss.Config.FriendlyBoss.FriendBoss = _mBoss;
-            _mHawkBoss.Config.FriendlyBoss.ActionStr = "shield";
-
-            _mMoive.PlayMovie("in", 3000, 0);
-            _mFront.PlayMovie("in", 3200, 0);
-            _mMoive.PlayMovie("out", 6000, 0);
-            _mFront.PlayMovie("out", 6000, 0);
+        public override void OnNewTurnStarted()
+        {
+            base.OnNewTurnStarted();
         }
 
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-
-            if (Game.TurnIndex <= 1) return;
-            if (_mMoive != null)
+            if (base.Game.TurnIndex > 1)
             {
-                Game.RemovePhysicalObj(_mMoive, true);
-                _mMoive = null;
-            }
-            if (_mFront != null)
-            {
-                Game.RemovePhysicalObj(_mFront, true);
-                _mFront = null;
+                if (physicalObj_0 != null)
+                {
+                    base.Game.RemovePhysicalObj(physicalObj_0, sendToClient: true);
+                    physicalObj_0 = null;
+                }
+                if (physicalObj_1 != null)
+                {
+                    base.Game.RemovePhysicalObj(physicalObj_1, sendToClient: true);
+                    physicalObj_1 = null;
+                }
             }
         }
 
         public override bool CanGameOver()
         {
-            if (_mBoss != null && !_mBoss.IsLiving && !m_canWin)
+            if (simpleBoss_0 != null && !simpleBoss_0.IsLiving && simpleBoss_1 != null && !simpleBoss_1.IsLiving)
             {
-                Game.GameStateModify = eGameState.Waiting;
-                Game.SendFreeFocus(_mHawkBoss.X, _mHawkBoss.Y - 100, 0, 0, 0);
-
-                _mHawkBoss.PlayMovie("die", 2500, 0);
-                _mHawkBoss.Die(4000);
-
-                m_canWin = true;
+                int_3++;
+                return true;
             }
-            if (_mHawkBoss != null && !_mHawkBoss.IsLiving && !m_canWin)
+            if (base.Game.TotalTurn > base.Game.MissionInfo.TotalTurn)
             {
-                Game.GameStateModify = eGameState.Waiting;
-                Game.SendFreeFocus(_mBoss.X, _mBoss.Y - 100, 0, 0, 0);
-
-                _mBoss.PlayMovie("die", 2500, 0);
-                _mBoss.Die(4000);
-
-                m_canWin = true;
+                return true;
             }
-            return Game.TotalKillCount >= Game.MissionInfo.TotalCount || Game.TotalTurn > Game.MissionInfo.TotalTurn;
+            return false;
         }
 
         public override int UpdateUIData()
         {
             base.UpdateUIData();
-            return Game.TotalKillCount;
+            return int_3;
         }
-        public override void OnWaitingGameState()
-        {
-            base.OnWaitingGameState();
-            Game.GameStateModify = eGameState.Playing;
-        }
+
         public override void OnGameOver()
         {
             base.OnGameOver();
-            Game.IsWin = Game.TotalKillCount >= Game.MissionInfo.TotalCount;
+            if (simpleBoss_0 != null && !simpleBoss_0.IsLiving && simpleBoss_1 != null && !simpleBoss_1.IsLiving)
+            {
+                base.Game.IsWin = true;
+            }
+            else
+            {
+                base.Game.IsWin = false;
+            }
+        }
+
+        public override void OnShooted()
+        {
+            base.OnShooted();
+        }
+
+        public PDHAAH1143()
+        {
+            int_0 = 4305;
+            int_1 = 4306;
+            int_2 = 4302;
         }
     }
 }

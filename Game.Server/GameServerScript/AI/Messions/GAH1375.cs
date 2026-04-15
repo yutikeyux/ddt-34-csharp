@@ -1,27 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using SqlDataProvider.Data;
-using Game.Logic;
-using Bussiness;
 
 namespace GameServerScript.AI.Messions
 {
     public class GAH1375 : AMissionControl
     {
-        private SimpleBoss m_king = null;
+        private SimpleBoss simpleBoss_0;
 
-        private int m_kill = 0;
+        private int int_0;
 
-        private int bossID = 1308;
+        private int int_1;
 
-        private int npcID = 1311;
+        private int int_2;
 
-        private PhysicalObj m_kingMoive;
+        private PhysicalObj physicalObj_0;
 
-        private PhysicalObj m_front;
+        private PhysicalObj physicalObj_1;
 
         public override int CalculateScoreGrade(int score)
         {
@@ -30,122 +24,117 @@ namespace GameServerScript.AI.Messions
             {
                 return 3;
             }
-            else if (score > 1150)
+            if (score > 1150)
             {
                 return 2;
             }
-            else if (score > 970)
+            if (score > 970)
             {
                 return 1;
             }
-            else
-            {
-                return 0;
-            }
+            return 0;
         }
 
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-
-            int[] resources = { npcID, bossID };
-            int[] gameOverResource = { bossID };
-            Game.LoadResources(resources);
-            Game.LoadNpcGameOverResources(gameOverResource);
-            Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
-            Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.ZhenBombKingAsset");
-            Game.SetMap(1084);
-            //Game.IsBossWar = LanguageMgr.GetTranslation("Game.Server.GameServerScript.AI.Messions.CHM1378.msg1");
+            int[] npcIds = new int[2]
+            {
+                int_2,
+                int_1
+            };
+            int[] npcIds2 = new int[1]
+            {
+                int_1
+            };
+            base.Game.LoadResources(npcIds);
+            base.Game.LoadNpcGameOverResources(npcIds2);
+            base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
+            base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.ZhenBombKingAsset");
+            base.Game.SetMap(1084);
         }
 
         public override void OnStartGame()
         {
             base.OnStartGame();
-            m_king = Game.CreateBoss(bossID, 888, 590, -1, 1, "");
-            m_kingMoive = Game.Createlayer(0, 0, "kingmoive", "game.asset.living.BossBgAsset", "out", 1, 1);
-            m_front = Game.Createlayer(710, 380, "font", "game.asset.living.ZhenBombKingAsset", "out", 1, 1);
-            m_king.FallFrom(888, 590, "fall", 0, 2, 1000);
-            m_king.SetRelateDemagemRect(-41, -187, 83, 140);
-            m_kingMoive.PlayMovie("in", 1000, 0);
-            m_front.PlayMovie("in", 2000, 2000);
-            m_king.AddDelay(16);
-            Game.BossCardCount = 1;
+            simpleBoss_0 = base.Game.CreateBoss(int_1, 888, 590, -1, 1, "");
+            physicalObj_0 = base.Game.Createlayer(0, 0, "kingmoive", "game.asset.living.BossBgAsset", "out", 1, 1);
+            physicalObj_1 = base.Game.Createlayer(710, 380, "font", "game.asset.living.ZhenBombKingAsset", "out", 1, 1);
+            simpleBoss_0.FallFrom(888, 590, "fall", 0, 2, 1000);
+            simpleBoss_0.SetRelateDemagemRect(-41, -187, 83, 140);
+            physicalObj_0.PlayMovie("in", 1000, 0);
+            physicalObj_1.PlayMovie("in", 2000, 2000);
+            simpleBoss_0.AddDelay(16);
+            base.Game.BossCardCount = 1;
         }
-
-
 
         public override void OnNewTurnStarted()
         {
             base.OnNewTurnStarted();
-            if (m_king.State == 0)
+            if (simpleBoss_0.State == 0)
             {
-                m_king.SetRelateDemagemRect(-41, -187, 83, 140);
+                simpleBoss_0.SetRelateDemagemRect(-41, -187, 83, 140);
             }
         }
 
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-
-            if (m_kingMoive != null)
+            if (physicalObj_0 != null)
             {
-                Game.RemovePhysicalObj(m_kingMoive, true);
-                m_kingMoive = null;
+                base.Game.RemovePhysicalObj(physicalObj_0, true);
+                physicalObj_0 = null;
             }
-            if (m_front != null)
+            if (physicalObj_1 != null)
             {
-                Game.RemovePhysicalObj(m_front, true);
-                m_front = null;
+                base.Game.RemovePhysicalObj(physicalObj_1, true);
+                physicalObj_1 = null;
             }
         }
 
         public override bool CanGameOver()
         {
-            if (Game.TurnIndex > Game.MissionInfo.TotalTurn - 1)
+            if (!simpleBoss_0.IsLiving)
             {
-                return true;
-            }
-            if (m_king.IsLiving == false)
-            {
-                m_kill++;
-                m_king.PlayMovie("die", 0, 200);
+                int_0++;
                 return true;
             }
             return false;
         }
 
-
         public override int UpdateUIData()
         {
             base.UpdateUIData();
-            return m_kill;
+            return int_0;
         }
-
-
-        //public override void OnPrepareGameOver()
-        //{
-        //    base.OnPrepareGameOver();
-        //}
 
         public override void OnGameOver()
         {
             base.OnGameOver();
-            bool IsAllPlayerDie = true;
-            foreach (Player player in Game.GetAllFightPlayers())
+            bool flag = true;
+            foreach (Player allFightPlayer in base.Game.GetAllFightPlayers())
             {
-                if (player.IsLiving == true)
+                if (allFightPlayer.IsLiving)
                 {
-                    IsAllPlayerDie = false;
+                    flag = false;
                 }
             }
-            if (m_king.IsLiving == false && IsAllPlayerDie == false)
+            if (!simpleBoss_0.IsLiving && !flag)
             {
-                Game.IsWin = true;
+                base.Game.IsWin = true;
             }
             else
             {
-                Game.IsWin = false;
+                base.Game.IsWin = false;
             }
+        }
+
+        public GAH1375()
+        {
+
+            int_1 = 1308;
+            int_2 = 1311;
+
         }
     }
 }

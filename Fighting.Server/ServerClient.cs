@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using Fighting.Server.GameObjects;
 
 namespace Fighting.Server
 {
@@ -76,6 +78,9 @@ namespace Fighting.Server
 				break;
 			case 1501:
 				HandlePlayerReport(pkg);
+				break;
+			case 90:
+				HandleAddViewer(pkg);
 				break;
 			default:
 			{
@@ -775,5 +780,256 @@ namespace Fighting.Server
         {
 			ilog_1 = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         }
+
+        private void HandleAddViewer(GSPacketIn pkg)
+        {
+            try
+            {
+                int gameId = pkg.ClientID;
+                BaseGame game = GameMgr.FindGame(gameId);
+                if (game == null) { ilog_1.Error($"HandleAddViewer: Game {gameId} not found"); return; }
+
+                // Viewer karakter bilgilerini oku
+                PlayerInfo character = new PlayerInfo();
+                character.ID = pkg.ReadInt();
+                character.NickName = pkg.ReadString();
+                character.Sex = pkg.ReadBoolean();
+                character.Hide = pkg.ReadInt();
+                character.Style = pkg.ReadString();
+                character.Colors = pkg.ReadString();
+                character.Skin = pkg.ReadString();
+                character.Grade = pkg.ReadInt();
+                character.Repute = pkg.ReadInt();
+                character.ConsortiaID = pkg.ReadInt();
+                character.ConsortiaName = pkg.ReadString();
+                character.ConsortiaLevel = pkg.ReadInt();
+                character.ConsortiaRepute = pkg.ReadInt();
+                character.IsShowConsortia = pkg.ReadBoolean();
+                character.badgeID = pkg.ReadInt();
+                character.Honor = pkg.ReadString();
+                character.AchievementPoint = pkg.ReadInt();
+                character.FightPower = pkg.ReadInt();
+                character.Nimbus = pkg.ReadInt();
+                character.Win = pkg.ReadInt();
+                character.Total = pkg.ReadInt();
+                character.Offer = pkg.ReadInt();
+                character.typeVIP = pkg.ReadByte();
+                character.VIPLevel = pkg.ReadInt();
+                character.apprenticeshipState = pkg.ReadInt();
+                character.masterID = pkg.ReadInt();
+                character.masterOrApprentices = pkg.ReadString();
+                character.IsMarried = pkg.ReadBoolean();
+                if (character.IsMarried)
+                {
+                    character.SpouseID = pkg.ReadInt();
+                    character.SpouseName = pkg.ReadString();
+                }
+                character.hp = pkg.ReadInt();
+                int zoneId = pkg.ReadInt();
+                string zoneName = pkg.ReadString();
+
+                // ProxyPlayer oluştur
+                ProxyPlayerInfo proxyInfo = new ProxyPlayerInfo();
+                proxyInfo.ZoneId = zoneId;
+                proxyInfo.ZoneName = zoneName;
+                ProxyPlayer viewerProxy = new ProxyPlayer(this, character, null,
+                    new List<BufferInfo>(), new List<int>(), new List<BufferInfo>(),
+                    proxyInfo, new UserMatchInfo());
+                viewerProxy.IsViewer = true;
+
+                // PhysicalId artır
+                BindingFlags bf = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+                var fiPhysId = typeof(BaseGame).GetField("PhysicalId", BindingFlags.Public | BindingFlags.Instance);
+                int physId = (int)fiPhysId.GetValue(game);
+                fiPhysId.SetValue(game, physId + 1);
+
+                // Player nesnesi + AddPlayer (protected)
+                Player fp = new Player(viewerProxy, physId, game, 1, character.hp);
+                var miAdd = typeof(BaseGame).GetMethod("AddPlayer", bf,
+                    null, new Type[] { typeof(IGamePlayer), typeof(Player) }, null);
+                miAdd.Invoke(game, new object[] { (IGamePlayer)viewerProxy, fp });
+
+                // ── GAME_CREATE (101) → sadece viewer'a ──
+                const byte GAME_CMD = 91;
+                int roomTypeVal = (int)game.RoomType;
+                int gameTypeVal = (int)game.GameType;
+                int timeTypeVal = game.TimeType;
+
+                var piLifeTime = typeof(BaseGame).GetProperty("LifeTime", bf);
+                int lifeTimeVal = 0;
+                if (piLifeTime != null) lifeTimeVal = Convert.ToInt32(piLifeTime.GetValue(game));
+                else { var fl = typeof(BaseGame).GetField("LifeTime", bf); if (fl != null) lifeTimeVal = Convert.ToInt32(fl.GetValue(game)); }
+
+                var allPlayers = game.GetAllFightPlayers();
+                var pkgCreate = new GSPacketIn(GAME_CMD);
+                if (lifeTimeVal > 0) pkgCreate.Parameter2 = lifeTimeVal;
+                pkgCreate.WriteByte(101);
+                pkgCreate.WriteInt((byte)roomTypeVal);
+                pkgCreate.WriteInt((byte)gameTypeVal);
+                pkgCreate.WriteInt(timeTypeVal);
+                pkgCreate.WriteInt(allPlayers.Count);
+                foreach (var player in allPlayers)
+                {
+                    IGamePlayer pd = player.PlayerDetail;
+                    pkgCreate.WriteInt(pd.ZoneId);
+                    pkgCreate.WriteString(pd.ZoneName ?? "");
+                    pkgCreate.WriteInt(pd.PlayerCharacter.ID);
+                    pkgCreate.WriteString(pd.PlayerCharacter.NickName ?? "");
+                    pkgCreate.WriteBoolean(pd.IsViewer);
+                    pkgCreate.WriteByte(pd.PlayerCharacter.typeVIP);
+                    pkgCreate.WriteInt(pd.PlayerCharacter.VIPLevel);
+                    pkgCreate.WriteBoolean(pd.PlayerCharacter.Sex);
+                    pkgCreate.WriteInt(pd.PlayerCharacter.Hide);
+                    pkgCreate.WriteString(pd.PlayerCharacter.Style ?? "");
+                    pkgCreate.WriteString(pd.PlayerCharacter.Colors ?? "");
+                    pkgCreate.WriteString(pd.PlayerCharacter.Skin ?? "");
+                    pkgCreate.WriteInt(pd.PlayerCharacter.Grade);
+                    pkgCreate.WriteInt(pd.PlayerCharacter.Repute);
+                    if (pd.MainWeapon == null) { pkgCreate.WriteInt(0); }
+                    else
+                    {
+                        pkgCreate.WriteInt(pd.MainWeapon.TemplateID);
+                        pkgCreate.WriteInt(pd.MainWeapon.RefineryLevel);
+                        pkgCreate.WriteString(pd.MainWeapon.Template?.Name ?? "");
+                        pkgCreate.WriteDateTime(DateTime.MinValue);
+                    }
+                    if (pd.SecondWeapon == null) pkgCreate.WriteInt(0);
+                    else pkgCreate.WriteInt(pd.SecondWeapon.TemplateID);
+                    pkgCreate.WriteInt(pd.PlayerCharacter.Nimbus);
+                    pkgCreate.WriteBoolean(pd.PlayerCharacter.IsShowConsortia);
+                    pkgCreate.WriteInt(pd.PlayerCharacter.ConsortiaID);
+                    pkgCreate.WriteString(pd.PlayerCharacter.ConsortiaName ?? "");
+                    pkgCreate.WriteInt(pd.PlayerCharacter.badgeID);
+                    pkgCreate.WriteInt(pd.PlayerCharacter.ConsortiaLevel);
+                    pkgCreate.WriteInt(pd.PlayerCharacter.ConsortiaRepute);
+                    pkgCreate.WriteInt(pd.PlayerCharacter.Win);
+                    pkgCreate.WriteInt(pd.PlayerCharacter.Total);
+                    pkgCreate.WriteInt(pd.PlayerCharacter.FightPower);
+                    pkgCreate.WriteInt(pd.PlayerCharacter.apprenticeshipState);
+                    pkgCreate.WriteInt(pd.PlayerCharacter.masterID);
+                    pkgCreate.WriteString(pd.PlayerCharacter.masterOrApprentices ?? "");
+                    pkgCreate.WriteInt(pd.PlayerCharacter.AchievementPoint);
+                    pkgCreate.WriteString(pd.PlayerCharacter.Honor ?? "");
+                    pkgCreate.WriteInt(pd.PlayerCharacter.Offer);
+                    pkgCreate.WriteBoolean(pd.MatchInfo.DailyLeagueFirst);
+                    pkgCreate.WriteInt(pd.MatchInfo.DailyLeagueLastScore);
+                    pkgCreate.WriteBoolean(pd.PlayerCharacter.IsMarried);
+                    if (pd.PlayerCharacter.IsMarried)
+                    {
+                        pkgCreate.WriteInt(pd.PlayerCharacter.SpouseID);
+                        pkgCreate.WriteString(pd.PlayerCharacter.SpouseName ?? "");
+                    }
+                    pkgCreate.WriteInt(0); pkgCreate.WriteInt(0); pkgCreate.WriteInt(0);
+                    pkgCreate.WriteInt(0); pkgCreate.WriteInt(0); pkgCreate.WriteInt(0);
+                    pkgCreate.WriteInt(player.Team);
+                    pkgCreate.WriteInt(player.Id);
+                    pkgCreate.WriteInt(player.MaxBlood);
+                    if (player.Pet == null) { pkgCreate.WriteInt(0); }
+                    else
+                    {
+                        pkgCreate.WriteInt(1);
+                        pkgCreate.WriteInt(player.Pet.Place);
+                        pkgCreate.WriteInt(player.Pet.TemplateID);
+                        pkgCreate.WriteInt(player.Pet.ID);
+                        pkgCreate.WriteString(player.Pet.Name ?? "");
+                        pkgCreate.WriteInt(player.Pet.UserID);
+                        pkgCreate.WriteInt(player.Pet.Level);
+                        string[] skillEquips = player.Pet.SkillEquip.Split('|');
+                        pkgCreate.WriteInt(skillEquips.Length);
+                        foreach (string skill in skillEquips)
+                        {
+                            var parts = skill.Split(',');
+                            pkgCreate.WriteInt(int.Parse(parts[1]));
+                            pkgCreate.WriteInt(int.Parse(parts[0]));
+                        }
+                    }
+                }
+                viewerProxy.SendTCP(pkgCreate);
+
+                // ── START_LOADING (103) → harita yükle ──
+                var pkgLoad = new GSPacketIn(GAME_CMD);
+                if (lifeTimeVal > 0) pkgLoad.Parameter2 = lifeTimeVal;
+                pkgLoad.WriteByte(103);
+                pkgLoad.WriteInt(5);
+                pkgLoad.WriteInt(game.Map.Info.ID);
+                var fiLoadFiles = typeof(BaseGame).GetField("m_loadingFiles", bf);
+                var loadFiles = fiLoadFiles?.GetValue(game) as System.Collections.IList;
+                int loadCount = loadFiles?.Count ?? 0;
+                pkgLoad.WriteInt(loadCount);
+                if (loadFiles != null)
+                {
+                    foreach (var lf in loadFiles)
+                    {
+                        var lfType = lf.GetType();
+                        var fType = lfType.GetField("Type"); var fPath = lfType.GetField("Path"); var fClass = lfType.GetField("ClassName");
+                        var pType = lfType.GetProperty("Type"); var pPath = lfType.GetProperty("Path"); var pClass = lfType.GetProperty("ClassName");
+                        int lt = pType != null ? (int)pType.GetValue(lf) : (fType != null ? (int)fType.GetValue(lf) : 0);
+                        string lp = pPath != null ? (string)pPath.GetValue(lf) : (fPath != null ? (string)fPath.GetValue(lf) : "");
+                        string lc = pClass != null ? (string)pClass.GetValue(lf) : (fClass != null ? (string)fClass.GetValue(lf) : "");
+                        pkgLoad.WriteInt(lt); pkgLoad.WriteString(lp ?? ""); pkgLoad.WriteString(lc ?? "");
+                    }
+                }
+                pkgLoad.WriteInt(0); // pet skills
+                viewerProxy.SendTCP(pkgLoad);
+
+                // ── START_GAME (99) → pozisyonlar ──
+                var fightingPlayers = game.GetAllFightingPlayers();
+                var pkgStart = new GSPacketIn(GAME_CMD);
+                if (lifeTimeVal > 0) pkgStart.Parameter2 = lifeTimeVal;
+                pkgStart.WriteByte(99);
+                pkgStart.WriteInt(fightingPlayers.Count);
+                foreach (var fPlayer in fightingPlayers)
+                {
+                    pkgStart.WriteInt(fPlayer.Id);
+                    pkgStart.WriteInt(fPlayer.X); pkgStart.WriteInt(fPlayer.Y);
+                    pkgStart.WriteInt(fPlayer.Direction);
+                    pkgStart.WriteInt(fPlayer.Blood); pkgStart.WriteInt(fPlayer.MaxBlood);
+                    pkgStart.WriteInt(fPlayer.Team);
+                    pkgStart.WriteInt(fPlayer.Weapon != null ? fPlayer.Weapon.RefineryLevel : 0);
+                    pkgStart.WriteInt(50); pkgStart.WriteInt(fPlayer.Dander);
+                    var buffs = fPlayer.PlayerDetail.FightBuffs;
+                    pkgStart.WriteInt(buffs != null ? buffs.Count : 0);
+                    if (buffs != null) { foreach (var b in buffs) { pkgStart.WriteInt(b.Type); pkgStart.WriteInt(b.Value); } }
+                    pkgStart.WriteInt(0);
+                    pkgStart.WriteBoolean(fPlayer.IsFrost);
+                    pkgStart.WriteBoolean(fPlayer.IsHide);
+                    pkgStart.WriteBoolean(fPlayer.IsNoHole);
+                    pkgStart.WriteBoolean(false);
+                    pkgStart.WriteInt(0);
+                }
+                pkgStart.WriteDateTime(DateTime.Now);
+                viewerProxy.SendTCP(pkgStart);
+
+                // ── Background cleanup ──
+                int viewerPlayerId = fp.Id;
+                System.Threading.Tasks.Task.Run(async () =>
+                {
+                    try
+                    {
+                        while (true)
+                        {
+                            await System.Threading.Tasks.Task.Delay(300);
+                            try { var s = game.GameState.ToString(); if (s != "Playing" && s != "GameStart") break; }
+                            catch { break; }
+                        }
+                        try
+                        {
+                            var fiP = typeof(BaseGame).GetField("m_players", BindingFlags.NonPublic | BindingFlags.Instance);
+                            var pl = fiP?.GetValue(game) as System.Collections.IDictionary;
+                            if (pl != null) lock (pl) { pl.Remove(viewerPlayerId); }
+                        }
+                        catch { }
+                    }
+                    catch { }
+                });
+
+                ilog_1.Info($"PVP Viewer added: {character.NickName} (ID:{character.ID}) to game {gameId}");
+            }
+            catch (Exception ex)
+            {
+                ilog_1.Error("HandleAddViewer error", ex);
+            }
+        }
+
     }
 }

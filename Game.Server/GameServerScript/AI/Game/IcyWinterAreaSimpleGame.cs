@@ -2,7 +2,7 @@
 
 namespace Game.Server.GameServerScript.AI.Game
 {
-    public class IcyWinterAreaSimpleGame : APVEGameControl
+    public class IcyWinterAreaSimpleGame : APVEGameControl // Buz ve Kar Dünyası Kolay
     {
         public override int CalculateScoreGrade(int score)
         {
@@ -28,8 +28,8 @@ namespace Game.Server.GameServerScript.AI.Game
         public override void OnCreated()
         {
             base.OnCreated();
-            base.Game.SetupMissions("26001,26002");
-            base.Game.TotalMissionCount = 2;
+            base.Game.SetupMissions("26001,26002"); //Buz ve Kar Dünyası kolay mession idleri
+            base.Game.TotalMissionCount = 2; //Buz ve Kar Dünyası kolay toplam etap sayısı 2
         }
 
         public override void OnGameOverAllSession()

@@ -31,16 +31,13 @@ namespace Game.Server.Packets.Client
                 client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Bag.Locked"));
                 return 0;
             }
-            //if (client.Player.PlayerCharacter.Grade < 20)
-            //{
-            //    client.Player.SendMessage(LanguageMgr.GetTranslation("GameServer.LevelErrorUsing"));
-            //    return 0;
-            //}
+
             string translateId = null;
             string message = null;
             ItemInfo itemInfo = null;
             ShopItemInfo shopItemInfo = new ShopItemInfo();
             PlayerInventory playerInventory = null;
+
             foreach (int item2 in list)
             {
                 if (num == -1)
@@ -58,13 +55,39 @@ namespace Game.Server.Packets.Client
                             needMoney = shopItemInfo.AValue1;
                             itemInfo.ValidDate = shopItemInfo.AUnit;
                         }
+
                         if (itemInfo != null)
                         {
+                            // Bakiye kontrolü
                             if (needGold <= client.Player.PlayerCharacter.Gold && (needMoney <= Money || needMoney <= MoneyLock) && (needMoney > 0 || needGold > 0))
                             {
-                                client.Player.MoneyDirect(needMoney, true, false, true);
-                                client.Player.RemoveGold(needGold);
-                                translateId = "CardUseHandler.Success";
+                                bool paymentSuccess = true;
+
+                                // GÜNLÜK LİMİT KONTROLÜ
+                                // MoneyDirect fonksiyonu limit kontrolünü yapar ve false dönerse engeller.
+                                if (needMoney > 0)
+                                {
+                                    // Eğer limit doluysa MoneyDirect false döner ve hata mesajı gönderilir.
+                                    if (!client.Player.MoneyDirect(needMoney, true, false, true))
+                                    {
+                                        paymentSuccess = false;
+                                        // MoneyDirect zaten "Günlük limit doldu" mesajını gönderdi.
+                                    }
+                                }
+
+                                if (paymentSuccess)
+                                {
+                                    if (needGold > 0)
+                                    {
+                                        client.Player.RemoveGold(needGold);
+                                    }
+                                    translateId = "CardUseHandler.Success";
+                                }
+                                else
+                                {
+                                    // Ödeme başarısız (Limit doldu veya yetersiz bakiye)
+                                    itemInfo = null; // Item'ı null yaparak işlemin iptal edilmesini sağla
+                                }
                             }
                             else
                             {
@@ -86,10 +109,12 @@ namespace Game.Server.Packets.Client
                         translateId = "CardUseHandler.Success";
                     }
                 }
+
                 if (itemInfo == null)
                 {
                     continue;
                 }
+
                 string empty = string.Empty;
                 switch (itemInfo.Template.Property1)
                 {
@@ -151,6 +176,7 @@ namespace Game.Server.Packets.Client
                         client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation(translateId, itemInfo.Template.Property2 * itemInfo.Count));
                         continue;
                 }
+
                 AbstractBuffer abstractBuffer = BufferList.CreateBuffer(itemInfo.Template, itemInfo.ValidDate);
                 if (abstractBuffer != null)
                 {
@@ -160,6 +186,7 @@ namespace Game.Server.Packets.Client
                         playerInventory?.RemoveCountFromStack(itemInfo, 1);
                     }
                 }
+
                 client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation(translateId));
             }
             return 0;

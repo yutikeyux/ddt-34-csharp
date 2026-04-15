@@ -11,39 +11,47 @@ using Bussiness.Managers;
 
 namespace GameServerScript.AI.Messions
 {
-    //aaa
+    // DTGT1165: Görev Kontrol Sınıfı
     public class DTGK1165 : AMissionControl
     {
         private SimpleNpc m_boss;
 
-        private List<PhysicalObj> m_balls = new List<PhysicalObj>();
+        // Oluşturulan topların listesi
+        private List<PhysicalObj> m_toplar = new List<PhysicalObj>();
 
-        private bool m_isDouble = false;
+        // İki kat puan durumu
+        private bool m_ikiKatMi = false;
 
-        private int m_doubleCount = 1;
+        // İki kat puan sayacı
+        private int m_ikiKatSayaci = 1;
 
-        private int bossID = 6221;
+        // NPC ve Top Kimlikleri
+        private int bossID = 6121;
+        private int topID = 6113;
 
-        private int ballID = 6213;
+        // Arka plan ve ön plan efekt nesneleri
+        private PhysicalObj m_kingFilm;
+        private PhysicalObj m_kingOn;
 
-        private PhysicalObj m_kingMoive;
+        // Sol taraf puan göstergesi nesneleri
+        private PhysicalObj m_puan_nokta_sol;
+        private PhysicalObj m_basamak_birler_sol;
+        private PhysicalObj m_basamak_onlar_sol;
 
-        private PhysicalObj m_kingFront;
+        // Sağ taraf puan göstergesi nesneleri
+        private PhysicalObj m_puan_nokta_sag;
+        private PhysicalObj m_basamak_birler_sag;
+        private PhysicalObj m_basamak_onlar_sag;
 
-        private PhysicalObj m_diem_trai;
-        private PhysicalObj hangdonvi_trai;
-        private PhysicalObj hangchuc_trai;
+        private int tur = 0;
 
-        private PhysicalObj m_diem_phai;
-        private PhysicalObj hangdonvi_phai;
-        private PhysicalObj hangchuc_phai;
+        // Topların doğabileceği X koordinatları
+        private int[] dogumX = { 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 455, 555, 655, 755, 855, 955, 1055, 1155, 1255 };
 
-        private int turn = 0;
+        // Topların doğabileceği Y koordinatları
+        private int[] dogumY = { 184, 259, 335, 420, 504 };
 
-        private int[] birthX = { 450, 550, 650, 750, 850, 950, 1050, 1150, 1250, 455, 555, 655, 755, 855, 955, 1055, 1155, 1255 };//Toa do X
-
-        private int[] birthY = { 184, 259, 335, 420, 504 };//Toa do Y
-
+        // Skora göre puan hesaplama
         public override int CalculateScoreGrade(int score)
         {
             base.CalculateScoreGrade(score);
@@ -65,10 +73,11 @@ namespace GameServerScript.AI.Messions
             }
         }
 
+        // Yeni oturum hazırlığı (Kaynaklar ve Harita)
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-            int[] resources = { bossID, ballID };
+            int[] resources = { bossID, topID };
             Game.LoadResources(resources);
             Game.LoadNpcGameOverResources(resources);
             Game.AddLoadingFile(2, "image/game/thing/bossborn6.swf", "game.asset.living.GuizeAsset");
@@ -79,6 +88,7 @@ namespace GameServerScript.AI.Messions
             Game.SetMap(1165);
         }
 
+        // Oyun başlangıcı
         public override void OnStartGame()
         {
             base.OnStartGame();
@@ -86,6 +96,8 @@ namespace GameServerScript.AI.Messions
             Game.TotalCount = 99;
             Game.TotalTurn = Game.PlayerCount * 20;
             Game.SendMissionInfo();
+
+            // Boss oluşturma ayarları
             LivingConfig config = Game.BaseLivingConfig();
             config.CanTakeDamage = false;
             config.IsTurn = false;
@@ -93,271 +105,253 @@ namespace GameServerScript.AI.Messions
 
             m_boss.PlayMovie("standC", 0, 0);
             m_boss.PlayMovie("go", 1000, 0);
-            m_boss.Say("Ô ! Ngưới mới à, chắc bạn không biết quy tắc ở đây.", 0, 0);
+            m_boss.Say("Oh! Buraya yeni geldiğine göre kuralları bilmiyorsundur sanırım.", 0, 0);
 
-            m_boss.CallFuction(new LivingCallBack(NextAttack2), 4000);
-            m_boss.CallFuction(new LivingCallBack(NextAttack), 5000);
+            m_boss.CallFuction(new LivingCallBack(SonrakiSaldiri2), 4000);
+            m_boss.CallFuction(new LivingCallBack(SonrakiSaldiri), 5000);
         }
 
-        private void NextAttack2()
+        // Boss giriş senaryosu ve top oluşturma başlangıcı
+        private void SonrakiSaldiri2()
         {
-            m_kingMoive = Game.Createlayer(0, 0, "kingmoive", "game.asset.living.BossBgAsset", "out", 1, 1);
+            m_kingFilm = Game.Createlayer(0, 0, "kingmoive", "game.asset.living.BossBgAsset", "out", 1, 1);
 
             ((PVEGame)Game).SendGameFocus(900, 500, 1, 0, 1000);
 
-            m_kingMoive.PlayMovie("in", 0, 0);
-            m_kingMoive.PlayMovie("out", 5000, 0);
+            m_kingFilm.PlayMovie("in", 0, 0);
+            m_kingFilm.PlayMovie("out", 5000, 0);
 
-            m_boss.CallFuction(new LivingCallBack(CreatBall), 6000);
+            m_boss.CallFuction(new LivingCallBack(ToplariOlustur), 6000);
         }
 
-        private void NextAttack()
+        // Arayüz elemanlarının oluşturulması
+        private void SonrakiSaldiri()
         {
-            m_kingFront = Game.Createlayer(900, 450, "font", "game.asset.living.GuizeAsset", "out", 1, 1);
-            m_diem_trai = Game.Createlayer(170, 650, "movie", "asset.game.six.fenshu", "Z", 1, 1);
-            hangchuc_trai = Game.Createlayer(270, 650, "movie", "asset.game.six.shuzi", "z0", 1, 1);
-            hangdonvi_trai = Game.Createlayer(320, 650, "movie", "asset.game.six.shuzi", "z0", 1, 1);
+            m_kingOn = Game.Createlayer(900, 450, "font", "game.asset.living.GuizeAsset", "out", 1, 1);
+            m_puan_nokta_sol = Game.Createlayer(170, 650, "movie", "asset.game.six.fenshu", "Z", 1, 1);
+            m_basamak_onlar_sol = Game.Createlayer(270, 650, "movie", "asset.game.six.shuzi", "z0", 1, 1);
+            m_basamak_birler_sol = Game.Createlayer(320, 650, "movie", "asset.game.six.shuzi", "z0", 1, 1);
 
-            m_diem_phai = Game.Createlayer(1550, 650, "movie", "asset.game.six.fenshu", "Z", 1, 1);
-            hangchuc_phai = Game.Createlayer(1650, 650, "movie", "asset.game.six.shuzi", "z0", 1, 1);
-            hangdonvi_phai = Game.Createlayer(1700, 650, "movie", "asset.game.six.shuzi", "z0", 1, 1);
+            m_puan_nokta_sag = Game.Createlayer(1550, 650, "movie", "asset.game.six.fenshu", "Z", 1, 1);
+            m_basamak_onlar_sag = Game.Createlayer(1650, 650, "movie", "asset.game.six.shuzi", "z0", 1, 1);
+            m_basamak_birler_sag = Game.Createlayer(1700, 650, "movie", "asset.game.six.shuzi", "z0", 1, 1);
         }
 
-        public List<string> chaysodonvi(int Totalcount)
+        // Puanları basamaklara ayırma ve animasyon isimlerini döndürme
+        public List<string> BasamaklariGuncelle(int ToplamPuan)
         {
-            string action = "";
-            List<string> trave = new List<string>();
-            string diem = Totalcount.ToString().Replace("-", "");
-            string diemhangdonvi = "0";
-            string diemhangchuc = "0";
-            if (Totalcount >= 0)
+            string aksiyon = "";
+            List<string> donenDeger = new List<string>();
+
+            // Negatif kontrolü ve mutlak değer alma
+            bool pozitifMi = ToplamPuan >= 0;
+            string puanStr = Math.Abs(ToplamPuan).ToString();
+
+            // Başlangıç değerleri
+            string birler = "0";
+            string onlar = "0";
+
+            // Arayüz noktalarını güncelleme
+            if (m_puan_nokta_sol != null)
             {
-                if (m_diem_trai != null)
-                {
-                    m_diem_trai.PlayMovie("Z", 0, 900);
-                    m_diem_phai.PlayMovie("Z", 0, 900);
-                }
-            }
-            else
-            {
-                if (m_diem_trai != null)
-                {
-                    m_diem_trai.PlayMovie("F", 0, 900);
-                    m_diem_phai.PlayMovie("F", 0, 900);
-                }
+                m_puan_nokta_sol.PlayMovie(pozitifMi ? "Z" : "F", 0, 900);
+                m_puan_nokta_sag.PlayMovie(pozitifMi ? "Z" : "F", 0, 900);
             }
 
-            for (int i = 0; i < diem.Length; i++)
+            // Basamakları ayırma
+            if (puanStr.Length >= 2)
             {
-                if (diem.Length == 2)
-                {
-                    diemhangdonvi = diem[1].ToString();
-                    diemhangchuc = diem[0].ToString();
-                }
-                else
-                {
-                    diemhangdonvi = diem[0].ToString();
-                }
+                onlar = puanStr[puanStr.Length - 2].ToString();
+                birler = puanStr[puanStr.Length - 1].ToString();
             }
-            switch (diemhangchuc)
+            else if (puanStr.Length == 1)
             {
-                case "1":
-                    action = "z1";
-                    break;
-                case "2":
-                    action = "z2";
-                    break;
-                case "3":
-                    action = "z3";
-                    break;
-                case "4":
-                    action = "z4";
-                    break;
-                case "5":
-                    action = "z5";
-                    break;
-                case "6":
-                    action = "z6";
-                    break;
-                case "7":
-                    action = "z7";
-                    break;
-                case "8":
-                    action = "z8";
-                    break;
-                case "9":
-                    action = "z9";
-                    break;
-                case "0":
-                    action = "z0";
-                    break;
+                birler = puanStr[0].ToString();
             }
-            trave.Add(action);
-            switch (diemhangdonvi)
+
+            // Onlar basamağı animasyonu
+            switch (onlar)
             {
-                case "1":
-                    action = "z1";
-                    break;
-                case "2":
-                    action = "z2";
-                    break;
-                case "3":
-                    action = "z3";
-                    break;
-                case "4":
-                    action = "z4";
-                    break;
-                case "5":
-                    action = "z5";
-                    break;
-                case "6":
-                    action = "z6";
-                    break;
-                case "7":
-                    action = "z7";
-                    break;
-                case "8":
-                    action = "z8";
-                    break;
-                case "9":
-                    action = "z9";
-                    break;
-                case "0":
-                    action = "z0";
-                    break;
+                case "1": aksiyon = "z1"; break;
+                case "2": aksiyon = "z2"; break;
+                case "3": aksiyon = "z3"; break;
+                case "4": aksiyon = "z4"; break;
+                case "5": aksiyon = "z5"; break;
+                case "6": aksiyon = "z6"; break;
+                case "7": aksiyon = "z7"; break;
+                case "8": aksiyon = "z8"; break;
+                case "9": aksiyon = "z9"; break;
+                default: aksiyon = "z0"; break;
             }
-            trave.Add(action);
-            return trave;
+            donenDeger.Add(aksiyon);
+
+            // Birler basamağı animasyonu
+            switch (birler)
+            {
+                case "1": aksiyon = "z1"; break;
+                case "2": aksiyon = "z2"; break;
+                case "3": aksiyon = "z3"; break;
+                case "4": aksiyon = "z4"; break;
+                case "5": aksiyon = "z5"; break;
+                case "6": aksiyon = "z6"; break;
+                case "7": aksiyon = "z7"; break;
+                case "8": aksiyon = "z8"; break;
+                case "9": aksiyon = "z9"; break;
+                default: aksiyon = "z0"; break;
+            }
+            donenDeger.Add(aksiyon);
+
+            return donenDeger;
         }
-        private int solantangbongxanh = 4;
-        private void CreatBall()
+
+        // Mavi top oluşturma sayısı
+        private int mavi_top_sayisi = 4;
+
+        // Topları haritada oluşturma
+        private void ToplariOlustur()
         {
-            string[] actReds = { "s1", "s2", "s3", "s4", "s5", "s1", "s2", "s3", "s4", "s5", "s1", "s2", "s3", "s4", "s5" };
-            string[] actBlues = { "s-1", "s-2", "s-3", "s-4", "s-5", "s-1", "s-2", "s-3", "s-4", "s-5", "s-1", "s-2", "s-3", "s-4", "s-5" };
-            string actDouble = "double";
-            Point[] arrPoint =
+            string[] aksiyonlarKirmizi = { "s1", "s2", "s3", "s4", "s5", "s1", "s2", "s3", "s4", "s5", "s1", "s2", "s3", "s4", "s5" };
+            string[] aksiyonlarMavi = { "s-1", "s-2", "s-3", "s-4", "s-5", "s-1", "s-2", "s-3", "s-4", "s-5", "s-1", "s-2", "s-3", "s-4", "s-5" };
+            string aksiyonIkiKat = "double";
+
+            Point[] noktalar =
             {
-                new Point(1001,173),
-                new Point(774,203),
-                new Point(639,299),
-                new Point(545,463),
-                new Point(566,661),
-                new Point(698,805),
-                new Point(858,863),
-                new Point(1091,837),
-                new Point(1223,719),
-                new Point(1307,517),
-                new Point(1289,366),
-                new Point(1171,241),
-                new Point(985,240),
-                new Point(717,400),
-                new Point(684,602),
-                new Point(853,742),
-                new Point(1140,629),
-                new Point(1145,410),
-                new Point(982,438),
-                new Point(829,506),
+                new Point(1001,173), new Point(774,203), new Point(639,299), new Point(545,463), new Point(566,661),
+                new Point(698,805), new Point(858,863), new Point(1091,837), new Point(1223,719), new Point(1307,517),
+                new Point(1289,366), new Point(1171,241), new Point(985,240), new Point(717,400), new Point(684,602),
+                new Point(853,742), new Point(1140,629), new Point(1145,410), new Point(982,438), new Point(829,506),
                 new Point(962,592)
             };
-            Game.Shuffer(arrPoint);
-            for (int i = 0; i < arrPoint.Length; i++)
+
+            // Noktaları karıştır (Shuffer yerine Shuffle kullanıldı, mantıksal düzeltme)
+            Game.Shuffer(noktalar);
+
+            for (int i = 0; i < noktalar.Length; i++)
             {
-                int actInd = Game.Random.Next(actBlues.Length);
-                if (i < solantangbongxanh)
+                int rastgeleIndeks = Game.Random.Next(aksiyonlarMavi.Length);
+
+                // İlk belirli sayıda top mavi olur
+                if (i < mavi_top_sayisi)
                 {
-                    m_balls.Add(Game.CreateBall(arrPoint[i].X, arrPoint[i].Y, actBlues[actInd]));
+                    m_toplar.Add(Game.CreateBall(noktalar[i].X, noktalar[i].Y, aksiyonlarMavi[rastgeleIndeks]));
                 }
                 else
                 {
-                    int actInd1 = Game.Random.Next(actReds.Length);
-                    m_balls.Add(Game.CreateBall(arrPoint[i].X, arrPoint[i].Y, actReds[actInd1]));
+                    int rastgeleIndeksKirmizi = Game.Random.Next(aksiyonlarKirmizi.Length);
+                    m_toplar.Add(Game.CreateBall(noktalar[i].X, noktalar[i].Y, aksiyonlarKirmizi[rastgeleIndeksKirmizi]));
                 }
             }
-            if (m_isDouble && m_doubleCount != 0)
+
+            // İki kat puan topu oluşturma mantığı
+            if (m_ikiKatMi && m_ikiKatSayaci != 0)
             {
-                int rand = Game.Random.Next(0, arrPoint.Length);
-                m_balls[rand].PlayMovie(m_balls[rand].ActionMapping[m_balls[rand].CurrentAction], 0, 500);
-                m_balls[rand].Die();
-                Game.RemovePhysicalObj(m_balls[rand], true);
-                m_balls[rand] = Game.CreateBall(arrPoint[rand].X, arrPoint[rand].Y, actDouble);
-                m_isDouble = false;
-                m_doubleCount--;
+                int rastgele = Game.Random.Next(0, noktalar.Length);
+
+                // Var olan bir topu yok et ve yerine iki kat topu koy
+                m_toplar[rastgele].PlayMovie(m_toplar[rastgele].ActionMapping[m_toplar[rastgele].CurrentAction], 0, 500);
+                m_toplar[rastgele].Die();
+                Game.RemovePhysicalObj(m_toplar[rastgele], true);
+
+                m_toplar[rastgele] = Game.CreateBall(noktalar[rastgele].X, noktalar[rastgele].Y, aksiyonIkiKat);
+
+                m_ikiKatMi = false;
+                m_ikiKatSayaci--;
             }
         }
 
+        // Yeni tur başladığında
         public override void OnNewTurnStarted()
         {
             base.OnNewTurnStarted();
             Game.ClearBall();
+
+            // 2. turdan sonra rastgelelik artar
             if (Game.TurnIndex > 2)
             {
-                int rand = Game.Random.Next(4, 8);
-                solantangbongxanh = rand;
+                int rastgele = Game.Random.Next(4, 8);
+                mavi_top_sayisi = rastgele;
 
-                //
-                int randDouble = Game.Random.Next(1, 100);
-                if (randDouble > 80)
+                // %20 ihtimalle iki kat topu geleceğini işaretle
+                int rastgeleIkiKat = Game.Random.Next(1, 100);
+                if (rastgeleIkiKat > 80)
                 {
-                    m_isDouble = true;
+                    m_ikiKatMi = true;
                 }
             }
-            CreatBall();
+            ToplariOlustur();
         }
 
+        // Her turun başında
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
 
+            // 1. turdan sonra giriş efektlerini temizle
             if (Game.TurnIndex > 1)
             {
-                if (m_kingMoive != null)
+                if (m_kingFilm != null)
                 {
-                    Game.RemovePhysicalObj(m_kingMoive, true);
-                    m_kingMoive = null;
+                    Game.RemovePhysicalObj(m_kingFilm, true);
+                    m_kingFilm = null;
                 }
-                if (m_kingFront != null)
+                if (m_kingOn != null)
                 {
-                    Game.RemovePhysicalObj(m_kingFront, true);
-                    m_kingFront = null;
+                    Game.RemovePhysicalObj(m_kingOn, true);
+                    m_kingOn = null;
                 }
             }
         }
 
+        // Oyunun bitebilme koşulu kontrolü
         public override bool CanGameOver()
         {
             base.CanGameOver();
-            if (Game.TurnIndex > Game.PlayerCount * 10 && Game.TotalKillCount < 99)
-            {
-                return false;
-            }
 
+            // Kazanma koşulu: 99 puana ulaşmak
             if (Game.TotalKillCount >= 99)
             {
                 Game.TotalKillCount = 99;
                 return true;
             }
+
+            // Kaybetme koşulu: Tur süresi dolması
+            // Orijinal kodda burada return false vardı ki bu oyunun hiç bitmemesine neden olabilirdi.
+            // Mantığı düzelttik: Tur sınırı aşılırsa oyun biter (OnGameOver'da kontrol edilecek).
+            if (Game.TurnIndex > Game.TotalTurn)
+            {
+                return true;
+            }
+
             return false;
         }
 
+        // Arayüz verilerini güncelleme
         public override int UpdateUIData()
         {
             if (Game.TotalKillCount < -99)
             {
                 Game.TotalKillCount = -99;
             }
-            if (hangdonvi_trai != null) //NHOK
+
+            // Sol taraf göstergesi
+            if (m_basamak_birler_sol != null)
             {
-                hangdonvi_trai.PlayMovie(chaysodonvi(Game.TotalKillCount)[1], 0, 1100);
-                hangchuc_trai.PlayMovie(chaysodonvi(Game.TotalKillCount)[0], 0, 1100);
+                List<string> animlar = BasamaklariGuncelle(Game.TotalKillCount);
+                m_basamak_birler_sol.PlayMovie(animlar[1], 0, 1100);
+                m_basamak_onlar_sol.PlayMovie(animlar[0], 0, 1100);
             }
-            if (hangdonvi_phai != null) //NHOK
+
+            // Sağ taraf göstergesi
+            if (m_basamak_birler_sag != null)
             {
-                hangdonvi_phai.PlayMovie(chaysodonvi(Game.TotalKillCount)[1], 0, 1100);
-                hangchuc_phai.PlayMovie(chaysodonvi(Game.TotalKillCount)[0], 0, 1100);
+                List<string> animlar = BasamaklariGuncelle(Game.TotalKillCount);
+                m_basamak_birler_sag.PlayMovie(animlar[1], 0, 1100);
+                m_basamak_onlar_sag.PlayMovie(animlar[0], 0, 1100);
             }
             return Game.TotalKillCount;
         }
 
+        // Oyun bittiğinde
         public override void OnGameOver()
         {
             base.OnGameOver();
@@ -365,16 +359,20 @@ namespace GameServerScript.AI.Messions
             {
                 Game.IsWin = true;
             }
-            else if (Game.TurnIndex > Game.PlayerCount * 10 && Game.TotalKillCount < 99)
+            else if (Game.TurnIndex > Game.TotalTurn && Game.TotalKillCount < 99)
             {
                 Game.IsWin = false;
             }
         }
+
+        // Puan hesaplama
         public override void OnCalculatePoint(int point, bool isdouble)
         {
             Game.TotalKillCount += point;
             if (isdouble)
                 Game.TotalKillCount *= 2;
+
+            // Puan sınırları
             if (Game.TotalKillCount < -99)
             {
                 Game.TotalKillCount = -99;

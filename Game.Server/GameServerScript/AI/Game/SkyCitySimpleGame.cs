@@ -2,7 +2,7 @@
 
 namespace Game.Server.GameServerScript.AI.Game
 {
-    public class SkyCitySimpleGame : APVEGameControl
+    public class SkyCitySimpleGame : APVEGameControl // Gökyüzü Şehri Kolay
     {
         public override int CalculateScoreGrade(int score)
         {
@@ -28,8 +28,8 @@ namespace Game.Server.GameServerScript.AI.Game
         public override void OnCreated()
         {
             base.OnCreated();
-            base.Game.SetupMissions("25001,25002");
-            base.Game.TotalMissionCount = 2;
+            base.Game.SetupMissions("25001,25002"); //Gökyüzü Şehri kolay mession idleri
+            base.Game.TotalMissionCount = 2;  //Gökyüzü Şehri kolay toplam etap sayısı 2
         }
 
         public override void OnGameOverAllSession()

@@ -1,35 +1,38 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using Game.Logic;
 
 namespace GameServerScript.AI.Messions
 {
     public class DTGT1167 : AMissionControl
     {
-        private SimpleBoss m_oaitu;
+        private SimpleBoss simpleBoss_0;
 
-        private SimpleBoss m_trongtai;
+        private SimpleBoss simpleBoss_1;
 
-        private SimpleNpc m_fan;
+        private SimpleNpc PuuwlzIqwIf;
 
-        private PhysicalObj m_kingMoive;
+        private PhysicalObj physicalObj_0;
 
-        private PhysicalObj m_front;
+        private PhysicalObj physicalObj_1;
 
-        private PhysicalObj m_decuatrongtai;
+        private PhysicalObj physicalObj_2;
 
-        private int IsSay = 0;
+        private int int_0;
 
-        private int m_oaituID = 6131;//oai tu
+        private int int_1;
 
-        private int m_trongtaiID = 6132;//trong tai coi den
+        private int int_2;
 
-        private int m_fanID = 6134;//Fan
+        private int int_3;
 
-        private int m_decuatrongtaiID = 6135;//De cua trong tai
+        private int int_4;
+
+        private int int_5;
+
+        private static string[] string_0;
+
+        private static string[] string_1;
 
         public override int CalculateScoreGrade(int score)
         {
@@ -38,89 +41,62 @@ namespace GameServerScript.AI.Messions
             {
                 return 3;
             }
-            else if (score > 825)
+            if (score > 825)
             {
                 return 2;
             }
-            else if (score > 725)
+            if (score > 725)
             {
                 return 1;
             }
-            else
-            {
-                return 0;
-            }
+            return 0;
         }
 
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-            Game.AddLoadingFile(1, "bombs/61.swf", "tank.resource.bombs.Bomb61");
-            Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
-            Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.boguquanwangAsset");
-            Game.AddLoadingFile(2, "image/game/effect/6/popcan.swf", "asset.game.six.popcan");
-            Game.AddLoadingFile(2, "image/game/effect/6/popcan.swf", "popcan_fla.qusan_8");
-            int[] resources = { m_decuatrongtaiID, m_fanID, m_oaituID, m_trongtaiID };
-            Game.LoadResources(resources);
-            Game.LoadNpcGameOverResources(resources);
-            Game.SetMap(1167);
+            base.Game.AddLoadingFile(2, "image/game/effect/6/popcan.swf", "asset.game.six.popcan");
+            base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
+            base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.boguquanwangAsset");
+            int[] npcIds = new int[4]
+            {
+                int_1,
+                int_2,
+                int_3,
+                int_4
+            };
+            base.Game.LoadResources(npcIds);
+            base.Game.LoadNpcGameOverResources(npcIds);
+            base.Game.SetMap(1167);
         }
 
-        public override void OnPrepareStartGame()
-        {
-            base.OnPrepareStartGame();
-            //fan
-            LivingConfig fan = Game.BaseLivingConfig();
-            fan.IsTurn = false;
-            fan.isShowBlood = false;
-            fan.IsFly = true;
-            fan.isShowSmallMapPoint = false;
-            fan.CanTakeDamage = false;
-            m_fan = Game.CreateNpc(m_fanID, Game.Map.Info.DeadWidth / 2 - 3, Game.Map.Info.DeadHeight / 2 - 80, 0, -1, fan);
-            m_fan.PlayMovie("stand", 0, 0);
-            m_fan.OnSmallMap(false);
-            Game.SendHideBlood(m_fan, 1);
-            //de cua trong tai
-            m_decuatrongtai = Game.CreatePhysicalObj(Game.Map.Info.DeadWidth / 2, Game.Map.Info.DeadHeight / 2 + 100, "m_decuatrongtai", "game.living.Living181", "stand", 1, 0);
-            m_decuatrongtai.SetRect(-126, -120, 260, 90);
-            //trong tai coi den
-            LivingConfig trongtai = Game.BaseLivingConfig();
-            trongtai.IsFly = true;
-            trongtai.IsTurn = false;
-            m_trongtai = Game.CreateBoss(m_trongtaiID, m_decuatrongtai.X + 20, m_decuatrongtai.Y - 100, 1, 1, "stand", trongtai);
-            m_trongtai.PlayMovie("stand", 0, 0);
-            m_trongtai.SetRect(m_trongtai.NpcInfo.X, m_trongtai.NpcInfo.Y, m_trongtai.NpcInfo.Width, m_trongtai.NpcInfo.Height);
-            m_trongtai.SetRelateDemagemRect(m_trongtai.NpcInfo.X, m_trongtai.NpcInfo.Y, m_trongtai.NpcInfo.Width, m_trongtai.NpcInfo.Height);
-            m_trongtai.Properties1 = 1;
-            m_trongtai.Properties2 = 0;
-        }
         public override void OnStartGame()
         {
             base.OnStartGame();
-            m_trongtai.Say("Trong kỳ vận hội nây chúng ta sẽ được chiêm ngưỡng sức mạnh của Quyền Vương và 4 đấu sĩ vô danh!", 1500, 0);
-
-            //oai tu
-            LivingConfig config = Game.BaseLivingConfig();
-            config.isShowBlood = false;
-            config.KeepLife = true;
-            m_oaitu = Game.CreateBoss(m_oaituID, Game.Map.Info.DeadWidth / 2 + 150, 975, -1, 6, "", config);
-            m_oaitu.SetRelateDemagemRect(m_oaitu.NpcInfo.X, m_oaitu.NpcInfo.Y, m_oaitu.NpcInfo.Width, m_oaitu.NpcInfo.Height);
-            m_oaitu.Properties2 = false;
-            Game.SendFreeFocus(m_trongtai.X, m_trongtai.Y - 200, 0, 0, 2000);
-            Game.SendFreeFocus(m_oaitu.X, m_oaitu.Y, 0, 6000, 0);
-            m_trongtai.CallFuction(Layer, 6500);
-        }
-        private void Layer()
-        {
-            m_kingMoive = Game.Createlayer(0, 0, "kingmoive", "game.asset.living.BossBgAsset", "out", 1, 1);
-            m_front = Game.Createlayer(m_oaitu.X - 50, m_oaitu.Y - 150, "font", "game.asset.living.boguquanwangAsset", "out", 1, 1);
-            m_kingMoive.PlayMovie("in", 1000, 0);
-            m_front.PlayMovie("in", 2000, 2000);
-
-            foreach (Player p in Game.GetAllFightPlayers())
-            {
-                p.Properties1 = 0;
-            }
+            physicalObj_2 = base.Game.Createlayer(1250, 520, "moive", "game.living.Living189", "", 1, 0);
+            physicalObj_1 = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
+            physicalObj_0 = base.Game.Createlayer(1455, 773, "front", "game.asset.living.boguquanwangAsset", "out", 1, 0);
+            LivingConfig livingConfig = base.Game.BaseLivingConfig();
+            livingConfig.IsTurn = false;
+            livingConfig.CanTakeDamage = false;
+            livingConfig.IsFly = true;
+            PuuwlzIqwIf = base.Game.CreateNpc(int_4, 1250, 700, 1, 1, livingConfig);
+            base.Game.SendHideBlood(PuuwlzIqwIf, 0);
+            PuuwlzIqwIf.OnSmallMap(state: false);
+            simpleBoss_0 = base.Game.CreateBoss(int_1, 1650, 1000, -1, 1, "");
+            simpleBoss_0.SetRelateDemagemRect(simpleBoss_0.NpcInfo.X, simpleBoss_0.NpcInfo.Y, simpleBoss_0.NpcInfo.Width, simpleBoss_0.NpcInfo.Height);
+            LivingConfig livingConfig2 = base.Game.BaseLivingConfig();
+            livingConfig2.IsFly = true;
+            simpleBoss_1 = base.Game.CreateBoss(int_3, 1250, 600, 1, 1, "", livingConfig2);
+            simpleBoss_1.SetRelateDemagemRect(simpleBoss_1.NpcInfo.X, simpleBoss_1.NpcInfo.Y, simpleBoss_1.NpcInfo.Width, simpleBoss_1.NpcInfo.Height);
+            base.Game.SendObjectFocus(simpleBoss_1, 1, 1000, 0);
+            simpleBoss_1.Say("Heyecan verici boks maçına hoş geldiniz.", 0, 1500);
+            simpleBoss_1.Say("Efsanevi Boks Kralı Boksör karşınızda.", 0, 3000);
+            base.Game.SendObjectFocus(simpleBoss_0, 1, 4000, 0);
+            physicalObj_1.PlayMovie("in", 5000, 0);
+            physicalObj_0.PlayMovie("in", 5100, 0);
+            physicalObj_1.PlayMovie("out", 7000, 0);
+            physicalObj_0.PlayMovie("out", 7100, 0);
         }
 
         public override void OnNewTurnStarted()
@@ -131,45 +107,45 @@ namespace GameServerScript.AI.Messions
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-            if (m_kingMoive != null)
-            {
-                Game.RemovePhysicalObj(m_kingMoive, true);
-                m_kingMoive = null;
-            }
-            if (m_front != null)
-            {
-                Game.RemovePhysicalObj(m_front, true);
-                m_front = null;
-            }
-            IsSay = 0;
+            int_0 = 0;
         }
 
         public override bool CanGameOver()
         {
             base.CanGameOver();
-
-            if (Game.TurnIndex > Game.MissionInfo.TotalTurn - 1)
+            if (base.Game.TurnIndex > base.Game.MissionInfo.TotalTurn - 1)
             {
                 return true;
             }
-
-            if (m_oaitu.IsLiving == false)
+            if (!simpleBoss_0.IsLiving && int_5 == 0)
             {
-                return true;
-            }
-            else
-            {
+                base.Game.SendObjectFocus(simpleBoss_1, 1, 1000, 0);
+                simpleBoss_1.Say("Boksör düştü!! Geri sayım başladı!", 0, 2000);
+                base.Game.RemoveLiving(simpleBoss_0.Id);
+                simpleBoss_0 = base.Game.CreateBoss(int_1, simpleBoss_0.X, simpleBoss_0.Y, simpleBoss_0.Direction, 1, "");
+                simpleBoss_0.SetRelateDemagemRect(simpleBoss_0.NpcInfo.X, simpleBoss_0.NpcInfo.Y, simpleBoss_0.NpcInfo.Width, simpleBoss_0.NpcInfo.Height);
+                simpleBoss_0.PlayMovie("standA", 0, 0);
+                base.Game.SendObjectFocus(simpleBoss_0, 1, 4000, 0);
+                simpleBoss_0.PlayMovie("dieA", 5000, 5000);
+                base.Game.SendObjectFocus(simpleBoss_1, 1, 10000, 0);
+                simpleBoss_1.Say("Boksör ayağa kalktı! Devam edelim.", 11000, 2000);
+                int_5 = 1;
                 return false;
             }
+            if (!simpleBoss_0.IsLiving && int_5 > 0)
+            {
+                return true;
+            }
+            return false;
         }
 
         public override int UpdateUIData()
         {
-
-            if (m_oaitu == null)
+            if (simpleBoss_0 == null)
+            {
                 return 0;
-
-            if (m_oaitu.IsLiving == false)
+            }
+            if (!simpleBoss_0.IsLiving)
             {
                 return 1;
             }
@@ -179,15 +155,39 @@ namespace GameServerScript.AI.Messions
         public override void OnGameOver()
         {
             base.OnGameOver();
-
-            if (m_oaitu.IsLiving == false)
+            if (!simpleBoss_0.IsLiving)
             {
-                Game.IsWin = true;
+                base.Game.IsWin = true;
             }
             else
             {
-                Game.IsWin = false;
+                base.Game.IsWin = false;
             }
+        }
+
+        public DTGT1167()
+        {
+
+            int_1 = 6131;
+            int_2 = 6134;
+            int_3 = 6132;
+            int_4 = 6135;
+
+        }
+
+        static DTGT1167()
+        {
+
+            string_0 = new string[2]
+            {
+               "Beni eve gönderin!",
+               "Tek başına, beni yenebileceğin yanılsamasına mı kapılıyorsun?"
+            };
+            string_1 = new string[2]
+            {
+                "Acıyor! Acıyor...",
+                "Yaşasın Kral..."
+            };
         }
     }
 }

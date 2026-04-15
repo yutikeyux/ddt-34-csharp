@@ -2,25 +2,24 @@ using Game.Logic.AI;
 
 namespace GameServerScript.AI.Game
 {
-    public class GuluOlympicsTerrorGame : APVEGameControl
+    public class GuluOlympicsTerrorGame : APVEGameControl //atletizm kahraman
     {
         public override void OnCreated()
         {
 			base.OnCreated();
-			base.Game.SetupMissions("6301,6302,6303,6304");
-			base.Game.TotalMissionCount = 4;
+			base.Game.SetupMissions("6301,6302,6303,6304"); //atletizm kahraman misson id leri etap 1, etap 2, etap 3 ve etap 4
+            base.Game.TotalMissionCount = 4; //atletizm kahraman etap sayısı 4
         }
 
         public override void OnPrepated()
         {
 			base.OnPrepated();
-			//base.Game.SessionId = 0;
         }
 
         public override int CalculateScoreGrade(int score)
         {
 			base.CalculateScoreGrade(score);
-			if (score > 800)
+			if (score > 900)
 			{
 				return 3;
 			}

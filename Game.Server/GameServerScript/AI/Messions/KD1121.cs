@@ -8,11 +8,11 @@ namespace GameServerScript.AI.Messions
     {
         private SimpleBoss boss;
 
-        private int npcID = 2004;
+        private int MaviKarıncaID = 2004;
 
-        private int bossID = 2003;
+        private int KraliçeKarıncaID = 2003;
 
-        private int IsSay = 0;
+        private int Söylemler = 0;
 
         private int kill;
 
@@ -51,8 +51,8 @@ namespace GameServerScript.AI.Messions
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-            int[] resources = { bossID, npcID };
-            int[] gameOverResources = { bossID };
+            int[] resources = { KraliçeKarıncaID, MaviKarıncaID };
+            int[] gameOverResources = { KraliçeKarıncaID };
             base.Game.LoadResources(resources);
             base.Game.LoadNpcGameOverResources(gameOverResources);
             base.Game.AddLoadingFile(1, "bombs/51.swf", "tank.resource.bombs.Bomb51");
@@ -66,7 +66,7 @@ namespace GameServerScript.AI.Messions
             base.OnStartGame();
             m_moive = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 1);
             m_front = base.Game.Createlayer(1131, 150, "font", "game.asset.living.AntQueenAsset", "out", 1, 1);
-            boss = base.Game.CreateBoss(bossID, 1316, 444, -1, 1, "");
+            boss = base.Game.CreateBoss(KraliçeKarıncaID, 1316, 444, -1, 1, "");
             boss.SetRelateDemagemRect(-42, -200, 84, 194);
             boss.Say(LanguageMgr.GetTranslation("Sandıklarım, hazinelerim, bunlar benim en değerli eşyalarım!"), 0, 200, 0);
             m_moive.PlayMovie("in", 6000, 0);
@@ -139,11 +139,11 @@ namespace GameServerScript.AI.Messions
 
         public override void OnShooted()
         {
-            if (boss.IsLiving && IsSay == 0)
+            if (boss.IsLiving && Söylemler == 0)
             {
                 int index = base.Game.Random.Next(0, AngryChat.Length);
                 boss.Say(AngryChat[index], 0, 1500);
-                IsSay = 1;
+                Söylemler = 1;
             }
         }
     }

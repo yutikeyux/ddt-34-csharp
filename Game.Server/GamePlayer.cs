@@ -8,6 +8,7 @@ using Game.Logic.Protocol;
 using Game.Server;
 using Game.Server.Achievement;
 using Game.Server.ActiveSystem;
+using Game.Server.API;
 using Game.Server.Buffer;
 using Game.Server.Consortia;
 using Game.Server.ConsortiaTask;
@@ -644,6 +645,17 @@ public class GamePlayer : IGamePlayer
             }
         }
     }
+    public BaseGame Game
+    {
+        get
+        {
+            return m_game;
+        }
+        set
+        {
+            m_game = value;
+        }
+    }
     public void DiceReset()
     {
         this.m_dice.Reset();
@@ -700,6 +712,8 @@ public class GamePlayer : IGamePlayer
             int_6 = value;
         }
     }
+
+
 
     public int GamePlayerId { get; set; }
 
@@ -3125,6 +3139,7 @@ public class GamePlayer : IGamePlayer
                 {
                     CheckAndSendWeeklyHonorReward();
                 }
+
                 if ((int)Math.Ceiling(diff.TotalDays) >= 7)//15 gün girilmez sayan değer 7'ye düşürüldü eski oyuncu ödülü not: yuti
                 {
                     DateTime startDate = Convert.ToDateTime(GameProperties.StartEventOldPlayer);
@@ -3141,6 +3156,7 @@ public class GamePlayer : IGamePlayer
                             items.Add(oldPlayerAward.itemInfo);
                         }
                         //AddMoneyLock(Money);
+                        
                         m_character.IsOldPlayer = true;
                         m_character.isOldPlayerHasValidEquitAtLogin = true;
                         SendItemsToMail(items, Cotent, Title, eMailType.ItemOverdue);
@@ -3168,6 +3184,7 @@ public class GamePlayer : IGamePlayer
                 m_character.BoxGetDate = DateTime.Now;
                 m_character.damageScores = 0;
                 m_character.Score = 0;
+                m_character.DailyMoneyUsed = 0;
                 m_battle.Reset();
                 m_extra.Info.MinHotSpring = 60;
                 m_extra.Info.LastFreeTimeHotSpring = DateTime.Now;
@@ -3402,40 +3419,8 @@ public class GamePlayer : IGamePlayer
     private void LogInfo(string message) => Console.WriteLine($"[INFO] {DateTime.Now}: {message}");
     private void LogWarning(string message) => Console.WriteLine($"[WARN] {DateTime.Now}: {message}");
     private void LogError(string message) => Console.WriteLine($"[ERROR] {DateTime.Now}: {message}");
-    public bool MoneyDirect(int value)
-    {
-        if (GameProperties.IsDDTMoneyActive)
-        {
-            return this.MoneyDirect(MoneyType.DDTMoney, value);
-        }
-        return this.MoneyDirect(MoneyType.Money, value);
-    }
-    public bool MoneyDirect(MoneyType type, int value)
-    {
-        if (value < 0 || value > 2147483647)
-        {
-            return false;
-        }
-        if (type == MoneyType.Money)
-        {
-            if (this.PlayerCharacter.Money >= value)
-            {
-                this.RemoveMoney(value);
-                return true;
-            }
-            this.SendInsufficientMoney(0);
-        }
-        else
-        {
-            if (this.PlayerCharacter.GiftToken >= value)
-            {
-                this.RemoveGiftToken(value);
-                return true;
-            }
-            this.SendMessage("Hediye altınınız yeterli değil."); //türkçeleştirildi not: yuti
-        }
-        return false;
-    }
+    
+    
     public char[] InitFightLabPermission()
     {
         char[] array = new char[50];
@@ -4028,10 +4013,8 @@ public class GamePlayer : IGamePlayer
     }
 
 
-    public bool MoneyDirect(int value, bool IsAntiMult, bool NoviceActive, bool CanMoneyLock)
-    {
-        return MoneyDirect(MoneyType.Money, value, IsAntiMult, NoviceActive, CanMoneyLock);
-    }
+   
+
     public bool GiftTokenDirect(int value)
     {
         if (value <= 0 || PlayerCharacter.GiftToken < value)
@@ -4041,41 +4024,7 @@ public class GamePlayer : IGamePlayer
         RemoveGiftToken(value);
         return true;
     }
-    public bool MoneyDirect(MoneyType type, int value, bool IsAntiMult, bool NoviceActive, bool CanMoneyLock)
-    {
-        if (value >= 0 && value <= int.MaxValue)
-        {
-            if (type == MoneyType.Money)
-            {
-                if (PlayerCharacter.Money >= value)
-                {
-                    RemoveMoney(value, IsAntiMult, NoviceActive);
-                    AddLog("RemoveMoney", "Tài khoản " + m_character.UserName + "sử dụng " + value + "xu ở tài khoản" + m_character.NickName);
-                    UpdateProperties();
-                    return true;
-                }
-                else if (PlayerCharacter.MoneyLock >= value && CanMoneyLock)
-                {
-                    RemoveMoneyLock(value);
-                    UpdateProperties();
-                    return true;
-                }
-                SendInsufficientMoney(0);
-            }
-            else
-            {
-                if (PlayerCharacter.GiftToken >= value)
-                {
-                    RemoveGiftToken(value);
-                    AddLog("RemoveGiftToken", "Tài khoản " + m_character.UserName + "sử dụng " + value + "lễ kim ở tài khoản" + m_character.NickName);
-                    UpdateProperties();
-                    return true;
-                }
-                SendMessage("Không đủ lễ kim.");
-            }
-        }
-        return false;
-    }
+  
 
     public void OnAchievementFinish(AchievementData info)
     {
@@ -4638,55 +4587,89 @@ public class GamePlayer : IGamePlayer
 
     public int RemoveMoney(int value)
     {
-        if (value > 0 && value <= m_character.Money)
-        {
-            m_character.Money -= value;
-            if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Gunluk_Harcama))
-            {
-                Extra.UpdateEventCondition((int)NoviceActiveType.Gunluk_Harcama, value, isPlus: true, 0);
-            }
-            if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Haftalık_Harcama))
-            {
-                Extra.UpdateEventCondition((int)NoviceActiveType.Haftalık_Harcama, value, isPlus: true, 0);
-            }
-            OnPropertiesChanged();
-            UpdateProperties();
-            return value;
-        }
-        else if (value > 0 && value <= m_character.MoneyLock)
-        {
-            m_character.MoneyLock -= value;
-            OnPropertiesChanged();
-            UpdateProperties();
-            return value;
-
-        }
-        return 0;
+        return RemoveMoney(value, IsAntiMult: false, isNoviceActive: false);
     }
+    /// <summary>
+    /// Harcama yapılmadan önce günlük limit kontrolünü yapar.
+    /// Limit dolduysa false döner ve uyarı mesajı gönderir.
+    /// </summary>
+    public bool CanSpendMoney(int value)
+    {
+        int dailyLimit = GameServer.Instance?.Configuration != null
+            ? GameApiServer.DailyMoneyLimit
+            : 16000;
 
+        // Eğer yapılacak harcama, kalan limiti aşıyorsa
+        if (m_character.DailyMoneyUsed + value > dailyLimit)
+        {
+            SendMessage(string.Format("Günlük harcama limitinizi aşıyorsunuz! Kalan Limit: {0} Kupon", dailyLimit - m_character.DailyMoneyUsed));
+            return false;
+        }
+
+        // Yeterli bakiye kontrolü (Opsiyonel, normalde handler'da vardır ama garanti olsun)
+        if (m_character.Money < value)
+        {
+            SendMessage("Yeterli kupona sahip değilsiniz.");
+            return false;
+        }
+
+        return true;
+    }
     public int RemoveMoney(int value, bool IsAntiMult, bool isNoviceActive)
     {
-        if (value > 0 && value <= m_character.Money)
+        // GÜNLÜK LİMİT KONTROLÜ
+        int dailyLimit = GameApiServer.PlayerCustomLimits
+            .TryGetValue(PlayerCharacter.NickName, out int _cl)
+            ? _cl
+            : GameApiServer.DailyMoneyLimit;
+        if (m_character.DailyMoneyUsed + value > dailyLimit)
         {
-            m_character.Money -= value;
-            if (!isNoviceActive)
+            // Limit aşıldı, işlemi engelle ve uyarı gönder
+            SendMessage(string.Format("Günlük kupon harcama limitini aştınız! (Limit: {0}, Harcanan: {1})", dailyLimit, m_character.DailyMoneyUsed));
+            return 0;
+        }
+
+        if (value > 0)
+        {
+            // Normal Kupon (Money) Kontrolü
+            if (value <= m_character.Money)
             {
-                if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Gunluk_Harcama))
+                m_character.Money -= value;
+
+                // Günlük harcamayı artır
+                m_character.DailyMoneyUsed += value;
+
+                // Görev/Event kontrolleri (mevcut kodunuzdaki gibi)
+                if (!isNoviceActive)
                 {
-                    Extra.UpdateEventCondition((int)NoviceActiveType.Gunluk_Harcama, value, isPlus: true, 0);
+                    if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Gunluk_Harcama))
+                    {
+                        Extra.UpdateEventCondition((int)NoviceActiveType.Gunluk_Harcama, value, isPlus: true, 0);
+                    }
+                    if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Haftalık_Harcama))
+                    {
+                        Extra.UpdateEventCondition((int)NoviceActiveType.Haftalık_Harcama, value, isPlus: true, 0);
+                    }
                 }
-                if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Haftalık_Harcama))
-                {
-                    Extra.UpdateEventCondition((int)NoviceActiveType.Haftalık_Harcama, value, isPlus: true, 0);
-                }
+                OnPropertiesChanged();
+                UpdateProperties();
+                return value;
             }
-            OnPropertiesChanged();
-            UpdateProperties();
-            return value;
+            // Kilitli Kupon (MoneyLock) Kontrolü
+            else if (value <= m_character.MoneyLock)
+            {
+                m_character.MoneyLock -= value;
+
+                // Kilitli kupon harcaması da sayılırsa buraya ekleyebilirsiniz (isteğe bağlı)
+                // m_character.DailyMoneyUsed += value; 
+
+                OnPropertiesChanged();
+                UpdateProperties();
+                return value;
+            }
         }
         return 0;
     }
-
     public int RemoveMoneyLock(int value)
     {
         if (value > 0 && value <= m_character.MoneyLock)
@@ -5605,7 +5588,7 @@ public class GamePlayer : IGamePlayer
             GiftToken = 0,
             Receiver = PlayerCharacter.NickName,
             ReceiverID = PlayerCharacter.ID,
-            Sender = "NEWGUN",
+            Sender = "Bombom",
             SenderID = 0,
             Type = (int)type
         };
@@ -6040,16 +6023,6 @@ public class GamePlayer : IGamePlayer
         {
             Extra.UpdateEventCondition((int)NoviceActiveType.Level_Atlama, Level);
         }
-        //if (Level == 25 && !EventSeven.IsFirstLv)
-        //{
-        //    //Nguoi choi dau tien len level 25
-        //    string Title = "Sự kiện Đầu Tiên Đạt Cấp 25";
-        //    string Content = "Người chơi đầu tiên đạt cấp 25 tại máy chủ!";
-        //    GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysTipNotice("Chúc mừng người chơi " + m_character.NickName + " đạt cấp 25 đầu tiên tại máy chủ!"));
-        //    SendItemToMail(46176, 1, Content, Title);
-        //    EventSeven.IsFirstLv = true;
-        //    UpdateEventSevens(EventSeven, m_character.ID);
-        //}
         OnLevelUp(Level);
         if (Level == maxLevel && levelInfo != null)
         {
@@ -6508,7 +6481,7 @@ public class GamePlayer : IGamePlayer
                 int kalanCan = this.Players != null ? this.Players.Blood : blood;
 
                 // SÜS YOK, DİREKT PYTHON'UN OKUYACAĞI ŞİFRELİ METNİ YOLLUYORUZ
-                string rawData = string.Format("[MATCH_RESULT]|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}",
+                string rawData = string.Format("[Oyun Logu Alındı]|Oyuncu: {0}|Seviye: {1}|Rakipler: {2}|Oda Tipi: {3}|Durum: {4}|Hasar: {5}|Kalan Can: {6}|Kazanç XP: {7}",
                     oyuncuIsmi, seviye, rakipIsimleri, odaTipi, durum, hasar.ToString("N0"), kalanCan.ToString("N0"), gainXp);
 
                 var payload = new { content = rawData, username = "Oyun Logu" };
@@ -6795,6 +6768,102 @@ public class GamePlayer : IGamePlayer
         else
         {
             return MoneyDirect(value, IsAntiMult: false, false, true);
+        }
+        return false;
+    }
+    public bool MoneyDirect(int value)
+    {
+        if (GameProperties.IsDDTMoneyActive)
+        {
+            return this.MoneyDirect(MoneyType.DDTMoney, value);
+        }
+        return this.MoneyDirect(MoneyType.Money, value);
+    }
+
+    public bool MoneyDirect(MoneyType type, int value)
+    {
+        if (value < 0 || value > 2147483647)
+        {
+            return false;
+        }
+        if (type == MoneyType.Money)
+        {
+            // Önce bakiye kontrolü
+            if (this.PlayerCharacter.Money >= value)
+            {
+                // RemoveMoney artık limit kontrolü yapıyor.
+                // Eğer limit dolduysa 0 döner, işlem başarısız olur.
+                if (RemoveMoney(value) > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    // Limit dolu olduğu için false döndü, yeterli bakiye olsa bile harcanamadı.
+                    return false;
+                }
+            }
+            this.SendInsufficientMoney(0);
+        }
+        else
+        {
+            if (this.PlayerCharacter.GiftToken >= value)
+            {
+                this.RemoveGiftToken(value);
+                return true;
+            }
+            this.SendMessage("Hediye altınınız yeterli değil.");
+        }
+        return false;
+    }
+
+    public bool MoneyDirect(int value, bool IsAntiMult, bool NoviceActive, bool CanMoneyLock)
+    {
+        return MoneyDirect(MoneyType.Money, value, IsAntiMult, NoviceActive, CanMoneyLock);
+    }
+
+    public bool MoneyDirect(MoneyType type, int value, bool IsAntiMult, bool NoviceActive, bool CanMoneyLock)
+    {
+        if (value >= 0 && value <= int.MaxValue)
+        {
+            if (type == MoneyType.Money)
+            {
+                if (PlayerCharacter.Money >= value)
+                {
+                    // RemoveMoney'nin sonucunu kontrol et (Limit kontrolü için)
+                    if (RemoveMoney(value, IsAntiMult, NoviceActive) > 0)
+                    {
+                        AddLog("RemoveMoney", "Tài khoản " + m_character.UserName + "sử dụng " + value + "xu ở tài khoản" + m_character.NickName);
+                        UpdateProperties();
+                        return true;
+                    }
+                    else
+                    {
+                        // Limit aşıldıysa buraya düşer
+                        return false;
+                    }
+                }
+                else if (PlayerCharacter.MoneyLock >= value && CanMoneyLock)
+                {
+                    // Kilitli kupon için de limit kontrolü istenirse buraya eklenebilir.
+                    // Şimdilik sadece RemoveMoney'deki limiti baz alıyoruz.
+                    RemoveMoneyLock(value);
+                    UpdateProperties();
+                    return true;
+                }
+                SendInsufficientMoney(0);
+            }
+            else
+            {
+                if (PlayerCharacter.GiftToken >= value)
+                {
+                    RemoveGiftToken(value);
+                    AddLog("RemoveGiftToken", "Tài khoản " + m_character.UserName + "sử dụng " + value + "lễ kim ở tài khoản" + m_character.NickName);
+                    UpdateProperties();
+                    return true;
+                }
+                SendMessage("Không đủ lễ kim.");
+            }
         }
         return false;
     }

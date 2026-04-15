@@ -6,32 +6,31 @@ namespace GameServerScript.AI.Messions
 {
     public class DCR5201 : AMissionControl
     {
-        private SimpleBoss m_boss = null;
+        private SimpleBoss KızgınGOBLİN;
 
-        private SimpleNpc m_helper = null;
+        private SimpleNpc TonyAMCA;
 
-        private SimpleNpc m_npc = null;
+        private SimpleNpc ZincirÇekiciKöleler;
 
-        private PhysicalObj m_specialEffect = null;
+        private PhysicalObj ElektrikliAlan;
 
-        private PhysicalObj m_dianEffect = null;
+        private PhysicalObj İlkEkipmanEfekti;
 
-        private PhysicalObj m_kingMoive;
+        private PhysicalObj İkinciEkipmanEfekti;
 
-        private PhysicalObj m_kingFront;
+        private PhysicalObj ÜçüncüEkipmanEfekti;
 
-        private int m_kill = 0;
+        private int OyunSonu;
 
-        private int bossId = 5201; //quypuchi
+        private int KızgınGoblin;
 
-        private int npcId1 = 5202; //nole
+        private int YardımcıKöle;
 
-        private int npcId2 = 5203; //banh rang
+        private int Zincir;
 
-        private int helperId = 5204; // nha tham hiem
+        private int TonyAmca;
 
-        private int m_map = 1151;
-
+        private int Harita;
 
         public override int CalculateScoreGrade(int score)
         {
@@ -64,62 +63,71 @@ namespace GameServerScript.AI.Messions
             base.Game.AddLoadingFile(2, "image/game/effect/5/xiaopao.swf", "asset.game.4.xiaopao");
             base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
             base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.gebulinzhihuiguanAsset");
-            int[] resources = { bossId, npcId1, npcId2, helperId };
-            base.Game.LoadResources(resources);
-            int[] gameOverResources = { bossId };
-            base.Game.LoadNpcGameOverResources(gameOverResources);
-            base.Game.SetMap(m_map);
+            int[] npcIDleri = new int[4]
+            {
+                KızgınGoblin,
+                YardımcıKöle,
+                Zincir,
+                TonyAmca
+            };
+            base.Game.LoadResources(npcIDleri);
+            int[] npcIDleri2 = new int[1]
+            {
+                KızgınGoblin
+            };
+            base.Game.LoadNpcGameOverResources(npcIDleri2);
+            base.Game.SetMap(Harita);
         }
 
         public override void OnStartGame()
         {
             base.OnStartGame();
-            m_kingMoive = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 1);
-            m_kingFront = base.Game.Createlayer(1172, 587, "front", "game.asset.living.gebulinzhihuiguanAsset", "out", 1, 1);
+            İkinciEkipmanEfekti = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 1);
+            ÜçüncüEkipmanEfekti = base.Game.Createlayer(1172, 587, "front", "game.asset.living.gebulinzhihuiguanAsset", "out", 1, 1);
             LivingConfig livingConfig = base.Game.BaseLivingConfig();
             livingConfig.IsFly = true;
-            m_boss = base.Game.CreateBoss(bossId, 1484, 750, -1, 1, "born", livingConfig);
-            base.Game.SendHideBlood(m_boss, 0);
+            KızgınGOBLİN = base.Game.CreateBoss(KızgınGoblin, 1484, 750, -1, 1, "born", livingConfig);
+            base.Game.SendHideBlood(KızgınGOBLİN, 0);
             livingConfig = base.Game.BaseLivingConfig();
             livingConfig.IsTurn = false;
-            m_helper = base.Game.CreateNpc(helperId, 1287, 859, 0, 1, livingConfig);
-            base.Game.SendHideBlood(m_helper, 0);
-            base.Game.SendObjectFocus(m_helper, 1, 700, 0);
-            m_helper.Say("Haha, ta thích cái máy này!", 0, 2000);
-            m_helper.MoveTo(1388, 867, "walk", 4000, StepAfterWalk);
+            TonyAMCA = base.Game.CreateNpc(TonyAmca, 1287, 859, 0, 1, livingConfig);
+            base.Game.SendHideBlood(TonyAMCA, 0);
+            base.Game.SendObjectFocus(TonyAMCA, 1, 700, 0);
+            TonyAMCA.Say("Ooo, bu malzemeler çok işimize yaricak!", 0, 2000);
+            TonyAMCA.MoveTo(1388, 867, "walk", 4000, TonyAmcaSaldırısı);
         }
 
-        private void StepAfterWalk()
+        private void TonyAmcaSaldırısı()
         {
-            m_specialEffect = base.Game.Createlayer(1470, 822, "", "asset.game.4.jinqud", "", 1, 1);
-            m_dianEffect = base.Game.Createlayer(m_helper.X, m_helper.Y, "", "asset.game.4.dian", "", 1, 1);
-            m_helper.PlayMovie("outA", 500, 2000);
-            m_helper.Die(2500);
-            m_boss.PlayMovie("in", 3000, 5000);
-            m_kingMoive.PlayMovie("in", 5000, 0);
-            m_kingFront.PlayMovie("in", 5200, 0);
-            m_kingMoive.PlayMovie("out", 8000, 0);
-            m_kingFront.PlayMovie("out", 8200, 0);
-            m_boss.CallFuction(CreateProtectNpc, 10000);
+            ElektrikliAlan = base.Game.Createlayer(1470, 822, "", "asset.game.4.jinqud", "", 1, 1);
+            İlkEkipmanEfekti = base.Game.Createlayer(TonyAMCA.X, TonyAMCA.Y, "", "asset.game.4.dian", "", 1, 1);
+            TonyAMCA.PlayMovie("outA", 500, 2000);
+            TonyAMCA.Die(2500);
+            KızgınGOBLİN.PlayMovie("in", 3000, 5000);
+            İkinciEkipmanEfekti.PlayMovie("in", 5000, 0);
+            ÜçüncüEkipmanEfekti.PlayMovie("in", 5200, 0);
+            İkinciEkipmanEfekti.PlayMovie("out", 8000, 0);
+            ÜçüncüEkipmanEfekti.PlayMovie("out", 8200, 0);
+            KızgınGOBLİN.CallFuction(KöleDoğumveÇekim, 10000);
         }
 
-        private void CreateProtectNpc()
+        private void KöleDoğumveÇekim()
         {
             LivingConfig livingConfig = base.Game.BaseLivingConfig();
             livingConfig.IsTurn = false;
             livingConfig.CanTakeDamage = false;
-            m_npc = base.Game.CreateNpc(npcId1, 187, 370, 1, 1, livingConfig);
-            base.Game.SendLivingActionMapping(m_npc, "stand", "standA");
-            base.Game.SendObjectFocus(m_npc, 1, 700, 0);
-            m_npc.PlayMovie("in", 1500, 10000);
-            m_npc.PlayMovie("walkA", 9000, 3000);
+            ZincirÇekiciKöleler = base.Game.CreateNpc(YardımcıKöle, 187, 370, 1, 1, livingConfig);
+            base.Game.SendLivingActionMapping(ZincirÇekiciKöleler, "stand", "standA");
+            base.Game.SendObjectFocus(ZincirÇekiciKöleler, 1, 700, 0);
+            ZincirÇekiciKöleler.PlayMovie("in", 1500, 10000);
+            ZincirÇekiciKöleler.PlayMovie("walkA", 9000, 3000);
         }
 
-        private void RemoveDianEffect()
+        private void KuşanılanlarıKaldır()
         {
-            if (m_dianEffect != null)
+            if (İlkEkipmanEfekti != null)
             {
-                base.Game.RemovePhysicalObj(m_dianEffect, sendToClient: true);
+                base.Game.RemovePhysicalObj(İlkEkipmanEfekti, true);
             }
         }
 
@@ -131,25 +139,25 @@ namespace GameServerScript.AI.Messions
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-            if (m_kingMoive != null)
+            if (İkinciEkipmanEfekti != null)
             {
-                base.Game.RemovePhysicalObj(m_kingMoive, sendToClient: true);
-                m_kingMoive = null;
+                base.Game.RemovePhysicalObj(İkinciEkipmanEfekti, true);
+                İkinciEkipmanEfekti = null;
             }
-            if (m_kingFront != null)
+            if (ÜçüncüEkipmanEfekti != null)
             {
-                base.Game.RemovePhysicalObj(m_kingFront, sendToClient: true);
-                m_kingFront = null;
+                base.Game.RemovePhysicalObj(ÜçüncüEkipmanEfekti, true);
+                ÜçüncüEkipmanEfekti = null;
             }
-            RemoveDianEffect();
+            KuşanılanlarıKaldır();
         }
 
         public override bool CanGameOver()
         {
             base.CanGameOver();
-            if (m_boss != null && !m_boss.IsLiving)
+            if (KızgınGOBLİN != null && !KızgınGOBLİN.IsLiving)
             {
-                m_kill++;
+                OyunSonu++;
                 return true;
             }
             if (base.Game.TurnIndex > 200)
@@ -162,13 +170,13 @@ namespace GameServerScript.AI.Messions
         public override int UpdateUIData()
         {
             base.UpdateUIData();
-            return m_kill;
+            return OyunSonu;
         }
 
         public override void OnGameOver()
         {
             base.OnGameOver();
-            if (m_boss != null && !m_boss.IsLiving)
+            if (KızgınGOBLİN != null && !KızgınGOBLİN.IsLiving)
             {
                 base.Game.IsWin = true;
             }
@@ -183,28 +191,37 @@ namespace GameServerScript.AI.Messions
             base.DoOther();
         }
 
-        private void CallActionEndGame()
+        private void OyunKazanlırsa()
         {
-            m_helper = base.Game.CreateNpc(helperId, 243, 368, 0, 1);
-            base.Game.SendObjectFocus(m_helper, 1, 0, 500);
-            m_helper.Say("Đừng có để hắn trốn thoát.", 0, 1000);
-            m_helper.Say("Grrr. Máy bị các ngươi làm hư cmnr.", 0, 3000, 2000);
+            TonyAMCA = base.Game.CreateNpc(TonyAmca, 243, 368, 0, 1);
+            base.Game.SendObjectFocus(TonyAMCA, 1, 0, 500);
+            TonyAMCA.Say("İşte şimdi bakabilirim bu EkipmanEfektilara!", 0, 1000);
+            TonyAMCA.Say("Haydi diğer etaba geçelim!", 0, 3000, 2000);
         }
 
         public override void OnShooted()
         {
             base.OnShooted();
-            if (m_boss != null && !m_boss.IsLiving)
+            if (KızgınGOBLİN != null && !KızgınGOBLİN.IsLiving)
             {
                 int waitTimerLeft = base.Game.GetWaitTimerLeft();
                 base.Game.ClearAllChild();
-                m_boss.CallFuction(CallActionEndGame, waitTimerLeft + 3000);
+                KızgınGOBLİN.CallFuction(OyunKazanlırsa, waitTimerLeft + 3000);
             }
         }
 
         public override void OnDied()
         {
             base.OnDied();
+        }
+
+        public DCR5201()
+        {
+            KızgınGoblin = 5201;
+            YardımcıKöle = 5202;
+            Zincir = 5203;
+            TonyAmca = 5204;
+            Harita = 1151;
         }
     }
 }

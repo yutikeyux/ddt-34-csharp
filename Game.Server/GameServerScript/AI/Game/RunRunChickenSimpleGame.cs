@@ -2,19 +2,18 @@ using Game.Logic.AI;
 
 namespace GameServerScript.AI.Game
 {
-    public class RunRunChickenSimpleGame : APVEGameControl
+    public class RunRunChickenSimpleGame : APVEGameControl //civciv kolay
     {
         public override void OnCreated()
         {
 			base.OnCreated();
-			base.Game.SetupMissions("7001,7004");
-			base.Game.TotalMissionCount = 2;
+			base.Game.SetupMissions("7001,7004"); //civciv kolay misson id leri etap 1 ve etap 2
+            base.Game.TotalMissionCount = 2; //etap sayısı 2
         }
 
         public override void OnPrepated()
         {
 			base.OnPrepated();
-			//base.Game.SessionId = 0;
         }
 
         public override int CalculateScoreGrade(int score)

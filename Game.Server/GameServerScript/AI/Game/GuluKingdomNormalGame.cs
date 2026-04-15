@@ -2,19 +2,18 @@ using Game.Logic.AI;
 
 namespace GameServerScript.AI.Game
 {
-    public class GuluKingdomNormalGame : APVEGameControl
+    public class GuluKingdomNormalGame : APVEGameControl //bogo normal
     {
         public override void OnCreated()
         {
 			base.OnCreated();
-			base.Game.SetupMissions("1171,1172,1173");
-			base.Game.TotalMissionCount = 3;
+			base.Game.SetupMissions("1171,1172,1173"); //bogo normal misson id leri etap 1, etap 2 ve etap 3
+            base.Game.TotalMissionCount = 3; //etap sayısı 3
         }
 
         public override void OnPrepated()
         {
 			base.OnPrepated();
-			//base.Game.SessionId = 0;
         }
 
         public override int CalculateScoreGrade(int score)

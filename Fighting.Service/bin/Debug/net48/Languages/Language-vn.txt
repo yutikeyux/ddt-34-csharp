@@ -1,4 +1,4 @@
-#中文包 
+﻿#中文包 
 Game.Server.Hello: Merhaba. 
 
 #协议包中的就不加命名空间前缀 
@@ -3672,8 +3672,8 @@ ItemReclaimHandler.Success2:Kazandığınız {0} altın.
 ItemReclaimHandler.NotSuccess: Satış başarısız.
 PVPGame.SendGameOVer.Msg1:Oyun bitti, elde ettiniz: {0} kupon 
 PVPGame.SendGameOVer.Msg2:Etkinlikten {0} tanrı savaş sonrası komutu aldınız.?
-PVPGame.SendGameOVer.Msg3:Oyun bitti. Yendiniz, {0} prestij kazandınız.
-PVPGame.SendGameOVer.Msg4:Oyun bitti. Kaybettiniz, {0} prestij kazandınız.
+PVPGame.SendGameOVer.Msg3:Oyun bitti. Yendiniz, {0} prestij kazandınız. Kalan Lig Hakkınız: {1}
+PVPGame.SendGameOVer.Msg4:Oyun bitti. Kaybettiniz, {0} prestij kazandınız. Kalan Lig Hakkınız: {1}
 PVPGame.SendGameOVer.Msg5:Sunucu hatası.
 PVPGame.SendGameOVer.Msg6:Mücadeleyi kazandınız ve {0} onursal madalya ödülü kazandınız!
 PVPGame.SendGameOVer.Msg7:Mücadeleyi kaybettiniz, {0} onursal madalya ödülü kazandınız!

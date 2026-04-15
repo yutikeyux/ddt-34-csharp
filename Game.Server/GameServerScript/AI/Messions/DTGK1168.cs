@@ -1,32 +1,48 @@
-using Game.Logic;
 using Game.Logic.AI;
+using Game.Logic.Effects;
 using Game.Logic.Phy.Object;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace GameServerScript.AI.Messions
 {
     public class DTGK1168 : AMissionControl
     {
-        private SimpleBoss m_trongtai;
+        private SimpleBoss simpleBoss_0;
 
-        private SimpleNpc m_fan;
+        private PhysicalObj physicalObj_0;
 
-        private PhysicalObj m_kingMoive;
+        private PhysicalObj physicalObj_1;
 
-        private PhysicalObj m_front;
+        private PhysicalObj physicalObj_2;
 
-        private int IsSay = 0;
+        private int int_0;
 
-        private int m_trongtaiID = 6241;//trong tai coi den
+        private int int_1;
 
-        private int m_khienID = 6244;//khien cuatrong tai coi den
+        private int int_2;
 
-        private int m_fanID = 6234;//Fan
+        private int int_3;
 
-        private static string[] m_shootedChat = new string[]
-        {
-            "Ây da!",
-            "Ai cho phép mang vũ khí vào đâyy!"
-        };
+        private int wdEwCpwbXoN;
+
+        private int int_4;
+
+        private int int_5;
+
+        private int int_6;
+
+        private PhysicalObj physicalObj_3;
+
+        private PhysicalObj physicalObj_4;
+
+        private PhysicalObj physicalObj_5;
+
+        private static string[] string_0;
+
+        private static string[] string_1;
+
+        private Point[] point_0;
 
         public override int CalculateScoreGrade(int score)
         {
@@ -35,76 +51,56 @@ namespace GameServerScript.AI.Messions
             {
                 return 3;
             }
-            else if (score > 825)
+            if (score > 825)
             {
                 return 2;
             }
-            else if (score > 725)
+            if (score > 725)
             {
                 return 1;
             }
-            else
-            {
-                return 0;
-            }
+            return 0;
         }
 
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-            Game.AddLoadingFile(1, "bombs/61.swf", "tank.resource.bombs.Bomb61");
-            Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
-            Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.bogucaipanAsset");
-            Game.AddLoadingFile(2, "image/game/effect/6/popcan.swf", "asset.game.six.popcan");
-            Game.AddLoadingFile(2, "image/game/effect/6/popcan.swf", "asset.game.six.aup");
-            Game.AddLoadingFile(2, "image/game/effect/6/popcan.swf", "asset.game.six.pup");
-            Game.AddLoadingFile(2, "image/game/effect/6/redcircle.swf", "asset.game.six.redcircle");
-            Game.AddLoadingFile(2, "image/game/effect/6/bluecircle.swf", "asset.game.six.bluecircle");
-            Game.AddLoadingFile(2, "image/game/effect/6/greencircle.swf", "asset.game.six.greencircle");
-            Game.AddLoadingFile(2, "image/game/effect/6/chang.swf", "asset.game.six.chang");
-            Game.AddLoadingFile(2, "image/game/effect/6/popcan.swf", "popcan_fla.qusan_8");
-            int[] resources = { m_fanID, m_trongtaiID, m_khienID };
-            Game.LoadResources(resources);
-            Game.LoadNpcGameOverResources(resources);
-            Game.SetMap(1168);
+            base.Game.AddLoadingFile(1, "bombs/61.swf", "tank.resource.bombs.Bomb61");
+            base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
+            base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.bogucaipanAsset");
+            base.Game.AddLoadingFile(2, "image/game/effect/6/chang.swf", "asset.game.six.chang");
+            base.Game.AddLoadingFile(2, "image/game/effect/6/bluecircle.swf", "asset.game.six.bluecircle");
+            base.Game.AddLoadingFile(2, "image/game/effect/6/greencircle.swf", "asset.game.six.greencircle");
+            base.Game.AddLoadingFile(2, "image/game/effect/6/redcircle.swf", "asset.game.six.redcircle");
+            int[] npcIds = new int[3]
+            {
+                int_1,
+                int_2,
+                int_3
+            };
+            base.Game.LoadResources(npcIds);
+            base.Game.LoadNpcGameOverResources(npcIds);
+            base.Game.SetMap(1168);
         }
 
-        public override void OnPrepareStartGame()
-        {
-            base.OnPrepareStartGame();
-            //fan
-            LivingConfig fan = Game.BaseLivingConfig();
-            fan.IsTurn = false;
-            fan.isShowBlood = false;
-            fan.IsFly = true;
-            fan.isShowSmallMapPoint = false;
-            fan.CanTakeDamage = false;
-            m_fan = Game.CreateNpc(m_fanID, Game.Map.Info.DeadWidth / 2 - 3, Game.Map.Info.DeadHeight / 2 - 80, 0, -1, fan);
-            m_fan.PlayMovie("stand", 0, 0);
-            m_kingMoive = Game.Createlayer(0, 0, "kingmoive", "game.asset.living.BossBgAsset", "", 1, 1);
-            m_front = Game.Createlayer(1190, 770, "font", "game.asset.living.bogucaipanAsset", "", 1, 1);
-            //trong tai coi den
-            LivingConfig trongtai = Game.BaseLivingConfig();
-            trongtai.isShowBlood = false;
-            m_trongtai = Game.CreateBoss(m_trongtaiID, 1270, 975, 1, 1, "", trongtai);
-            m_trongtai.PlayMovie("shengqi", 0, 0);
-            m_trongtai.DoAction = 2;
-            Game.SendHideBlood(m_trongtai, 0);
-        }
         public override void OnStartGame()
         {
             base.OnStartGame();
-            m_trongtai.PlayMovie("xialai", 1500, 0);
-            m_trongtai.Properties1 = 1;
-            m_trongtai.CallFuction(Layer, 6000);
-        }
-        private void Layer()
-        {
-            m_kingMoive.PlayMovie("out", 0, 0);
-            m_front.PlayMovie("out", 0, 0);
-            m_kingMoive.PlayMovie("in", 1000, 0);
-            m_front.PlayMovie("in", 2000, 2000);
-
+            physicalObj_2 = base.Game.Createlayer(1250, 520, "moive", "game.living.Living189", "", 1, 0);
+            physicalObj_1 = base.Game.Createlayer(0, 0, "moive", "game.asset.living.BossBgAsset", "out", 1, 0);
+            physicalObj_0 = base.Game.Createlayer(1081, 700, "front", "game.asset.living.bogucaipanAsset", "out", 1, 0);
+            simpleBoss_0 = base.Game.CreateBoss(int_1, 1250, 1000, -1, 1, "born");
+            simpleBoss_0.FallFrom(simpleBoss_0.X, simpleBoss_0.Y, "", 0, 0, 1000);
+            simpleBoss_0.SetRect(-70, -110, 130, 116);
+            simpleBoss_0.SetRelateDemagemRect(-10, -80, 30, 90);
+            base.Game.SendGameFocus(1245, 520, 1, 0, 3000);
+            simpleBoss_0.Say("Bu aptallar beni taklit etmeye mi cüret ediyorlar? Size neler yapabileceğimi göstereceğim.", 0, 3100);
+            simpleBoss_0.PlayMovie("shengqi", 1000, 2000);
+            simpleBoss_0.PlayMovie("xialai", 2000, 3000);
+            physicalObj_1.PlayMovie("in", 6000, 0);
+            physicalObj_0.PlayMovie("in", 6100, 0);
+            physicalObj_1.PlayMovie("out", 9000, 0);
+            physicalObj_0.PlayMovie("out", 9100, 0);
         }
 
         public override void OnNewTurnStarted()
@@ -115,48 +111,118 @@ namespace GameServerScript.AI.Messions
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-            Game.SendHideBlood(m_fan, 0);
-
-            if (m_kingMoive != null)
+            if (base.Game.CurrentTurnLiving is SimpleBoss)
             {
-                Game.RemovePhysicalObj(m_kingMoive, true);
-                m_kingMoive = null;
+                if (physicalObj_3 != null && wdEwCpwbXoN > 0)
+                {
+                    wdEwCpwbXoN--;
+                    method_1();
+                }
+                else
+                {
+                    method_0();
+                }
             }
-            if (m_front != null)
-            {
-                Game.RemovePhysicalObj(m_front, true);
-                m_front = null;
-            }
+            int_0 = 0;
+        }
 
-            IsSay = 0;
+        private void method_0()
+        {
+            if (physicalObj_3 != null)
+            {
+                base.Game.RemovePhysicalObj(physicalObj_3, true);
+                base.Game.RemovePhysicalObj(physicalObj_4, true);
+                base.Game.RemovePhysicalObj(physicalObj_5, true);
+            }
+            List<Point> list = new List<Point>();
+            Point[] array = point_0;
+            foreach (Point item in array)
+            {
+                list.Add(item);
+            }
+            int index = base.Game.Random.Next(list.Count);
+            physicalObj_3 = base.Game.Createlayer(list[index].X, list[index].Y, "moive", "asset.game.six.greencircle", "", 1, 0);
+            list.RemoveAt(index);
+            index = base.Game.Random.Next(list.Count);
+            physicalObj_4 = base.Game.Createlayer(list[index].X, list[index].Y, "moive", "asset.game.six.bluecircle", "", 1, 0);
+            list.RemoveAt(index);
+            index = base.Game.Random.Next(list.Count);
+            physicalObj_5 = base.Game.Createlayer(list[index].X, list[index].Y, "moive", "asset.game.six.redcircle", "", 1, 0);
+        }
+
+        private void method_1()
+        {
+            if (physicalObj_3 != null && physicalObj_4 != null && physicalObj_5 != null)
+            {
+                List<Player> list = new List<Player>();
+                foreach (Player allFightPlayer in base.Game.GetAllFightPlayers())
+                {
+                    if (allFightPlayer.IsLiving && allFightPlayer.X > physicalObj_3.X - 100 && allFightPlayer.X < physicalObj_3.X + 100)
+                    {
+                        list.Add(allFightPlayer);
+                    }
+                }
+                if (list.Count > 0)
+                {
+                    foreach (Player item in list)
+                    {
+                        item.AddEffect(new AddBloodTurnEffect(int_6, 1), 0);
+                    }
+                }
+                list = new List<Player>();
+                foreach (Player allFightPlayer2 in base.Game.GetAllFightPlayers())
+                {
+                    if (allFightPlayer2.IsLiving && allFightPlayer2.X > physicalObj_4.X - 100 && allFightPlayer2.X < physicalObj_4.X + 100)
+                    {
+                        list.Add(allFightPlayer2);
+                    }
+                }
+                if (list.Count > 0)
+                {
+                    foreach (Player item2 in list)
+                    {
+                        item2.AddEffect(new AddGuardEquipEffect(int_5, 1, isArrmor: false), 0);
+                    }
+                }
+                list = new List<Player>();
+                foreach (Player allFightPlayer3 in base.Game.GetAllFightPlayers())
+                {
+                    if (allFightPlayer3.IsLiving && allFightPlayer3.X > physicalObj_5.X - 100 && allFightPlayer3.X < physicalObj_5.X + 100)
+                    {
+                        list.Add(allFightPlayer3);
+                    }
+                }
+                if (list.Count > 0)
+                {
+                    foreach (Player item3 in list)
+                    {
+                        item3.AddEffect(new AddDamageTurnEffect(int_4, 1), 0);
+                    }
+                }
+            }
         }
 
         public override bool CanGameOver()
         {
             base.CanGameOver();
-
-            if (Game.TurnIndex > Game.MissionInfo.TotalTurn - 1)
+            if (base.Game.TurnIndex > base.Game.MissionInfo.TotalTurn - 1)
             {
                 return true;
             }
-
-            if (m_trongtai.IsLiving == false)
+            if (!simpleBoss_0.IsLiving)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public override int UpdateUIData()
         {
-
-            if (m_trongtai == null)
+            if (simpleBoss_0 == null)
+            {
                 return 0;
-
-            if (m_trongtai.IsLiving == false)
+            }
+            if (!simpleBoss_0.IsLiving)
             {
                 return 1;
             }
@@ -166,15 +232,50 @@ namespace GameServerScript.AI.Messions
         public override void OnGameOver()
         {
             base.OnGameOver();
-
-            if (m_trongtai.IsLiving == false)
+            if (!simpleBoss_0.IsLiving)
             {
-                Game.IsWin = true;
+                base.Game.IsWin = true;
             }
             else
             {
-                Game.IsWin = false;
+                base.Game.IsWin = false;
             }
+        }
+
+        public DTGK1168()
+        {
+
+            int_1 = 6241;
+            int_2 = 6243;
+            int_3 = 6244;
+            wdEwCpwbXoN = 4;
+            int_4 = 100;
+            int_5 = 20;
+            int_6 = 1000;
+            point_0 = new Point[4]
+            {
+                new Point(663, 1000),
+                new Point(876, 1000),
+                new Point(1267, 1000),
+                new Point(1653, 1000)
+            };
+
+        }
+
+        static DTGK1168()
+        {
+
+            string_0 = new string[2]
+            {
+               "Beni eve gönderin!",
+
+                 "Tek başına, beni yenebileceğin yanılsamasına mı kapılıyorsun?"
+            };
+            string_1 = new string[2]
+            {
+               "Acıyor sevgilim! Acıyor...",
+                "Yaşasın Kral..."
+            };
         }
     }
 }

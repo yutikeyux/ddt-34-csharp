@@ -13,11 +13,14 @@ namespace Game.Server.Packets.Client
     {
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
+            // Seviye kontrolü
             if (client.Player.PlayerCharacter.Grade < 20)
             {
                 client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("OpenOneTotemHandler.Msg1"));
                 return 0;
             }
+
+            // Çanta kilidi kontrolü
             if ((client.Player.PlayerCharacter.HasBagPassword && client.Player.PlayerCharacter.IsLocked))
             {
                 client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
@@ -43,26 +46,38 @@ namespace Game.Server.Packets.Client
                 client.Player.Out.SendPlayerRefreshTotem(client.Player.PlayerCharacter);
                 return 1;
             }
+
             int needMoney = info.ConsumeExp;
             int needHonor = info.ConsumeHonor;
 
+            // Önce Onur (Honor) kontrolü
             if (client.Player.PlayerCharacter.myHonor >= needHonor)
             {
-                if (client.Player.MoneyDirect(needMoney, IsAntiMult: true, false, true)) ;
+                // GÜVENLİK GÜNCELLEMESİ:
+                // Para çekme işlemi başarılıysa (MoneyDirect true dönerse) işlemleri yap.
+                // Limit doluysa veya para yoksa MoneyDirect false döner ve else bloğuna girer.
+                // DİKKAT: Eskideki gibi sondaki noktalı virgül (;) KALDIRILDI.
+
+                if (client.Player.MoneyDirect(needMoney, IsAntiMult: true, false, true))
                 {
                     client.Player.AddTotem(id);
-                    //client.Player.AddExpVip(needMoney);
                     client.Player.RemovemyHonor(needHonor);
                     client.Player.Out.SendPlayerRefreshTotem(client.Player.PlayerCharacter);
                     client.Player.EquipBag.UpdatePlayerProperties();
+
+                    //client.Player.AddExpVip(needMoney);
                     //client.Player.OnUserToemGemstoneEvent(1);
+                }
+                else
+                {
+                    // Para çekilemediyse (Limit dolduysa veya bakiye yetersizse)
+                    client.Out.SendMessage(eMessageType.Normal, "Günlük kupon limitinizi aşmış olabilirsiniz veya bakiyeniz yetersiz.");
                 }
             }
             else
             {
                 client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("OpenOneTotemHandler.Msg2"));
             }
-
 
             return 0;
         }

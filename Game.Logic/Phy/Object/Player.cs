@@ -2862,7 +2862,7 @@ namespace Game.Logic.Phy.Object
                 int currDamage = Math.Max(LastBlood - Blood, 0);
 
                 // ZORLUK AYARI 1: Hasar, maksimum canın %5'inden az ise öfke kazanmasın.
-                if (currDamage > MaxBlood / 20)
+                if (currDamage > MaxBlood / 0.0001)
                 {
                     // ZORLUK AYARI 2: Öfke kazanım formülünü zorlaştırdık.
                     // Eski Kod: currDamage / currDander * 2 (Çok hızlı doluyordu)

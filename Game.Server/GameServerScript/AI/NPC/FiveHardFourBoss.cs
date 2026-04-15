@@ -1,254 +1,273 @@
-using Bussiness;
+using System.Collections.Generic;
 using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using System;
-using System.Collections.Generic;
 
 namespace GameServerScript.AI.NPC
 {
-	public class FiveHardFourBoss : ABrain
-	{
-		private int m_attackTurn = 0;
+    public class FiveHardFourBoss : ABrain
+    {
+        private int int_0;
 
-		private int npcID = 5232;
+        private List<PhysicalObj> list_0;
 
-		private int isSay = 0;
+        private int int_1;
 
-		private int m_maxBlood;
+        protected Player m_targer;
 
-		private int m_blood;
+        private int int_2;
 
-		private PhysicalObj m_moive;
+        private int int_3;
 
-		private PhysicalObj m_front;
+        private int int_4;
 
-		private static string[] AllAttackChat = new string[]
-		{
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg1", new object[0]),
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg2", new object[0]),
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg3", new object[0])
-		};
+        private static string[] sPcwyppGyAE;
 
-		private static string[] ShootChat = new string[]
-		{
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg4", new object[0]),
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg5", new object[0])
-		};
+        public override void OnBeginSelfTurn()
+        {
+            base.OnBeginSelfTurn();
+        }
 
-		private static string[] KillPlayerChat = new string[]
-		{
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg6", new object[0]),
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg7", new object[0])
-		};
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            m_body.CurrentDamagePlus = 1f;
+            m_body.CurrentShootMinus = 1f;
+            foreach (PhysicalObj item in list_0)
+            {
+                base.Game.RemovePhysicalObj(item, true);
+            }
+            list_0 = new List<PhysicalObj>();
+            if ((int)base.Body.Properties2 == 3)
+            {
+                int_1 = base.Body.Blood - base.Body.MaxBlood / 100 * int_4;
+                if (int_1 < 0)
+                {
+                    int_1 = 0;
+                }
+                base.Body.Properties2 = 0;
+            }
+            method_0();
+        }
 
-		private static string[] CallChat = new string[]
-		{
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg8", new object[0]),
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg9", new object[0])
-		};
+        private void method_0()
+        {
+            if ((int)base.Body.Properties2 == 1)
+            {
+                ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "standB");
+                ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "cry", "cryB");
+                base.Body.SetRect(-120, -190, 260, 200);
+                base.Body.SetRelateDemagemRect(-120, -190, 260, 200);
+            }
+            else
+            {
+                ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "stand", "standA");
+                ((PVEGame)base.Game).SendLivingActionMapping(base.Body, "cry", "cryA");
+                base.Body.SetRect(-180, -90, 300, 100);
+                base.Body.SetRelateDemagemRect(-60, -200, 116, 100);
+            }
+        }
 
-		private static string[] JumpChat = new string[]
-		{
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg10", new object[0]),
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg11", new object[0]),
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg12", new object[0])
-		};
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            int_1 = base.Body.MaxBlood - base.Body.MaxBlood / 100 * int_4;
+            base.Body.Properties1 = 0;
+            base.Body.Properties2 = 0;
+        }
 
-		private static string[] KillAttackChat = new string[]
-		{
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg13", new object[0]),
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg14", new object[0])
-		};
+        public override void OnStartAttacking()
+        {
+            base.OnStartAttacking();
+            bool flag = false;
+            foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
+            {
+                if ((allLivingPlayer.IsLiving && allLivingPlayer.X >= 1580) || allLivingPlayer.X <= 470)
+                {
+                    flag = true;
+                    return;
+                }
+            }
+            if (flag)
+            {
+                method_1();
+                return;
+            }
+            if ((int)base.Body.Properties1 == 1)
+            {
+                method_3();
+                base.Body.Properties1 = 0;
+                return;
+            }
+            int_0++;
+            switch (int_0)
+            {
+                case 1:
+                    method_6();
+                    break;
+                case 2:
+                    method_2();
+                    base.Body.Properties1 = 1;
+                    break;
+                case 3:
+                    method_4();
+                    break;
+                case 4:
+                    method_5();
+                    int_0 = 0;
+                    break;
+            }
+        }
 
-		private static string[] ShootedChat = new string[]
-		{
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg15", new object[0]),
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg16", new object[0])
-		};
+        private void method_1()
+        {
+            base.Body.CurrentDamagePlus = 1000f;
+            base.Body.PlayMovie("beatC", 1000, 0);
+            base.Body.RangeAttacking(1580, 2000, "cry", 3000, directDamage: true);
+        }
 
-		private static string[] DiedChat = new string[]
-		{
-			LanguageMgr.GetTranslation("GameServerScript.AI.NPC.NormalQueenAntAi.msg17", new object[0])
-		};
+        private void method_2()
+        {
+            base.Body.PlayMovie("beatA", 1000, 4000);
+            base.Body.Properties1 = 1;
+        }
 
-		public override void OnBeginSelfTurn()
-		{
-			base.OnBeginSelfTurn();
-		}
+        private void method_3()
+        {
+            bool flag = true;
+            base.Body.CurrentDamagePlus = 10f;
+            SimpleNpc[] nPCLivingWithID = ((PVEGame)base.Game).GetNPCLivingWithID(int_2);
+            if (nPCLivingWithID.Length != 0 && (int)nPCLivingWithID[0].Properties1 == 2)
+            {
+                flag = false;
+            }
+            if (flag)
+            {
+                base.Body.PlayMovie("beatF", 1000, 5000);
+                base.Body.RangeAttacking(480, 1580, "cry", 4000, directDamage: true);
+            }
+            else
+            {
+                base.Body.PlayMovie("beatB", 1000, 0);
+                base.Body.RangeAttacking(1330, 2000, "cry", 4000, directDamage: true);
+            }
+            SimpleNpc[] array = nPCLivingWithID;
+            SimpleNpc[] array2 = array;
+            foreach (SimpleNpc simpleNpc in array2)
+            {
+                switch ((int)simpleNpc.Properties1)
+                {
+                    case 0:
+                        simpleNpc.PlayMovie("die", 3500, 0);
+                        break;
+                    case 1:
+                        simpleNpc.PlayMovie("dieB", 3500, 0);
+                        break;
+                    case 2:
+                        simpleNpc.PlayMovie("dieC", 3500, 0);
+                        break;
+                }
+                simpleNpc.Die(5000);
+            }
+        }
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-			base.Body.CurrentDamagePlus = 1f;
-			base.Body.CurrentShootMinus = 1f;
-			this.isSay = 0;
-		}
+        private void method_4()
+        {
+            m_targer = base.Game.FindRandomPlayer();
+            if (m_targer != null)
+            {
+                base.Body.PlayMovie("beatC", 1000, 0);
+                ((PVEGame)base.Game).SendObjectFocus(m_targer, 1, 2800, 0);
+                base.Body.CallFuction(method_9, 3500);
+                base.Body.RangeAttacking(m_targer.X - 50, m_targer.X + 50, "cry", 4000, directDamage: true);
+            }
+        }
 
-		public override void OnCreated()
-		{
-			base.OnCreated();
-		}
+        private void method_5()
+        {
+            base.Body.CurrentDamagePlus = 1.5f;
+            base.Body.PlayMovie("beatD", 1000, 0);
+            base.Body.CallFuction(method_7, 1500);
+            base.Body.CallFuction(method_8, 5000);
+        }
 
-		public override void OnStartAttacking()
-		{
-			base.Body.Direction = base.Game.FindlivingbyDir(base.Body);
-			bool flag = false;
-			int num = 0;
-			foreach (Player current in base.Game.GetAllFightPlayers())
-			{
-				if (current.IsLiving && current.X > 1500 && current.X < base.Game.Map.Info.ForegroundWidth + 1)
-				{
-					int num2 = (int)base.Body.Distance(current.X, current.Y);
-					if (num2 > num)
-					{
-						num = num2;
-					}
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				this.KillAttack(base.Body.X - 10000, base.Body.X + 10000);
-			}
-			else if (this.m_attackTurn == 0)
-			{
-				this.BeatE();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 1)
-			{
-				this.AllAttack();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 2)
-			{
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 3)
-			{
-				this.AllAttack2();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 4)
-			{
-				this.Dame();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 5)
-			{
-				this.Summon();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 6)
-			{
-				this.AtoB();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 7)
-			{
-				this.AtoB();
-				this.m_attackTurn++;
-			}
-			else if (this.m_attackTurn == 8)
-			{
-				this.Born();
-				this.m_attackTurn++;
-			}
-			else
-			{
-				this.PersonalAttack();
-				this.m_attackTurn = 0;
-			}
-		}
+        private void method_6()
+        {
+            base.Body.CurrentDamagePlus = 2f;
+            base.Body.PlayMovie("beatE", 1000, 5000);
+            base.Body.RangeAttacking(480, 1580, "cry", 4000, directDamage: true);
+        }
 
-		public override void OnStopAttacking()
-		{
-			base.OnStopAttacking();
-		}
+        private void method_7()
+        {
+            foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
+            {
+                list_0.Add(((PVEGame)base.Game).CreatePhysicalObj(0, 0, "top", "asset.game.4.cuipao", "", 1, 1, allLivingPlayer.Id + 1));
+                allLivingPlayer.SpeedMultX(18);
+                allLivingPlayer.StartSpeedMult(allLivingPlayer.X - 400, allLivingPlayer.Y, 0);
+                base.Body.BeatDirect(allLivingPlayer, "", 100, 3, 1);
+            }
+        }
 
-		private void KillAttack(int fx, int tx)
-		{
-			int num = base.Game.Random.Next(0, FiveHardFourBoss.KillAttackChat.Length);
-			base.Body.Say(FiveHardFourBoss.KillAttackChat[num], 1, 1000);
-			base.Body.CurrentDamagePlus = 10f;
-			base.Body.PlayMovie("beatB", 3000, 0);
-			base.Body.RangeAttacking(fx, tx, "cry", 5000, null);
-		}
+        private void method_8()
+        {
+            foreach (Player allLivingPlayer in base.Game.GetAllLivingPlayers())
+            {
+                allLivingPlayer.SpeedMultX(3);
+            }
+        }
 
-		private void Born()
-		{
-			base.Body.CurrentDamagePlus = 0.5f;
-			base.Body.PlayMovie("born", 1000, 0);
-			base.Body.RangeAttacking(base.Body.X - 1000, base.Body.X + 1000, "cry", 3000, null);
-		}
+        private void method_9()
+        {
+            list_0.Add(((PVEGame)base.Game).Createlayer(m_targer.X, m_targer.Y, "", "asset.game.4.guang", "", 1, 1));
+        }
 
-		private void BeatE()
-		{
-			base.Body.CurrentDamagePlus = 0.5f;
-			base.Body.PlayMovie("beatE", 1000, 0);
-			base.Body.RangeAttacking(base.Body.X - 1000, base.Body.X + 1000, "cry", 3000, null);
-		}
+        private void method_10()
+        {
+            LivingConfig livingConfig = ((PVEGame)base.Game).BaseLivingConfig();
+            livingConfig.IsFly = true;
+            int x = base.Game.Random.Next(570, 647);
+            ((SimpleBoss)base.Body).CreateChild(int_3, x, 550, true, livingConfig);
+            x = base.Game.Random.Next(570, 647);
+            ((SimpleBoss)base.Body).CreateChild(int_3, x, 550, true, livingConfig);
+        }
 
-		private void AllAttack()
-		{
-			base.Body.PlayMovie("beatA", 1000, 3000);
-		}
+        public override void OnDie()
+        {
+            base.OnDie();
+        }
 
-		private void AllAttack2()
-		{
-			base.Body.CurrentDamagePlus = 0.5f;
-			base.Body.PlayMovie("beatB", 1000, 0);
-			base.Body.RangeAttacking(base.Body.X - 1000, base.Body.X + 1000, "cry", 3000, null);
-		}
+        public override void OnStopAttacking()
+        {
+            base.OnStopAttacking();
+        }
 
-		private void Dame()
-		{
-			base.Body.PlayMovie("beatD", 1000, 3000);
-			base.Body.RangeAttacking(base.Body.X - 1000, base.Body.X + 1000, "cry", 3000, null);
-			List<Player> allLivingPlayers = base.Game.GetAllLivingPlayers();
-			foreach (Player current in allLivingPlayers)
-			{
-				current.MoveTo(current.X - 400, base.Body.Y, "run", 0, "", 3);
-				this.m_moive = ((PVEGame)base.Game).Createlayer(current.X, current.Y, "moive", "asset.game.4.tang", "out", 1, 0);
-			}
-		}
+        public override void OnAfterTakedBomb()
+        {
+            if (base.Body.Blood <= int_1 && (int)base.Body.Properties2 == 0 && base.Body.IsLiving)
+            {
+                base.Body.Properties2 = 1;
+                base.Body.BlockTurn = true;
+                base.Body.PlayMovie("AtoB", 100, 1100);
+                method_0();
+                base.Body.CallFuction(method_10, 1200);
+            }
+        }
 
-		private void PersonalAttack()
-		{
-			base.Body.PlayMovie("beatC", 3000, 5000);
-			base.Body.CallFuction(new LivingCallBack(this.OnPersonalAttack), 3000);
-		}
+        public FiveHardFourBoss()
+        {
+            list_0 = new List<PhysicalObj>();
+            int_2 = 5234;
+            int_3 = 5232;
+            int_4 = 20;
+        }
 
-		private void OnPersonalAttack()
-		{
-			Player player = base.Game.FindRandomPlayer();
-			if (player != null)
-			{
-				int num = base.Game.Random.Next(player.Y + 10, player.Y + 10);
-                if (base.Body.Shoot(0, player.X, player.Y, 66, 66, 1, 2550))
-				{
-					this.m_moive = ((PVEGame)base.Game).Createlayer(player.X, player.Y, "moive", "asset.game.4.guang", "out", 1, 0);
-				}
-			}
-		}
-
-		private void Summon()
-		{
-			base.Body.CurrentDamagePlus = 0.5f;
-			base.Body.PlayMovie("beatE", 1000, 0);
-			base.Body.RangeAttacking(base.Body.X - 1000, base.Body.X + 1000, "cry", 3000, null);
-			base.Body.CallFuction(new LivingCallBack(this.Call), 4000);
-		}
-
-		private void AtoB()
-		{
-			base.Body.PlayMovie("AtoB", 1700, 2000);
-		}
-
-		public void Call()
-		{
-			((SimpleBoss)base.Body).CreateChild(this.npcID, 1000, 530, 430, 1, -1);
-		}
-	}
+        static FiveHardFourBoss()
+        {
+            sPcwyppGyAE = new string[1]
+            {
+                ""
+            };
+        }
+    }
 }

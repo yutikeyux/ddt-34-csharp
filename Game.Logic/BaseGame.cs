@@ -177,18 +177,24 @@ namespace Game.Logic
 			}
 		}
 
-		public int PlayerCount
-		{
-			get
-			{
-				lock (m_players)
-				{
-					return m_players.Count;
-				}
-			}
-		}
+        public int PlayerCount
+        {
+            get
+            {
+                lock (m_players)
+                {
+                    int count = 0;
+                    foreach (Player p in m_players.Values)
+                    {
+                        if (!p.PlayerDetail.IsViewer)
+                            count++;
+                    }
+                    return count;
+                }
+            }
+        }
 
-		public bool IsWrong
+        public bool IsWrong
 		{
 			get
 			{
@@ -1246,17 +1252,20 @@ namespace Game.Logic
 			}
 		}
 
-		public List<Player> GetAllFightPlayers()
-		{
-			List<Player> list = new List<Player>();
-			lock (m_players)
-			{
-				list.AddRange(m_players.Values);
-			}
-
-			return list;
-		}
-		public List<Player> GetAllFightingPlayers()
+        public List<Player> GetAllFightPlayers()
+        {
+            List<Player> list = new List<Player>();
+            lock (m_players)
+            {
+                foreach (Player p in m_players.Values)
+                {
+                    if (!p.PlayerDetail.IsViewer)
+                        list.Add(p);
+                }
+            }
+            return list;
+        }
+        public List<Player> GetAllFightingPlayers()
 		{
 			List<Player> list = new List<Player>();
 			lock (m_players)
@@ -3075,22 +3084,25 @@ namespace Game.Logic
 			SendToAll(pkg, null);
 		}
 
-		public virtual void SendToAll(GSPacketIn pkg, IGamePlayer except)
-		{
-			if (pkg.Parameter2 == 0)
-			{
-				pkg.Parameter2 = LifeTime;
-			}
-			foreach (Player pp in GetAllFightPlayers())
-			{
-				if (pp.IsActive && pp.PlayerDetail != except)
-				{
-					pp.PlayerDetail.SendTCP(pkg);
-				}
-			}
-		}
+        public virtual void SendToAll(GSPacketIn pkg, IGamePlayer except)
+        {
+            if (pkg.Parameter2 == 0)
+            {
+                pkg.Parameter2 = LifeTime;
+            }
+            lock (m_players)
+            {
+                foreach (Player pp in m_players.Values)
+                {
+                    if (pp.IsActive && pp.PlayerDetail != except)
+                    {
+                        pp.PlayerDetail.SendTCP(pkg);
+                    }
+                }
+            }
+        }
 
-		public virtual void SendToTeam(GSPacketIn pkg, int team)
+        public virtual void SendToTeam(GSPacketIn pkg, int team)
 		{
 			SendToTeam(pkg, team, null);
 		}

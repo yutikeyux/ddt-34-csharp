@@ -23,7 +23,7 @@ namespace SqlDataProvider.BaseClass
 			switch (Path_Source)
 			{
 			case "AppConfig":
-				_SqlConnection = new SqlConnection(ConfigurationSettings.AppSettings[Conn_DB]);
+				_SqlConnection = new SqlConnection(ConfigurationManager.AppSettings[Conn_DB]);
 				break;
 			default:
 				_SqlConnection = new SqlConnection(Conn_DB);

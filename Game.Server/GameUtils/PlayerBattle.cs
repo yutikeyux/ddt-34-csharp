@@ -1,4 +1,5 @@
 using Bussiness;
+using Game.Logic;
 using Game.Server.Managers;
 using log4net;
 using SqlDataProvider.Data;
@@ -11,47 +12,26 @@ namespace Game.Server.GameUtils
     public class PlayerBattle
     {
         public readonly int Agility = 1600;
-
         public readonly int Attack = 1700;
-
         public readonly int Blood = 25000;
-
         public readonly int Damage = 1000;
-
         public readonly int Defend = 1500;
-
         public readonly int Energy = 293;
-
         public readonly int fairBattleDayPrestige = 2000;
-
         public readonly int Guard = 500;
-
         public readonly int LevelLimit = 15;
-
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
         public readonly int Lucky = 1500;
-
         protected object m_lock = new object();
-
         private UserMatchInfo m_matchInfo;
-
         protected GamePlayer m_player;
-
         private bool m_saveToDb;
-
         public readonly int maxCount = 30;
 
         public UserMatchInfo MatchInfo
         {
-            get
-            {
-                return m_matchInfo;
-            }
-            set
-            {
-                m_matchInfo = value;
-            }
+            get { return m_matchInfo; }
+            set { m_matchInfo = value; }
         }
 
         public GamePlayer Player => m_player;
@@ -75,9 +55,11 @@ namespace Game.Server.GameUtils
                 int pointLose = battleDataByPrestige.PrestigeForLose;
                 Random random = new Random();
                 string translation = "";
-                if(m_matchInfo.dailyWinCount > 0)
+
+                if (m_matchInfo.dailyWinCount > 0)
                 {
-                    int rateWin = (m_matchInfo.WeeklyWinCount / m_matchInfo.dailyWinCount) * 100;
+                    int rateWin = (m_matchInfo.WeeklyWinCount * 100 / m_matchInfo.dailyWinCount);
+
                     if (rateWin >= 0 && rateWin <= 50)
                     {
                         pointWin = pointWin + random.Next(1, 2);
@@ -99,36 +81,54 @@ namespace Game.Server.GameUtils
                         pointLose += 0;
                     }
                 }
-                if (isWin)
+
+                // Oyun tipi kontrolü
+                if (m_player.Game != null && m_player.Game.GameType == eGameType.Guild)
                 {
-                    translation = LanguageMgr.GetTranslation("PVPGame.SendGameOVer.Msg3", pointWin);
-                    m_matchInfo.dailyWinCount++;
-                    m_matchInfo.WeeklyWinCount++;
-                    if (m_matchInfo.addDayPrestge < fairBattleDayPrestige)
+                    // Kalan lig hakkını al
+                    int remainingRounds = m_matchInfo.restCount;
+
+                    if (isWin)
                     {
-                        m_matchInfo.addDayPrestge += pointWin;
-                        m_matchInfo.totalPrestige += pointWin;
+                        // ÇEVİRİ NOTU: Dil dosyasında Msg3 şu şekilde olmalı:
+                        // "Oyun bitti. Yendiniz, {0} prestij kazandınız. Kalan Lig Hakkınız: {1}"
+                        translation = LanguageMgr.GetTranslation("PVPGame.SendGameOVer.Msg3", pointWin, remainingRounds);
+
+                        m_matchInfo.dailyWinCount++;
+                        m_matchInfo.WeeklyWinCount++;
+
+                        if (m_matchInfo.addDayPrestge < fairBattleDayPrestige)
+                        {
+                            m_matchInfo.addDayPrestge += pointWin;
+                            m_matchInfo.totalPrestige += pointWin;
+                        }
                     }
-                }
-                else
-                {
-                    translation = LanguageMgr.GetTranslation("PVPGame.SendGameOVer.Msg4", pointLose);
-                    if (m_matchInfo.addDayPrestge < fairBattleDayPrestige)
+                    else
                     {
-                        m_matchInfo.addDayPrestge -= pointLose;
-                        m_matchInfo.totalPrestige -= pointLose;
+                        // ÇEVİRİ NOTU: Dil dosyasında Msg4 şu şekilde olmalı:
+                        // "Oyun bitti. Kaybettiniz, {0} prestij kazandınız. Kalan Lig Hakkınız: {1}"
+                        translation = LanguageMgr.GetTranslation("PVPGame.SendGameOVer.Msg4", pointLose, remainingRounds);
+
+                        if (m_matchInfo.addDayPrestge < fairBattleDayPrestige)
+                        {
+                            m_matchInfo.addDayPrestge -= pointLose;
+                            m_matchInfo.totalPrestige -= pointLose;
+                        }
                     }
                 }
                 Player.SendMessage(translation);
             }
+
             m_matchInfo.dailyGameCount++;
             m_matchInfo.weeklyGameCount++;
+
             if (m_matchInfo.addDayPrestge < 0)
                 m_matchInfo.addDayPrestge = 0;
             if (m_matchInfo.totalPrestige < 0)
                 m_matchInfo.totalPrestige = 0;
-            //SaveToDatabase();
         }
+
+        // ... (Diğer metodlar aynen kalabilir) ...
 
         public void CreateInfo(int UserID)
         {
@@ -163,7 +163,6 @@ namespace Game.Server.GameUtils
             {
                 using (PlayerBussiness pb = new PlayerBussiness())
                 {
-
                     try
                     {
                         m_matchInfo = pb.GetSingleUserMatchInfo(Player.PlayerCharacter.ID);
@@ -178,14 +177,9 @@ namespace Game.Server.GameUtils
                     {
                         log.Error("PlayerBattle: " + ex);
                     }
-                    finally
-                    {
-
-                    }
                 }
             }
         }
-
 
         public void Reset()
         {
@@ -201,10 +195,8 @@ namespace Game.Server.GameUtils
 
         public virtual void SaveToDatabase()
         {
-            if (!m_saveToDb)
-            {
-                return;
-            }
+            if (!m_saveToDb) return;
+
             using PlayerBussiness playerBussiness = new PlayerBussiness();
             lock (m_lock)
             {
@@ -224,18 +216,9 @@ namespace Game.Server.GameUtils
 
         public void UpdateLeagueGrade()
         {
-            if (Player.PlayerCharacter.Grade < 30)
-            {
-                Player.MatchInfo.leagueGrade = 20;
-            }
-            else if (Player.PlayerCharacter.Grade < 40)
-            {
-                Player.MatchInfo.leagueGrade = 30;
-            }
-            else if (Player.PlayerCharacter.Grade <= 50)
-            {
-                Player.MatchInfo.leagueGrade = 40;
-            }
+            if (Player.PlayerCharacter.Grade < 30) Player.MatchInfo.leagueGrade = 20;
+            else if (Player.PlayerCharacter.Grade < 40) Player.MatchInfo.leagueGrade = 30;
+            else if (Player.PlayerCharacter.Grade <= 50) Player.MatchInfo.leagueGrade = 40;
             m_saveToDb = true;
             SaveToDatabase();
         }

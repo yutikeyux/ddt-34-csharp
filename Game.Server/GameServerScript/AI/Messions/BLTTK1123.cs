@@ -1,201 +1,218 @@
+using System.Collections.Generic;
 using Bussiness;
 using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using System.Collections.Generic;
 
 namespace GameServerScript.AI.Messions
 {
-	public class BLTTK1123 : AMissionControl
-	{
-		private List<SimpleNpc> m_npcList = new List<SimpleNpc>();
+    public class BLTTK1123 : AMissionControl
+    {
+        private List<SimpleNpc> list_0;
 
-		private SimpleBoss m_dauThan;
+        private SimpleBoss simpleBoss_0;
 
-		protected int m_maxBlood;
+        protected int m_maxBlood;
 
-		protected int m_blood;
+        protected int m_blood;
 
-		private SimpleBoss m_bossBorn;
+        private SimpleBoss simpleBoss_1;
 
-		private int m_chiensiID = 3202;
+        private int int_0;
 
-		private int m_dauthanID = 3207;
+        private int int_1;
 
-		private int m_dungsiID = 3205;
+        private int int_2;
 
-		private int m_bornBossID = 3208;
+        private int int_3;
 
-		private int m_npcCreateCount = 4;
+        private int int_4;
 
-		private int m_bossRecoveredCount = 0;
+        private int int_5;
 
-		private SimpleBoss m_dungSi;
+        private SimpleBoss simpleBoss_2;
 
-		private int m_dungSiCreateCount = 1;
+        private int int_6;
 
-		public override int CalculateScoreGrade(int score)
-		{
-			base.CalculateScoreGrade(score);
-			if (score > 1750)
-			{
-				return 3;
-			}
-			if (score > 1675)
-			{
-				return 2;
-			}
-			if (score > 1600)
-			{
-				return 1;
-			}
-			return 0;
-		}
+        public override int CalculateScoreGrade(int score)
+        {
+            base.CalculateScoreGrade(score);
+            if (score > 1750)
+            {
+                return 3;
+            }
+            if (score > 1675)
+            {
+                return 2;
+            }
+            if (score > 1600)
+            {
+                return 1;
+            }
+            return 0;
+        }
 
-		public override void OnPrepareNewSession()
-		{
-			base.OnPrepareNewSession();
-			int[] npcIds = new int[4]
-			{
-				m_chiensiID,
-				m_dauthanID,
-				m_dungsiID,
-				m_bornBossID
-			};
-			int[] npcIds2 = new int[3]
-			{
-				m_chiensiID,
-				m_dauthanID,
-				m_dungsiID
-			};
-			base.Game.LoadResources(npcIds);
-			base.Game.LoadNpcGameOverResources(npcIds2);
-			base.Game.AddLoadingFile(1, "bombs/58.swf", "tank.resource.bombs.Bomb58");
-			base.Game.SetMap(1123);
-		}
+        public override void OnPrepareNewSession()
+        {
+            base.OnPrepareNewSession();
+            int[] npcIds = new int[4]
+            {
+                int_0,
+                int_1,
+                int_2,
+                int_3
+            };
+            int[] npcIds2 = new int[3]
+            {
+                int_0,
+                int_1,
+                int_2
+            };
+            base.Game.LoadResources(npcIds);
+            base.Game.LoadNpcGameOverResources(npcIds2);
+            base.Game.AddLoadingFile(1, "bombs/58.swf", "tank.resource.bombs.Bomb58");
+            base.Game.SetMap(1123);
+        }
 
-		public override void OnStartGame()
-		{
-			base.OnStartGame();
-			m_bossBorn = base.Game.CreateBoss(m_bornBossID, 210, 444, 1, 0, "");
-			m_bossBorn.FallFrom(m_bossBorn.X, m_bossBorn.Y, "", 0, 0, 2000);
-			m_bossBorn.Say("Các ngươi hết đường thoát rồi, giữ những tên này làm vật tế! Ngư...", 0, 1800, 1500);
-			m_bossBorn.PlayMovie("castA", 3000, 0);
+        public override void OnStartGame()
+        {
+            base.OnStartGame();
+            simpleBoss_1 = base.Game.CreateBoss(int_3, 100, 444, 1, 0, "");
+            simpleBoss_1.FallFrom(simpleBoss_1.X, simpleBoss_1.Y, "", 0, 0, 2000);
+            simpleBoss_1.PlayMovie("castA", 500, 0);
+            simpleBoss_1.Say("Buraya gizlice girmeye mi cüret ettin? Kesinlikle öleceksin! Senin için hiçbir çıkış yolu yok...", 0, 300);
+            simpleBoss_1.CallFuction(CreateStarGame, 2500);
+        }
 
-			m_bossBorn.CallFuction(CreateBoss, 4200);
-			m_bossBorn.CallFuction(CreateNPC, 4200);
-			m_bossBorn.PlayMovie("out", 5300, 1000);
-			m_bossBorn.CallFuction(CreateOutGame, 6500);
+        public void CreateStarGame()
+        {
+            LivingConfig livingConfig = base.Game.BaseLivingConfig();
+            livingConfig.IsHelper = true;
+            livingConfig.ReduceBloodStart = 2;
+            simpleBoss_0 = base.Game.CreateBoss(int_1, 1100, 444, -1, 1, "born", livingConfig);
+            simpleBoss_0.SetRelateDemagemRect(simpleBoss_0.NpcInfo.X, simpleBoss_0.NpcInfo.Y, simpleBoss_0.NpcInfo.Width, simpleBoss_0.NpcInfo.Height);
+            simpleBoss_0.FallFrom(simpleBoss_0.X, simpleBoss_0.Y, "", 0, 0, 1000, null);
+            CreateBoss();
+            method_0();
+            base.Game.SendObjectFocus(simpleBoss_0, 1, 500, 3000);
+            simpleBoss_0.Say(LanguageMgr.GetTranslation("Beni iyileştir, seni buradan çıkarayım!"), 0, 1500, 0);
+        }
 
-			m_bossBorn.CallFuction(CreateStarGame, 8000);
-		}
+        public void CreateBoss()
+        {
+            simpleBoss_2 = base.Game.CreateBoss(int_2, 300, 444, 1, 0, "");
+            simpleBoss_2.SetRelateDemagemRect(simpleBoss_2.NpcInfo.X, simpleBoss_2.NpcInfo.Y, simpleBoss_2.NpcInfo.Width, simpleBoss_2.NpcInfo.Height);
+            simpleBoss_2.FallFrom(simpleBoss_2.X, simpleBoss_2.Y, "", 0, 0, 1000, null);
+            int_6 = 1;
+        }
 
-		public void CreateStarGame()
-		{
-			LivingConfig livingConfig = base.Game.BaseLivingConfig();
-			livingConfig.IsHelper = true;
-			livingConfig.IsTurn = false;
-			livingConfig.ReduceBloodStart = 2;
-			m_dauThan = base.Game.CreateBoss(m_dauthanID, 1100, 444, -1, 1, "born", livingConfig);
-			m_dauThan.SetRelateDemagemRect(m_dauThan.NpcInfo.X, m_dauThan.NpcInfo.Y, m_dauThan.NpcInfo.Width, m_dauThan.NpcInfo.Height);
-			m_dauThan.FallFrom(m_dauThan.X, m_dauThan.Y, "", 0, 0, 1000, null);
-			m_dauThan.Say(LanguageMgr.GetTranslation("Tôi sẽ dẫn các cậu phá vòng vây, nhưng cần năng lượng!"), 0, 2500, 2000);
-			Game.SendLivingActionMapping(m_dauThan, "renew", "nothing");
-		}
+        public void CreateOutGame()
+        {
+            simpleBoss_1.Blood = 0;
+            simpleBoss_1.Die();
+            base.Game.RemoveLiving(simpleBoss_1.Id);
+        }
 
-		public void CreateBoss()
-		{
-			m_dungSi = base.Game.CreateBoss(m_dungsiID, 180, 444, 1, 0, "");
-			m_dungSi.SetRelateDemagemRect(m_dungSi.NpcInfo.X, m_dungSi.NpcInfo.Y, m_dungSi.NpcInfo.Width, m_dungSi.NpcInfo.Height);
-			m_dungSi.FallFrom(m_dungSi.X, m_dungSi.Y, "", 0, 0, 1000, null);
-			m_dungSiCreateCount = 1;
-		}
+        public override void OnNewTurnStarted()
+        {
+            base.OnNewTurnStarted();
+            if (simpleBoss_2 != null && !simpleBoss_2.IsLiving && !(base.Game.CurrentLiving is Player))
+            {
+                if (int_6 <= 0)
+                {
+                    CreateBoss();
+                }
+                else
+                {
+                    int_6--;
+                }
+            }
+            if (method_1() <= 0)
+            {
+                method_0();
+            }
+        }
 
-		public void CreateOutGame()
-		{
-			m_bossBorn.Die(0);
-			base.Game.RemoveLiving(m_bossBorn.Id);
-		}
+        private void method_0()
+        {
+            int num = 350;
+            for (int i = 0; i < int_4; i++)
+            {
+                list_0.Add(base.Game.CreateNpc(int_0, num, 344, 1, 1));
+                num += 50;
+            }
+        }
 
-		public override void OnNewTurnStarted()
-		{
-			base.OnNewTurnStarted();
-			if (m_dungSi != null && !m_dungSi.IsLiving)
-			{
-				if (m_dungSiCreateCount <= 0)
-				{
-					CreateBoss();
-				}
-				else
-				{
-					m_dungSiCreateCount--;
-				}
-			}
-			if (CheckNPCLived() <= 0)
-			{
-				CreateNPC();
-			}
-		}
+        private int method_1()
+        {
+            int num = 0;
+            foreach (SimpleNpc item in list_0)
+            {
+                if (item.IsLiving)
+                {
+                    num++;
+                }
+            }
+            return num;
+        }
 
-		private void CreateNPC()
-		{
-			int disX = 220;
-			for (int i = 0; i < m_npcCreateCount; i++)
-			{
-				m_npcList.Add(base.Game.CreateNpc(m_chiensiID, disX, 344, 1, 1));
-				disX += 30;
-			}
-		}
+        public override void OnBeginNewTurn()
+        {
+            base.OnBeginNewTurn();
+            if (base.Game.TurnIndex == 1)
+            {
+                simpleBoss_1.PlayMovie("out", 0, 2000);
+                simpleBoss_1.CallFuction(CreateOutGame, 1200);
+            }
+        }
 
-		private int CheckNPCLived()
-		{
-			int cnt = 0;
-			foreach (SimpleNpc item in m_npcList)
-			{
-				cnt += item.IsLiving ? 1 : 0;
-			}
-			return cnt;
-		}
+        public override bool CanGameOver()
+        {
+            base.CanGameOver();
+            if (simpleBoss_0 != null && simpleBoss_0.Blood >= simpleBoss_0.NpcInfo.Blood)
+            {
+                return true;
+            }
+            if (simpleBoss_0 != null && !simpleBoss_0.IsLiving)
+            {
+                int_5++;
+                return true;
+            }
+            if (base.Game.TurnIndex > 200)
+            {
+                return true;
+            }
+            return false;
+        }
 
-		public override void OnBeginNewTurn()
-		{
-			base.OnBeginNewTurn();
-		}
+        public override int UpdateUIData()
+        {
+            base.UpdateUIData();
+            return int_5;
+        }
 
-		public override bool CanGameOver()
-		{
-			base.CanGameOver();
-			//if (m_dauThan != null && m_dauThan.Blood >= m_dauThan.MaxBlood)
-			if (Game.TotalKillCount > 0 && m_dauThan.Blood >= m_dauThan.MaxBlood)
-			{
-				m_bossRecoveredCount++;
-				return true;
-			}
-			if (m_dauThan != null && !m_dauThan.IsLiving)
-			{
-				return true;
-			}
-			return false;
-		}
+        public override void OnGameOver()
+        {
+            base.OnGameOver();
+            if (simpleBoss_0.Blood >= simpleBoss_0.NpcInfo.Blood)
+            {
+                simpleBoss_0.PlayMovie("grow", 0, 3000);
+                base.Game.IsWin = true;
+            }
+            if (!simpleBoss_0.IsLiving)
+            {
+                base.Game.IsWin = false;
+            }
+        }
 
-		public override int UpdateUIData()
-		{
-			base.UpdateUIData();
-			return m_bossRecoveredCount;
-		}
-
-		public override void OnGameOver()
-		{
-			base.OnGameOver();
-			//if (m_dauThan.Blood >= m_dauThan.MaxBlood)
-			if (Game.TotalKillCount > 0 && m_dauThan.Blood >= m_dauThan.MaxBlood)
-			{
-				base.Game.IsWin = true;
-			}
-			if (!m_dauThan.IsLiving)
-			{
-				base.Game.IsWin = false;
-			}
-		}
-	}
+        public BLTTK1123()
+        {
+            list_0 = new List<SimpleNpc>();
+            int_0 = 3202;
+            int_1 = 3207;
+            int_2 = 3205;
+            int_3 = 3208;
+            int_4 = 4;
+        }
+    }
 }

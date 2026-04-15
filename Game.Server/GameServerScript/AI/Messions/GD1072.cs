@@ -4,10 +4,8 @@ using Game.Logic.Phy.Object;
 
 namespace GameServerScript.AI.Messions
 {
-    // Token: 0x0200025F RID: 607
     public class GD1072 : AMissionControl
     {
-        // Token: 0x06001F13 RID: 7955 RVA: 0x000E3E60 File Offset: 0x000E2060
         public override int CalculateScoreGrade(int score)
         {
             base.CalculateScoreGrade(score);
@@ -39,8 +37,6 @@ namespace GameServerScript.AI.Messions
             }
             return result;
         }
-
-        // Token: 0x06001F14 RID: 7956 RVA: 0x000E3EB0 File Offset: 0x000E20B0
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
@@ -56,8 +52,6 @@ namespace GameServerScript.AI.Messions
             base.Game.LoadNpcGameOverResources(npcIds);
             base.Game.SetMap(1073);
         }
-
-        // Token: 0x06001F15 RID: 7957 RVA: 0x000E3F50 File Offset: 0x000E2150
         public override void OnStartGame()
         {
             base.OnStartGame();
@@ -75,14 +69,10 @@ namespace GameServerScript.AI.Messions
             this.ArkaPlan_Efekti.PlayMovie("out", 15000, 0);
             base.Game.BossCardCount = 1;
         }
-
-        // Token: 0x06001F16 RID: 7958 RVA: 0x000E40C8 File Offset: 0x000E22C8
         public override void OnNewTurnStarted()
         {
             base.OnNewTurnStarted();
         }
-
-        // Token: 0x06001F17 RID: 7959 RVA: 0x000E40D4 File Offset: 0x000E22D4
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
@@ -104,8 +94,6 @@ namespace GameServerScript.AI.Messions
                 }
             }
         }
-
-        // Token: 0x06001F18 RID: 7960 RVA: 0x000E4158 File Offset: 0x000E2358
         public override bool CanGameOver()
         {
             base.CanGameOver();
@@ -122,8 +110,6 @@ namespace GameServerScript.AI.Messions
             }
             return result;
         }
-
-        // Token: 0x06001F19 RID: 7961 RVA: 0x000E41B4 File Offset: 0x000E23B4
         public override int UpdateUIData()
         {
             bool flag = this.Balufu == null;
@@ -146,8 +132,6 @@ namespace GameServerScript.AI.Messions
             }
             return result;
         }
-
-        // Token: 0x06001F1A RID: 7962 RVA: 0x000E41F8 File Offset: 0x000E23F8
         public override void OnGameOver()
         {
             base.OnGameOver();
@@ -161,8 +145,6 @@ namespace GameServerScript.AI.Messions
                 base.Game.IsWin = false;
             }
         }
-
-        // Token: 0x06001F1B RID: 7963 RVA: 0x000E4240 File Offset: 0x000E2440
         public override void DoOther()
         {
             base.DoOther();
@@ -177,8 +159,6 @@ namespace GameServerScript.AI.Messions
                 }
             }
         }
-
-        // Token: 0x06001F1C RID: 7964 RVA: 0x000E42A4 File Offset: 0x000E24A4
         public override void OnShooted()
         {
             base.OnShooted();
@@ -190,40 +170,22 @@ namespace GameServerScript.AI.Messions
                 this.int_0 = 1;
             }
         }
-
-        // Token: 0x06001F1D RID: 7965 RVA: 0x000E4319 File Offset: 0x000E2519
         public GD1072()
         {
             this.BogoLideri = 1003;
             this.Mavi_Bogo_Koruma = 1009;
         }
-
-        // Token: 0x04001145 RID: 4421
         private SimpleBoss Balufu;
-
-        // Token: 0x04001146 RID: 4422
         private PhysicalObj ArkaPlan_Efekti;
-
-        // Token: 0x04001147 RID: 4423
         private PhysicalObj BogoLiderSarıEfekt;
-
-        // Token: 0x04001148 RID: 4424
         private int int_0;
-
-        // Token: 0x04001149 RID: 4425
         private int BogoLideri;
-
-        // Token: 0x0400114A RID: 4426
         private int Mavi_Bogo_Koruma;
-
-        // Token: 0x0400114B RID: 4427
         private static string[] Sohbet_1 = new string[]
         {
             "Seni çıktığın deliğe geri sokacağım!",
             "Bu kadar mı? Beni yenebileceğini mi sandınn?"
         };
-
-        // Token: 0x0400114C RID: 4428
         private static string[] Sohbet_2 = new string[]
         {
             "Acıyor, dostum! Acıdıı..",

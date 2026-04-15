@@ -22,7 +22,7 @@ namespace Tank.Request
 			path += "\\";
 			LanguageMgr.Setup(path);
 			bool value = false;
-			string message = LanguageMgr.GetTranslation(" Tên người chơi đã tồn tại", Array.Empty<object>());
+			string message = LanguageMgr.GetTranslation(" Bu isim kullanılıyor.", Array.Empty<object>());
 			XElement result = new XElement("Result");
 			try
 			{

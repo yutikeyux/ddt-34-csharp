@@ -2,19 +2,18 @@ using Game.Logic.AI;
 
 namespace GameServerScript.AI.Game
 {
-    public class GuluKingdomTerrorGame : APVEGameControl
+    public class GuluKingdomTerrorGame : APVEGameControl //bogo kahraman
     {
         public override void OnCreated()
         {
 			base.OnCreated();
-			base.Game.SetupMissions("1371,1372,1373,1374,1375");/*1371,1372,*/
-			base.Game.TotalMissionCount = 5;
+			base.Game.SetupMissions("1371,1372,1373,1374,1375"); //bogo kahraman misson id leri etap 1, etap 2, etap 3, etap 4 ve etap 5
+            base.Game.TotalMissionCount = 5; //etap sayısı 5
         }
 
         public override void OnPrepated()
         {
 			base.OnPrepated();
-			//base.Game.SessionId = 0;
         }
 
         public override int CalculateScoreGrade(int score)

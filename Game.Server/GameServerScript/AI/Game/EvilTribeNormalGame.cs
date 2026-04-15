@@ -2,20 +2,18 @@ using Game.Logic.AI;
 
 namespace GameServerScript.AI.Game
 {
-    public class EvilTribeNormalGame : APVEGameControl
+    public class EvilTribeNormalGame : APVEGameControl //kabile normal
     {
         public override void OnCreated()
         {
 			base.OnCreated();
-            base.Game.SetupMissions("3101,3102,3103,3106");
-            //base.Game.SetupMissions("3103,3106");
-            base.Game.TotalMissionCount = 4;
+            base.Game.SetupMissions("3101,3102,3103,3106"); //kabile normal misson id leri etap 1, etap 2, etap 3 ve etap 4
+            base.Game.TotalMissionCount = 4; //kabile normal etap sayısı 4
         }
 
         public override void OnPrepated()
         {
 			base.OnPrepated();
-			//base.Game.SessionId = 0;
         }
 
         public override int CalculateScoreGrade(int score)

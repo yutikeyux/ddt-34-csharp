@@ -15,7 +15,7 @@ namespace Fighting.Service.action
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public string HelpStr=> ConfigurationSettings.AppSettings["HelpStr"];
+        public string HelpStr=> ConfigurationManager.AppSettings["HelpStr"];
 
         public string Name=> "--start";
 

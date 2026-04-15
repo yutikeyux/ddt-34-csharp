@@ -2,17 +2,17 @@ using Game.Logic.AI;
 
 namespace GameServerScript.AI.Game
 {
-    public class DarkCastleNormalGame : APVEGameControl
+    public class DarkCastleNormalGame : APVEGameControl //kale normal
     {
         public override void OnCreated()
         {
-			base.Game.SetupMissions("4101,4102,4103");
-			base.Game.TotalMissionCount = 3;
+			base.Game.SetupMissions("4101,4102,4103"); //kale normal misson id leri etap 1, etap 2 ve etap 3
+            base.Game.TotalMissionCount = 3; //kale normal etap sayısı 3
         }
 
         public override void OnPrepated()
         {
-			//base.Game.SessionId = 0;
+			base.OnPrepated();
         }
 
         public override int CalculateScoreGrade(int score)

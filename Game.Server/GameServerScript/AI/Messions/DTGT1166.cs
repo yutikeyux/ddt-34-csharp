@@ -7,36 +7,47 @@ namespace GameServerScript.AI.Messions
 {
     public class DTGT1166 : AMissionControl
     {
-        private const int BOSS_RED_ID = 6123;
-        private const int NPC_FRIEND_ID = 6121;
-        private const int NPC_ENEMY_ID = 6122;
-        private const int NPC_SUPPORT_ID = 6124;
-        private const int NPC_COMMANDER_ID = 6114;
+        private SimpleBoss simpleBoss_0;
 
-        private SimpleBoss bossRed;
-        private SimpleBoss bossCommander;
-        private PhysicalObj targetObject;
+        private SimpleBoss simpleBoss_1;
 
-        // KAZANMA KOŞULU: En az 2 dost bogo bitiş çizgisine ulaşmalı.
-        private const int REQUIRED_FRIEND_COUNT = 2;
+        private PhysicalObj physicalObj_0;
 
-        // Düşman sayısı veya koşulu (Oyunun bitmesi için hala bir tetikleyici gerekli)
-        private const int REQUIRED_ENEMY_COUNT = 5;
+        private int int_0;
 
-        private int _finishedFriends = 0;
-        private int _finishedEnemies = 0;
+        private int int_1;
 
-        private List<SimpleNpc> listFriends = new List<SimpleNpc>();
-        private List<SimpleNpc> listEnemies = new List<SimpleNpc>();
+        private int int_2;
 
-        private List<Point> pathPoints;
+        private int int_3;
+
+        private int IyjwlqAukcG;
+
+        private int int_4;
+
+        private SimpleNpc simpleNpc_0;
+
+        private int int_5;
+
+        private int int_6;
+
+        private List<Point> list_0;
 
         public override int CalculateScoreGrade(int score)
         {
             base.CalculateScoreGrade(score);
-            if (score > 900) return 3;
-            if (score > 825) return 2;
-            if (score > 725) return 1;
+            if (score > 900)
+            {
+                return 3;
+            }
+            if (score > 825)
+            {
+                return 2;
+            }
+            if (score > 725)
+            {
+                return 1;
+            }
             return 0;
         }
 
@@ -48,8 +59,14 @@ namespace GameServerScript.AI.Messions
             base.Game.AddLoadingFile(2, "image/game/effect/6/zhaozi.swf", "asset.game.six.zhaozi");
             base.Game.AddLoadingFile(2, "image/game/effect/6/danjia.swf", "asset.game.six.danjia");
             base.Game.AddLoadingFile(2, "image/game/effect/6/qunjia.swf", "asset.game.six.qunjia");
-
-            int[] npcIds = { BOSS_RED_ID, NPC_FRIEND_ID, NPC_ENEMY_ID, NPC_SUPPORT_ID, NPC_COMMANDER_ID };
+            int[] npcIds = new int[5]
+            {
+                int_0,
+                int_2,
+                int_1,
+                int_3,
+                IyjwlqAukcG
+            };
             base.Game.LoadResources(npcIds);
             base.Game.LoadNpcGameOverResources(npcIds);
             base.Game.SetMap(1166);
@@ -58,104 +75,138 @@ namespace GameServerScript.AI.Messions
         public override void OnStartGame()
         {
             base.OnStartGame();
-            _finishedFriends = 0;
-            _finishedEnemies = 0;
-            listFriends.Clear();
-            listEnemies.Clear();
-
-            bossRed = base.Game.CreateBoss(BOSS_RED_ID, 1910, 1080, -1, 1, "");
-            bossRed.Delay = 1;
-            bossRed.Config.CanTakeDamage = false;
-
-            bossCommander = base.Game.CreateBoss(NPC_COMMANDER_ID, 460, 1080, -1, 1, "");
-            bossCommander.Config.CanTakeDamage = false;
-            bossCommander.Config.IsTurn = false;
-            bossCommander.MoveTo(450, 1080, "walk", 500);
-            bossCommander.PlayMovie("go", 1500, 0);
-            bossCommander.Say("Dost bogoları kurtar, Düşman bogoları engelle!", 0, 2000);
-
-            targetObject = base.Game.Createlayerboss(1100, 1080, "font", "game.living.Living190", "stand", 1, 0);
-
-            bossRed.CallFuction(SpawnNpcs, 2500);
+            simpleBoss_0 = base.Game.CreateBoss(int_0, 1910, 1080, -1, 1, "");
+            simpleBoss_0.Delay = 1;
+            simpleBoss_0.Config.CanTakeDamage = false;
+            simpleBoss_1 = base.Game.CreateBoss(IyjwlqAukcG, 460, 1080, -1, 1, "");
+            simpleBoss_1.Config.CanTakeDamage = false;
+            simpleBoss_1.Config.IsTurn = false;
+            simpleBoss_1.MoveTo(450, 1080, "walk", 500);
+            simpleBoss_1.PlayMovie("go", 1500, 0);
+            simpleBoss_1.Say("Mavi takıma saldırın, kırmızı takımı koruyun.", 0, 2000);
+            physicalObj_0 = base.Game.Createlayerboss(1100, 1080, "font", "game.living.Living190", "stand", 1, 0);
+            simpleBoss_0.CallFuction(method_0, 2500);
             base.Game.PveGameDelay = 0;
         }
 
-        private void SpawnNpcs()
+        private void method_0()
         {
-            int startStep = 10;
-            for (int i = 0; i < 5; i++)
-            {
-                int posX = 300 - (i * 50);
-                SimpleNpc npc = base.Game.CreateNpc(NPC_ENEMY_ID, posX, 1080, 1, 1);
-                npc.Config.IsFly = true;
-                npc.Config.MaxStepMove = 6;
-                npc.Config.MinBlood = 1;
-                npc.Config.FirstStepMove = startStep;
-
-                listEnemies.Add(npc);
-                startStep -= 2;
-            }
-
-            startStep = 9;
-            for (int i = 0; i < 5; i++)
-            {
-                int posX = 50 - (i * 50);
-                SimpleNpc npc = base.Game.CreateNpc(NPC_FRIEND_ID, posX, 1080, 1, 1);
-                npc.Config.IsFly = true;
-                npc.Config.IsHelper = true;
-                npc.Config.MaxStepMove = 4;
-                npc.Config.MinBlood = 1;
-                npc.Config.FirstStepMove = startStep;
-
-                listFriends.Add(npc);
-                startStep -= 2;
-            }
+            int_4 = 10;
+            simpleNpc_0 = base.Game.CreateNpc(int_1, 300, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.MaxStepMove = 6;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_1, 250, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.MaxStepMove = 6;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_1, 200, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.MaxStepMove = 6;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_1, 150, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.MaxStepMove = 6;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_1, 100, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.MaxStepMove = 6;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            int_4 = 9;
+            simpleNpc_0 = base.Game.CreateNpc(int_2, 50, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.IsHelper = true;
+            simpleNpc_0.Config.MaxStepMove = 4;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_2, 0, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.IsHelper = true;
+            simpleNpc_0.Config.MaxStepMove = 4;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_2, -50, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.IsHelper = true;
+            simpleNpc_0.Config.MaxStepMove = 4;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_2, -100, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.IsHelper = true;
+            simpleNpc_0.Config.MaxStepMove = 4;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_2, -150, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.IsHelper = true;
+            simpleNpc_0.Config.MaxStepMove = 4;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
         }
 
         public override bool CanGameOver()
         {
             base.CanGameOver();
-            if (listFriends.Count == 0 && listEnemies.Count == 0) return false;
-
-            int currentFinishedFriends = 0;
-            int currentFinishedEnemies = 0;
-
-            foreach (SimpleNpc npc in listFriends)
+            SimpleNpc[] array = base.Game.FindAllNpcLiving();
+            int_5 = 0;
+            int_6 = 0;
+            SimpleNpc[] array2 = array;
+            foreach (SimpleNpc simpleNpc in array2)
             {
-                if (npc != null && npc.IsLiving && npc.Config.CompleteStep) currentFinishedFriends++;
+                if (simpleNpc.Config.CompleteStep)
+                {
+                    if (simpleNpc.NpcInfo.ID == int_2)
+                    {
+                        int_5++;
+                    }
+                    else
+                    {
+                        int_6++;
+                    }
+                }
             }
-
-            foreach (SimpleNpc npc in listEnemies)
+            if (int_5 < 5 && int_6 < 5)
             {
-                if (npc != null && npc.IsLiving && npc.Config.CompleteStep) currentFinishedEnemies++;
+                return false;
             }
-
-            _finishedFriends = currentFinishedFriends;
-            _finishedEnemies = currentFinishedEnemies;
-
-            // Kazanma koşulu: 2 Dost Bogo tamamlarsa oyun biter.
-            if (_finishedFriends >= REQUIRED_FRIEND_COUNT)
-
-            {
-                bossCommander.Say("Harika! Senin yazacağın kodun amına koyim utku!", 0, 2000);
-                return true;
-            }
-            // Düşmanlar şartı sağlarsa (örneğin hepsi tamamlarsa) oyun biter ve OnGameOver'da kaybettirilir.
-            if (_finishedEnemies >= REQUIRED_ENEMY_COUNT)
-            {
-                return true;
-            }
-            return false;
+            return true;
         }
 
-        public override int UpdateUIData() => _finishedFriends;
+        public override int UpdateUIData()
+        {
+            return base.Game.TotalKillCount;
+        }
 
         public override void OnGameOver()
         {
             base.OnGameOver();
-
-            // Eğer en az 2 dost bogo hedefe ulaştıysa KAZANIR, değilse KAYBEDER.
-            if (_finishedFriends >= REQUIRED_FRIEND_COUNT)
+            if (int_5 >= 5)
             {
                 base.Game.IsWin = true;
             }
@@ -167,7 +218,18 @@ namespace GameServerScript.AI.Messions
 
         public DTGT1166()
         {
-            pathPoints = new List<Point> { new Point(620, 1080) };
+
+            int_0 = 6123;
+            int_1 = 6122;
+            int_2 = 6121;
+            int_3 = 6124;
+            IyjwlqAukcG = 6114;
+            int_4 = 11;
+            list_0 = new List<Point>
+            {
+                new Point(620, 1080)
+            };
+
         }
     }
 }

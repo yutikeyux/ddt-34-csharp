@@ -19,6 +19,9 @@ namespace Game.Server.Packets.Client
         private static readonly ConcurrentDictionary<string, object> _userLocks = new();
         private static readonly ConcurrentDictionary<int, string> _pendingLogins = new();
 
+        // Aynı IP'den eşzamanlı giriş yapılmasını engellemek için IP bazlı lock
+        private static readonly ConcurrentDictionary<string, object> _ipLocks = new();
+
         // Sabitler
         private const int MAX_LOGIN_ATTEMPTS = 5;
         private const int LOCKOUT_DURATION_MINUTES = 15;
@@ -64,7 +67,7 @@ namespace Game.Server.Packets.Client
                 return 0;
             }
 
-            // Client tip kontrolü - EXPECTED_CLIENT_TYPE (69) dışındakiler işlenir
+            // Client tip kontrolü
             if (clientType == EXPECTED_CLIENT_TYPE)
             {
                 GameServer.log.Warn($"Blocked client type {clientType} from {client?.TcpEndpoint}");
@@ -92,6 +95,14 @@ namespace Game.Server.Packets.Client
                 return 0;
             }
 
+            // IP adresini al
+            string clientIp = GetClientIpAddress(client);
+            if (string.IsNullOrEmpty(clientIp))
+            {
+                HandleError(client, "UserLoginHandler.InvalidIp");
+                return 0;
+            }
+
             // Rate limiting ve güvenlik kontrolü
             if (IsRateLimitedOrLockedOut(username, client))
             {
@@ -99,7 +110,84 @@ namespace Game.Server.Packets.Client
             }
 
             // Thread-safe kullanıcı kontrolü ve login işlemi
-            return PerformThreadSafeLogin(client, username, password, version);
+            return PerformThreadSafeLogin(client, username, password, version, clientIp);
+        }
+
+        /// <summary>
+        /// Client IP adresini güvenli şekilde alır (String formatından parse eder)
+        /// </summary>
+        private string GetClientIpAddress(GameClient client)
+        {
+            try
+            {
+                string endpoint = client?.TcpEndpoint;
+                if (string.IsNullOrEmpty(endpoint))
+                    return null;
+
+                // Format genelde "IP:Port" veya "[IPv6]:Port" şeklindedir
+                int portSeparator = endpoint.LastIndexOf(':');
+                if (portSeparator > 0)
+                {
+                    string ipPart = endpoint.Substring(0, portSeparator);
+
+                    // IPv6 köşeli parantezlerini temizle (Örn: [::1] -> ::1)
+                    if (ipPart.StartsWith("[") && ipPart.EndsWith("]"))
+                        ipPart = ipPart.Substring(1, ipPart.Length - 2);
+
+                    return ipPart;
+                }
+
+                return endpoint;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gerçek zamanlı olarak sunucudaki tüm aktif oyuncuları tarar ve aynı IP'den başka biri varsa engeller.
+        /// </summary>
+        private bool IsIpRestricted(string clientIp, GameClient currentClient)
+        {
+            try
+            {
+                GameClient[] allClients = GameServer.Instance?.GetAllClients();
+                if (allClients == null || allClients.Length == 0)
+                    return false;
+
+                foreach (GameClient c in allClients)
+                {
+                    // Kendisi null ise, kendisi ise veya bağlantısı kopuk ise atla
+                    if (c == null || c == currentClient || !c.IsConnected)
+                        continue;
+
+                    // Sadece oyuna başarılı bir şekilde girmiş olanları kontrol et
+                    if (c.Player == null)
+                        continue;
+
+                    string otherIp = GetClientIpAddress(c);
+
+                    // Eğer aynı IP'den başka birisi oyundaysa engelle
+                    if (!string.IsNullOrEmpty(otherIp) &&
+                        string.Equals(otherIp, clientIp, StringComparison.OrdinalIgnoreCase))
+                    {
+                        string otherUser = c.Player.PlayerCharacter?.NickName ?? c.Player.PlayerCharacter?.UserName ?? "Bilinmiyor";
+                        GameServer.log.Warn($"IP KISITLAMASI: {clientIp} IP adresi şuanda '{otherUser}' tarafından kullanılıyor. Giriş denemesi engellendi.");
+
+                        currentClient?.Out?.SendMessage(eMessageType.ALERT,"Bu IP adresinden zaten giriş yapılmış. Her IP adresi sadece bir hesapla giriş yapabilir.");
+                        Thread.Sleep(2000); // Mesajın gönderilmesi için kısa bir bekleme
+                        currentClient?.Disconnect();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                GameServer.log.Error("IsIpRestriction kontrolünde hata", ex);
+            }
+
+            return false;
         }
 
         private bool TryReadVersionInfo(GSPacketIn packet, out int version, out int clientType)
@@ -173,7 +261,6 @@ namespace Game.Server.Packets.Client
                     return false;
                 }
 
-                // Manuel kopyalama - Buffer.BlockCopy yerine
                 for (int i = 0; i < KEY_LENGTH; i++)
                 {
                     sessionKey[i] = data[KEY_OFFSET + i];
@@ -228,7 +315,6 @@ namespace Game.Server.Packets.Client
 
             lock (attemptInfo)
             {
-                // Lockout kontrolü
                 if (attemptInfo.LockoutEnd.HasValue && now < attemptInfo.LockoutEnd.Value)
                 {
                     var remaining = (int)(attemptInfo.LockoutEnd.Value - now).TotalMinutes;
@@ -237,7 +323,6 @@ namespace Game.Server.Packets.Client
                     return true;
                 }
 
-                // Rate limiting
                 if ((now - attemptInfo.LastAttempt).TotalSeconds < RATE_LIMIT_SECONDS)
                 {
                     client?.Out?.SendKitoff("Çok hızlı giriş denemesi. Lütfen bekleyin.");
@@ -251,31 +336,48 @@ namespace Game.Server.Packets.Client
             return false;
         }
 
-        private int PerformThreadSafeLogin(GameClient client, string username, string password, int version)
+        private int PerformThreadSafeLogin(GameClient client, string username, string password, int version, string clientIp)
         {
-            // Kullanıcı bazlı lock object
-            var userLock = _userLocks.GetOrAdd(username, _ => new object());
+            // Aynı IP'den aynı anda gelen 2 login isteğini sıraya sokmak için IP bazlı lock
+            var ipLock = _ipLocks.GetOrAdd(clientIp, _ => new object());
 
-            lock (userLock)
+            lock (ipLock)
             {
-                try
+                // 1. IP Kontrolü
+                if (IsIpRestricted(clientIp, client))
                 {
-                    return ExecuteLogin(client, username, password, version);
+                    return 0;
                 }
-                finally
+
+                // Kullanıcı bazlı lock
+                var userLock = _userLocks.GetOrAdd(username, _ => new object());
+
+                lock (userLock)
                 {
-                    // Temizlik - lock object'i dictionary'den kaldır
-                    if (!_pendingLogins.Values.Any(v => v == username))
+                    try
                     {
-                        _userLocks.TryRemove(username, out _);
+                        // 2. Kullanıcı lock'u aldıkktan sonra tekrar IP kontrolü (Race Condition güvenliği)
+                        if (IsIpRestricted(clientIp, client))
+                        {
+                            return 0;
+                        }
+
+                        return ExecuteLogin(client, username, password, version, clientIp);
+                    }
+                    finally
+                    {
+                        if (!_pendingLogins.Values.Any(v => v == username))
+                        {
+                            _userLocks.TryRemove(username, out _);
+                        }
                     }
                 }
             }
         }
 
-        private int ExecuteLogin(GameClient client, string username, string password, int version)
+        private int ExecuteLogin(GameClient client, string username, string password, int version, string clientIp)
         {
-            // Çift giriş kontrolü - hem string hem ID bazlı
+            // Çift giriş kontrolü
             if (LoginMgr.ContainsUser(username))
             {
                 HandleError(client, "UserLoginHandler.AlreadyLoggedIn");
@@ -292,7 +394,6 @@ namespace Game.Server.Packets.Client
             {
                 try
                 {
-                    // BaseInterface using kaldırıldı - IDisposable değil
                     BaseInterface interfaceInstance = BaseInterface.CreateInterface();
                     return interfaceInstance.LoginGame(username, password,
                         GameServer.Instance.Configuration.AreaID, ref isFirstLogin);
@@ -346,22 +447,22 @@ namespace Game.Server.Packets.Client
                 return 0;
             }
 
-            // İlk giriş kontrolü (kayıt gerekli)
+            // İlk giriş kontrolü
             if (isFirstLogin)
             {
                 HandleError(client, "UserLoginHandler.RegisterRequired");
                 return 0;
             }
 
-            // Başarılı giriş - oyuncu oluşturma
-            return CompleteSuccessfulLogin(client, playerInfo, username, version);
+            // Başarılı giriş
+            return CompleteSuccessfulLogin(client, playerInfo, username, version, clientIp);
         }
 
-        private int CompleteSuccessfulLogin(GameClient client, PlayerInfo playerInfo, string username, int version)
+        private int CompleteSuccessfulLogin(GameClient client, PlayerInfo playerInfo, string username, int version, string clientIp)
         {
             try
             {
-                // ID çakışması kontrolü - atomic olmayan ama yeterli kontrol
+                // ID çakışması kontrolü
                 if (LoginMgr.ContainsUser(playerInfo.ID))
                 {
                     GameServer.log.Error($"User ID {playerInfo.ID} already logged in");
@@ -369,13 +470,19 @@ namespace Game.Server.Packets.Client
                     return 0;
                 }
 
-                // Pending login ekle (race condition önleme)
+                // VERİTABANI SÜRESİNCE (10 saniye) başkası aynı IP'den girmiş olabilir, SON KEZ KONTROL EDİYORUZ
+                if (IsIpRestricted(clientIp, client))
+                {
+                    return 0;
+                }
+
+                // Pending login ekle
                 _pendingLogins[playerInfo.ID] = username;
 
                 // Oyuncu nesnesi oluşturma
                 var gamePlayer = new GamePlayer(playerInfo.ID, username, client, playerInfo);
 
-                // LoginMgr.Add kullan (mevcut API)
+                // LoginMgr.Add kullan
                 LoginMgr.Add(playerInfo.ID, client);
 
                 // Client ayarları
@@ -396,7 +503,7 @@ namespace Game.Server.Packets.Client
                 ResetFailedAttempts(username);
                 _pendingLogins.TryRemove(playerInfo.ID, out _);
 
-                GameServer.log.Info($"Player {username} (ID: {playerInfo.ID}) logged in successfully from {client.TcpEndpoint}");
+                GameServer.log.Info($"Player {username} (ID: {playerInfo.ID}) logged in successfully from IP: {clientIp}");
 
                 return 1;
             }
@@ -409,7 +516,7 @@ namespace Game.Server.Packets.Client
                 {
                     LoginMgr.Remove(playerInfo.ID);
                 }
-                catch { /* ignore cleanup errors */ }
+                catch { }
 
                 _pendingLogins.TryRemove(playerInfo.ID, out _);
                 HandleError(client, "UserLoginHandler.ServerError");

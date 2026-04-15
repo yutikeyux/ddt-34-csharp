@@ -1042,13 +1042,13 @@ namespace Game.Logic
                 pkg.WriteString(str);
             }
             SendToAll(pkg);
-            if (IsShowLargeCards())
+            if (IsShowLargeCards() && IsWin) 
             {
                 WaitTime(16000);
             }
-            else
-            {
-                WaitTime(23000);
+            if (!IsWin)
+             {
+                WaitTime(1000);
             }
             CanStopGame();
         }
@@ -1954,7 +1954,7 @@ namespace Game.Logic
 
             // Buraya BAYRAK (WantTryAgain) yerine MALİYETİ (cost) yazıyoruz.
             // ActionScript tarafındaki this._info.value bu değeri okuyacak.
-           
+
 
             // --- DÜZELTME BİTİŞİ ---
 
@@ -2360,7 +2360,7 @@ namespace Game.Logic
                         // Mevcut IsTips kontrolü (Database'den gelen sabit duyurular)
                         if (info.IsTips)
                         {
-                            player.PlayerDetail.PVERewardNotice($"~" + player.PlayerDetail.ZoneName +"~ oyuncusu değerli [" + player.PlayerDetail.PlayerCharacter.NickName + "] Keşif rıhtımındaki " + MissionInfo.Name + " keşiften değerli ödüller kazandı. Kazandıkları ödüller: " + info.Name + " x" + info.Count+ ".", info.ItemID, info.TemplateID);
+                            player.PlayerDetail.PVERewardNotice($"~" + player.PlayerDetail.ZoneName + "~ oyuncusu değerli [" + player.PlayerDetail.PlayerCharacter.NickName + "] Keşif rıhtımındaki " + MissionInfo.Name + " keşiften değerli ödüller kazandı. Kazandıkları ödüller: " + info.Name + " x" + info.Count + ".", info.ItemID, info.TemplateID);
                         }
                     }
                 }

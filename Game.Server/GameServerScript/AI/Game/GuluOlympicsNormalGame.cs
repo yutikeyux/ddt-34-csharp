@@ -2,19 +2,18 @@ using Game.Logic.AI;
 
 namespace GameServerScript.AI.Game
 {
-    public class GuluOlympicsNormalGame : APVEGameControl
+    public class GuluOlympicsNormalGame : APVEGameControl //atletizm normal
     {
         public override void OnCreated()
         {
 			base.OnCreated();
-			base.Game.SetupMissions("6101,6102,6103,6104");
-			base.Game.TotalMissionCount = 4;
+			base.Game.SetupMissions("6101,6102,6103,6104"); //atletizm normal misson id leri etap 1, etap 2, etap 3 ve etap 4
+            base.Game.TotalMissionCount = 4; //atletizm normal etap sayısı 4
         }
 
         public override void OnPrepated()
         {
 			base.OnPrepated();
-			//base.Game.SessionId = 0;
         }
 
         public override int CalculateScoreGrade(int score)

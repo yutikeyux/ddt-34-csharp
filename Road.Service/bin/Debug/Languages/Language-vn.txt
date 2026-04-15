@@ -122,7 +122,7 @@ ConsortiaChangeChairmanHandler.Self:Kendinize veremezsiniz.
 ConsortiaChatHandler.IsBanChat:Daha fazla yorum yapamazsınız. 
 ConsortiaCreateHandler.Long:Birlik adı çok uzun. 
 ConsortiaDescriptionUpdateHandler.Long:İçerik çok uzun. 
-ConsortiaDutyUpdateHandler.Long:Üye pozisyon unvanı çok uzun. 
+ConsortiaDutyUpdateHandler.Long:Üye pozisyon ünvanı çok uzun. 
 ConsortiaPlacardUpdateHandler.Long:İçerik çok uzun. 
 ConsortiaUserRemarkHandler.Long:İçerik çok uzun. 
 ActivePullDownHandler.Fail:Ödül alımı başarısız. 
@@ -3672,8 +3672,8 @@ ItemReclaimHandler.Success2:Kazandığınız {0} altın.
 ItemReclaimHandler.NotSuccess: Satış başarısız.
 PVPGame.SendGameOVer.Msg1:Oyun bitti. Elde ettiniz: {0} kupon
 PVPGame.SendGameOVer.Msg2:Etkinlikten {0} tanrı savaş sonrası komutu aldınız.?
-PVPGame.SendGameOVer.Msg3:Oyun bitti. Yendiniz, {0} prestij kazandınız.
-PVPGame.SendGameOVer.Msg4:Oyun bitti. Kaybettiniz, {0} prestij kazandınız.
+PVPGame.SendGameOVer.Msg3:Oyun bitti. Yendiniz, {0} prestij kazandınız. Kalan Lig Hakkınız: {1}
+PVPGame.SendGameOVer.Msg4:Oyun bitti. Kaybettiniz, {0} prestij kazandınız. Kalan Lig Hakkınız: {1}
 PVPGame.SendGameOVer.Msg5:Sunucu hatası.
 PVPGame.SendGameOVer.Msg6:Mücadeleyi kazandınız ve {0} onursal madalya ödülü kazandınız!
 PVPGame.SendGameOVer.Msg7:Mücadeleyi kaybettiniz, {0} onursal madalya ödülü kazandınız!
@@ -4007,9 +4007,9 @@ OpenUpArkHandler.RingScore:Karı-koca {0} sevgi puanı kazandınız.
 FigSpiritUpGradeHandler.WrongPlace: Yanlış Yer
 UseLoveChocolateHandler.UseFail:Bugün yeteri kadar paket açtınız.
 NewTitleCardHandler.ItemNotFound:Hiçbir öğe bulunamadı.
-NewTitleCardHandler.TitleNotFound:Bu unvan mevcut değil.
+NewTitleCardHandler.TitleNotFound:Bu ünvan mevcut değil.
 NewTitleCardHandler.RemoveItemError:Veri işlenirken hata oluştu. Lütfen daha sonra tekrar deneyiniz.
-NewTitleCardHandler.Success:Tebrikler, unvan elde ettin: {0}.
+NewTitleCardHandler.Success:Tebrikler, ünvan elde ettin: {0}.
 UseLoveChocolateHandler.UnMerry:Bu özelliği kullanmak için evli olmalısınız.
 AddPetEquip.WrongItem:Ekipman yanlış
 AddPetEquip.Success:Başarıyla donatıldı!

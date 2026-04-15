@@ -13,6 +13,9 @@ namespace Bussiness
         [ConfigProperty("BeginAuction", "ÅÄÂòÊ±ÆðÊ¼Ëæ»úÊ±¼ä", 20)]
 		public static int BeginAuction;
 
+        [ConfigProperty("WantTryAgainValues", "WantTryAgainValues", "2002,500")]
+        public static string WantTryAgainValues;
+
         [ConfigProperty("BigExp", "µ±Ç°ÓÎÏ·°æ±¾", "11906|99")]
 		public static readonly string BigExp;
 

@@ -440,7 +440,7 @@ namespace Game.Server.Battle
             else
             {
                 RingStationMgr.CreateAutoBot(playerById, roomtype, gametype, npcId, countPlayer);
-                Console.WriteLine("Create " + countPlayer.ToString() + " bot by " + playerById.PlayerCharacter.NickName);
+               // Console.WriteLine("Create " + countPlayer.ToString() + " bot by " + playerById.PlayerCharacter.NickName);
             }
         }
 

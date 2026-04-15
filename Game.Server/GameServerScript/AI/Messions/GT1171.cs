@@ -1,270 +1,231 @@
-using System;
 using System.Collections.Generic;
+using Game.Logic;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
 
 namespace GameServerScript.AI.Messions
 {
-    // Token: 0x02000264 RID: 612
     public class GT1171 : AMissionControl
     {
-        // Token: 0x06001F4C RID: 8012 RVA: 0x000E5DFC File Offset: 0x000E3FFC
+        private List<SimpleNpc> list_0;
+
+        private List<SimpleNpc> list_1;
+
+        private int int_0;
+
+        private int int_1;
+
+        private int int_2;
+
+        private int int_3;
+
+        private int int_4;
+
+        private int int_5;
+
+        private int int_6;
+
+        private int int_7;
+
         public override int CalculateScoreGrade(int score)
         {
             base.CalculateScoreGrade(score);
-            bool flag = score > 930;
-            int result;
-            if (flag)
+            if (score > 930)
             {
-                result = 3;
+                return 3;
             }
-            else
+            if (score > 850)
             {
-                bool flag2 = score > 850;
-                if (flag2)
-                {
-                    result = 2;
-                }
-                else
-                {
-                    bool flag3 = score > 775;
-                    if (flag3)
-                    {
-                        result = 1;
-                    }
-                    else
-                    {
-                        result = 0;
-                    }
-                }
+                return 2;
             }
-            return result;
+            if (score > 775)
+            {
+                return 1;
+            }
+            return 0;
         }
 
-        // Token: 0x06001F4D RID: 8013 RVA: 0x000E5E4C File Offset: 0x000E404C
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-            int[] NpcIDleri = new int[]
+            int[] npcIds = new int[2]
             {
-                this.Pembe_Bogolu,
-                this.Mavi_Bogolu
+                int_6,
+                int_7
             };
-            base.Game.LoadResources(NpcIDleri);
-            base.Game.LoadNpcGameOverResources(NpcIDleri);
+            base.Game.LoadResources(npcIds);
+            base.Game.LoadNpcGameOverResources(npcIds);
             base.Game.SetMap(1072);
         }
 
-        // Token: 0x06001F4E RID: 8014 RVA: 0x000E5EA8 File Offset: 0x000E40A8
         public override void OnStartGame()
         {
             base.OnStartGame();
             for (int i = 0; i < 4; i++)
             {
-                this.Toplam_Pembe_Bogo++;
-                bool flag = i < 1;
-                if (flag)
+                int_2++;
+                if (i < 1)
                 {
-                    this.Pembe_Bogo_Listesi.Add(base.Game.CreateNpc(this.Pembe_Bogolu, 900 + (i + 1) * 100, 505, -1, 1));
+                    list_0.Add(base.Game.CreateNpc(int_6, 900 + (i + 1) * 100, 505, -1, 1));
+                }
+                else if (i < 3)
+                {
+                    list_0.Add(base.Game.CreateNpc(int_6, 920 + (i + 1) * 100, 505, -1, 1));
                 }
                 else
                 {
-                    bool flag2 = i < 3;
-                    if (flag2)
-                    {
-                        this.Pembe_Bogo_Listesi.Add(base.Game.CreateNpc(this.Pembe_Bogolu, 920 + (i + 1) * 100, 505, -1, 1));
-                    }
-                    else
-                    {
-                        this.Pembe_Bogo_Listesi.Add(base.Game.CreateNpc(this.Pembe_Bogolu, 1000 + (i + 1) * 100, 515, -1, 1));
-                    }
+                    list_0.Add(base.Game.CreateNpc(int_6, 1000 + (i + 1) * 100, 515, -1, 1));
                 }
             }
-            this.Toplam_Mavi_Bogo++;
-            this.Mavi_Bogo_Listesi.Add(base.Game.CreateNpc(this.Mavi_Bogolu, 1467, 495, -1, 1));
+            int_3++;
+            list_1.Add(base.Game.CreateNpc(int_7, 1467, 495, -1, 1));
         }
 
-        // Token: 0x06001F4F RID: 8015 RVA: 0x000E5FC4 File Offset: 0x000E41C4
         public override void OnNewTurnStarted()
         {
-            this.Pembe_Bogo_Sayýlar = this.Toplam_Pembe_Bogo - this.Kalan_Pembe_Bogo;
-            this.Mavi_Bogo_Sayýlar = this.Toplam_Mavi_Bogo - this.Kalan_Mavi_Bogo;
-            bool flag = base.Game.GetLivedLivings().Count == 0;
-            if (flag)
+            int_0 = int_2 - int_4;
+            int_1 = int_3 - int_5;
+            if (base.Game.GetLivedLivings().Count == 0)
             {
                 base.Game.PveGameDelay = 0;
             }
-            bool flag2 = base.Game.TurnIndex <= 1 || base.Game.CurrentPlayer.Delay <= base.Game.PveGameDelay || (this.Mavi_Bogo_Sayýlar == 3 && this.Pembe_Bogo_Sayýlar == 12);
-            if (!flag2)
+            if (base.Game.TurnIndex <= 1 || base.Game.CurrentPlayer.Delay <= base.Game.PveGameDelay || (int_1 == 3 && int_0 == 12))
             {
-                bool flag3 = this.Toplam_Pembe_Bogo < 12 && this.Toplam_Mavi_Bogo < 3;
-                if (flag3)
+                return;
+            }
+            if (int_2 < 12 && int_3 < 3)
+            {
+                for (int i = 0; i < 4; i++)
                 {
-                    for (int i = 0; i < 4; i++)
+                    int_2++;
+                    if (i < 1)
                     {
-                        this.Toplam_Pembe_Bogo++;
-                        bool flag4 = i < 1;
-                        if (flag4)
+                        list_0.Add(base.Game.CreateNpc(int_6, 900 + (i + 1) * 100, 505, -1, 1));
+                    }
+                    else if (i < 3)
+                    {
+                        list_0.Add(base.Game.CreateNpc(int_6, 920 + (i + 1) * 100, 505, -1, 1));
+                    }
+                    else
+                    {
+                        list_0.Add(base.Game.CreateNpc(int_6, 1000 + (i + 1) * 100, 515, -1, 1));
+                    }
+                }
+                int_3++;
+                list_1.Add(base.Game.CreateNpc(int_7, 1467, 495, -1, 1));
+            }
+            else
+            {
+                if (int_0 >= 12)
+                {
+                    return;
+                }
+                if (12 - int_0 >= 4)
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (int_2 < 15 && int_0 != 12)
                         {
-                            this.Pembe_Bogo_Listesi.Add(base.Game.CreateNpc(this.Pembe_Bogolu, 900 + (i + 1) * 100, 505, -1, 1));
-                        }
-                        else
-                        {
-                            bool flag5 = i < 3;
-                            if (flag5)
+                            int_2++;
+                            if (j < 1)
                             {
-                                this.Pembe_Bogo_Listesi.Add(base.Game.CreateNpc(this.Pembe_Bogolu, 920 + (i + 1) * 100, 505, -1, 1));
+                                list_0.Add(base.Game.CreateNpc(int_6, 900 + (j + 1) * 100, 505, -1, 1));
+                            }
+                            else if (j < 3)
+                            {
+                                list_0.Add(base.Game.CreateNpc(int_6, 920 + (j + 1) * 100, 505, -1, 1));
                             }
                             else
                             {
-                                this.Pembe_Bogo_Listesi.Add(base.Game.CreateNpc(this.Pembe_Bogolu, 1000 + (i + 1) * 100, 515, -1, 1));
+                                list_0.Add(base.Game.CreateNpc(int_6, 1000 + (j + 1) * 100, 515, -1, 1));
                             }
                         }
                     }
-                    this.Toplam_Mavi_Bogo++;
-                    this.Mavi_Bogo_Listesi.Add(base.Game.CreateNpc(this.Mavi_Bogolu, 1467, 495, -1, 1));
                 }
-                else
+                else if (12 - int_0 > 0)
                 {
-                    bool flag6 = this.Pembe_Bogo_Sayýlar >= 12;
-                    if (!flag6)
+                    for (int k = 0; k < 12 - int_0; k++)
                     {
-                        bool flag7 = 12 - this.Pembe_Bogo_Sayýlar >= 4;
-                        if (flag7)
+                        if (int_2 < 15 && int_0 != 12)
                         {
-                            for (int j = 0; j < 4; j++)
+                            int_2++;
+                            if (k < 1)
                             {
-                                bool flag8 = this.Toplam_Pembe_Bogo < 15 && this.Pembe_Bogo_Sayýlar != 12;
-                                if (flag8)
-                                {
-                                    this.Toplam_Pembe_Bogo++;
-                                    bool flag9 = j < 1;
-                                    if (flag9)
-                                    {
-                                        this.Pembe_Bogo_Listesi.Add(base.Game.CreateNpc(this.Pembe_Bogolu, 900 + (j + 1) * 100, 505, -1, 1));
-                                    }
-                                    else
-                                    {
-                                        bool flag10 = j < 3;
-                                        if (flag10)
-                                        {
-                                            this.Pembe_Bogo_Listesi.Add(base.Game.CreateNpc(this.Pembe_Bogolu, 920 + (j + 1) * 100, 505, -1, 1));
-                                        }
-                                        else
-                                        {
-                                            this.Pembe_Bogo_Listesi.Add(base.Game.CreateNpc(this.Pembe_Bogolu, 1000 + (j + 1) * 100, 515, -1, 1));
-                                        }
-                                    }
-                                }
+                                list_0.Add(base.Game.CreateNpc(int_6, 900 + (k + 1) * 100, 505, -1, 1));
                             }
-                        }
-                        else
-                        {
-                            bool flag11 = 12 - this.Pembe_Bogo_Sayýlar > 0;
-                            if (flag11)
+                            else if (k < 3)
                             {
-                                for (int k = 0; k < 12 - this.Pembe_Bogo_Sayýlar; k++)
-                                {
-                                    bool flag12 = this.Toplam_Pembe_Bogo < 15 && this.Pembe_Bogo_Sayýlar != 12;
-                                    if (flag12)
-                                    {
-                                        this.Toplam_Pembe_Bogo++;
-                                        bool flag13 = k < 1;
-                                        if (flag13)
-                                        {
-                                            this.Pembe_Bogo_Listesi.Add(base.Game.CreateNpc(this.Pembe_Bogolu, 900 + (k + 1) * 100, 505, -1, 1));
-                                        }
-                                        else
-                                        {
-                                            bool flag14 = k < 3;
-                                            if (flag14)
-                                            {
-                                                this.Pembe_Bogo_Listesi.Add(base.Game.CreateNpc(this.Pembe_Bogolu, 920 + (k + 1) * 100, 505, -1, 1));
-                                            }
-                                            else
-                                            {
-                                                this.Pembe_Bogo_Listesi.Add(base.Game.CreateNpc(this.Pembe_Bogolu, 1000 + (k + 1) * 100, 515, -1, 1));
-                                            }
-                                        }
-                                    }
-                                }
+                                list_0.Add(base.Game.CreateNpc(int_6, 920 + (k + 1) * 100, 505, -1, 1));
                             }
-                        }
-                        bool flag15 = this.Mavi_Bogo_Sayýlar < 3 && this.Toplam_Mavi_Bogo < 5;
-                        if (flag15)
-                        {
-                            this.Toplam_Mavi_Bogo++;
-                            this.Mavi_Bogo_Listesi.Add(base.Game.CreateNpc(this.Mavi_Bogolu, 1467, 495, -1, 1));
+                            else
+                            {
+                                list_0.Add(base.Game.CreateNpc(int_6, 1000 + (k + 1) * 100, 515, -1, 1));
+                            }
                         }
                     }
+                }
+                if (int_1 < 3 && int_3 < 5)
+                {
+                    int_3++;
+                    list_1.Add(base.Game.CreateNpc(int_7, 1467, 495, -1, 1));
                 }
             }
         }
 
-        // Token: 0x06001F50 RID: 8016 RVA: 0x000E6452 File Offset: 0x000E4652
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
         }
 
-        // Token: 0x06001F51 RID: 8017 RVA: 0x000E645C File Offset: 0x000E465C
         public override bool CanGameOver()
         {
             bool flag = true;
-            this.Kalan_Pembe_Bogo = 0;
-            this.Kalan_Mavi_Bogo = 0;
-            foreach (SimpleNpc item in this.Pembe_Bogo_Listesi)
+            int_4 = 0;
+            int_5 = 0;
+            foreach (SimpleNpc item in list_0)
             {
-                bool isLiving = item.IsLiving;
-                if (isLiving)
+                if (item.IsLiving)
                 {
                     flag = false;
                 }
                 else
                 {
-                    this.Kalan_Pembe_Bogo++;
+                    int_4++;
                 }
             }
-            foreach (SimpleNpc item2 in this.Mavi_Bogo_Listesi)
+            foreach (SimpleNpc item2 in list_1)
             {
-                bool isLiving2 = item2.IsLiving;
-                if (isLiving2)
+                if (item2.IsLiving)
                 {
                     flag = false;
                 }
                 else
                 {
-                    this.Kalan_Mavi_Bogo++;
+                    int_5++;
                 }
             }
-            bool flag2 = flag && this.Toplam_Pembe_Bogo == 15 && this.Toplam_Mavi_Bogo == 5;
-            bool result;
-            if (flag2)
+            if (flag && int_2 == 15 && int_3 == 5)
             {
                 base.Game.IsWin = true;
-                result = true;
+                return true;
             }
-            else
+            if (base.Game.TurnIndex > base.Game.MissionInfo.TotalTurn - 1)
             {
-                bool flag3 = base.Game.TurnIndex > base.Game.MissionInfo.TotalTurn - 1;
-                result = flag3;
+                return true;
             }
-            return result;
+            return false;
         }
 
-        // Token: 0x06001F52 RID: 8018 RVA: 0x000E65A4 File Offset: 0x000E47A4
         public override int UpdateUIData()
         {
             base.UpdateUIData();
             return base.Game.TotalKillCount;
         }
 
-        // Token: 0x06001F53 RID: 8019 RVA: 0x000E65C8 File Offset: 0x000E47C8
         public override void OnGameOver()
         {
             base.OnGameOver();
-            bool flag = base.Game.GetLivedLivings().Count == 0;
-            if (flag)
+            if (base.Game.GetLivedLivings().Count == 0)
             {
                 base.Game.IsWin = true;
             }
@@ -274,43 +235,12 @@ namespace GameServerScript.AI.Messions
             }
         }
 
-        // Token: 0x06001F54 RID: 8020 RVA: 0x000E6612 File Offset: 0x000E4812
         public GT1171()
         {
-            this.Pembe_Bogo_Listesi = new List<SimpleNpc>();
-            this.Mavi_Bogo_Listesi = new List<SimpleNpc>();
-            this.Pembe_Bogolu = 1101;
-            this.Mavi_Bogolu = 1102;
+            list_0 = new List<SimpleNpc>();
+            list_1 = new List<SimpleNpc>();
+            int_6 = 1101;
+            int_7 = 1102;
         }
-
-        // Token: 0x0400117A RID: 4474
-        private List<SimpleNpc> Pembe_Bogo_Listesi;
-
-        // Token: 0x0400117B RID: 4475
-        private List<SimpleNpc> Mavi_Bogo_Listesi;
-
-        // Token: 0x0400117C RID: 4476
-        private int Pembe_Bogo_Sayýlar;
-
-        // Token: 0x0400117D RID: 4477
-        private int Mavi_Bogo_Sayýlar;
-
-        // Token: 0x0400117E RID: 4478
-        private int Toplam_Pembe_Bogo;
-
-        // Token: 0x0400117F RID: 4479
-        private int Toplam_Mavi_Bogo;
-
-        // Token: 0x04001180 RID: 4480
-        private int Kalan_Pembe_Bogo;
-
-        // Token: 0x04001181 RID: 4481
-        private int Kalan_Mavi_Bogo;
-
-        // Token: 0x04001182 RID: 4482
-        private int Pembe_Bogolu;
-
-        // Token: 0x04001183 RID: 4483
-        private int Mavi_Bogolu;
     }
 }

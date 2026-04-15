@@ -1,35 +1,38 @@
-
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Game.Logic.AI;
 using Game.Logic.Phy.Object;
-using Game.Logic;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace GameServerScript.AI.Messions
 {
     public class DTGAH1166 : AMissionControl
     {
-        private SimpleBoss m_grace;
-        private SimpleNpc m_captain;
-        private List<SimpleNpc> m_chicken = new List<SimpleNpc>();
-        private PhysicalObj m_front;
-        private int IsSay = 0;
-        private int graceID = 6323;
-        private int redID = 6321;
-        private int blueID = 6322;
-        private int captainID = 6314;
-        private static string[] KillChat = new string[]{
-           "Gửi cho bạn trở về nhà!",
+        private SimpleBoss simpleBoss_0;
 
-           "Một mình, bạn có ảo tưởng có thể đánh bại tôi?"
-        };
+        private SimpleBoss simpleBoss_1;
 
-        private static string[] ShootedChat = new string[]{
-            " Đau ah! Đau ...",
+        private PhysicalObj physicalObj_0;
 
-            "Quốc vương vạn tuế ..."
-        };
+        private int int_0;
+
+        private int int_1;
+
+        private int int_2;
+
+        private int int_3;
+
+        private int IyjwlqAukcG;
+
+        private int int_4;
+
+        private SimpleNpc simpleNpc_0;
+
+        private int int_5;
+
+        private int int_6;
+
+        private List<Point> list_0;
+
         public override int CalculateScoreGrade(int score)
         {
             base.CalculateScoreGrade(score);
@@ -37,174 +40,196 @@ namespace GameServerScript.AI.Messions
             {
                 return 3;
             }
-            else if (score > 825)
+            if (score > 825)
             {
                 return 2;
             }
-            else if (score > 725)
+            if (score > 725)
             {
                 return 1;
             }
-            else
-            {
-                return 0;
-            }
+            return 0;
         }
 
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-            Game.AddLoadingFile(1, "bombs/86.swf", "tank.resource.bombs.Bomb86");
-            Game.AddLoadingFile(2, "image/game/living/Living190.swf", "game.living.Living190");
-            Game.AddLoadingFile(2, "image/game/effect/6/danti.swf", "asset.game.six.danti");
-            Game.AddLoadingFile(2, "image/game/effect/6/cpdian.swf", "asset.game.six.cpdian");
-            Game.AddLoadingFile(2, "image/game/effect/6/qunti.swf", "asset.game.six.qunti");
-            Game.AddLoadingFile(2, "image/game/effect/6/qunjia.swf", "asset.game.six.qunjia");
-            int[] resources = { graceID, redID, blueID, captainID };
-            Game.LoadResources(resources);
-            Game.LoadNpcGameOverResources(resources);
-            Game.SetMap(1166);
-        }
-
-        public override void OnPrepareStartGame()
-        {
-            base.OnPrepareStartGame();
-            m_front = Game.Createlayer(1098, 1080, "hide", "game.living.Living190", "stand", 1, 0);
-            CreateGraceAndCaptain();
+            base.Game.AddLoadingFile(2, "image/game/effect/6/danti.swf", "asset.game.six.danti");
+            base.Game.AddLoadingFile(2, "image/game/effect/6/qunti.swf", "asset.game.six.qunti");
+            base.Game.AddLoadingFile(2, "image/game/effect/6/zhaozi.swf", "asset.game.six.zhaozi");
+            base.Game.AddLoadingFile(2, "image/game/effect/6/danjia.swf", "asset.game.six.danjia");
+            base.Game.AddLoadingFile(2, "image/game/effect/6/qunjia.swf", "asset.game.six.qunjia");
+            int[] npcIds = new int[5]
+            {
+                int_0,
+                int_2,
+                int_1,
+                int_3,
+                IyjwlqAukcG
+            };
+            base.Game.LoadResources(npcIds);
+            base.Game.LoadNpcGameOverResources(npcIds);
+            base.Game.SetMap(1166);
         }
 
         public override void OnStartGame()
         {
             base.OnStartGame();
-            Game.Param2 = 0;
-            Game.SendLivingActionMapping(m_captain, "stand", "standC");
-            m_captain.Say("Rồi, bây giờ thì đồng đội chúng ta phải gắng sức vượt qua đội xanh.", 0, 1000, 5000);
-            m_captain.Say("Xuất phát nào!", 0, 5000);
-            m_captain.PlayMovie("go", 5500, 0);
-            CreateMember();
-
+            simpleBoss_0 = base.Game.CreateBoss(int_0, 1910, 1080, -1, 1, "");
+            simpleBoss_0.Delay = 1;
+            simpleBoss_0.Config.CanTakeDamage = false;
+            simpleBoss_1 = base.Game.CreateBoss(IyjwlqAukcG, 460, 1080, -1, 1, "");
+            simpleBoss_1.Config.CanTakeDamage = false;
+            simpleBoss_1.Config.IsTurn = false;
+            simpleBoss_1.MoveTo(450, 1080, "walk", 500);
+            simpleBoss_1.PlayMovie("go", 1500, 0);
+            simpleBoss_1.Say("Mavi takıma saldırın, kırmızı takımı koruyun.", 0, 2000);
+            physicalObj_0 = base.Game.Createlayerboss(1100, 1080, "font", "game.living.Living190", "stand", 1, 0);
+            simpleBoss_0.CallFuction(method_0, 2500);
+            base.Game.PveGameDelay = 0;
         }
 
-        private void CreateGraceAndCaptain()
+        private void method_0()
         {
-            //Grace
-            LivingConfig config = Game.BaseLivingConfig();
-            config.CanTakeDamage = false;
-            config.KeepLife = true;
-            m_grace = Game.CreateBoss(graceID, 1950, 1080, -1, 1, "", config);
-            m_grace.AddDelay(1000);
-            LivingConfig config2 = Game.BaseLivingConfig();
-            config2.CanTakeDamage = false;
-            config2.IsTurn = false;
-            config.KeepLife = true;
-            m_captain = Game.CreateNpc(captainID, 494, 1080, 1, -1, "standC", config2);
-            m_captain.BlockTurn = true;
+            int_4 = 10;
+            simpleNpc_0 = base.Game.CreateNpc(int_1, 300, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.MaxStepMove = 6;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_1, 250, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.MaxStepMove = 6;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_1, 200, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.MaxStepMove = 6;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_1, 150, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.MaxStepMove = 6;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_1, 100, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.MaxStepMove = 6;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            int_4 = 9;
+            simpleNpc_0 = base.Game.CreateNpc(int_2, 50, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.IsHelper = true;
+            simpleNpc_0.Config.MaxStepMove = 4;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_2, 0, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.IsHelper = true;
+            simpleNpc_0.Config.MaxStepMove = 4;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_2, -50, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.IsHelper = true;
+            simpleNpc_0.Config.MaxStepMove = 4;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_2, -100, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.IsHelper = true;
+            simpleNpc_0.Config.MaxStepMove = 4;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
+            simpleNpc_0 = base.Game.CreateNpc(int_2, -150, 1080, 1, 1);
+            simpleNpc_0.Config.IsFly = true;
+            simpleNpc_0.Config.IsHelper = true;
+            simpleNpc_0.Config.MaxStepMove = 4;
+            simpleNpc_0.Config.MinBlood = 1;
+            simpleNpc_0.Config.FirstStepMove = int_4;
+            simpleNpc_0.MoveTo(list_0[0].X, list_0[0].Y, "walk", 0, 8);
+            int_4 -= 2;
         }
-        private void CreateMember()
-        {
-            LivingConfig redTeam = Game.BaseLivingConfig();
-            redTeam.IsHelper = true;
-            redTeam.IsFly = true;
-            redTeam.IsComplete = false;
-            redTeam.KeepLife = true;
 
-            LivingConfig blueTeam = Game.BaseLivingConfig();
-            blueTeam.IsFly = true;
-            blueTeam.IsComplete = false;
-            blueTeam.KeepLife = true;
-
-            //posX
-            //int[] m_diemden = { 675, 755, 835, 915, 995, 1075, 1155, 1235, 1315, 1395 };
-            int[] m_diemden = { 1315, 1155, 995, 835, 675, 1395, 1235, 1075, 915, 755 };
-            for (int i = 0; i < 10; i++)
-            {
-                if (i < 5)//red
-                {
-                    m_chicken.Add(Game.CreateNpc(redID, 90, 1080, 0, 1, redTeam));
-                }
-                else
-                {
-                    m_chicken.Add(Game.CreateNpc(blueID, 90, 1080, 0, 1, blueTeam));
-                }
-                m_chicken[i].Properties1 = i;//stt
-                m_chicken[i].Properties3 = m_diemden[i];
-                m_chicken[i].IsHide = true;
-            }
-        }
-
-        public override void OnNewTurnStarted()
-        {
-            base.OnNewTurnStarted();
-        }
-
-        public override void OnBeginNewTurn()
-        {
-            base.OnBeginNewTurn();
-            IsSay = 0;
-        }
-        private void Ending()
-        {
-            Game.CanEndGame = true;
-        }
-        private void EndGame()
-        {
-            Game.SendFreeFocus(1100, 200, 0, 0, 2500);
-            Game.SendFreeFocus(m_grace.X, m_grace.Y, 0, 3000, 6000);
-            m_grace.PlayMovie((Game.TotalKillCount >= 5) ? "die" : "happy", 3000, 2500);
-            m_grace.CallFuction(Ending, 3000);
-        }
         public override bool CanGameOver()
         {
             base.CanGameOver();
-            foreach (SimpleNpc npc in Game.GetNPCLivingWithID(blueID))
+            SimpleNpc[] array = base.Game.FindAllNpcLiving();
+            int_5 = 0;
+            int_6 = 0;
+            SimpleNpc[] array2 = array;
+            foreach (SimpleNpc simpleNpc in array2)
             {
-                if (npc.Y < 285)
-                    npc.Config.IsComplete = true;
+                if (simpleNpc.Config.CompleteStep)
+                {
+                    if (simpleNpc.NpcInfo.ID == int_2)
+                    {
+                        int_5++;
+                    }
+                    else
+                    {
+                        int_6++;
+                    }
+                }
             }
-            foreach (SimpleNpc npc in Game.GetNPCLivingWithID(redID))
+            if (int_5 < 5 && int_6 < 5)
             {
-                if (npc.Y < 285)
-                    npc.Config.IsComplete = true;
+                return false;
             }
-            if (Game.TotalKillCount >= 5)
-            {
-                Game.TotalKillCount = 5;
-                Game.Param2 = 0;
-                return true;
-            }
-            if (Game.Param2 > 5)
-                Game.Param2 = 5;
-            if (Game.Param2 >= 5)
-            {
-                Game.TotalKillCount = 0;
-                return true;
-            }
-            return false;
-
+            return true;
         }
 
         public override int UpdateUIData()
         {
-            return Game.TotalKillCount;
+            return base.Game.TotalKillCount;
         }
 
         public override void OnGameOver()
         {
             base.OnGameOver();
-
-            if (Game.TotalKillCount >= 5)
+            if (int_5 >= 5)
             {
-                Game.IsWin = true;
+                base.Game.IsWin = true;
             }
-            if (Game.Param2 >= 5)
+            else
             {
-                Game.IsWin = false;
+                base.Game.IsWin = false;
             }
         }
-        public override void OnPrepareGameOver()
+
+        public DTGAH1166()
         {
-            base.OnPrepareGameOver();
-            EndGame();
+
+            int_0 = 6323;
+            int_1 = 6322;
+            int_2 = 6321;
+            int_3 = 6324;
+            IyjwlqAukcG = 6314;
+            int_4 = 11;
+            list_0 = new List<Point>
+            {
+                new Point(620, 1080)
+            };
+
         }
     }
 }

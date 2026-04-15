@@ -93,7 +93,7 @@ namespace GameServerScript.AI.Messions
             simpleBoss_0 = base.Game.CreateBoss(int_2, 800, 400, -1, 1, "");
             simpleBoss_0.FallFrom(800, 400, "fall", 0, 2, 1200, null);
             simpleBoss_0.SetRelateDemagemRect(-42, -187, 75, 187);
-            simpleBoss_0.Say("Buraya kadar gelebildiğine göre artık yaşamak istemiyorsun diye yorumladım.", 0, 2000);
+            simpleBoss_0.Say("Yeter artık! Törenimi nasıl bölmeye cüret edersiniz? Yaşamak istemiyor musunuz?", 0, 2000);
             physicalObj_0.PlayMovie("in", 7000, 0);
             physicalObj_1.PlayMovie("in", 7000, 0);
             physicalObj_0.PlayMovie("out", 13000, 0);
@@ -148,6 +148,10 @@ namespace GameServerScript.AI.Messions
             {
                 int_10 = simpleBoss_1.Direction;
                 int_1++;
+                return true;
+            }
+            if (base.Game.TurnIndex > 200)
+            {
                 return true;
             }
             return false;
@@ -206,16 +210,16 @@ namespace GameServerScript.AI.Messions
         static BLTTT1126()
         {
             string_0 = new string[3]
-             {
-                "Sizle dalga geçmekten bile o kadar yoruldum ki!",
-                "Element'in işaret ettiği şey bu mu?",
-                "Gücümün sadece bir kısmını kullandım."
-             };
+           {
+                "Sizinle şakalaşmaktan bıktım!",
+                "Hepsi bu mu?",
+                "Gücümün sadece küçük bir kısmını kullandım."
+           };
             string_1 = new string[3]
             {
-                "Beni kızdırmaya cesaretin var mı?",
-                "Saçıyorum, kaçıyorum!!!",
-                "Seni piç. Bana vurmaya nasıl cesaret edersin!!"
+                "Beni nasıl kızdırmaya cüret edersin?",
+                "Kaçtım, kaçtım!!!",
+                "Seni alçak herif. Bana vurmaya nasıl cüret edersin!!"
             };
         }
     }

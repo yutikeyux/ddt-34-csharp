@@ -24,9 +24,9 @@ namespace Game.Logic.Cmd
             {
                 PVPGame pvp = game as PVPGame;
                 
-                //GSPacketIn pkg = new GSPacketIn((byte)ePackageTypeLogic.GAME_CMD, player.Id);
-                //pkg.WriteInt((int)eTankCmdType.REPORT_COMMAND);
-                //game.SendToAll(pkg);
+                GSPacketIn pkg = new GSPacketIn((byte)ePackageTypeLogic.GAME_CMD, player.Id);
+                pkg.WriteInt((int)eTankCmdType.REPORT_COMMAND);
+                game.SendToAll(pkg);
             }
         }
     }

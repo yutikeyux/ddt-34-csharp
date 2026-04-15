@@ -91,6 +91,8 @@ namespace Bussiness
                 Quality = (int)dr["Quality"]
             };
         }
+
+
         public GypsyItemDataInfo[] GetAllGypsyItemDataByID(int ID)
         {
             List<GypsyItemDataInfo> list = new List<GypsyItemDataInfo>();
@@ -3971,6 +3973,7 @@ namespace Bussiness
             player.necklaceExpAdd = (int)reader["necklaceExpAdd"];
             player.GhostEquipList = reader["GhostEquipList"] == DBNull.Value ? "" : (string)reader["GhostEquipList"];
             player.fineSuitExp = (int)reader["fineSuitExp"];
+            player.DailyMoneyUsed = reader["DailyMoneyUsed"] == DBNull.Value ? 0 : (int)reader["DailyMoneyUsed"];
             return player;
         }
 
@@ -5878,7 +5881,7 @@ namespace Bussiness
                 {
                     return flag;
                 }
-                SqlParameter[] para = new SqlParameter[88];
+                SqlParameter[] para = new SqlParameter[89];
                 para[0] = new SqlParameter("@UserID", player.ID);
                 para[1] = new SqlParameter("@Attack", player.Attack);
                 para[2] = new SqlParameter("@Colors", (player.Colors == null) ? "" : player.Colors);
@@ -5970,6 +5973,7 @@ namespace Bussiness
                 para[85] = new SqlParameter("@necklaceExpAdd", player.necklaceExpAdd);
                 para[86] = new SqlParameter("@GhostEquipList", player.GhostEquipList);
                 para[87] = new SqlParameter("@fineSuitExp", player.fineSuitExp);
+                para[88] = new SqlParameter("@DailyMoneyUsed", player.DailyMoneyUsed);
                 sqlParameters2 = para;
                 db.RunProcedure("SP_Users_Update", para);
                 flag = (int)para[21].Value == 0;
@@ -5996,6 +6000,8 @@ namespace Bussiness
                 return flag;
             }
         }
+
+
 
         public bool UpdatePlayerGotRingProp(int groomID, int brideID)
         {

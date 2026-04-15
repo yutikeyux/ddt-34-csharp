@@ -218,7 +218,7 @@ namespace Bussiness.Interface
                         {
                             info = null;
                             // message = "Active is fail!";
-                            message = LanguageMgr.GetTranslation("BaseInterface.LoginAndUpdate.Fail");
+                            message = LanguageMgr.GetTranslation("Hesabınız bulunamadı");
                         }
                         else
                         {

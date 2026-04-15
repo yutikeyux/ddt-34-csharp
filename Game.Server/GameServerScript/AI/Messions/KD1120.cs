@@ -9,11 +9,11 @@ namespace GameServerScript.AI.Messions
     {
         private List<SimpleNpc> someNpc = new List<SimpleNpc>();
 
-        private int dieRedCount;
+        private int KırmızıKarıncaÖlümSayısı;
 
-        private int[] npcIDs = { 2001, 2002 };
+        private int[] KarıncaIDleri = { 2001, 2002 };
 
-        private int[] birthX = { 52, 115, 183, 253, 320, 1206, 1275, 1342, 1410, 1475 };
+        private int[] DoğumNoktaları = { 52, 115, 183, 253, 320, 1206, 1275, 1342, 1410, 1475 };
 
         public override int CalculateScoreGrade(int score)
         {
@@ -36,8 +36,8 @@ namespace GameServerScript.AI.Messions
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
-            int[] resources = { npcIDs[0], npcIDs[1] };
-            int[] gameOverResources = { npcIDs[1], npcIDs[0], npcIDs[0], npcIDs[0] };
+            int[] resources = { KarıncaIDleri[0], KarıncaIDleri[1] };
+            int[] gameOverResources = { KarıncaIDleri[1], KarıncaIDleri[0], KarıncaIDleri[0], KarıncaIDleri[0] };
             base.Game.LoadResources(resources);
             base.Game.LoadNpcGameOverResources(gameOverResources);
             base.Game.SetMap(1120);
@@ -46,26 +46,26 @@ namespace GameServerScript.AI.Messions
         public override void OnStartGame()
         {
             base.OnStartGame();
-            int index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 52, 206, 1, 1));
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 100, 207, 1, 1));
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 155, 208, 1, 1));
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 210, 207, 1, 1));
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 253, 207, 1, 1));
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1275, 208, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1325, 206, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1360, 208, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1410, 206, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
-            index = base.Game.Random.Next(0, npcIDs.Length);
-            someNpc.Add(base.Game.CreateNpc(npcIDs[index], 1475, 208, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
+            int index = base.Game.Random.Next(0, KarıncaIDleri.Length);
+            someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[index], 52, 206, 1, 1));
+            index = base.Game.Random.Next(0, KarıncaIDleri.Length);
+            someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[index], 100, 207, 1, 1));
+            index = base.Game.Random.Next(0, KarıncaIDleri.Length);
+            someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[index], 155, 208, 1, 1));
+            index = base.Game.Random.Next(0, KarıncaIDleri.Length);
+            someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[index], 210, 207, 1, 1));
+            index = base.Game.Random.Next(0, KarıncaIDleri.Length);
+            someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[index], 253, 207, 1, 1));
+            index = base.Game.Random.Next(0, KarıncaIDleri.Length);
+            someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[index], 1275, 208, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
+            index = base.Game.Random.Next(0, KarıncaIDleri.Length);
+            someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[index], 1325, 206, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
+            index = base.Game.Random.Next(0, KarıncaIDleri.Length);
+            someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[index], 1360, 208, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
+            index = base.Game.Random.Next(0, KarıncaIDleri.Length);
+            someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[index], 1410, 206, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
+            index = base.Game.Random.Next(0, KarıncaIDleri.Length);
+            someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[index], 1475, 208, -1, -1)); //sağdaki karıncalar oyuncuya dönük olması için -1
         }
 
         public override void OnNewTurnStarted()
@@ -85,27 +85,27 @@ namespace GameServerScript.AI.Messions
                 {
                     break;
                 }
-                int index = base.Game.Random.Next(0, birthX.Length);
-                int NpcX = birthX[index];
-                index = base.Game.Random.Next(0, npcIDs.Length);
-                if (index == 1 && GetNpcCountByID(npcIDs[1]) < 10)
+                int index = base.Game.Random.Next(0, DoğumNoktaları.Length);
+                int NpcX = DoğumNoktaları[index];
+                index = base.Game.Random.Next(0, KarıncaIDleri.Length);
+                if (index == 1 && GetNpcCountByID(KarıncaIDleri[1]) < 10)
                 {
                     if (NpcX > 700)
                     {
-                        someNpc.Add(base.Game.CreateNpc(npcIDs[1], NpcX, 506, -1, 1));
+                        someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[1], NpcX, 506, -1, 1));
                     }
                     else
                     {
-                        someNpc.Add(base.Game.CreateNpc(npcIDs[1], NpcX, 506, 1, 1));
+                        someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[1], NpcX, 506, 1, 1));
                     }
                 }
                 else if (NpcX > 700)
                 {
-                    someNpc.Add(base.Game.CreateNpc(npcIDs[1], NpcX, 506, -1, 1));
+                    someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[1], NpcX, 506, -1, 1));
                 }
                 else
                 {
-                    someNpc.Add(base.Game.CreateNpc(npcIDs[1], NpcX, 506, 1, 1));
+                    someNpc.Add(base.Game.CreateNpc(KarıncaIDleri[1], NpcX, 506, 1, 1));
                 }
             }
         }
@@ -119,7 +119,7 @@ namespace GameServerScript.AI.Messions
         {
             bool result = true;
             base.CanGameOver();
-            dieRedCount = 0;
+            KırmızıKarıncaÖlümSayısı = 0;
             foreach (SimpleNpc item in someNpc)
             {
                 if (item.IsLiving)
@@ -128,10 +128,10 @@ namespace GameServerScript.AI.Messions
                 }
                 else
                 {
-                    dieRedCount++;
+                    KırmızıKarıncaÖlümSayısı++;
                 }
             }
-            if (result && dieRedCount == base.Game.MissionInfo.TotalCount)
+            if (result && KırmızıKarıncaÖlümSayısı == base.Game.MissionInfo.TotalCount)
             {
                 base.Game.IsWin = true;
                 return true;
@@ -154,9 +154,9 @@ namespace GameServerScript.AI.Messions
             if (base.Game.GetLivedLivings().Count == 0)
             {
                 base.Game.IsWin = true;
-                List<LoadingFileInfo> loadingFileInfos = new List<LoadingFileInfo>();
-                loadingFileInfos.Add(new LoadingFileInfo(2, "image/map/2/show2", ""));
-                base.Game.SendLoadResource(loadingFileInfos);
+           //     List<LoadingFileInfo> loadingFileInfos = new List<LoadingFileInfo>();
+            //    loadingFileInfos.Add(new LoadingFileInfo(2, "image/map/2/show2", ""));
+             //   base.Game.SendLoadResource(loadingFileInfos);
             }
             else
             {

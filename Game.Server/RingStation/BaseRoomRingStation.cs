@@ -63,7 +63,8 @@ namespace Game.Server.RingStation
                 {
                     if (p != null && p != except)
                     {
-                        Console.WriteLine($"SendToAll -> ID: {p.ID} , NickName: {p.NickName}");
+                        // (gereksiz!) bot savaşlarında paket ve nickname gönderiminin yazılmasına gerek yok. not: yutikeyu
+                        //Console.WriteLine($"SendToAll -> ID: {p.ID} , NickName: {p.NickName}");
                         p.ProcessPacket(pkg);
                         pkg.ClearOffset();
                     }
@@ -83,7 +84,7 @@ namespace Game.Server.RingStation
 
         public void RemovePlayer(VirtualGamePlayer player)
         {
-            Console.WriteLine("NickName: {0}", player.NickName);
+           // Console.WriteLine("NickName: {0}", player.NickName);
             if (BattleServer != null)
             {
                 if (m_game != null)

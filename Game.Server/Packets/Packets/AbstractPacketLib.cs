@@ -1,5 +1,6 @@
 ﻿using Bussiness;
 using Bussiness.Managers;
+using Game.Logic.Phy.Object;
 using Game.Server;
 using Game.Server.Buffer;
 using Game.Server.EliteGame;
@@ -993,6 +994,7 @@ namespace Game.Base.Packets
             }
             gSPacketIn.WriteInt(info.hardCurrency);
             gSPacketIn.WriteInt(info.myHonor);//myHonor
+            gSPacketIn.WriteInt(info.DailyMoneyUsed);
             SendTCP(gSPacketIn);
         }
 

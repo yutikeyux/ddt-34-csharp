@@ -2,17 +2,17 @@ using Game.Logic.AI;
 
 namespace GameServerScript.AI.Game
 {
-    public class DragonWarHardGame : APVEGameControl
+    public class DragonWarHardGame : APVEGameControl //ejderha savaşı zor
     {
         public override void OnCreated()
         {
-			base.Game.SetupMissions("5201,5202,5203,5204");
-			base.Game.TotalMissionCount = 4;
+			base.Game.SetupMissions("5201,5202,5203,5204"); //ejderha savaşı zor misson id leri etap 1, etap 2, etap 3 ve etap 4
+            base.Game.TotalMissionCount = 4; //ejderha savaşı zor etap sayısı 4
         }
 
         public override void OnPrepated()
         {
-			//base.Game.SessionId = 0;
+			base.OnPrepated();  
         }
 
         public override int CalculateScoreGrade(int score)

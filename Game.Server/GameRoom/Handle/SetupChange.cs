@@ -45,61 +45,50 @@ namespace Game.Server.GameRoom.Handle
                         else if (GameServer.Instance.Configuration.ZoneId == 1001 || GameServer.Instance.Configuration.ZoneId == 1002 || GameServer.Instance.Configuration.ZoneId == 1003)
                         {
                             int price = pve.GetPrice((int)hardLevel);
-                            int discount = 0; // Varsayılan indirim
+                            int discount = 0;
                             int vipLevel = Player.PlayerCharacter.VIPLevel;
 
                             switch (vipLevel)
                             {
-                                case 2:
-                                    discount = 5;
-                                    price = price * (100 - discount) / 100;
-                                    break;
-                                case 3:
-                                    discount = 10;
-                                    price = price * (100 - discount) / 100;
-                                    break;
-                                case 4:
-                                    discount = 25;
-                                    price = price * (100 - discount) / 100;
-                                    break;
-                                case 5:
-                                    discount = 37;
-                                    price = price * (100 - discount) / 100;
-                                    break;
-                                case 6:
-                                    discount = 48;
-                                    price = price * (100 - discount) / 100;
-                                    break;
-                                case 7:
-                                    discount = 55;
-                                    price = price * (100 - discount) / 100;
-                                    break;
-                                case 8:
-                                    discount = 69;
-                                    price = price * (100 - discount) / 100;
-                                    break;
-                                case 9:
-                                    discount = 88;
-                                    price = price * (100 - discount) / 100;
-                                    break;
-                                default:
-                                    // VIP 1 ve altı buraya düşer, indirim yoktur (değişiklik yapılmaz)
-                                    break;
+                                case 2: discount = 5; break;
+                                case 3: discount = 10; break;
+                                case 4: discount = 25; break;
+                                case 5: discount = 37; break;
+                                case 6: discount = 48; break;
+                                case 7: discount = 55; break;
+                                case 8: discount = 69; break;
+                                case 9: discount = 88; break;
                             }
 
-                            Player.MoneyDirect(price, IsAntiMult: false, false, true);
-
-                            // Eğer indirim varsa (discount > 0) indirimli mesaj, yoksa standart mesaj gönderilir
                             if (discount > 0)
                             {
-                                Player.SendMessage(string.Format("VIP seviyeniz {0} olduğu için %{1} indirim aldınız. Başarıyla Boss odası oluşturuldu!", vipLevel, discount));
+                                price = price * (100 - discount) / 100;
+                            }
+
+                            // GÜVENLİK GÜNCELLEMESİ: Ödeme kontrolü
+                            if (Player.MoneyDirect(price, IsAntiMult: false, false, true))
+                            {
+                                // Ödeme Başarılı
+                                if (discount > 0)
+                                {
+                                    Player.SendMessage(string.Format("VIP seviyeniz {0} olduğu için %{1} indirim aldınız. Başarıyla Boss odası oluşturuldu!", vipLevel, discount));
+                                }
+                                else
+                                {
+                                    Player.SendMessage("Başarıyla Boss odası oluşturuldu!");
+                                }
+
+                                // Odayı Boss modunda güncelle
+                                RoomMgr.UpdateRoomGameType(Player.CurrentRoom, roomType, timeMode, (eHardLevel)hardLevel, levelLimits, mapId, password, roomname, isCrosszone, isOpenBoss, pic, currentFloor);
                             }
                             else
                             {
-                                Player.SendMessage("Başarıyla Boss odası oluşturuldu!");
+                                // Ödeme Başarısız (Limit Doldu veya Bakiye Yetersiz)
+                                // MoneyDirect zaten oyuncuya "Limit doldu" veya "Para yetmedi" mesajı gönderdi.
+                                // Boss modunu kapatıp normal odayı açıyoruz.
+                                isOpenBoss = false;
+                                RoomMgr.UpdateRoomGameType(Player.CurrentRoom, roomType, timeMode, (eHardLevel)hardLevel, levelLimits, mapId, password, roomname, isCrosszone, isOpenBoss, pic, currentFloor);
                             }
-
-                            RoomMgr.UpdateRoomGameType(Player.CurrentRoom, roomType, timeMode, (eHardLevel)hardLevel, levelLimits, mapId, password, roomname, isCrosszone, isOpenBoss, pic, currentFloor);
                             return true;
                         }
                         else
@@ -109,6 +98,7 @@ namespace Game.Server.GameRoom.Handle
                         }
                     }
                 }
+                // Genel oda güncelleme (Boss modu kapalıysa veya diğer odalarsa buraya düşer)
                 RoomMgr.UpdateRoomGameType(Player.CurrentRoom, roomType, timeMode, (eHardLevel)hardLevel, levelLimits, mapId, password, roomname, isCrosszone, isOpenBoss, pic, currentFloor);
             }
             return true;

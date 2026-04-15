@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Bussiness;
 using Game.Logic;
@@ -7,43 +6,58 @@ using Game.Logic.Phy.Object;
 
 namespace GameServerScript.AI.Messions
 {
-    // Token: 0x02000266 RID: 614
     public class GT1173 : AMissionControl
     {
-        // Token: 0x06001F61 RID: 8033 RVA: 0x000E6B5C File Offset: 0x000E4D5C
+        private PhysicalObj physicalObj_0;
+
+        private PhysicalObj physicalObj_1;
+
+        private SimpleBoss simpleBoss_0;
+
+        private SimpleBoss simpleBoss_1;
+
+        private PhysicalObj[] physicalObj_2;
+
+        private PhysicalObj[] physicalObj_3;
+
+        private int int_0;
+
+        private int int_1;
+
+        private int int_2;
+
+        private int int_3;
+
+        private int int_4;
+
+        private int int_5;
+
+        private int int_6;
+
+        private int int_7;
+
+        private static string[] string_0;
+
+        private static string[] string_1;
+
         public override int CalculateScoreGrade(int score)
         {
             base.CalculateScoreGrade(score);
-            bool flag = score > 1150;
-            int result;
-            if (flag)
+            if (score > 1150)
             {
-                result = 3;
+                return 3;
             }
-            else
+            if (score > 925)
             {
-                bool flag2 = score > 925;
-                if (flag2)
-                {
-                    result = 2;
-                }
-                else
-                {
-                    bool flag3 = score > 700;
-                    if (flag3)
-                    {
-                        result = 1;
-                    }
-                    else
-                    {
-                        result = 0;
-                    }
-                }
+                return 2;
             }
-            return result;
+            if (score > 700)
+            {
+                return 1;
+            }
+            return 0;
         }
 
-        // Token: 0x06001F62 RID: 8034 RVA: 0x000E6BAC File Offset: 0x000E4DAC
         public override void OnPrepareNewSession()
         {
             base.OnPrepareNewSession();
@@ -52,136 +66,115 @@ namespace GameServerScript.AI.Messions
             base.Game.AddLoadingFile(2, "image/map/1076/objects/1076MapAsset.swf", "com.mapobject.asset.WaveAsset_01_right");
             base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.BossBgAsset");
             base.Game.AddLoadingFile(2, "image/game/thing/BossBornBgAsset.swf", "game.asset.living.boguoLeaderAsset");
-            int[] resources = new int[]
+            int[] npcIds = new int[3]
             {
-                this.firstBossID,
-                this.secondBossID,
-                this.npcID
+                int_4,
+                int_5,
+                int_6
             };
-            base.Game.LoadResources(resources);
-            int[] gameOverResources = new int[]
+            base.Game.LoadResources(npcIds);
+            int[] npcIds2 = new int[1]
             {
-                this.firstBossID
+                int_4
             };
-            base.Game.LoadNpcGameOverResources(gameOverResources);
+            base.Game.LoadNpcGameOverResources(npcIds2);
             base.Game.SetMap(1076);
         }
 
-        // Token: 0x06001F63 RID: 8035 RVA: 0x000E6C94 File Offset: 0x000E4E94
         public override void OnStartGame()
         {
             base.OnStartGame();
-            this.m_kingMoive = base.Game.Createlayer(0, 0, "kingmoive", "game.asset.living.BossBgAsset", "out", 1, 1);
-            this.m_kingFront = base.Game.Createlayer(720, 495, "font", "game.asset.living.boguoKingAsset", "out", 1, 1);
-            this.m_king = base.Game.CreateBoss(this.m_state, 888, 590, -1, 1, "");
-            this.m_king.FallFrom(this.m_king.X, 0, "", 0, 2, 2000);
-            this.m_king.SetRelateDemagemRect(-21, -87, 72, 59);
-            this.m_king.AddDelay(10);
-            this.m_king.Say(LanguageMgr.GetTranslation("Seni zavallı! Nasıl cürret edersiniz?", Array.Empty<object>()), 0, 3000);
-            this.m_kingMoive.PlayMovie("in", 9000, 0);
-            this.m_kingFront.PlayMovie("in", 9000, 0);
-            this.m_kingMoive.PlayMovie("out", 13000, 0);
-            this.m_kingFront.PlayMovie("out", 13400, 0);
-            this.turn = base.Game.TurnIndex;
+            physicalObj_0 = base.Game.Createlayer(0, 0, "kingmoive", "game.asset.living.BossBgAsset", "out", 1, 1);
+            physicalObj_1 = base.Game.Createlayer(720, 495, "font", "game.asset.living.boguoKingAsset", "out", 1, 1);
+            simpleBoss_0 = base.Game.CreateBoss(int_1, 888, 590, -1, 1, "");
+            simpleBoss_0.FallFrom(simpleBoss_0.X, 0, "", 0, 2, 2000);
+            simpleBoss_0.SetRelateDemagemRect(-21, -87, 72, 59);
+            simpleBoss_0.AddDelay(10);
+            simpleBoss_0.Say(LanguageMgr.GetTranslation("GameServerScript.AI.Messions.CHM1376.msg2"), 0, 3000);
+            physicalObj_0.PlayMovie("in", 9000, 0);
+            physicalObj_1.PlayMovie("in", 9000, 0);
+            physicalObj_0.PlayMovie("out", 13000, 0);
+            physicalObj_1.PlayMovie("out", 13400, 0);
+            int_2 = base.Game.TurnIndex;
             base.Game.BossCardCount = 1;
         }
 
-        // Token: 0x06001F64 RID: 8036 RVA: 0x000E6E02 File Offset: 0x000E5002
         public override void OnNewTurnStarted()
         {
             base.OnNewTurnStarted();
         }
 
-        // Token: 0x06001F65 RID: 8037 RVA: 0x000E6E0C File Offset: 0x000E500C
         public override void OnBeginNewTurn()
         {
             base.OnBeginNewTurn();
-            bool flag = base.Game.TurnIndex > this.turn + 1;
-            if (flag)
+            if (base.Game.TurnIndex > int_2 + 1)
             {
-                bool flag2 = this.m_kingMoive != null;
-                if (flag2)
+                if (physicalObj_0 != null)
                 {
-                    base.Game.RemovePhysicalObj(this.m_kingMoive, true);
-                    this.m_kingMoive = null;
+                    base.Game.RemovePhysicalObj(physicalObj_0, sendToClient: true);
+                    physicalObj_0 = null;
                 }
-                bool flag3 = this.m_kingFront != null;
-                if (flag3)
+                if (physicalObj_1 != null)
                 {
-                    base.Game.RemovePhysicalObj(this.m_kingFront, true);
-                    this.m_kingFront = null;
+                    base.Game.RemovePhysicalObj(physicalObj_1, sendToClient: true);
+                    physicalObj_1 = null;
                 }
             }
         }
 
-        // Token: 0x06001F66 RID: 8038 RVA: 0x000E6E90 File Offset: 0x000E5090
         public override bool CanGameOver()
         {
             base.CanGameOver();
-            bool flag = !this.m_king.IsLiving && this.m_state == this.firstBossID;
-            if (flag)
+            if (!simpleBoss_0.IsLiving && int_1 == int_4)
             {
-                this.m_state++;
+                int_1++;
             }
-            bool flag2 = this.m_state == this.secondBossID && this.m_secondKing == null;
-            if (flag2)
+            if (int_1 == int_5 && simpleBoss_1 == null)
             {
-                this.m_secondKing = base.Game.CreateBoss(this.m_state, this.m_king.X, this.m_king.Y, this.m_king.Direction, 1, "");
-                base.Game.RemoveLiving(this.m_king.Id);
-                bool flag3 = this.m_secondKing.Direction == 1;
-                if (flag3)
+                simpleBoss_1 = base.Game.CreateBoss(int_1, simpleBoss_0.X, simpleBoss_0.Y, simpleBoss_0.Direction, 1, "");
+                base.Game.RemoveLiving(simpleBoss_0.Id);
+                if (simpleBoss_1.Direction == 1)
                 {
-                    this.m_secondKing.SetRect(-21, -87, 72, 59);
+                    simpleBoss_1.SetRect(-21, -87, 72, 59);
                 }
-                this.m_secondKing.SetRelateDemagemRect(-21, -87, 72, 59);
-                this.m_secondKing.Say(LanguageMgr.GetTranslation("Bana bu yaptığınızı unutmayacağım!", Array.Empty<object>()), 0, 3000);
+                simpleBoss_1.SetRelateDemagemRect(-21, -87, 72, 59);
+                simpleBoss_1.Say(LanguageMgr.GetTranslation("Beni kızdırdın. Seni affetmeyeceğim!"), 0, 3000);
                 List<Player> allFightPlayers = base.Game.GetAllFightPlayers();
                 Player player = base.Game.FindRandomPlayer();
-                int minDelay = 0;
-                bool flag4 = player != null;
-                if (flag4)
+                int num = 0;
+                if (player != null)
                 {
-                    minDelay = player.Delay;
+                    num = player.Delay;
                 }
                 foreach (Player item in allFightPlayers)
                 {
-                    bool flag5 = item.Delay < minDelay;
-                    if (flag5)
+                    if (item.Delay < num)
                     {
-                        minDelay = item.Delay;
+                        num = item.Delay;
                     }
                 }
-                this.m_secondKing.AddDelay(minDelay - 2000);
-                this.turn = base.Game.TurnIndex;
+                simpleBoss_1.AddDelay(num - 2000);
+                int_2 = base.Game.TurnIndex;
             }
-            bool flag6 = this.m_secondKing != null && !this.m_secondKing.IsLiving;
-            bool result;
-            if (flag6)
+            if (simpleBoss_1 != null && !simpleBoss_1.IsLiving)
             {
-                this.direction = this.m_secondKing.Direction;
-                this.m_kill++;
-                result = true;
+                int_7 = simpleBoss_1.Direction;
+                int_0++;
+                return true;
             }
-            else
-            {
-                result = false;
-            }
-            return result;
+            return false;
         }
 
-        // Token: 0x06001F67 RID: 8039 RVA: 0x000E70AC File Offset: 0x000E52AC
         public override int UpdateUIData()
         {
             base.UpdateUIData();
-            return this.m_kill;
+            return int_0;
         }
 
-        // Token: 0x06001F68 RID: 8040 RVA: 0x000E70CC File Offset: 0x000E52CC
         public override void OnGameOver()
         {
             base.OnGameOver();
-            bool flag = this.m_state == this.secondBossID && !this.m_secondKing.IsLiving;
-            if (flag)
+            if (int_1 == int_5 && !simpleBoss_1.IsLiving)
             {
                 base.Game.IsWin = true;
             }
@@ -192,114 +185,74 @@ namespace GameServerScript.AI.Messions
             List<LoadingFileInfo> list = new List<LoadingFileInfo>();
             list.Add(new LoadingFileInfo(2, "image/map/show7.jpg", ""));
             base.Game.SendLoadResource(list);
-            this.m_leftWall = base.Game.FindPhysicalObjByName("wallLeft");
-            this.m_rightWall = base.Game.FindPhysicalObjByName("wallRight");
-            for (int i = 0; i < this.m_leftWall.Length; i++)
+            physicalObj_2 = base.Game.FindPhysicalObjByName("wallLeft");
+            physicalObj_3 = base.Game.FindPhysicalObjByName("wallRight");
+            for (int i = 0; i < physicalObj_2.Length; i++)
             {
-                base.Game.RemovePhysicalObj(this.m_leftWall[i], true);
+                base.Game.RemovePhysicalObj(physicalObj_2[i], sendToClient: true);
             }
-            for (int j = 0; j < this.m_rightWall.Length; j++)
+            for (int j = 0; j < physicalObj_3.Length; j++)
             {
-                base.Game.RemovePhysicalObj(this.m_rightWall[j], true);
+                base.Game.RemovePhysicalObj(physicalObj_3[j], sendToClient: true);
             }
         }
 
-        // Token: 0x06001F69 RID: 8041 RVA: 0x000E71DC File Offset: 0x000E53DC
         public override void DoOther()
         {
             base.DoOther();
-            bool flag = this.m_king != null;
-            if (flag)
+            if (simpleBoss_0 != null)
             {
-                bool isLiving = this.m_king.IsLiving;
-                if (isLiving)
+                if (simpleBoss_0.IsLiving)
                 {
-                    int index = base.Game.Random.Next(0, GT1173.KillChat.Length);
-                    this.m_king.Say(GT1173.KillChat[index], 0, 0);
+                    int num = base.Game.Random.Next(0, string_0.Length);
+                    simpleBoss_0.Say(string_0[num], 0, 0);
                 }
                 else
                 {
-                    int index2 = base.Game.Random.Next(0, GT1173.KillChat.Length);
-                    this.m_king.Say(GT1173.KillChat[index2], 0, 0);
+                    int num2 = base.Game.Random.Next(0, string_0.Length);
+                    simpleBoss_0.Say(string_0[num2], 0, 0);
                 }
             }
         }
 
-        // Token: 0x06001F6A RID: 8042 RVA: 0x000E7274 File Offset: 0x000E5474
         public override void OnShooted()
         {
             base.OnShooted();
-            bool flag = this.IsSay == 0;
-            if (flag)
+            if (int_3 == 0)
             {
-                bool isLiving = this.m_king.IsLiving;
-                if (isLiving)
+                if (simpleBoss_0.IsLiving)
                 {
-                    int index = base.Game.Random.Next(0, GT1173.ShootedChat.Length);
-                    this.m_king.Say(GT1173.ShootedChat[index], 0, 1500);
+                    int num = base.Game.Random.Next(0, string_1.Length);
+                    simpleBoss_0.Say(string_1[num], 0, 1500);
                 }
                 else
                 {
-                    int index2 = base.Game.Random.Next(0, GT1173.ShootedChat.Length);
-                    this.m_secondKing.Say(GT1173.ShootedChat[index2], 0, 1500);
+                    int num2 = base.Game.Random.Next(0, string_1.Length);
+                    simpleBoss_1.Say(string_1[num2], 0, 1500);
                 }
-                this.IsSay = 1;
+                int_3 = 1;
             }
         }
 
-        // Token: 0x0400118C RID: 4492
-        private PhysicalObj m_kingMoive;
-
-        // Token: 0x0400118D RID: 4493
-        private PhysicalObj m_kingFront;
-
-        // Token: 0x0400118E RID: 4494
-        private SimpleBoss m_king;
-
-        // Token: 0x0400118F RID: 4495
-        private SimpleBoss m_secondKing;
-
-        // Token: 0x04001190 RID: 4496
-        private PhysicalObj[] m_leftWall;
-
-        // Token: 0x04001191 RID: 4497
-        private PhysicalObj[] m_rightWall;
-
-        // Token: 0x04001192 RID: 4498
-        private int m_kill;
-
-        // Token: 0x04001193 RID: 4499
-        private int m_state = 1105;
-
-        // Token: 0x04001194 RID: 4500
-        private int turn;
-
-        // Token: 0x04001195 RID: 4501
-        private int IsSay;
-
-        // Token: 0x04001196 RID: 4502
-        private int firstBossID = 1105;
-
-        // Token: 0x04001197 RID: 4503
-        private int secondBossID = 1106;
-
-        // Token: 0x04001198 RID: 4504
-        private int npcID = 1110;
-
-        // Token: 0x04001199 RID: 4505
-        private int direction;
-
-        // Token: 0x0400119A RID: 4506
-        private static string[] KillChat = new string[]
+        public GT1173()
         {
-            "Sonunda Matthias'ın kontrolünden kurtuldum, ne büyük bir baş ağrısıydı!"
-        };
+            int_1 = 1105;
+            int_4 = 1105;
+            int_5 = 1106;
+            int_6 = 1110;
+        }
 
-        // Token: 0x0400119B RID: 4507
-        private static string[] ShootedChat = new string[]
+        static GT1173()
         {
-            "Aman Tanrım, neden bana vuruyorsunuz? Ne yaptım ben?... ",
-            "Ah, canım acıyor! Neden savaşmak zorundayız? Savaşmak zorundayız!"
-        };
+            string_0 = new string[1]
+            {
+                "Sonunda Matthias'ın kontrolünden kurtuldum, ne büyük bir baş ağrısı!"
+            };
+            string_1 = new string[2]
+            {
+                "Aman Tanrım, neden bana vuruyorsunuz? Ne yaptım ki?... ",
+                "Ah! Çok acıyor! Neden kavga ediyoruz? Kavga etmemeliyiz!"
+            };
+        }
     }
 }

@@ -60,7 +60,7 @@ namespace Game.Server.Rooms
 					baseRoom.LevelLimits = (int)baseRoom.GetLevelLimit(m_player);
 					baseRoom.isOpenBoss = false;
 					baseRoom.currentFloor = 0;
-					baseRoom.maxViewerCnt = 1;
+					baseRoom.maxViewerCnt = 2;
 				}
 				if (baseRoom.isWithinLeageTime)
 				{

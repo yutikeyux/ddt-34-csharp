@@ -121,16 +121,16 @@ namespace GameServerScript.AI.NPC
         {
             string_0 = new string[3]
             {
-                "Chú ý tường băng sắp vỡ rồi.",
-                "Hãy giúp ta xây tường băng nào.",
-                "Xây lại tường băng nhanh lên."
+                "Buz duvarının kırılmasına dikkat edin.",
+                "Buzdan duvar inşa etmeme yardım et.",
+                "Buz duvarını hızla yeniden inşa et."
             };
             string_1 = new string[4]
             {
-                "Thử cái này xem.",
-                "Con rồng ngu hãy coi đây.",
-                "Ta bắn chít ngươi.",
-                "Sống sao với dàn đạn của ta?"
+                "Bunu dene.",
+                "Aptal ejderha, buraya bak.",
+                "Seni vuracağım.",
+                "Kurşunlarımla nasıl yaşarsın?"
             };
         }
     }
