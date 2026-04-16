@@ -18,9 +18,10 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="3.2.0" />
+    <PackageReference Include="log4net" Version="3.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="protobuf-net" Version="3.2.56" />
+    <PackageReference Include="System.Collections.Immutable" Version="10.0.6" />
     <PackageReference Include="zlib.net" Version="1.0.4" />
   </ItemGroup>
   <ItemGroup>
