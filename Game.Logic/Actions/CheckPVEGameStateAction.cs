@@ -1,3 +1,5 @@
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
 namespace Game.Logic.Actions
 {
     public class CheckPVEGameStateAction : IAction
@@ -95,9 +97,10 @@ namespace Game.Logic.Actions
                         }
                         break;
                     case eGameState.GameOver:
-                        if (!pve.HasNextSession())
+                        if (!pve.HasNextSession() && pve.IsWin)
                         {
                             pve.GameOverAllSession();
+                            game.WaitTime(23000);
                         }
                         else
                         {
@@ -109,7 +112,7 @@ namespace Game.Logic.Actions
                         {
                             pve.SetupStyle();
                             pve.StartLoading();
-                        }
+                        }             
                         else
                         {
                             game.WaitTime(1000);
@@ -120,15 +123,32 @@ namespace Game.Logic.Actions
                         {
                             pve.Stop();
                         }
+                        else if (pve.IsWin && !pve.HasNextSession())
+                        {
+                            game.WaitTime(23000);
+                        }
                         else if (pve.WantTryAgain == 1)
                         {
                             pve.ShowDragonLairCard();
+                            game.WaitTime(23000);
                             pve.PrepareNewSession();
                         }
                         else if (pve.WantTryAgain == 2)
                         {
                             pve.SessionId--;
                             pve.PrepareNewSession();
+                        }
+                        else if (pve.IsWin && !pve.HasNextSession())
+                        {
+                            game.WaitTime(23000);
+                        }
+                        else if (pve.IsShowLargeCards() && pve.IsWin)
+                        {   
+                            game.WaitTime(23000);
+                        }
+                        else if (!pve.IsWin && !pve.HasNextSession())
+                        {
+                            game.WaitTime(5000);
                         }
                         else
                         {
