@@ -1,6 +1,7 @@
 using Game.Base.Packets;
 using Game.Server.Buffer;
 using Game.Server.GameUtils;
+using Game.Server.Managers;
 using Game.Server.Quests;
 using Game.Server.Rooms;
 using Game.Server.SceneMarryRooms;
@@ -111,9 +112,21 @@ namespace Game.Server.Packets.Server
 
         public void SendEdictumVersion()
         {
-			throw new NotImplementedException();
+            EdictumInfo[] allEdictumVersion = WorldMgr.GetAllEdictumVersion();
+            Random random = new Random();
+            if (allEdictumVersion.Length != 0)
+            {
+                GSPacketIn packet = new GSPacketIn(75);
+                packet.WriteInt(allEdictumVersion.Length);
+                EdictumInfo[] array = allEdictumVersion;
+                foreach (EdictumInfo edictumInfo in array)
+                {
+                    packet.WriteInt(edictumInfo.ID + random.Next(10000));
+                }
+                SendTCP(packet);
+            }
         }
-       
+
         public void SendEnthrallLight()
         {
 			throw new NotImplementedException();

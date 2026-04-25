@@ -143,6 +143,23 @@ namespace Game.Server.GameUtils
                         UpdateItem(m_items[fromSlot]);
                         return false;
                     }
+
+                    // --- EKLENEN ÇÖZÜM BAŞLANGIÇ ---
+                    // Eğer hedef slot doluysa ve içindeki item ile takılan item aynı kategoriden ise (Örn: İkisi de Kategori 8)
+                    if (m_items[toSlot] != null && m_items[toSlot].Template.CategoryID == m_items[fromSlot].Template.CategoryID)
+                    {
+                        // Bu kategori için boş olan uygun slotu bul (Örn: 7 dolu ise 8'i bulur)
+                        int properEmptySlot = FindItemEpuipSlot(m_items[fromSlot].Template);
+
+                        // Eğer boş slot bulunduysa (FindItemEpuipSlot -1 dönmez ve bulunan slot gerçekten boşsa)
+                        if (properEmptySlot != -1 && m_items[properEmptySlot] == null)
+                        {
+                            toSlot = properEmptySlot; // Hedef slotu boş olan 2. slota yönlendir
+                        }
+                        // Eğer her iki slot da doluysa (Örn: 7 ve 8 dolu), toSlot değişmez ve normal Swap (takas) yapılır.
+                    }
+                    // --- EKLENEN ÇÖZÜM BİTİŞ ---
+
                     if (m_items[fromSlot] != null)
                     {
                         m_player.OnNewGearEvent(m_items[fromSlot]);
@@ -790,13 +807,14 @@ namespace Game.Server.GameUtils
             if (temp.CategoryID == 8 || temp.CategoryID == 28)
             {
                 return slot == 7 || slot == 8;
+                
             }
             if (temp.CategoryID == 9 || temp.CategoryID == 29)
             {
                 if (temp.IsRing())
                 {
                     return slot == 16;
-                    //return slot == 9 || slot == 10 || slot == 16;
+                    
                 }
                 return slot == 9 || slot == 10;
             }

@@ -40,23 +40,50 @@ namespace Game.Server.Consortia.Handle
                 return 1;
             }
 
+            // ---------------------------------------------------------
+            // GÜVENLİK GÜNCELLEMESİ: GÜNLÜK LİMİT KONTROLÜ
+            // ---------------------------------------------------------
+            bool moneySuccess = true;
+            if (money > 0)
+            {
+                // Limit kontrolü ve para kesme işlemi burada yapılıyor
+                moneySuccess = Player.MoneyDirect(money, true, false, true);
+            }
+
             bool result = false;
             string msg = "ConsortiaRichesOfferHandler.Failed";
-            using (ConsortiaBussiness db = new ConsortiaBussiness())
-            {
-                if (db.ConsortiaRichAdd(Player.PlayerCharacter.ConsortiaID, ref riches, 5, Player.PlayerCharacter.NickName))
-                {
-                    result = true;
-                    Player.PlayerCharacter.RichesOffer += riches;
-                    Player.PlayerCharacter.RichesRob += riches;
-                    //Player.SetMoney(-money);
 
-                    Player.RemoveMoney(money);
-                    Player.OnDonateRiches(riches, 1);
-                    msg = "ConsortiaRichesOfferHandler.Successed";
-                    GameServer.Instance.LoginServer.SendConsortiaRichesOffer(Player.PlayerCharacter.ConsortiaID, Player.PlayerCharacter.ID, Player.PlayerCharacter.NickName, riches);
+            // Sadece para kesme işlemi başarılıysa (Limit aşımı yoksa) DB işlemine gir
+            if (moneySuccess)
+            {
+                using (ConsortiaBussiness db = new ConsortiaBussiness())
+                {
+                    if (db.ConsortiaRichAdd(Player.PlayerCharacter.ConsortiaID, ref riches, 5, Player.PlayerCharacter.NickName))
+                    {
+                        result = true;
+                        Player.PlayerCharacter.RichesOffer += riches;
+                        Player.PlayerCharacter.RichesRob += riches;
+
+                        //Player.SetMoney(-money);
+
+                        // NOT: MoneyDirect zaten parayı kestiği için buradan tekrar kesmemize gerek yok. 
+                        // Aksi takdirde oyuncunun parası 2 kez kesilir (Çift kesim açığı).
+                        //Player.RemoveMoney(money); 
+
+                        Player.OnDonateRiches(riches, 1);
+                        msg = "ConsortiaRichesOfferHandler.Successed";
+                        GameServer.Instance.LoginServer.SendConsortiaRichesOffer(Player.PlayerCharacter.ConsortiaID, Player.PlayerCharacter.ID, Player.PlayerCharacter.NickName, riches);
+                    }
                 }
             }
+            else
+            {
+                // ÖDEME BAŞARISIZSA (LİMİT DOLU)
+                msg = "Bağış başarısız! Günlük kupon harcama limitinizi aşmış olabilirsiniz.";
+            }
+            // ---------------------------------------------------------
+            // GÜVENLİK GÜNCELLEMESİ SONU
+            // ---------------------------------------------------------
 
             GSPacketIn pkg = new GSPacketIn((byte)ePackageType.CONSORTIA_CMD);
             pkg.WriteByte((byte)ConsortiaPackageType.CONSORTIA_RICHES_OFFER);
