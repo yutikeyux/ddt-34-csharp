@@ -299,10 +299,10 @@ PlayerBussiness.DeleteAuction.Msg4:Hủy bỏ thất bại.
 Tank.Request.Login.Fail1:Đăng nhập thất bại.
 Tank.Request.Login.Fail2:Đăng nhập thất bại..
 Tank.Request.Login.Success:Đăng nhập thành công.
-Tank.Request.VisualizeRegister.Fail1:Đăng ký hình tượng thất bại.
-Tank.Request.VisualizeRegister.Success:Đăng ký hình tượng thành công.
-Tank.Request.VisualizeRegister.Long:Biệt danh người dùng quá dài.
-Tank.Request.VisualizeRegister.Illegalcharacters:Tên nhân vật chứa ký tự không hợp lệ.
+Tank.Request.VisualizeRegister.Fail1:Kayıt işlemi sırasında bir hata oluştu.
+Tank.Request.VisualizeRegister.Success:Kayıt başarıyla tamamlandı!
+Tank.Request.VisualizeRegister.Long:Kullanıcı adınız çok uzun (Maksimum 14 karakter).
+Tank.Request.VisualizeRegister.Illegalcharacters:Kullanıcı adı yasaklı karakterler içeriyor.
 
 
 

@@ -243,12 +243,12 @@ namespace Game.Service
             // Sunucu mesajları (her gün gönderilir)
             if (num <= 25)
             {
-                string text = Program._sunucuMesajlari[Program._random.Next(Program._sunucuMesajlari.Count)];
-                Console.WriteLine("Rastgele sunucu mesajı gönderiliyor: '" + text + "'");
+               // string text = Program._sunucuMesajlari[Program._random.Next(Program._sunucuMesajlari.Count)];
+              //  Console.WriteLine("Rastgele sunucu mesajı gönderiliyor: '" + text + "'");
                 GamePlayer[] array2 = allPlayers;
                 for (int i = 0; i < array2.Length; i++)
                 {
-                    array2[i].SendMessage(text);
+             //       array2[i].SendMessage(text);
                 }
             }
         }
@@ -794,14 +794,14 @@ namespace Game.Service
   //      };
 
 		// Token: 0x04000007 RID: 7
-		private static readonly List<string> _sunucuMesajlari = new List<string>
-		{
-			"Duyuru! Sunucumuzda hile, bug veya 3. parti yazılım kullanımı kalıcı olarak yasaklanma sebebidir. Lütfen adil bir oyun ortamı için kurallara uyun.",
-			"İpucu: Günlük görevleri tamamlayarak değerli ödüller kazanabileceğinizi unutmayın!",
-			"Hatırlatma! Discordumuza katılarak değerli itemler hatta kupon bile kazanabilirsin!",
-			"Duyuru! Herhangi bir sorunla karşılaşırsanız oyun yöneticilerine bildirmekten çekinmeyin. Keyifli oyunlar!",
-			"Bilgi; Unutma, en güçlü silah bilgidir! Sitemizdeki rehberlere göz atarak oyununu geliştirebilirsin."
-		};
+		//private static readonly List<string> _sunucuMesajlari = new List<string>
+		//{
+	//		"Duyuru! Sunucumuzda hile, bug veya 3. parti yazılım kullanımı kalıcı olarak yasaklanma sebebidir. Lütfen adil bir oyun ortamı için kurallara uyun.",
+	//		"İpucu: Günlük görevleri tamamlayarak değerli ödüller kazanabileceğinizi unutmayın!",
+	//		"Hatırlatma! Discordumuza katılarak değerli itemler hatta kupon bile kazanabilirsin!",
+	//		"Duyuru! Herhangi bir sorunla karşılaşırsanız oyun yöneticilerine bildirmekten çekinmeyin. Keyifli oyunlar!",
+	//		"Bilgi; Unutma, en güçlü silah bilgidir! Sitemizdeki rehberlere göz atarak oyununu geliştirebilirsin."
+	//	};
 
 		// Token: 0x04000008 RID: 8
 		private static readonly Random _random = new Random();

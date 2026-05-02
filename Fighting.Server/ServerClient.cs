@@ -16,7 +16,6 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Fighting.Server.GameObjects;
 
 namespace Fighting.Server
 {
@@ -26,9 +25,9 @@ namespace Fighting.Server
 
         private RSACryptoServiceProvider rsacryptoServiceProvider_0;
 
-        private FightServer m_svr;
+        private readonly FightServer m_svr;
 
-        private Dictionary<int, ProxyRoom> m_rooms = new Dictionary<int, ProxyRoom>();
+        private readonly Dictionary<int, ProxyRoom> m_rooms = new Dictionary<int, ProxyRoom>();
 
         protected override void OnConnect()
         {
@@ -632,7 +631,7 @@ namespace Fighting.Server
 				pkg.WriteInt(totalKillHealth);
 				SendTCP(pkg);
 			}
-			catch(Exception Err)
+			catch(Exception)
 			{
 				ilog_1.ErrorFormat("SendPlayerConsortiaFight players.Count {0}", players.Count);
 			}
