@@ -1,35 +1,21 @@
 ﻿using Game.Logic.PetEffects.ContinueElement;
 using Game.Logic.Phy.Object;
-using System;
-using System.Collections.Generic;
 
 namespace Game.Logic.PetEffects.Element.Actives
 {
-    public class AE1021 : BasePetEffect
+    public class AE1021(int count, int probability, int type, int skillId, int delay, string elementID) : BasePetEffect(ePetEffectType.AE1021, elementID)
     {
-        private int m_type = 0;
-        private int m_count = 0;
-        private int m_probability = 0;
-        private int m_delay = 0;
-        private int m_coldDown = 0;
-        private int m_currentId;
-        private int m_added = 0;
-
-        public AE1021(int count, int probability, int type, int skillId, int delay, string elementID)
-            : base(ePetEffectType.AE1021, elementID)
-        {
-            m_count = count;
-            m_coldDown = count;
-            m_probability = probability == -1 ? 10000 : probability;
-            m_type = type;
-            m_delay = delay;
-            m_currentId = skillId;
-        }
+        private readonly int m_type = type;
+        private readonly int m_count = count;
+        private int m_probability = probability == -1 ? 10000 : probability;
+        private readonly int m_delay = delay;
+        private readonly int m_coldDown = count;
+        private readonly int m_currentId = skillId;
+        private readonly int m_added = 0;
 
         public override bool Start(Living living)
         {
-            AE1021 effect = living.PetEffectList.GetOfType(ePetEffectType.AE1021) as AE1021;
-            if (effect != null)
+            if (living.PetEffectList.GetOfType(ePetEffectType.AE1021) is AE1021 effect)
             {
                 effect.m_probability = m_probability > effect.m_probability ? m_probability : effect.m_probability;
                 return true;
@@ -50,7 +36,7 @@ namespace Game.Logic.PetEffects.Element.Actives
             player.PlayerBuffSkillPet -= new PlayerEventHandle(player_AfterBuffSkillPetByLiving);
         }
 
-        void player_AfterBuffSkillPetByLiving(Player player)
+        private void player_AfterBuffSkillPetByLiving(Player player)
         {
             if (player.PetEffects.CurrentUseSkill == m_currentId)
             {

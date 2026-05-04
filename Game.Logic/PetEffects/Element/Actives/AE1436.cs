@@ -9,16 +9,16 @@ namespace Game.Logic.PetEffects.Element.Actives
 {
     public class AE1436 : BasePetEffect
     {
-        private int m_type = 0;
-        private int m_count = 0;
+        private readonly int m_type = 0;
+        private readonly int m_count = 0;
         private int m_probability = 0;
-        private int m_delay = 0;
-        private int m_coldDown = 0;
-        private int m_currentId;
-        private int m_added = 0;
+        private readonly int m_delay = 0;
+        private readonly int m_coldDown = 0;
+        private readonly int m_currentId;
+        private readonly int m_added = 0;
         private int m_fx;
         private int m_tx;
-        private int BaseDistant = 500;
+        private readonly int BaseDistant = 500;
 
         public AE1436(int count, int probability, int type, int skillId, int delay, string elementID)
             : base(ePetEffectType.AE1436, elementID)

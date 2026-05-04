@@ -48,7 +48,7 @@ namespace Game.Server.Packets.Client
                                     int needed = items[j].Template.MaxCount - items[j].Count;
                                     int moveCount = (items[k].Count > needed) ? needed : items[k].Count;
 
-                                    inventory.MoveItem(items[k].Place, items[j].Place, moveCount);
+                                    _ = inventory.MoveItem(items[k].Place, items[j].Place, moveCount);
 
                                     // Taşıma işlemi sonrası listeyi güncellememiz gerekebilir
                                     // Ancak bu basit döngüde MoveItem otomatik güncellerse sorun yok,
@@ -71,7 +71,10 @@ namespace Game.Server.Packets.Client
                         int categoryCompare = a.Template.CategoryID.CompareTo(b.Template.CategoryID);
 
                         // Eğer kategoriler farklıysa, kategori sırasına göre döndür
-                        if (categoryCompare != 0) return categoryCompare;
+                        if (categoryCompare != 0)
+                        {
+                            return categoryCompare;
+                        }
 
                         // 2. Öncelik (Eşitse): Şablon ID (TemplateID)
                         // Aynı kategorideki eşyaların alt alta düzenli durması için
@@ -88,14 +91,17 @@ namespace Game.Server.Packets.Client
                         int targetSlot = inventory.BeginSlot + i;
 
                         // Eğer eşya zaten olması gereken yerdeyse atla (Performans için)
-                        if (itemToPlace.Place == targetSlot) continue;
+                        if (itemToPlace.Place == targetSlot)
+                        {
+                            continue;
+                        }
 
                         // Eşyayı hedef slota taşı.
                         // Eğer hedef slot doluysa, MoveItem genellikle otomatik olarak 
                         // hedefteki eşya ile yer değiştirir (Swap).
                         // Bu sayede "Baloncuk Sıralaması" (Bubble Sort) mantığıyla
                         // tüm eşyalar doğru yere yerleşir.
-                        inventory.MoveItem(itemToPlace.Place, targetSlot, itemToPlace.Count);
+                        _ = inventory.MoveItem(itemToPlace.Place, targetSlot, itemToPlace.Count);
                     }
                 }
                 catch (Exception ex)

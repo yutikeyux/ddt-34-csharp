@@ -1,18 +1,16 @@
-﻿using Game.Logic.PetEffects.ContinueElement;
-using Game.Logic.Phy.Object;
-using System;
+﻿using Game.Logic.Phy.Object;
 
 namespace Game.Logic.PetEffects.Element.Passives
 {
     public class PE1430 : BasePetEffect
     {
-        private int m_type = 0;
-        private int m_count = 0;
+        private readonly int m_type = 0;
+        private readonly int m_count = 0;
         private int m_probability = 0;
-        private int m_delay = 0;
-        private int m_coldDown = 0;
-        private int m_currentId;
-        private int m_added = 0;
+        private readonly int m_delay = 0;
+        private readonly int m_coldDown = 0;
+        private readonly int m_currentId;
+        private readonly int m_added = 0;
 
         public PE1430(int count, int probability, int type, int skillId, int delay, string elementID)
             : base(ePetEffectType.PE1430, elementID)
@@ -27,8 +25,7 @@ namespace Game.Logic.PetEffects.Element.Passives
 
         public override bool Start(Living living)
         {
-            PE1430 effect = living.PetEffectList.GetOfType(ePetEffectType.PE1430) as PE1430;
-            if (effect != null)
+            if (living.PetEffectList.GetOfType(ePetEffectType.PE1430) is PE1430 effect)
             {
                 effect.m_probability = m_probability > effect.m_probability ? m_probability : effect.m_probability;
                 return true;
@@ -48,7 +45,7 @@ namespace Game.Logic.PetEffects.Element.Passives
         {
             player.TakePlayerDamage -= new LivingTakedDamageEventHandle(player_BeforeTakeDamage);
         }
-        void player_BeforeTakeDamage(Living living, Living source, ref int damageAmount, ref int criticalAmount)
+        private void player_BeforeTakeDamage(Living living, Living source, ref int damageAmount, ref int criticalAmount)
         {
             if (rand.Next(100) < 20)
             {

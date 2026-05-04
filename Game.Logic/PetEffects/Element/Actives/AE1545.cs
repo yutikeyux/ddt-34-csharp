@@ -1,20 +1,18 @@
 ﻿using Game.Logic.PetEffects.ContinueElement;
 using Game.Logic.Phy.Object;
-using System;
-using System.Collections.Generic;
 using static Living;
 
 namespace Game.Logic.PetEffects.Element.Actives
 {
     public class AE1545 : BasePetEffect
     {
-        private int m_type = 0;
-        private int m_count = 0;
+        private readonly int m_type = 0;
+        private readonly int m_count = 0;
         private int m_probability = 0;
-        private int m_delay = 0;
-        private int m_coldDown = 0;
-        private int m_currentId;
-        private int m_added = 0;
+        private readonly int m_delay = 0;
+        private readonly int m_coldDown = 0;
+        private readonly int m_currentId;
+        private readonly int m_added = 0;
 
         public AE1545(int count, int probability, int type, int skillId, int delay, string elementID)
             : base(ePetEffectType.AE1545, elementID)
@@ -29,8 +27,7 @@ namespace Game.Logic.PetEffects.Element.Actives
 
         public override bool Start(Living living)
         {
-            AE1545 effect = living.PetEffectList.GetOfType(ePetEffectType.AE1545) as AE1545;
-            if (effect != null)
+            if (living.PetEffectList.GetOfType(ePetEffectType.AE1545) is AE1545 effect)
             {
                 effect.m_probability = m_probability > effect.m_probability ? m_probability : effect.m_probability;
                 return true;
@@ -44,26 +41,28 @@ namespace Game.Logic.PetEffects.Element.Actives
         protected override void OnAttachedToPlayer(Player player)
         {
             player.PlayerBuffSkillPet += new PlayerEventHandle(player_AfterBuffSkillPetByLiving);
-            player.AfterKillingLiving += new KillLivingEventHanlde(this.player_AfterPlayerShootedByLiving);
+            player.AfterKillingLiving += new KillLivingEventHanlde(player_AfterPlayerShootedByLiving);
         }
 
         protected override void OnRemovedFromPlayer(Player player)
         {
             player.PlayerBuffSkillPet -= new PlayerEventHandle(player_AfterBuffSkillPetByLiving);
-            player.AfterKillingLiving += new KillLivingEventHanlde(this.player_AfterPlayerShootedByLiving);
+            player.AfterKillingLiving += new KillLivingEventHanlde(player_AfterPlayerShootedByLiving);
         }
 
-        void player_AfterBuffSkillPetByLiving(Player player)
+        private void player_AfterBuffSkillPetByLiving(Player player)
         {
             if (player.PetEffects.CurrentUseSkill == m_currentId)
-            IsTrigger = true;
+            {
+                IsTrigger = true;
+            }
         }
 
-        void player_AfterPlayerShootedByLiving(Living living, Living target, int damageAmount, int criticalAmount)
+        private void player_AfterPlayerShootedByLiving(Living living, Living target, int damageAmount, int criticalAmount)
         {
             if (IsTrigger)
             {
-                target.AddPetEffect((AbstractPetEffect)new CE1545(2, m_probability, m_type, m_currentId, m_delay, ElementInfo.ID.ToString()), 0);
+                target.AddPetEffect(new CE1545(2, m_probability, m_type, m_currentId, m_delay, ElementInfo.ID.ToString()), 0);
                 IsTrigger = false;
             }
         }

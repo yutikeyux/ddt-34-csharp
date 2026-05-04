@@ -1,3 +1,4 @@
+using Bussiness;
 using Bussiness.Managers;
 using Game.Base.Packets;
 using Game.Server;
@@ -7,32 +8,30 @@ using Game.Server.Packets.Client;
 using SqlDataProvider.Data;
 using System;
 using System.Collections.Generic;
-using Bussiness;
 
 [PacketHandler(216, "卡牌系统")]
 internal class CardDataHandler : IPacketHandler
 {
-    public static Random random = new Random();
+    public static Random random = new();
 
     public int HandlePacket(GameClient client, GSPacketIn packet)
     {
         int cmdCard = packet.ReadInt();
-        int slot = 0;
-        int place = 0;
         CardInventory cardBag = client.Player.CardBag;
-        ItemInfo itemInfo = null;
-        List<ItemInfo> list = new List<ItemInfo>();
+        List<ItemInfo> list = [];
         List<UsersCardInfo> infos;
         if (client.Player.PlayerCharacter.Grade < 20)
         {
             client.Player.SendMessage(LanguageMgr.GetTranslation("GameServer.LevelErrorUsing"));
             return 0;
         }
-        using (PlayerBussiness playerBussiness = new PlayerBussiness())
+        using (PlayerBussiness playerBussiness = new())
         {
             infos = playerBussiness.GetUserCardEuqip(client.Player.PlayerCharacter.ID);
         }
         cardBag.BeginChanges();
+        int slot;
+        int place;
         switch (cmdCard)
         {
             case 0:
@@ -44,7 +43,7 @@ internal class CardDataHandler : IPacketHandler
                 }
                 if ((slot < 5 && place >= 5) || (slot == place && slot < 5))
                 {
-                    cardBag.RemoveCardAt(slot);
+                    _ = cardBag.RemoveCardAt(slot);
                     client.Player.EquipBag.UpdatePlayerProperties();
                 }
                 else if (slot >= 5 && place < 5)
@@ -54,10 +53,10 @@ internal class CardDataHandler : IPacketHandler
                     {
                         if (!cardBag.IsCardEquip(itemAt2.TemplateID))
                         {
-                            cardBag.RemoveCardAt(place);
+                            _ = cardBag.RemoveCardAt(place);
                             UsersCardInfo usersCardInfo2 = itemAt2.Clone();
                             usersCardInfo2.Count = 0;
-                            cardBag.AddCardTo(usersCardInfo2, place);
+                            _ = cardBag.AddCardTo(usersCardInfo2, place);
                             client.Player.OnEquipCardEvent();
                             client.Player.EquipBag.UpdatePlayerProperties();
                         }
@@ -69,32 +68,34 @@ internal class CardDataHandler : IPacketHandler
                 }
                 else
                 {
-                    cardBag.MoveCard(slot, place);
+                    _ = cardBag.MoveCard(slot, place);
                 }
                 break;
             case 1:
                 {
                     place = packet.ReadInt();
-                    UsersCardInfo usersCardInfo = new UsersCardInfo();
-                    usersCardInfo.Count = -1;
-                    usersCardInfo.UserID = client.Player.PlayerCharacter.ID;
-                    usersCardInfo.Place = place;
-                    usersCardInfo.TemplateID = 314101;
-                    usersCardInfo.isFirstGet = true;
-                    usersCardInfo.Damage = 0;
-                    usersCardInfo.Guard = 0;
-                    usersCardInfo.Attack = 0;
-                    usersCardInfo.Defence = 0;
-                    usersCardInfo.Luck = 0;
-                    usersCardInfo.Agility = 0;
-                    client.Player.CardBag.AddCardTo(usersCardInfo, place);
+                    UsersCardInfo usersCardInfo = new()
+                    {
+                        Count = -1,
+                        UserID = client.Player.PlayerCharacter.ID,
+                        Place = place,
+                        TemplateID = 314101,
+                        isFirstGet = true,
+                        Damage = 0,
+                        Guard = 0,
+                        Attack = 0,
+                        Defence = 0,
+                        Luck = 0,
+                        Agility = 0
+                    };
+                    _ = client.Player.CardBag.AddCardTo(usersCardInfo, place);
                     break;
                 }
             case 2:
                 {
                     slot = packet.ReadInt();
                     int count = packet.ReadInt();
-                    itemInfo = client.Player.EquipBag.GetItemAt(slot);
+                    ItemInfo itemInfo = client.Player.EquipBag.GetItemAt(slot);
                     if (itemInfo != null)
                     {
                         if (count <= 0 || count > itemInfo.Count)
@@ -109,14 +110,14 @@ internal class CardDataHandler : IPacketHandler
                             client.Player.SendMessage("Kart mevcut değil!");
                             return 0;
                         }
-                        client.Player.EquipBag.RemoveCountFromStack(itemInfo, itemInfo.Count);
+                        _ = client.Player.EquipBag.RemoveCountFromStack(itemInfo, itemInfo.Count);
                         int num5 = itemInfo.Count;
-                        Random random2 = new Random();
+                        Random random2 = new();
                         for (int i = 0; i < itemInfo.Count; i++)
                         {
                             num5 += random2.Next(1, 3);
                         }
-                        cardBag.AddCard(property, num5);
+                        _ = cardBag.AddCard(property, num5);
                     }
                     else
                     {
@@ -141,7 +142,7 @@ internal class CardDataHandler : IPacketHandler
                         CardUpdateConditionInfo cardUpdateCondition = CardMgr.GetCardUpdateCondition(itemAt.Level + 1);
                         if (cardUpdateCondition != null && itemAt.Count >= cardUpdateCondition.UpdateCardCount)
                         {
-                            Random random = new Random();
+                            Random random = new();
                             itemAt.Count -= cardUpdateCondition.UpdateCardCount;
                             itemAt.CardGP += random.Next(cardUpdateCondition.MinExp, cardUpdateCondition.MaxExp);
                             if (itemAt.CardGP >= cardUpdateCondition.Exp)
@@ -184,8 +185,8 @@ internal class CardDataHandler : IPacketHandler
                     break;
                 }
             case 4:
-                packet.ReadInt();
-                packet.ReadInt();
+                _ = packet.ReadInt();
+                _ = packet.ReadInt();
                 break;
         }
         cardBag.CommitChanges();

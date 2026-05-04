@@ -65,10 +65,10 @@ namespace Bussiness
             }
             catch (Exception ex)
             {
-                //if (BaseBussiness.log.IsErrorEnabled)
-                //{
-                //    BaseBussiness.log.Error((object)"InitMysteryShopInfo", ex);
-                //}
+                if (BaseBussiness.log.IsErrorEnabled)
+                {
+                    BaseBussiness.log.Error((object)"InitMysteryShopInfo", ex);
+                }
             }
             finally
             {

@@ -1,28 +1,27 @@
-﻿using System;
+﻿using Bussiness;
+using Bussiness.Managers;
+using Game.Base.Packets;
+using SqlDataProvider.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Game.Base.Packets;
-using Game.Server.GameObjects;
-using Bussiness;
-using SqlDataProvider.Data;
-using Game.Server.GameUtils;
-using Bussiness.Managers;
 
 namespace Game.Server.Packets.Client
 {
     [PacketHandler((byte)ePackageType.FIGHT_SPIRIT, "场景用户离开")]
     public class FigSpiritUpGradeHandler : IPacketHandler
     {
-        private static int[] exps = FightSpiritTemplateMgr.Exps();
-        private static int golddenLv = GameProperties.FightSpiritMaxLevel;//FightSpiritTemplateMgr.GOLDEN_LEVEL();        
+        private static readonly int[] exps = FightSpiritTemplateMgr.Exps();
+        private static readonly int golddenLv = GameProperties.FightSpiritMaxLevel;//FightSpiritTemplateMgr.GOLDEN_LEVEL();        
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             if (client.Player.PlayerCharacter.Grade < 30)
+            {
                 return 0;
+            }
 
             int id = client.Player.PlayerCharacter.ID;
-            packet.ReadByte();//_loc_2.writeByte(FightSpiritPackageType.FIGHT_SPIRIT_LEVELUP);
+            _ = packet.ReadByte();//_loc_2.writeByte(FightSpiritPackageType.FIGHT_SPIRIT_LEVELUP);
             int autoBuyId = packet.ReadInt();//_loc_2.writeInt(param1.autoBuyId);
             int goodsId = packet.ReadInt();//_loc_2.writeInt(param1.goodsId);
             int type = packet.ReadInt();//_loc_2.writeInt(param1.type);
@@ -37,8 +36,8 @@ namespace Game.Server.Packets.Client
             UserGemStone gemStone = client.Player.GetGemStone(equipPlace);
             if (gemStone == null)
             {
-                client.Player.Out.SendPlayerFigSpiritUp(id, gemStone, false, true, true, 0, 0);
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("FigSpiritUpGradeHandler.Msg"));
+                _ = client.Player.Out.SendPlayerFigSpiritUp(id, gemStone, false, true, true, 0, 0);
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("FigSpiritUpGradeHandler.Msg"));
                 return 0;
             }
             string[] spiritIdValues = gemStone.FigSpiritIdValue.Split('|');
@@ -51,22 +50,24 @@ namespace Game.Server.Packets.Client
             FigSpiritUpInfo[] curFs = new FigSpiritUpInfo[spiritIdValues.Length];
             for (int i = 0; i < spiritIdValues.Length; i++)
             {
-                FigSpiritUpInfo info = new FigSpiritUpInfo();
-                info.level = Convert.ToInt32(spiritIdValues[i].Split(',')[0]);
-                info.exp = Convert.ToInt32(spiritIdValues[i].Split(',')[1]);
-                info.place = Convert.ToInt32(spiritIdValues[i].Split(',')[2]);
+                FigSpiritUpInfo info = new()
+                {
+                    level = Convert.ToInt32(spiritIdValues[i].Split(',')[0]),
+                    exp = Convert.ToInt32(spiritIdValues[i].Split(',')[1]),
+                    place = Convert.ToInt32(spiritIdValues[i].Split(',')[2])
+                };
                 curFs[i] = info;
             }
             if (itemCount <= 0 || item == null)
             {
-                client.Player.Out.SendPlayerFigSpiritUp(id, gemStone, isUp, isMaxLevel, isFall, 0, dir);
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("FigSpiritUpGradeHandler.Msg"));
+                _ = client.Player.Out.SendPlayerFigSpiritUp(id, gemStone, isUp, isMaxLevel, isFall, 0, dir);
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("FigSpiritUpGradeHandler.Msg"));
                 return 0;
             }
             if (!item.isGemStone())
             {
-                client.Player.Out.SendPlayerFigSpiritUp(id, gemStone, isUp, isMaxLevel, isFall, 0, dir);
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("FigSpiritUpGradeHandler.Msg"));
+                _ = client.Player.Out.SendPlayerFigSpiritUp(id, gemStone, isUp, isMaxLevel, isFall, 0, dir);
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("FigSpiritUpGradeHandler.Msg"));
                 return 0;
             }
             if (!isMaxLevel)
@@ -74,11 +75,11 @@ namespace Game.Server.Packets.Client
                 FigSpiritUpInfo curGem = GetCurGem(curFs, place);
                 if (curGem == null)
                 {
-                    client.Player.Out.SendPlayerFigSpiritUp(id, gemStone, isUp, isMaxLevel, isFall, 0, dir);
-                    client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("FigSpiritUpGradeHandler.WrongPlace"));
+                    _ = client.Player.Out.SendPlayerFigSpiritUp(id, gemStone, isUp, isMaxLevel, isFall, 0, dir);
+                    _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("FigSpiritUpGradeHandler.WrongPlace"));
                     return 0;
                 }
-                int exp = 0;
+                int exp;
                 switch (autoBuyId)
                 {
                     case 1:
@@ -88,11 +89,11 @@ namespace Game.Server.Packets.Client
                             needCount = itemCount;
                         }
                         exp = item.Template.Property2 * needCount;
-                        client.Player.PropBag.RemoveTemplate(templeteId, needCount);
+                        _ = client.Player.PropBag.RemoveTemplate(templeteId, needCount);
                         break;
                     default:
                         exp = item.Template.Property2;
-                        client.Player.PropBag.RemoveCountFromStack(item, 1);
+                        _ = client.Player.PropBag.RemoveCountFromStack(item, 1);
                         break;
                 }
 
@@ -110,7 +111,7 @@ namespace Game.Server.Packets.Client
             }
             else
             {
-                client.Player.Out.SendPlayerFigSpiritUp(id, gemStone, isUp, isMaxLevel, isFall, 0, dir);
+                _ = client.Player.Out.SendPlayerFigSpiritUp(id, gemStone, isUp, isMaxLevel, isFall, 0, dir);
                 return 0;
             }
             if (isUp)
@@ -127,7 +128,7 @@ namespace Game.Server.Packets.Client
             gemStone.FigSpiritId = fightSpiritId;
             gemStone.FigSpiritIdValue = figSpiritIdValue;
             client.Player.UpdateGemStone(equipPlace, gemStone);
-            client.Player.Out.SendPlayerFigSpiritUp(id, gemStone, isUp, isMaxLevel, isFall, num, dir);
+            _ = client.Player.Out.SendPlayerFigSpiritUp(id, gemStone, isUp, isMaxLevel, isFall, num, dir);
             return 0;
         }
 
@@ -148,7 +149,9 @@ namespace Game.Server.Packets.Client
             for (int i = 1; i < exps.Length; i++)
             {
                 if (exp >= exps[i] - exps[i - 1] && curLv == (i - 1))
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -158,7 +161,9 @@ namespace Game.Server.Packets.Client
             foreach (FigSpiritUpInfo fs in gems)
             {
                 if (fs.place == place)
+                {
                     return fs;
+                }
             }
             return null;
         }
@@ -168,12 +173,13 @@ namespace Game.Server.Packets.Client
             for (int i = 0; i < gems.Length; i++)
             {
                 if (gems[i].place == gem.place)
+                {
                     gems[i] = gem;
-
+                }
             }
             if (isUp)
             {
-                IEnumerable<FigSpiritUpInfo> temp = (from p in gems orderby p.level, p.exp ascending select p);
+                IEnumerable<FigSpiritUpInfo> temp = from p in gems orderby p.level, p.exp ascending select p;
                 FigSpiritUpInfo[] lvs = new FigSpiritUpInfo[gems.Length];
                 int place = 0;
                 foreach (FigSpiritUpInfo fs in temp)

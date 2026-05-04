@@ -1,19 +1,18 @@
 ﻿using Game.Logic.PetEffects.ContinueElement;
 using Game.Logic.Phy.Object;
-using System;
 using System.Collections.Generic;
 
 namespace Game.Logic.PetEffects.Element.Actives
 {
     public class AE1221 : BasePetEffect
     {
-        private int m_type = 0;
-        private int m_count = 0;
+        private readonly int m_type = 0;
+        private readonly int m_count = 0;
         private int m_probability = 0;
-        private int m_delay = 0;
-        private int m_coldDown = 0;
-        private int m_currentId;
-        private int m_added = 0;
+        private readonly int m_delay = 0;
+        private readonly int m_coldDown = 0;
+        private readonly int m_currentId;
+        private readonly int m_added = 0;
 
         public AE1221(int count, int probability, int type, int skillId, int delay, string elementID)
             : base(ePetEffectType.AE1221, elementID)
@@ -28,8 +27,7 @@ namespace Game.Logic.PetEffects.Element.Actives
 
         public override bool Start(Living living)
         {
-            AE1221 effect = living.PetEffectList.GetOfType(ePetEffectType.AE1221) as AE1221;
-            if (effect != null)
+            if (living.PetEffectList.GetOfType(ePetEffectType.AE1221) is AE1221 effect)
             {
                 effect.m_probability = m_probability > effect.m_probability ? m_probability : effect.m_probability;
                 return true;
@@ -41,7 +39,7 @@ namespace Game.Logic.PetEffects.Element.Actives
         }
 
         protected override void OnAttachedToPlayer(Player player)
-        {            
+        {
             player.PlayerBuffSkillPet += new PlayerEventHandle(player_AfterBuffSkillPetByLiving);
         }
 
@@ -50,10 +48,10 @@ namespace Game.Logic.PetEffects.Element.Actives
             player.PlayerBuffSkillPet -= new PlayerEventHandle(player_AfterBuffSkillPetByLiving);
         }
 
-        void player_AfterBuffSkillPetByLiving(Player player)
+        private void player_AfterBuffSkillPetByLiving(Player player)
         {
             if (player.PetEffects.CurrentUseSkill == m_currentId && player.Game is PVPGame)
-            {                
+            {
                 List<Player> enemys = player.Game.GetAllEnemyPlayers(player);
                 foreach (Player enemy in enemys)
                 {
@@ -62,6 +60,6 @@ namespace Game.Logic.PetEffects.Element.Actives
                 }
                 //Console.WriteLine("Buff Name: {2}, ID: {0}, player.CurrentDamagePlus: {1}", ElementInfo.ID, player.CurrentDamagePlus, ElementInfo.Name);
             }
-        }      
+        }
     }
 }

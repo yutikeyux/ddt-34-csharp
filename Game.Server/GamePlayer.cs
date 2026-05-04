@@ -2,7 +2,6 @@ using Bussiness;
 using Bussiness.Managers;
 using Game.Base.Packets;
 using Game.Logic;
-using Game.Logic.Actions;
 using Game.Logic.Phy.Object;
 using Game.Logic.Protocol;
 using Game.Server;
@@ -26,7 +25,6 @@ using Game.Server.Managers;
 using Game.Server.Packets;
 using Game.Server.Pet;
 using Game.Server.Quests;
-using Game.Server.RingStation;
 using Game.Server.Rooms;
 using Game.Server.SceneMarryRooms;
 using Game.Server.Statics;
@@ -48,9 +46,8 @@ public class GamePlayer : IGamePlayer
 {
 
     public delegate void PlayerOwnSpaEventHandle(int onlineTimeSpa);
-    
+
     public delegate void PlayerAddItemEventHandel(string type, int value);
-    private PlayerGmActivity m_gmActivity;
 
     public delegate void GameKillDropEventHandel(AbstractGame game, int type, int npcId, bool playResult);
 
@@ -72,7 +69,7 @@ public class GamePlayer : IGamePlayer
 
     public delegate void PlayerGameKillEventHandel(AbstractGame game, int type, int id, bool isLiving, int demage, bool isSpanArea);
 
-   
+
 
     public delegate void PlayerGoldCollection(int value);
 
@@ -151,9 +148,6 @@ public class GamePlayer : IGamePlayer
     public delegate void PlayerEquipCardEventHandle();
 
     public ItemInfo LastTakeCardItem;
-
-    private Dictionary<int, int> _friends;
-
     public DateTime BossBoxStartTime;
 
     public bool BlockReceiveMoney;
@@ -162,14 +156,13 @@ public class GamePlayer : IGamePlayer
 
     public int canTakeOut;
 
-    public Dictionary<int, CardInfoOld> Card = new Dictionary<int, CardInfoOld>();
+    public Dictionary<int, CardInfoOld> Card = [];
 
     public CardInfoOld[] CardsTakeOut = new CardInfoOld[9];
 
     public int CurrentRoomIndex;
 
     public int CurrentRoomTeam;
-    private PlayerDice m_dice;
     public int FightPower;
 
     public double GuildRichAddPlus = 1.0;
@@ -181,9 +174,6 @@ public class GamePlayer : IGamePlayer
     public int Hot_Y;
 
     public int HotMap;
-
-    private HotSpringRoom hotSpringRoom_0;
-
     public bool IsInChristmasRoom;
 
     public bool IsInWorldBossRoom;
@@ -272,106 +262,22 @@ public class GamePlayer : IGamePlayer
     public List<ItemInfo> LotteryAwardList;
 
     private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-    private string m_account;
-
-    private AchievementInventory m_achievementInventory;
-
-    private EventInventory m_eventLiveInventory;
-
-    private PlayerBattle m_battle;
-
-    private BufferList m_bufferList;
-
-    private PlayerInventory m_caddyBag;
-
-    private CardInventory m_cardBag;
-
     protected GameClient m_client;
-
-    private PlayerInventory m_ConsortiaBag;
-
-    private PlayerInventory m_BankBag;
-
-    private UTF8Encoding m_converter;
-
-    private MarryRoom m_currentMarryRoom;
-
-    private BaseRoom m_currentRoom;
-
+    private readonly UTF8Encoding m_converter;
     private ItemInfo m_currentSecondWeapon;
 
     private int m_changed;
-
-    private PlayerInfo m_character;
-
-    private PlayerEquipInventory m_equipBag;
-
-    private List<int> m_equipEffect;
-
-    private PlayerExtra m_extra;
-
-    private PlayerInventory m_fightBag;
-
-    private List<BufferInfo> m_fightBuffInfo;
-
-    private PlayerInventory m_food;
-
     protected BaseGame m_game;
-
-    private ItemInfo m_healstone;
-
-    private int m_immunity = 255;
-
-    private bool m_isAASInfo;
-
-    private bool m_isMinor;
-
-    private ItemInfo m_MainWeapon;
-
-    private UsersPetInfo m_pet;
-
-    private PlayerInventory m_petEgg;
-
-    private long m_pingTime;
-
-    private int m_playerId;
-
-    private PlayerProperty m_playerProp;
-
+    private readonly PlayerInventory m_petEgg;
     protected Player m_players;
-
-    private ePlayerState m_playerState;
-
-    private PlayerInventory m_propBag;
-
     private char[] m_pvepermissions;
-
-    private QuestInventory m_questInventory;
-
-    private PlayerRank m_rank;
-
-    private bool m_showPP;
-
-    private PlayerInventory m_storeBag;
-
-    private PlayerInventory m_tempBag;
-
-    private Dictionary<string, object> m_tempProperties = new Dictionary<string, object>();
-
     public bool m_toemview;
 
     public DateTime BoxBeginTime;
-
-    private Dictionary<int, UserDrillInfo> m_userDrills;
-
     public int MarryMap;
 
     public int HoGiap;
-
-    private List<UserGemStone> m_GemStone;
-
-    private static char[] permissionChars = new char[4]
+    private static readonly char[] permissionChars = new char[4]
     {
         '1',
         '3',
@@ -414,7 +320,7 @@ public class GamePlayer : IGamePlayer
 
     private char[] m_fightlabpermissions;
 
-    private static char[] fightlabpermissionChars = new char[4]
+    private static readonly char[] fightlabpermissionChars = new char[4]
     {
         '0',
         '1',
@@ -428,37 +334,21 @@ public class GamePlayer : IGamePlayer
 
     protected ConsortiaLogicProcessor m_consortiaProcessor;
 
-    protected GameRoomLogicProcessor m_gameroomProcessor = new GameRoomLogicProcessor();
+    protected GameRoomLogicProcessor m_gameroomProcessor = new();
 
     protected GameRoomProcessor m_gameRoom;
-
-    private ConsortiaProcessor consortiaProcessor_0;
-
     protected PetLogicProcessor m_petProcessor;
-
-    private PetProcessor petProcessor_0;
-
-    private PetInventory m_petBag;
-
     public DateTime LastMovePlaceItem;
 
     public Dictionary<int, int[]> CardResetTempProp;
-
-    private UserLabyrinthInfo userLabyrinthInfo;
-
     public int TakeCardPlace;
 
     public int TakeCardTemplateID;
 
     public int TakeCardCount;
-
-    private PlayerActives m_playerActive;
-
-    private int int_6;
-
     public static List<Suit_TemplateInfo> DS_Template_Suit_info = Load_Template_Suit_info();
 
-    protected FarmLogicProcessor m_farmProcessor = new FarmLogicProcessor();
+    protected FarmLogicProcessor m_farmProcessor = new();
 
     public List<int> CardBuff { get; set; }
 
@@ -483,9 +373,9 @@ public class GamePlayer : IGamePlayer
     {
         get
         {
-            if (m_character.MasterOrApprenticesArr.Count > 0)
+            if (UserVIPInfo.MasterOrApprenticesArr.Count > 0)
             {
-                foreach (KeyValuePair<int, string> item in m_character.MasterOrApprenticesArr)
+                foreach (KeyValuePair<int, string> item in UserVIPInfo.MasterOrApprenticesArr)
                 {
                     if (WorldMgr.GetPlayerById(item.Key) != null)
                     {
@@ -542,51 +432,34 @@ public class GamePlayer : IGamePlayer
         }
     }
 
-    public PetProcessor PetHandler => petProcessor_0;
+    public PetProcessor PetHandler { get; private set; }
 
-    public PlayerActives Actives => m_playerActive;
+    public PlayerActives Actives { get; }
 
-    public ConsortiaProcessor Consortia => consortiaProcessor_0;
+    public ConsortiaProcessor Consortia { get; private set; }
 
-    public UserLabyrinthInfo Labyrinth
-    {
-        get
-        {
-            return userLabyrinthInfo;
-        }
-        set
-        {
-            userLabyrinthInfo = value;
-        }
-    }
+    public UserLabyrinthInfo Labyrinth { get; set; }
 
-    public string Account => m_account;
+    public string Account { get; }
 
-    public AchievementInventory AchievementInventory => m_achievementInventory;
+    public AchievementInventory AchievementInventory { get; }
 
-    public EventInventory EventLiveInventory => m_eventLiveInventory;
+    public EventInventory EventLiveInventory { get; }
 
     public long AllWorldDameBoss { get; set; }
 
-    public PlayerBattle BattleData => m_battle;
+    public PlayerBattle BattleData { get; }
 
     public bool bool_1 { get; set; }
 
     public bool Boolean_0
     {
-        get
-        {
-            return bool_1;
-        }
-        set
-        {
-            bool_1 = value;
-        }
+        get => bool_1; set => bool_1 = value;
     }
 
-    public BufferList BufferList => m_bufferList;
+    public BufferList BufferList { get; }
 
-    public PlayerInventory CaddyBag => m_caddyBag;
+    public PlayerInventory CaddyBag { get; }
 
     public bool CanUseProp { get; set; }
 
@@ -598,47 +471,23 @@ public class GamePlayer : IGamePlayer
 
     public bool CanX3Exp { get; set; }
 
-    public CardInventory CardBag => m_cardBag;
+    public CardInventory CardBag { get; }
 
     public GameClient Client => m_client;
 
-    public PlayerInventory ConsortiaBag => m_ConsortiaBag;
+    public PlayerInventory ConsortiaBag { get; }
 
-    public PlayerInventory BankBag => m_BankBag;
+    public PlayerInventory BankBag { get; }
 
-    public HotSpringRoom CurrentHotSpringRoom
-    {
-        get
-        {
-            return hotSpringRoom_0;
-        }
-        set
-        {
-            hotSpringRoom_0 = value;
-        }
-    }
+    public HotSpringRoom CurrentHotSpringRoom { get; set; }
 
-    public MarryRoom CurrentMarryRoom
-    {
-        get
-        {
-            return m_currentMarryRoom;
-        }
-        set
-        {
-            m_currentMarryRoom = value;
-        }
-    }
+    public MarryRoom CurrentMarryRoom { get; set; }
 
     public BaseRoom CurrentRoom
     {
-        get
+        get; set
         {
-            return m_currentRoom;
-        }
-        set
-        {
-            BaseRoom baseRoom = Interlocked.Exchange(ref m_currentRoom, value);
+            BaseRoom baseRoom = Interlocked.Exchange(ref field, value);
             if (baseRoom != null)
             {
                 RoomMgr.ExitRoom(baseRoom, this);
@@ -647,71 +496,28 @@ public class GamePlayer : IGamePlayer
     }
     public BaseGame Game
     {
-        get
-        {
-            return m_game;
-        }
-        set
-        {
-            m_game = value;
-        }
+        get => m_game; set => m_game = value;
     }
     public void DiceReset()
     {
-        this.m_dice.Reset();
+        Dice.Reset();
     }
-    public PlayerEquipInventory EquipBag => m_equipBag;
+    public PlayerEquipInventory EquipBag { get; }
 
-    public List<int> EquipEffect
-    {
-        get
-        {
-            return m_equipEffect;
-        }
-        set
-        {
-            m_equipEffect = value;
-        }
-    }
+    public List<int> EquipEffect { get; set; }
 
-    public PlayerExtra Extra => m_extra;
+    public PlayerExtra Extra { get; }
 
-    public PlayerInventory FightBag => m_fightBag;
+    public PlayerInventory FightBag { get; }
 
-    public List<BufferInfo> FightBuffs
-    {
-        get
-        {
-            return m_fightBuffInfo;
-        }
-        set
-        {
-            m_fightBuffInfo = value;
-        }
-    }
-    public PlayerDice Dice
-    {
-        get
-        {
-            return this.m_dice;
-        }
-    }
-    public PlayerInventory Food => m_food;
+    public List<BufferInfo> FightBuffs { get; set; }
+    public PlayerDice Dice { get; }
+    public PlayerInventory Food { get; }
 
-    public Dictionary<int, int> Friends => _friends;
+    public Dictionary<int, int> Friends { get; private set; }
 
 
-    public int GameId
-    {
-        get
-        {
-            return int_6;
-        }
-        set
-        {
-            int_6 = value;
-        }
-    }
+    public int GameId { get; set; }
 
 
 
@@ -719,100 +525,50 @@ public class GamePlayer : IGamePlayer
 
     public int TempGameId { get; set; }
 
-    public ItemInfo Healstone
-    {
-        get
-        {
-            if (m_healstone == null)
-            {
-                return null;
-            }
-            return m_healstone;
-        }
+    public ItemInfo Healstone { get => field == null ? null : (field);
+
+        private set;
     }
 
-    public int Immunity
-    {
-        get
-        {
-            return m_immunity;
-        }
-        set
-        {
-            m_immunity = value;
-        }
-    }
+    public int Immunity { get; set; } = 255;
 
-    public bool IsAASInfo
-    {
-        get
-        {
-            return m_isAASInfo;
-        }
-        set
-        {
-            m_isAASInfo = value;
-        }
-    }
+    public bool IsAASInfo { get; set; }
 
     public virtual bool IsActive => m_client.IsConnected;
 
-    public bool IsInMarryRoom => m_currentMarryRoom != null;
+    public bool IsInMarryRoom => CurrentMarryRoom != null;
 
-    public bool IsMinor
-    {
-        get
-        {
-            return m_isMinor;
-        }
-        set
-        {
-            m_isMinor = value;
-        }
-    }
+    public bool IsMinor { get; set; }
 
-    public List<UserGemStone> GemStone
-    {
-        get
-        {
-            return this.m_GemStone;
-        }
-        set
-        {
-            this.m_GemStone = value;
-        }
-    }
+    public List<UserGemStone> GemStone { get; set; }
 
     public int Level
     {
-        get
-        {
-            return m_character.Grade;
-        }
+        get => UserVIPInfo.Grade;
         set
         {
-            if (value != m_character.Grade)
+            if (value != UserVIPInfo.Grade)
             {
-                int grade = m_character.Grade;
-                DailyRecordInfo info = new DailyRecordInfo
+                int grade = UserVIPInfo.Grade;
+                DailyRecordInfo info = new()
                 {
-                    UserID = m_character.ID,
+                    UserID = UserVIPInfo.ID,
                     Type = 2,
-                    Value = $"{m_character.Grade},{value}"
+                    Value = $"{UserVIPInfo.Grade},{value}"
                 };
                 new PlayerBussiness().AddDailyRecord(info);
                 Extra.UpdateEventCondition((int)NoviceActiveType.Level_Atlama, value);
-                m_character.Grade = value;
+                UserVIPInfo.Grade = value;
                 if (value == 6)
                 {
                     ItemInfo cloneItem = ItemInfo.CreateFromTemplate(ItemMgr.FindItemTemplate(112098), 1, 104);
-                    AddTemplate(cloneItem);
+                    _ = AddTemplate(cloneItem);
                 }
                 if (value == 8)
                 {
                     PlayerCharacter.WeaklessGuildProgressStr = "////b7D/ht8WDQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
                 }
-                if (m_character.masterID != 0 && grade < m_character.Grade)
+                if (UserVIPInfo.masterID != 0 && grade < UserVIPInfo.Grade)
                 {
                     AcademyMgr.UpdateAwardApp(this, grade);
                 }
@@ -829,122 +585,68 @@ public class GamePlayer : IGamePlayer
 
     public int LevelPlusBlood => LevelMgr.LevelPlusBlood(PlayerCharacter.Grade);
 
-    public ItemInfo MainWeapon => m_MainWeapon;
+    public ItemInfo MainWeapon { get; private set; }
 
-    public UserMatchInfo MatchInfo => m_battle.MatchInfo;
+    public UserMatchInfo MatchInfo => BattleData.MatchInfo;
 
     public virtual IPacketLib Out => m_client.Out;
 
-    public UsersPetInfo Pet => m_pet;
+    public UsersPetInfo Pet { get; private set; }
 
     public long PingTime
     {
-        get
+        get; set
         {
-            return m_pingTime;
-        }
-        set
-        {
-            m_pingTime = value;
-            GSPacketIn pkg = Out.SendNetWork(PlayerCharacter.ID, m_pingTime);
-            if (m_currentRoom != null)
-            {
-                m_currentRoom.SendToAll(pkg, this);
-            }
+            field = value;
+            GSPacketIn pkg = Out.SendNetWork(PlayerCharacter.ID, field);
+            CurrentRoom?.SendToAll(pkg, this);
         }
     }
 
-    public PlayerInfo PlayerCharacter => m_character;
+    public PlayerInfo PlayerCharacter => UserVIPInfo;
 
-    public PetInventory PetBag => m_petBag;
+    public PetInventory PetBag { get; }
 
     public PlayerFarm Farm { get; }
 
-    public int PlayerId => m_playerId;
+    public int PlayerId { get; }
 
-    public PlayerProperty PlayerProp => m_playerProp;
+    public PlayerProperty PlayerProp { get; }
 
     public Player Players => m_players;
 
-    public ePlayerState PlayerState
-    {
-        get
-        {
-            return m_playerState;
-        }
-        set
-        {
-            m_playerState = value;
-        }
-    }
+    public ePlayerState PlayerState { get; set; }
 
     public string ProcessLabyrinthAward { get; set; }
 
-    public PlayerInventory PropBag => m_propBag;
+    public PlayerInventory PropBag { get; }
 
-    public QuestInventory QuestInventory => m_questInventory;
+    public QuestInventory QuestInventory { get; }
 
-    public PlayerRank Rank => m_rank;
+    public PlayerRank Rank { get; }
 
-    public ItemInfo SecondWeapon
-    {
-        get
-        {
-            if (m_currentSecondWeapon == null)
-            {
-                return null;
-            }
-            return m_currentSecondWeapon;
-        }
-    }
+    public ItemInfo SecondWeapon => m_currentSecondWeapon == null ? null : m_currentSecondWeapon;
 
     public int ServerID { get; set; }
 
     public bool IsAccountLimit { get; set; }
 
-    public bool ShowPP
-    {
-        get
-        {
-            return m_showPP;
-        }
-        set
-        {
-            m_showPP = value;
-        }
-    }
+    public bool ShowPP { get; set; }
 
-    public PlayerInventory StoreBag => m_storeBag;
+    public PlayerInventory StoreBag { get; }
 
-    public PlayerInventory TempBag => m_tempBag;
+    public PlayerInventory TempBag { get; }
 
-    public Dictionary<string, object> TempProperties => m_tempProperties;
+    public Dictionary<string, object> TempProperties { get; } = [];
 
     public bool Toemview
     {
-        get
-        {
-            return m_toemview;
-        }
-        set
-        {
-            m_toemview = value;
-        }
+        get => m_toemview; set => m_toemview = value;
     }
 
-    public Dictionary<int, UserDrillInfo> UserDrills
-    {
-        get
-        {
-            return m_userDrills;
-        }
-        set
-        {
-            m_userDrills = value;
-        }
-    }
+    public Dictionary<int, UserDrillInfo> UserDrills { get; set; }
 
-    public PlayerInfo UserVIPInfo => m_character;
+    public PlayerInfo UserVIPInfo { get; private set; }
 
     public long WorldbossBood { get; set; }
 
@@ -966,13 +668,7 @@ public class GamePlayer : IGamePlayer
 
     public double BaseDamage { get; set; }
 
-    private bool m_isViewer;
-
-    public bool IsViewer
-    {
-        get { return m_isViewer; }
-        set { m_isViewer = value; }
-    }
+    public bool IsViewer { get; set; }
 
     public List<int> ViFarms { get; private set; }
 
@@ -992,10 +688,7 @@ public class GamePlayer : IGamePlayer
     // BU METODU EKLEYİN (Event'i dışarıdan tetiklemek için)
     public void OnDiscordLinkSuccess()
     {
-        if (DiscordBaglaEvent != null)
-        {
-            DiscordBaglaEvent(this);
-        }
+        DiscordBaglaEvent?.Invoke(this);
     }
 
     public event PlayerItemPropertyEventHandle AfterUsingItem;
@@ -1086,28 +779,9 @@ public class GamePlayer : IGamePlayer
 
     public event PlayerEquipCardEventHandle EquipCardEvent;
 
-    private PlayerAvatarCollection m_avatarcollect;
+    public PlayerAvatarCollection AvatarCollect { get; }
 
-    public PlayerAvatarCollection AvatarCollect
-    {
-        get
-        {
-            return this.m_avatarcollect;
-        }
-    }
-
-    private long _timecheckhack;
-    public long TimeCheckHack
-    {
-        get
-        {
-            return this._timecheckhack;
-        }
-        set
-        {
-            this._timecheckhack = value;
-        }
-    }
+    public long TimeCheckHack { get; set; }
 
     private void SetupProcessor()
     {
@@ -1116,8 +790,8 @@ public class GamePlayer : IGamePlayer
         ConsortiaTask = new ConsortiaTaskProcessor(m_consortiaTaskProcessor);
         WorldBoss = new WorldBossProcessor(_worldBossProcessor);
         LittleGame = new LittleGameProcessor(m_LittleGameProcessor);
-        m_activeSystemHandler = new ActiveSystemProcessor(m_activeSystemProcessor);
-        m_eliteGameHandler = new EliteGameProcessor(m_eliteGameProcessor);
+        ActiveSystemHandler = new ActiveSystemProcessor(m_activeSystemProcessor);
+        EliteGameHandler = new EliteGameProcessor(m_eliteGameProcessor);
     }
 
     //private int count_addmoney;
@@ -1180,59 +854,51 @@ public class GamePlayer : IGamePlayer
 
     public string LastChatMsg;
 
-    protected ActiveSystemLogicProcessor m_activeSystemProcessor = new ActiveSystemLogicProcessor();
+    protected ActiveSystemLogicProcessor m_activeSystemProcessor = new();
 
-    private ActiveSystemProcessor m_activeSystemHandler;
-    public ActiveSystemProcessor ActiveSystemHandler
-    {
-        get { return m_activeSystemHandler; }
-    }
+    public ActiveSystemProcessor ActiveSystemHandler { get; private set; }
 
     #region ELITEGAME
-    protected EliteGameLogicProcessor m_eliteGameProcessor = new EliteGameLogicProcessor();
+    protected EliteGameLogicProcessor m_eliteGameProcessor = new();
 
-    private EliteGameProcessor m_eliteGameHandler;
-    public EliteGameProcessor EliteGameHandler
-    {
-        get { return m_eliteGameHandler; }
-    }
+    public EliteGameProcessor EliteGameHandler { get; private set; }
     #endregion
 
     public GamePlayer(int playerId, string account, GameClient client, PlayerInfo info)
     {
-        m_playerId = playerId;
-        m_account = account;
+        PlayerId = playerId;
+        Account = account;
         m_client = client;
-        m_character = info;
-        m_equipBag = new PlayerEquipInventory(this);
-        m_propBag = new PlayerInventory(this, saveTodb: true, 96, 1, 0, autoStack: true);
-        m_ConsortiaBag = new PlayerInventory(this, saveTodb: true, 100, 11, 0, autoStack: true);
-        m_BankBag = new PlayerInventory(this, saveTodb: true, 492, 51, 0, autoStack: true);
-        m_storeBag = new PlayerInventory(this, saveTodb: true, 20, 12, 0, autoStack: true);
-        m_fightBag = new PlayerInventory(this, saveTodb: false, 3, 3, 0, autoStack: false);
-        m_tempBag = new PlayerInventory(this, saveTodb: false, 60, 4, 0, autoStack: true);
-        m_caddyBag = new PlayerInventory(this, saveTodb: false, 30, 5, 0, autoStack: true);
+        UserVIPInfo = info;
+        EquipBag = new PlayerEquipInventory(this);
+        PropBag = new PlayerInventory(this, saveTodb: true, 96, 1, 0, autoStack: true);
+        ConsortiaBag = new PlayerInventory(this, saveTodb: true, 100, 11, 0, autoStack: true);
+        BankBag = new PlayerInventory(this, saveTodb: true, 492, 51, 0, autoStack: true);
+        StoreBag = new PlayerInventory(this, saveTodb: true, 20, 12, 0, autoStack: true);
+        FightBag = new PlayerInventory(this, saveTodb: false, 3, 3, 0, autoStack: false);
+        TempBag = new PlayerInventory(this, saveTodb: false, 60, 4, 0, autoStack: true);
+        CaddyBag = new PlayerInventory(this, saveTodb: false, 30, 5, 0, autoStack: true);
         FarmBag = new PlayerInventory(this, saveTodb: true, 30, 13, 0, autoStack: true);
         Vegetable = new PlayerInventory(this, saveTodb: true, 30, 14, 0, autoStack: true);
-        m_food = new PlayerInventory(this, saveTodb: true, 30, 34, 0, autoStack: true);
+        Food = new PlayerInventory(this, saveTodb: true, 30, 34, 0, autoStack: true);
         m_petEgg = new PlayerInventory(this, saveTodb: true, 30, 35, 0, autoStack: true);
-        m_cardBag = new CardInventory(this, saveTodb: true, 100, 5);
+        CardBag = new CardInventory(this, saveTodb: true, 100, 5);
         Farm = new PlayerFarm(this, saveTodb: true, 30, 0);
-        m_petBag = new PetInventory(this, saveTodb: true, 20, 8, 0);
-        m_rank = new PlayerRank(this, saveToDb: true);
-        m_playerProp = new PlayerProperty(this);
+        PetBag = new PetInventory(this, saveTodb: true, 20, 8, 0);
+        Rank = new PlayerRank(this, saveToDb: true);
+        PlayerProp = new PlayerProperty(this);
 
-        m_battle = new PlayerBattle(this, saveTodb: true);
-        m_extra = new PlayerExtra(this, saveTodb: true);
-        m_playerActive = new PlayerActives(this, saveTodb: true);
-        m_questInventory = new QuestInventory(this);
-        m_achievementInventory = new AchievementInventory(this);
-        m_eventLiveInventory = new EventInventory(this);
-        m_bufferList = new BufferList(this);
-        m_fightBuffInfo = new List<BufferInfo>();
-        m_equipEffect = new List<int>();
-        m_userDrills = new Dictionary<int, UserDrillInfo>();
-        CardBuff = new List<int>();
+        BattleData = new PlayerBattle(this, saveTodb: true);
+        Extra = new PlayerExtra(this, saveTodb: true);
+        Actives = new PlayerActives(this, saveTodb: true);
+        QuestInventory = new QuestInventory(this);
+        AchievementInventory = new AchievementInventory(this);
+        EventLiveInventory = new EventInventory(this);
+        BufferList = new BufferList(this);
+        FightBuffs = [];
+        EquipEffect = [];
+        UserDrills = [];
+        CardBuff = [];
         GPAddPlus = 1.0;
         OfferAddPlus = 1.0;
         m_toemview = true;
@@ -1244,13 +910,13 @@ public class GamePlayer : IGamePlayer
         LastDrillUpTime = DateTime.Today;
         LastOpenPack = DateTime.Today;
         LastMovePlaceItem = DateTime.Today;
-        m_showPP = false;
+        ShowPP = false;
         m_converter = new UTF8Encoding();
         BossBoxStartTime = DateTime.Now;
         ResetLottery();
         IsAccountLimit = false;
-        CardResetTempProp = new Dictionary<int, int[]>();
-        userLabyrinthInfo = null;
+        CardResetTempProp = [];
+        Labyrinth = null;
         m_consortiaProcessor = new ConsortiaLogicProcessor();
         m_petProcessor = new PetLogicProcessor();
         BlockReceiveMoney = false;
@@ -1265,26 +931,26 @@ public class GamePlayer : IGamePlayer
             Y = 30
         };
         m_LittleGameProcessor = new LittleGameLogicProcessor();
-        m_character.CheckCode = "baodeptrai";
-        m_isViewer = false;
-        this._timecheckhack = (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+        UserVIPInfo.CheckCode = "baodeptrai";
+        IsViewer = false;
+        TimeCheckHack = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
         //this.count_addmoney = 0;
         //this.count_addgp = 0;
         //this.count_function = 0;
         //this.count_function2 = 0;
         //this.count_random = new Random();
-        this.m_GemStone = new List<UserGemStone>();
-        this.m_avatarcollect = new PlayerAvatarCollection(this, true);
-        this.m_dice = new PlayerDice(this, true);
-        m_equipGhostList = new Dictionary<string, UserEquipGhostInfo>();
+        GemStone = [];
+        AvatarCollect = new PlayerAvatarCollection(this, true);
+        Dice = new PlayerDice(this, true);
+        m_equipGhostList = [];
         GuildBattleEnemyId = 0;
         LastOpenChristmasPackage = DateTime.Now;
-        m_gmActivity = new PlayerGmActivity(this, saveTodb: true);
+        GmActivity = new PlayerGmActivity(this, saveTodb: true);
     }
 
     public bool isPassCheckCode()
     {
-        
+
         //int checkmoney = this.count_random.Next(10, 15);//7, 9); //30 ~ 40 trận sẽ hiện mã captcha
         //int checkgp = this.count_random.Next(30, 40);
         //int checkfunction = this.count_random.Next(7, 10);
@@ -1297,7 +963,7 @@ public class GamePlayer : IGamePlayer
 
     public void resetPassCode()
     {
-      // this.CountAddMoney = 0;
+        // this.CountAddMoney = 0;
         //this.CountAddGP = 0;
         //this.CountFunction = 0;
         //this.CountFunction2 = 0;
@@ -1326,24 +992,21 @@ public class GamePlayer : IGamePlayer
 
     public bool isPlayerWarrior()
     {
-        return this.m_extra.Info.coupleBossBoxNum == 9;
+        return Extra.Info.coupleBossBoxNum == 9;
     }
 
     public void UpdatePublicPlayer(string tempStyle = "")
     {
         PlayerCharacter.tempStyle = tempStyle;
         GSPacketIn pkg = Out.SendUpdatePublicPlayer(PlayerCharacter, MatchInfo, Extra.Info);
-        if (m_currentRoom != null)
-        {
-            m_currentRoom.SendToAll(pkg, this);
-        }
+        CurrentRoom?.SendToAll(pkg, this);
     }
 
     public int AddAchievementPoint(int value)
     {
         if (value > 0)
         {
-            m_character.AchievementPoint += value;
+            UserVIPInfo.AchievementPoint += value;
             OnPropertiesChanged();
             return value;
         }
@@ -1352,42 +1015,42 @@ public class GamePlayer : IGamePlayer
 
     public void SendUpdatePublicPlayer()
     {
-        Out.SendUpdatePublicPlayer(PlayerCharacter, MatchInfo, Extra.Info);
+        _ = Out.SendUpdatePublicPlayer(PlayerCharacter, MatchInfo, Extra.Info);
     }
 
     public void AddExpVip(int value)
     {
         List<int> exp = GameProperties.VIPExp();
-        m_character.VIPExp += value;
+        UserVIPInfo.VIPExp += value;
         for (int i = 0; i < exp.Count; i++)
         {
-            int vipExp = m_character.VIPExp;
-            int level = m_character.VIPLevel;
+            int vipExp = UserVIPInfo.VIPExp;
+            int level = UserVIPInfo.VIPLevel;
             if (level == 9)
             {
-                m_character.VIPExp = exp[8];
+                UserVIPInfo.VIPExp = exp[8];
                 break;
             }
             if (level < 9 && canUpLv(vipExp, level))
             {
-                m_character.VIPLevel++;
-                if (m_character.VIPLevel >= 7 && PetBag != null)
+                UserVIPInfo.VIPLevel++;
+                if (UserVIPInfo.VIPLevel >= 7 && PetBag != null)
                 {
-                    PetBag.UpdatePetFiveKillSlot(m_character.VIPLevel);
+                    PetBag.UpdatePetFiveKillSlot(UserVIPInfo.VIPLevel);
                 }
-                DailyRecordInfo info = new DailyRecordInfo
+                DailyRecordInfo info = new()
                 {
                     UserID = PlayerCharacter.ID,
                     Type = 28,
-                    Value = m_character.VIPLevel.ToString()
+                    Value = UserVIPInfo.VIPLevel.ToString()
                 };
                 new PlayerBussiness().AddDailyRecord(info);
             }
         }
         Extra.UpdateEventCondition((int)NoviceActiveType.VIP_LEVEL, PlayerCharacter.VIPLevel);
-        if (m_character.IsVIPExpire())
+        if (UserVIPInfo.IsVIPExpire())
         {
-            Out.SendOpenVIP(this);
+            _ = Out.SendOpenVIP(this);
         }
     }
 
@@ -1395,29 +1058,29 @@ public class GamePlayer : IGamePlayer
     {
         bool result = false;
         List<int> list = GameProperties.VIPExp();
-        if (m_character.VIPExp >= value)
+        if (UserVIPInfo.VIPExp >= value)
         {
-            m_character.VIPExp -= value;
+            UserVIPInfo.VIPExp -= value;
             result = true;
         }
-        else if (m_character.VIPExp < value && m_character.VIPExp > 0)
+        else if (UserVIPInfo.VIPExp < value && UserVIPInfo.VIPExp > 0)
         {
-            m_character.VIPExp = 0;
+            UserVIPInfo.VIPExp = 0;
             result = true;
         }
         for (int i = 0; i < list.Count; i++)
         {
-            int vIPExp = m_character.VIPExp;
-            int vIPLevel = m_character.VIPLevel;
+            int vIPExp = UserVIPInfo.VIPExp;
+            int vIPLevel = UserVIPInfo.VIPLevel;
 
             if (vIPLevel > 9 && canDownLv(vIPExp, vIPLevel))
             {
-                m_character.VIPLevel--;
-                DailyRecordInfo info = new DailyRecordInfo
+                UserVIPInfo.VIPLevel--;
+                DailyRecordInfo info = new()
                 {
                     UserID = PlayerCharacter.ID,
                     Type = 28,
-                    Value = m_character.VIPLevel.ToString()
+                    Value = UserVIPInfo.VIPLevel.ToString()
                 };
                 new PlayerBussiness().AddDailyRecord(info);
 
@@ -1430,10 +1093,10 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            m_character.Gold += value;
-            if (m_character.Gold == int.MinValue)
+            UserVIPInfo.Gold += value;
+            if (UserVIPInfo.Gold == int.MinValue)
             {
-                m_character.Gold = int.MaxValue;
+                UserVIPInfo.Gold = int.MaxValue;
                 SendMessage("Altınların sınırına ulaşmış!"); //türkçeleştirildi not: yuti
             }
             OnPlayerAddItem("Gold", value);
@@ -1445,34 +1108,37 @@ public class GamePlayer : IGamePlayer
     public int AddGP(int gp)
     {
         // Chức năng của BAOLT - Lâm đừng copaste nha //incelerim bi ara not: yuti
-        if (this.isPlayerWarrior())
+        if (isPlayerWarrior())
+        {
             return 0;
+        }
+
         if (gp >= 0)
         {
             if (AntiAddictionMgr.ISASSon)
             {
-                gp = (int)((double)gp * AntiAddictionMgr.GetAntiAddictionCoefficient(PlayerCharacter.AntiAddiction));
+                gp = (int)(gp * AntiAddictionMgr.GetAntiAddictionCoefficient(PlayerCharacter.AntiAddiction));
             }
-            gp = (int)((float)gp * RateMgr.GetRate(eRateType.Experience_Rate));
+            gp = (int)(gp * RateMgr.GetRate(eRateType.Experience_Rate));
             if (GPAddPlus > 0.0)
             {
-                gp = (int)((double)gp * GPAddPlus);
+                gp = (int)(gp * GPAddPlus);
             }
-            m_character.GP += gp;
-            if (m_character.GP < 1)
+            UserVIPInfo.GP += gp;
+            if (UserVIPInfo.GP < 1)
             {
-                m_character.GP = 1;
+                UserVIPInfo.GP = 1;
             }
-            Level = LevelMgr.GetLevel(m_character.GP);
+            Level = LevelMgr.GetLevel(UserVIPInfo.GP);
             int maxLevel = LevelMgr.MaxLevel;
             LevelInfo levelInfo = LevelMgr.FindLevel(maxLevel);
             if (Level == maxLevel && levelInfo != null)
             {
-                m_character.GP = levelInfo.GP;
+                UserVIPInfo.GP = levelInfo.GP;
                 int num = gp / 1000; //100 olan değer 1000e yükseltildi. not: yuti
                 if (num > 0)
                 {
-                    AddOffer(num);
+                    _ = AddOffer(num);
                     SendHideMessage(string.Format("Maksimum seviyeye ulaştığınız için kazandığınız deneyim mükafata dönüştürüldü. Kazanılan Mükafat: " + num)); //türkçeleştirildi not: yuti
                 }
             }
@@ -1486,34 +1152,37 @@ public class GamePlayer : IGamePlayer
     public int AddGP(int gp, bool x2)
     {
         // Chức năng của BAOLT - Lâm đừng copaste nha
-        if (this.isPlayerWarrior())
+        if (isPlayerWarrior())
+        {
             return 0;
+        }
+
         if (gp >= 0)
         {
             if (AntiAddictionMgr.ISASSon)
             {
-                gp = (int)((double)gp * AntiAddictionMgr.GetAntiAddictionCoefficient(PlayerCharacter.AntiAddiction));
+                gp = (int)(gp * AntiAddictionMgr.GetAntiAddictionCoefficient(PlayerCharacter.AntiAddiction));
             }
-            gp = (int)((float)gp * RateMgr.GetRate(eRateType.Experience_Rate));
+            gp = (int)(gp * RateMgr.GetRate(eRateType.Experience_Rate));
             if (GPAddPlus > 0.0 && x2)
             {
-                gp = (int)((double)gp * GPAddPlus);
+                gp = (int)(gp * GPAddPlus);
             }
-            m_character.GP += gp;
-            if (m_character.GP < 1)
+            UserVIPInfo.GP += gp;
+            if (UserVIPInfo.GP < 1)
             {
-                m_character.GP = 1;
+                UserVIPInfo.GP = 1;
             }
-            Level = LevelMgr.GetLevel(m_character.GP);
+            Level = LevelMgr.GetLevel(UserVIPInfo.GP);
             int maxLevel = LevelMgr.MaxLevel;
             LevelInfo levelInfo = LevelMgr.FindLevel(maxLevel);
             if (Level == maxLevel && levelInfo != null)
             {
-                m_character.GP = levelInfo.GP;
+                UserVIPInfo.GP = levelInfo.GP;
                 int num = gp / 1000; //100 olan değer 1000e yükseltildi not: yuti
                 if (num > 0)
                 {
-                    AddOffer(num);
+                    _ = AddOffer(num);
                     SendHideMessage(string.Format("Maksimum seviyeye ulaştığınız için kazandığınız deneyim mükafata dönüştürüldü. Kazanılan Mükafat: " + num)); //türkçeleştirildi not: yuti
                 }
             }
@@ -1527,14 +1196,14 @@ public class GamePlayer : IGamePlayer
 
     public void AddGift(eGiftType type)
     {
-        List<ItemInfo> list = new List<ItemInfo>();
+        List<ItemInfo> list = [];
         bool testActive = GameProperties.TestActive;
         switch (type)
         {
             case eGiftType.MONEY:
                 if (testActive)
                 {
-                    AddMoney(GameProperties.FreeMoney);
+                    _ = AddMoney(GameProperties.FreeMoney);
                 }
                 break;
             case eGiftType.SMALL_EXP:
@@ -1571,7 +1240,7 @@ public class GamePlayer : IGamePlayer
         foreach (ItemInfo item in list)
         {
             item.IsBinds = true;
-            AddTemplate(item, item.Template.BagType, item.Count, eGameView.dungeonTypeGet);
+            _ = AddTemplate(item, item.Template.BagType, item.Count, eGameView.dungeonTypeGet);
         }
     }
 
@@ -1579,7 +1248,7 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            m_character.GiftToken += value;
+            UserVIPInfo.GiftToken += value;
             OnPlayerAddItem("GiftToken", value);
             OnPropertiesChanged();
             return value;
@@ -1597,7 +1266,7 @@ public class GamePlayer : IGamePlayer
     {
         if (item.Template.BagType == (int)eBageType.EquipBag)
         {
-            return m_equipBag.AddItem(item);
+            return EquipBag.AddItem(item);
         }
         AbstractInventory bg = GetItemInventory(item.Template);
         return bg.AddItem(item, bg.BeginSlot);
@@ -1607,8 +1276,8 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            m_battle.MatchInfo.dailyScore += value;
-            m_battle.MatchInfo.weeklyScore += value;
+            BattleData.MatchInfo.dailyScore += value;
+            BattleData.MatchInfo.weeklyScore += value;
             OnPropertiesChanged();
             return value;
         }
@@ -1619,8 +1288,8 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            m_battle.MatchInfo.dailyScore -= value;
-            m_battle.MatchInfo.weeklyScore -= value;
+            BattleData.MatchInfo.dailyScore -= value;
+            BattleData.MatchInfo.weeklyScore -= value;
             OnPropertiesChanged();
             return value;
         }
@@ -1629,7 +1298,7 @@ public class GamePlayer : IGamePlayer
 
     public void AddLog(string type, string content)
     {
-        using PlayerBussiness playerBussiness = new PlayerBussiness();
+        using PlayerBussiness playerBussiness = new();
         playerBussiness.AddUserLogEvent(PlayerCharacter.ID, PlayerCharacter.UserName, PlayerCharacter.NickName, type, content);
     }
 
@@ -1649,9 +1318,9 @@ public class GamePlayer : IGamePlayer
                 //OnPropertiesChanged();
                 return 0;
             }
-            m_character.Money += value;
+            UserVIPInfo.Money += value;
             //this.count_addmoney++;            LOGA EKLEDİĞİ İÇİN TÜRKÇEYE ÇEVİRMEME GEREK YOK!
-            AddLog("AddMoney", "Tài khoản " + m_character.UserName + "nhận " + value + "xu vào tài khoản" + m_character.NickName);
+            AddLog("AddMoney", "Tài khoản " + UserVIPInfo.UserName + "nhận " + value + "xu vào tài khoản" + UserVIPInfo.NickName);
             OnPropertiesChanged();
             return value;
         }
@@ -1662,9 +1331,9 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            m_character.MoneyLock += value;
+            UserVIPInfo.MoneyLock += value;
             //this.count_addmoney++;
-            AddLog("AddMoneyLock", "Tài khoản " + m_character.UserName + "nhận " + value + "xu lock vào tài khoản" + m_character.NickName);
+            AddLog("AddMoneyLock", "Tài khoản " + UserVIPInfo.UserName + "nhận " + value + "xu lock vào tài khoản" + UserVIPInfo.NickName);
             OnPropertiesChanged();
             return value;
         }
@@ -1675,10 +1344,10 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            m_character.badLuckNumber += value;
-            if (m_character.badLuckNumber == int.MinValue)
+            UserVIPInfo.badLuckNumber += value;
+            if (UserVIPInfo.badLuckNumber == int.MinValue)
             {
-                m_character.badLuckNumber = int.MaxValue;
+                UserVIPInfo.badLuckNumber = int.MaxValue;
                 SendMessage("Limiti aştınız."); //türkçeleştirildi not: yuti
             }
             OnPropertiesChanged();
@@ -1710,13 +1379,13 @@ public class GamePlayer : IGamePlayer
         {
             if (AntiAddictionMgr.ISASSon)
             {
-                value = (int)((double)value * AntiAddictionMgr.GetAntiAddictionCoefficient(PlayerCharacter.AntiAddiction));
+                value = (int)(value * AntiAddictionMgr.GetAntiAddictionCoefficient(PlayerCharacter.AntiAddiction));
             }
             if (IsRate)
             {
-                value *= (((int)OfferAddPlus == 0) ? 1 : ((int)OfferAddPlus));
+                value *= ((int)OfferAddPlus == 0) ? 1 : ((int)OfferAddPlus);
             }
-            m_character.Offer += value;
+            UserVIPInfo.Offer += value;
             OnFightAddOffer(value);
             OnPropertiesChanged();
             return value;
@@ -1728,10 +1397,10 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            m_character.petScore += value;
-            if (m_character.petScore == int.MinValue)
+            UserVIPInfo.petScore += value;
+            if (UserVIPInfo.petScore == int.MinValue)
             {
-                m_character.petScore = int.MaxValue;
+                UserVIPInfo.petScore = int.MaxValue;
                 SendMessage("Sınırı aştınız."); //türkçeleştirildi not: yuti
             }
             OnPropertiesChanged();
@@ -1742,7 +1411,7 @@ public class GamePlayer : IGamePlayer
 
     public void AddPrestige(bool isWin, eRoomType roomType)
     {
-        if (m_character.Grade >= 20 && ActiveSystemMgr.IsLeagueOpen)
+        if (UserVIPInfo.Grade >= 20 && ActiveSystemMgr.IsLeagueOpen)
         {
             BattleData.AddPrestige(isWin);
             OnPropertiesChanged();
@@ -1767,7 +1436,7 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            m_character.RichesOffer += value;
+            UserVIPInfo.RichesOffer += value;
             OnPropertiesChanged();
             return value;
         }
@@ -1780,9 +1449,9 @@ public class GamePlayer : IGamePlayer
         {
             if (AntiAddictionMgr.ISASSon)
             {
-                value = (int)((double)value * AntiAddictionMgr.GetAntiAddictionCoefficient(PlayerCharacter.AntiAddiction));
+                value = (int)(value * AntiAddictionMgr.GetAntiAddictionCoefficient(PlayerCharacter.AntiAddiction));
             }
-            m_character.RichesRob += value;
+            UserVIPInfo.RichesRob += value;
             OnPlayerAddItem("RichesRob", value);
             OnPropertiesChanged();
             return value;
@@ -1794,7 +1463,7 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            m_character.Score += value;
+            UserVIPInfo.Score += value;
             OnPropertiesChanged();
             return value;
         }
@@ -1820,7 +1489,7 @@ public class GamePlayer : IGamePlayer
     {
         if (infos != null)
         {
-            List<ItemInfo> list = new List<ItemInfo>();
+            List<ItemInfo> list = [];
             foreach (ItemInfo info in infos)
             {
                 info.IsBinds = true;
@@ -1839,7 +1508,7 @@ public class GamePlayer : IGamePlayer
     {
         if (infos != null)
         {
-            List<ItemInfo> list = new List<ItemInfo>();
+            List<ItemInfo> list = [];
             foreach (ItemInfo info in infos)
             {
                 info.IsBinds = true;
@@ -1857,19 +1526,15 @@ public class GamePlayer : IGamePlayer
 
     public bool AddTemplate(ItemInfo cloneItem, eBageType bagType, int count, eGameView gameView)
     {
-        if (eBageType.FightBag == bagType)
-        {
-            return FightBag.AddItem(cloneItem);
-        }
-        return AddTemplate(cloneItem, bagType, count, gameView, "no");
+        return eBageType.FightBag == bagType ? FightBag.AddItem(cloneItem) : AddTemplate(cloneItem, bagType, count, gameView, "no");
     }
 
     public bool AddTemplate(ItemInfo cloneItem, eBageType bagType, int count, eGameView gameView, string Name)
     {
         if (cloneItem != null)
         {
-            SpecialItemBoxInfo specialValue = new SpecialItemBoxInfo();
-            List<ItemInfo> itemOverDue = new List<ItemInfo>();
+            _ = new SpecialItemBoxInfo();
+            List<ItemInfo> itemOverDue = [];
             AddLog("AddTemplate: ", "ItemInfo: " + cloneItem.Name + "," + cloneItem.ItemID + "," + cloneItem.TemplateID + "|eBageType: " + bagType + "|Count: " + count + "|eGameView: " + gameView + "|Name: " + Name);
             cloneItem.Count = count;
             if (!StackItemToAnother(cloneItem) && !AddItem(cloneItem))
@@ -1902,7 +1567,7 @@ public class GamePlayer : IGamePlayer
             }
             if (backToMail && cloneItem.Template.CategoryID != 10)
             {
-                SendItemsToMail(cloneItem, LanguageMgr.GetTranslation("GamePlayer.Msg18"), LanguageMgr.GetTranslation("GamePlayer.Msg18"), eMailType.BuyItem);
+                _ = SendItemsToMail(cloneItem, LanguageMgr.GetTranslation("GamePlayer.Msg18"), LanguageMgr.GetTranslation("GamePlayer.Msg18"), eMailType.BuyItem);
             }
         }
         return false;
@@ -1938,18 +1603,15 @@ public class GamePlayer : IGamePlayer
 
     private void SendItemNotice(ItemInfo item)
     {
-        GSPacketIn gSPacketIn = new GSPacketIn(14);
+        GSPacketIn gSPacketIn = new(14);
         gSPacketIn.WriteString(PlayerCharacter.NickName);
         gSPacketIn.WriteInt(1);
         gSPacketIn.WriteInt(item.TemplateID);
         gSPacketIn.WriteBoolean(item.IsBinds);
         gSPacketIn.WriteInt(1);
-        if (item.Template.Quality >= 3 && item.Template.Quality < 5)
+        if (item.Template.Quality is >= 3 and < 5)
         {
-            if (CurrentRoom != null)
-            {
-                CurrentRoom.SendToTeam(gSPacketIn, CurrentRoomTeam, this);
-            }
+            CurrentRoom?.SendToTeam(gSPacketIn, CurrentRoomTeam, this);
         }
         else
         {
@@ -1985,7 +1647,7 @@ public class GamePlayer : IGamePlayer
             }
             if (flag)
             {
-                Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
+                _ = Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
             }
         }
     }
@@ -1993,16 +1655,16 @@ public class GamePlayer : IGamePlayer
     public void BeginAllChanges()
     {
         BeginChanges();
-        m_bufferList.BeginChanges();
-        m_equipBag.BeginChanges();
-        m_propBag.BeginChanges();
+        BufferList.BeginChanges();
+        EquipBag.BeginChanges();
+        PropBag.BeginChanges();
         FarmBag.BeginChanges();
         Vegetable.BeginChanges();
     }
 
     public void BeginChanges()
     {
-        Interlocked.Increment(ref m_changed);
+        _ = Interlocked.Increment(ref m_changed);
     }
 
     public void RemoveLotteryItems(int templateId, int count)
@@ -2011,7 +1673,7 @@ public class GamePlayer : IGamePlayer
         {
             if (lotteryItem.TemplateId == templateId && lotteryItem.ItemCount == count)
             {
-                LotteryItems.Remove(lotteryItem);
+                _ = LotteryItems.Remove(lotteryItem);
                 break;
             }
         }
@@ -2026,14 +1688,14 @@ public class GamePlayer : IGamePlayer
             flag = false;
             message = LanguageMgr.GetTranslation("Game.Server.GameObjects.NoEquip");
         }
-        else if (m_character.Grade < item.NeedLevel)
+        else if (UserVIPInfo.Grade < item.NeedLevel)
         {
             flag = false;
             message = LanguageMgr.GetTranslation("Game.Server.GameObjects.CanLevel");
         }
         if (!flag)
         {
-            Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, message);
+            _ = Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, message);
         }
         return flag;
     }
@@ -2044,10 +1706,10 @@ public class GamePlayer : IGamePlayer
         {
             List<int> list = GameProperties.VIPExp();
             ShopItemInfo itemVipInfo = ShopMgr.FindShopbyTemplateID((int)EquipType.VIPCARD);
-            int adddaily = (int)(itemVipInfo.AValue1 / itemVipInfo.AUnit) * 2;
+            int adddaily = itemVipInfo.AValue1 / itemVipInfo.AUnit * 2;
 
             float result = 0;
-            float vipExpCompared = (float)list[viplevel] - (float)vipexp;//so sánh exp hiện tại với vipexp kế tiếp, listIndex start 0 -> 8 tương đương vipLevel 1 -> 9
+            float vipExpCompared = list[viplevel] - (float)vipexp;//so sánh exp hiện tại với vipexp kế tiếp, listIndex start 0 -> 8 tương đương vipLevel 1 -> 9
 
             if (PlayerCharacter.typeVIP == 2)
             {
@@ -2060,13 +1722,13 @@ public class GamePlayer : IGamePlayer
 
             if (result < 0)
             {
-                log.Info("GetVIPNextLevelDaysNeeded bug: compared vipexp > nextVipExp by VipLevel! CharacterID :" + m_character.ID);
+                log.Info("GetVIPNextLevelDaysNeeded bug: compared vipexp > nextVipExp by VipLevel! CharacterID :" + UserVIPInfo.ID);
             }
 
-            OnVIPUpgrade(m_character.VIPLevel, m_character.VIPExp);
+            OnVIPUpgrade(UserVIPInfo.VIPLevel, UserVIPInfo.VIPExp);
             return (int)Math.Ceiling(result > 0 ? result : 0);
         }
-        OnVIPUpgrade(m_character.VIPLevel, m_character.VIPExp);
+        OnVIPUpgrade(UserVIPInfo.VIPLevel, UserVIPInfo.VIPExp);
         return 0;
     }
 
@@ -2105,17 +1767,13 @@ public class GamePlayer : IGamePlayer
         {
             return true;
         }
-        if (exp >= list[8] && _curLv == 8)
-        {
-            return true;
-        }
-        return false;
+        return exp >= list[8] && _curLv == 8;
     }
 
     public bool canDownLv(int exp, int _curLv)
     {
         List<int> list = GameProperties.VIPExp();
-        if (_curLv == 0 || _curLv == 9)
+        if (_curLv is 0 or 9)
         {
             return false;
         }
@@ -2147,16 +1805,12 @@ public class GamePlayer : IGamePlayer
         {
             return true;
         }
-        if (exp < list[8] && _curLv == 8)
-        {
-            return true;
-        }
-        return false;
+        return exp < list[8] && _curLv == 8;
     }
 
     public void ClearCaddyBag()
     {
-        List<ItemInfo> list = new List<ItemInfo>();
+        List<ItemInfo> list = [];
         for (int i = 0; i < CaddyBag.Capalility; i++)
         {
             ItemInfo itemAt = CaddyBag.GetItemAt(i);
@@ -2168,7 +1822,7 @@ public class GamePlayer : IGamePlayer
             }
         }
         CaddyBag.ClearBag();
-        AddTemplate(list);
+        _ = AddTemplate(list);
 
     }
 
@@ -2176,7 +1830,7 @@ public class GamePlayer : IGamePlayer
     {
         int itemCount = PropBag.GetItemCount(11408);
         int num = 0;
-        if (m_character.IsConsortia)
+        if (UserVIPInfo.IsConsortia)
         {
             num = ConsortiaBag.GetItemCount(11408);
         }
@@ -2187,15 +1841,15 @@ public class GamePlayer : IGamePlayer
     public bool SendEventLiveRewards(EventLiveInfo eventLiveInfo)
     {
         List<EventLiveGoods> eventGoods = EventLiveMgr.GetEventGoods(eventLiveInfo);
-        new List<ItemInfo>();
+        _ = new List<ItemInfo>();
         foreach (EventLiveGoods item in eventGoods)
         {
-            if (item.TemplateID != -100 && item.TemplateID != -200)
+            if (item.TemplateID is not -100 and not -200)
             {
                 ItemTemplateInfo itemTemplateInfo = ItemMgr.FindItemTemplate(item.TemplateID);
                 if (itemTemplateInfo != null)
                 {
-                    int num = (PlayerCharacter.Sex ? 1 : 2);
+                    int num = PlayerCharacter.Sex ? 1 : 2;
                     if (itemTemplateInfo.NeedSex != 0 && itemTemplateInfo.NeedSex != num)
                     {
                         continue;
@@ -2203,7 +1857,7 @@ public class GamePlayer : IGamePlayer
                     int count = item.Count;
                     for (int i = 0; i < count; i += itemTemplateInfo.MaxCount)
                     {
-                        int count2 = ((i + itemTemplateInfo.MaxCount > count) ? (count - i) : itemTemplateInfo.MaxCount);
+                        int count2 = (i + itemTemplateInfo.MaxCount > count) ? (count - i) : itemTemplateInfo.MaxCount;
                         ItemInfo itemInfo = ItemInfo.CreateFromTemplate(itemTemplateInfo, count2, 120);
                         if (itemInfo != null)
                         {
@@ -2214,26 +1868,26 @@ public class GamePlayer : IGamePlayer
                             itemInfo.LuckCompose = item.LuckCompose;
                             itemInfo.IsBinds = item.IsBind;
                             itemInfo.ValidDate = item.ValidDate;
-                            SendItemToMail(itemInfo, LanguageMgr.GetTranslation("Merhaba! Dikkatini ve merakını karşılıksız bırakmadık. Oyunda belirli koşulları başarıyla yerine getirdiğin için özel bir ödül kazandın! Bu ödül, yalnızca detaylara önem veren ve oyunu keşfetmeyi seven oyunculara veriliyor. Ödülün şu anda hesabına tanımlandı. Envanterinde veya ilgili oyun ekranında hemen kullanabilirsin. Küçük bir ipucu: Bu tarz ödüller, oyunda düşündüğünden daha fazla yerde karşına çıkabilir. Keyifli Oyunlar.", eventLiveInfo.Description), LanguageMgr.GetTranslation("Tebrikler! Gizli Ödül!"), eMailType.Manage); //türkçeleştirildi not: yuti
+                            _ = SendItemToMail(itemInfo, LanguageMgr.GetTranslation("Merhaba! Dikkatini ve merakını karşılıksız bırakmadık. Oyunda belirli koşulları başarıyla yerine getirdiğin için özel bir ödül kazandın! Bu ödül, yalnızca detaylara önem veren ve oyunu keşfetmeyi seven oyunculara veriliyor. Ödülün şu anda hesabına tanımlandı. Envanterinde veya ilgili oyun ekranında hemen kullanabilirsin. Küçük bir ipucu: Bu tarz ödüller, oyunda düşündüğünden daha fazla yerde karşına çıkabilir. Keyifli Oyunlar.", eventLiveInfo.Description), LanguageMgr.GetTranslation("Tebrikler! Gizli Ödül!"), eMailType.Manage); //türkçeleştirildi not: yuti
                         }
                     }
                 }
             }
             if (item.TemplateID == -100)
             {
-                AddGold(item.Count);
+                _ = AddGold(item.Count);
             }
             if (item.TemplateID == -200)
             {
-                AddMoney(item.Count);
+                _ = AddMoney(item.Count);
             }
             if (item.TemplateID == -300)
             {
-                AddGiftToken(item.Count);
+                _ = AddGiftToken(item.Count);
             }
             if (item.TemplateID == -800)
             {
-                AddHonor(item.Count);
+                _ = AddHonor(item.Count);
             }
         }
         return true;
@@ -2243,9 +1897,17 @@ public class GamePlayer : IGamePlayer
     {
         string sender = LanguageMgr.GetTranslation("Game.Server.GameUtils.ConsortiaBag.Sender");
         string title = LanguageMgr.GetTranslation("Game.Server.GameUtils.ConsortiaBag.Title");
-        if (isclear) PlayerCharacter.ClearConsortia();
-        if (PlayerCharacter.ConsortiaID != 0 || ConsortiaBag.GetItems().Count <= 0) return;
-        List<ItemInfo> listitem = new List<ItemInfo>();
+        if (isclear)
+        {
+            PlayerCharacter.ClearConsortia();
+        }
+
+        if (PlayerCharacter.ConsortiaID != 0 || ConsortiaBag.GetItems().Count <= 0)
+        {
+            return;
+        }
+
+        List<ItemInfo> listitem = [];
         foreach (ItemInfo item in ConsortiaBag.GetItems())
         {
             if (item.IsValidItem())
@@ -2254,11 +1916,11 @@ public class GamePlayer : IGamePlayer
             }
         }
         OnPropertiesChanged();
-        QuestInventory.ClearConsortiaQuest();
+        _ = QuestInventory.ClearConsortiaQuest();
         //ConsortiaBag.ClearBag();
         //ConsortiaBag.SaveToDatabase();
         //SendItemsToMail(listitem, sender, title, eMailType.StoreCanel);
-        ConsortiaBag.SendAllItemsToMail(sender, title, eMailType.StoreCanel);
+        _ = ConsortiaBag.SendAllItemsToMail(sender, title, eMailType.StoreCanel);
     }
 
     public bool ClearFightBag()
@@ -2269,7 +1931,7 @@ public class GamePlayer : IGamePlayer
 
     public void ClearFightBuffOneMatch()
     {
-        List<BufferInfo> list = new List<BufferInfo>();
+        List<BufferInfo> list = [];
         foreach (BufferInfo fightBuff in FightBuffs)
         {
             if (fightBuff != null)
@@ -2290,7 +1952,7 @@ public class GamePlayer : IGamePlayer
         }
         foreach (BufferInfo item in list)
         {
-            FightBuffs.Remove(item);
+            _ = FightBuffs.Remove(item);
         }
         list.Clear();
     }
@@ -2305,34 +1967,36 @@ public class GamePlayer : IGamePlayer
 
     public void ClearStoreBag()
     {
-        for (int i = 0; i < this.StoreBag.Capalility; i++)
+        for (int i = 0; i < StoreBag.Capalility; i++)
         {
-            ItemInfo itemAt = this.StoreBag.GetItemAt(i);
+            ItemInfo itemAt = StoreBag.GetItemAt(i);
             if (itemAt != null)
             {
                 if (itemAt.Template.BagType == eBageType.PropBag)
                 {
-                    int place = this.PropBag.FindFirstEmptySlot();
-                    if (this.PropBag.AddItemTo(itemAt, place))
+                    int place = PropBag.FindFirstEmptySlot();
+                    if (PropBag.AddItemTo(itemAt, place))
                     {
-                        this.StoreBag.TakeOutItem(itemAt);
+                        _ = StoreBag.TakeOutItem(itemAt);
                     }
                 }
                 else
                 {
-                    int place = this.EquipBag.FindFirstEmptySlot(31);
+                    int place = EquipBag.FindFirstEmptySlot(31);
                     if (place > 0)
                     {
-                        if (this.EquipBag.AddItemTo(itemAt, place))
-                            this.StoreBag.TakeOutItem(itemAt);
+                        if (EquipBag.AddItemTo(itemAt, place))
+                        {
+                            _ = StoreBag.TakeOutItem(itemAt);
+                        }
                     }
                 }
             }
         }
-        List<ItemInfo> items = this.StoreBag.GetItems();
+        List<ItemInfo> items = StoreBag.GetItems();
         if (items.Count > 0)
         {
-            this.StoreBag.SendAllItemsToMail("Sistem", "İade Edilen Ürün", eMailType.StoreCanel); //türkçeleştirildi not: yuti
+            _ = StoreBag.SendAllItemsToMail("Sistem", "İade Edilen Ürün", eMailType.StoreCanel); //türkçeleştirildi not: yuti
         }
     }
 
@@ -2346,16 +2010,16 @@ public class GamePlayer : IGamePlayer
     public void CommitAllChanges()
     {
         CommitChanges();
-        m_bufferList.CommitChanges();
-        m_equipBag.CommitChanges();
-        m_propBag.CommitChanges();
+        BufferList.CommitChanges();
+        EquipBag.CommitChanges();
+        PropBag.CommitChanges();
         FarmBag.CommitChanges();
         Vegetable.CommitChanges();
     }
 
     public void CommitChanges()
     {
-        Interlocked.Decrement(ref m_changed);
+        _ = Interlocked.Decrement(ref m_changed);
         OnPropertiesChanged();
     }
 
@@ -2366,11 +2030,11 @@ public class GamePlayer : IGamePlayer
 
     public void ContinousVIP(int days)
     {
-        DateTime now = DateTime.Now;
-        DateTime dateTime2 = (m_character.VIPExpireDay = ((!(m_character.VIPExpireDay < DateTime.Now)) ? m_character.VIPExpireDay.AddDays(days) : DateTime.Now.AddDays(days)));
+        _ = DateTime.Now;
+        DateTime dateTime2 = UserVIPInfo.VIPExpireDay = (!(UserVIPInfo.VIPExpireDay < DateTime.Now)) ? UserVIPInfo.VIPExpireDay.AddDays(days) : DateTime.Now.AddDays(days);
         DateTime dateTime3 = dateTime2;
-        now = dateTime3;
-        m_character.typeVIP = SetTypeVIP(days);
+        DateTime now = dateTime3;
+        UserVIPInfo.typeVIP = SetTypeVIP(days);
     }
 
     public string ConverterPvePermission(char[] chArray)
@@ -2386,7 +2050,7 @@ public class GamePlayer : IGamePlayer
     public List<ItemInfo> CopyDrop(int SessionId, int m_missionInfoId)
     {
         List<ItemInfo> info = null;
-        DropInventory.CopyDrop(m_missionInfoId, SessionId, ref info);
+        _ = DropInventory.CopyDrop(m_missionInfoId, SessionId, ref info);
         return info;
     }
 
@@ -2394,9 +2058,9 @@ public class GamePlayer : IGamePlayer
     {
         int money = 0;
         string translation = LanguageMgr.GetTranslation("ChargeToUser.Title");
-        using (PlayerBussiness pb = new PlayerBussiness())
+        using (PlayerBussiness pb = new())
         {
-            if (!pb.ChargeToUser(m_character.UserName, ref money, m_character.NickName))
+            if (!pb.ChargeToUser(UserVIPInfo.UserName, ref money, UserVIPInfo.NickName))
             {
                 return;
             }
@@ -2406,29 +2070,29 @@ public class GamePlayer : IGamePlayer
                 return;
             }
             OnPropertiesChange();
-            SendMailToUser(pb, translation2, translation, eMailType.Manage);
-            AddMoney(money);
+            _ = SendMailToUser(pb, translation2, translation, eMailType.Manage);
+            _ = AddMoney(money);
             OnMoneyCharge(money);
-            if (m_character.CheckNewWeek())
+            if (UserVIPInfo.CheckNewWeek())
             {
                 OnMoneyChargeWeek(money);
             }
             if (money >= 5000)
             {
-                if (m_character.Sex == true)
+                if (UserVIPInfo.Sex == true)
                 {
-                    SendMessage(LanguageMgr.GetTranslation($"Phú ông [{m_character.NickName}] đã đổi thành công {money} xu vào game. Nhanh trí inbox xin xỏ nào!!!"));
+                    SendMessage(LanguageMgr.GetTranslation($"Phú ông [{UserVIPInfo.NickName}] đã đổi thành công {money} xu vào game. Nhanh trí inbox xin xỏ nào!!!"));
                 }
                 else
                 {
-                    SendMessage(LanguageMgr.GetTranslation($"Phú bà [{m_character.NickName}] đã đổi thành công {money} xu vào game. Nhanh trí inbox xin xỏ nào!!!"));
+                    SendMessage(LanguageMgr.GetTranslation($"Phú bà [{UserVIPInfo.NickName}] đã đổi thành công {money} xu vào game. Nhanh trí inbox xin xỏ nào!!!"));
                 }
             }
         }
-        Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
+        _ = Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
         //if (Extra.CheckNoviceActiveOpen(NoviceActiveType.GUNLUK YUKLEME))
         //{
-          //  Extra.UpdateEventCondition((int)NoviceActiveType.GUNLUK YUKLEME money, isPlus: true, 0);
+        //  Extra.UpdateEventCondition((int)NoviceActiveType.GUNLUK YUKLEME money, isPlus: true, 0);
         //}
         //f (Extra.CheckNoviceActiveOpen(NoviceActiveType.HAFTALIK YUKLEME)
         //{
@@ -2444,34 +2108,30 @@ public class GamePlayer : IGamePlayer
             int MoneyRate = (int)((float)(money * Extra.Info.LeftRoutteRate) / 100);//50000 + (50000 * 2)/100
             if (MoneyRate > 0)
             {
-                SendMoneyMailToUser(LanguageMgr.GetTranslation("GameServer.LeftRotterMail.Title"), LanguageMgr.GetTranslation("GameServer.LeftRotterMail.Content", MoneyRate), MoneyRate, eMailType.BuyItem);
+                _ = SendMoneyMailToUser(LanguageMgr.GetTranslation("GameServer.LeftRotterMail.Title"), LanguageMgr.GetTranslation("GameServer.LeftRotterMail.Content", MoneyRate), MoneyRate, eMailType.BuyItem);
             }
             Extra.Info.LeftRoutteRate = 1f;
             Out.SendLeftRouleteOpen(Extra.Info);
         }
-        this.SaveIntoDatabase();
+        _ = SaveIntoDatabase();
     }
 
     public void ChecVipkExpireDay()
     {
-        if (m_character.IsVIPExpire())
+        if (UserVIPInfo.IsVIPExpire())
         {
-            m_character.CanTakeVipReward = false;
-            m_character.typeVIP = 0;
-        }
-        else if (m_character.IsLastVIPPackTime())
-        {
-            m_character.CanTakeVipReward = true;
+            UserVIPInfo.CanTakeVipReward = false;
+            UserVIPInfo.typeVIP = 0;
         }
         else
         {
-            m_character.CanTakeVipReward = false;
+            UserVIPInfo.CanTakeVipReward = UserVIPInfo.IsLastVIPPackTime();
         }
     }
 
     public bool DeletePropItem(int place)
     {
-        FightBag.RemoveItemAt(place);
+        _ = FightBag.RemoveItemAt(place);
         return true;
     }
 
@@ -2482,11 +2142,11 @@ public class GamePlayer : IGamePlayer
 
     public bool EquipItem(ItemInfo item, int place)
     {
-        if (!item.CanEquip() || item.BagType != m_equipBag.BagType)
+        if (!item.CanEquip() || item.BagType != EquipBag.BagType)
         {
             return false;
         }
-        int num = m_equipBag.FindItemEpuipSlot(item.Template);
+        int num = EquipBag.FindItemEpuipSlot(item.Template);
         if ((uint)(num - 9) <= 1u && place switch
         {
             10 => 0,
@@ -2500,52 +2160,52 @@ public class GamePlayer : IGamePlayer
         {
             num = place;
         }
-        return m_equipBag.MoveItem(item.Place, num, item.Count);
+        return EquipBag.MoveItem(item.Place, num, item.Count);
     }
 
     private void EquipShowImp(int categoryID, int para)
     {
-        UpdateHide(m_character.Hide + (int)(Math.Pow(10.0, categoryID) * (double)(para - m_character.Hide / (int)Math.Pow(10.0, categoryID) % 10)));
+        UpdateHide(UserVIPInfo.Hide + (int)(Math.Pow(10.0, categoryID) * (para - (UserVIPInfo.Hide / (int)Math.Pow(10.0, categoryID) % 10))));
     }
 
     public bool FindEmptySlot(eBageType bagType)
     {
         PlayerInventory inventory = GetInventory(bagType);
-        inventory.FindFirstEmptySlot();
+        _ = inventory.FindFirstEmptySlot();
         return inventory.FindFirstEmptySlot() > 0;
     }
 
     public void FriendsAdd(int playerID, int relation)
     {
-        if (!_friends.ContainsKey(playerID))
+        if (!Friends.ContainsKey(playerID))
         {
-            _friends.Add(playerID, relation);
+            Friends.Add(playerID, relation);
         }
         else
         {
-            _friends[playerID] = relation;
+            Friends[playerID] = relation;
         }
     }
 
     public void FriendsRemove(int playerID)
     {
-        if (_friends.ContainsKey(playerID))
+        if (Friends.ContainsKey(playerID))
         {
-            _friends.Remove(playerID);
+            _ = Friends.Remove(playerID);
         }
     }
 
     public double GetBaseAgility()
     {
-        return 1.0 - (double)m_character.Agility * 0.001;
+        return 1.0 - (UserVIPInfo.Agility * 0.001);
     }
 
     public List<ItemInfo> GetAllEquipItems()
     {
-        List<ItemInfo> list = new List<ItemInfo>();
-        for (int place = 0; place < m_equipBag.BeginSlot; place++)
+        List<ItemInfo> list = [];
+        for (int place = 0; place < EquipBag.BeginSlot; place++)
         {
-            ItemInfo item = m_equipBag.GetItemAt(place);
+            ItemInfo item = EquipBag.GetItemAt(place);
             if (item != null)
             {
                 list.Add(item);
@@ -2556,9 +2216,9 @@ public class GamePlayer : IGamePlayer
 
     public double GetBaseAttack()
     {
-        ItemInfo weapon = m_equipBag.GetItemAt(6);
-        ItemInfo head = m_equipBag.GetItemAt(0);
-        ItemInfo cloth = m_equipBag.GetItemAt(4);
+        ItemInfo weapon = EquipBag.GetItemAt(6);
+        ItemInfo head = EquipBag.GetItemAt(0);
+        ItemInfo cloth = EquipBag.GetItemAt(4);
         int cardDamage = 0;
         int rankDamage = 0;
         double DamageAvatar = 0.0;
@@ -2611,7 +2271,7 @@ public class GamePlayer : IGamePlayer
             UserEquipGhostInfo egInfo = GetGhostEquip(weapon.BagType, weapon.Place);
             if (egInfo != null)
             {
-                weaponattack += (property / 200 * Math.Pow(egInfo.Level, 1.2) / 100) * weaponattack;
+                weaponattack += property / 200 * Math.Pow(egInfo.Level, 1.2) / 100 * weaponattack;
             }
             baseattack += (int)weaponattack;
         }
@@ -2669,7 +2329,7 @@ public class GamePlayer : IGamePlayer
                 BaseAttack(cloth.Hole6, ref baseattack);
             }
         }
-        List<UserAvatarCollectionInfo> avatarPropertyActived = this.AvatarCollect.GetAvatarPropertyActived();
+        List<UserAvatarCollectionInfo> avatarPropertyActived = AvatarCollect.GetAvatarPropertyActived();
         if (avatarPropertyActived.Count > 0)
         {
             foreach (UserAvatarCollectionInfo current3 in avatarPropertyActived)
@@ -2680,11 +2340,11 @@ public class GamePlayer : IGamePlayer
                     int num8 = ClothGroupTemplateInfoMgr.CountClothGroupWithID(current3.AvatarID);
                     if (current3.Items.Count >= num8 / 2 && current3.Items.Count < num8)
                     {
-                        DamageAvatar += (double)clothProperty.Damage;
+                        DamageAvatar += clothProperty.Damage;
                     }
                     else if (current3.Items.Count == num8)
                     {
-                        DamageAvatar += (double)(clothProperty.Damage * 2);
+                        DamageAvatar += clothProperty.Damage * 2;
                     }
                 }
             }
@@ -2698,8 +2358,8 @@ public class GamePlayer : IGamePlayer
                 baseattack += info.GetValue(6);
             }
         }
-        this.PlayerProp.UpadateBaseProp(true, "Damage", "Avatar", DamageAvatar);
-        baseattack += TotemMgr.GetTotemProp(m_character.totemId, "dam");
+        PlayerProp.UpadateBaseProp(true, "Damage", "Avatar", DamageAvatar);
+        baseattack += TotemMgr.GetTotemProp(UserVIPInfo.totemId, "dam");
         return baseattack + DamageAvatar;
     }
 
@@ -2718,7 +2378,7 @@ public class GamePlayer : IGamePlayer
         if (info != null)
         {
             //return (100.0 + (double)itemAt.Template.Property1) / 100.0;
-            return (100.0 + (double)info.Template.Property1 + (double)PlayerCharacter.necklaceExpAdd) / 100.0;
+            return (100.0 + info.Template.Property1 + PlayerCharacter.necklaceExpAdd) / 100.0;
         }
         return 1.0;
     }
@@ -2743,13 +2403,13 @@ public class GamePlayer : IGamePlayer
             basedefence += singleRank.Guard;
         }
         PlayerProp.UpadateBaseProp(isSelf: true, "Armor", "Pet", HoGiap);
-        ItemInfo weapon = m_equipBag.GetItemAt(6);
-        ItemInfo head = m_equipBag.GetItemAt(0);
-        ItemInfo cloth = m_equipBag.GetItemAt(4);
+        ItemInfo weapon = EquipBag.GetItemAt(6);
+        ItemInfo head = EquipBag.GetItemAt(0);
+        ItemInfo cloth = EquipBag.GetItemAt(4);
         if (head != null)
         {
             double property = head.Template.Property7;
-            int gold = (head.isGold ? 1 : 0);
+            int gold = head.isGold ? 1 : 0;
             double strengthenLevel = head.StrengthenLevel + gold;
             defence += (int)(getHertAddition(property, strengthenLevel) + property);
             // equipGhost
@@ -2763,7 +2423,7 @@ public class GamePlayer : IGamePlayer
         if (cloth != null)
         {
             double property = cloth.Template.Property7;
-            int gold = (cloth.isGold ? 1 : 0);
+            int gold = cloth.isGold ? 1 : 0;
             double strengthenLevel = cloth.StrengthenLevel + gold;
             defence += (int)(getHertAddition(property, strengthenLevel) + property);
             UserEquipGhostInfo egInfo = GetGhostEquip(cloth.BagType, cloth.Place);
@@ -2778,7 +2438,7 @@ public class GamePlayer : IGamePlayer
             AddProperty(weapon, ref defence);
         }
         defence += basedefence;
-        List<UserAvatarCollectionInfo> avatarPropertyActived = this.AvatarCollect.GetAvatarPropertyActived();
+        List<UserAvatarCollectionInfo> avatarPropertyActived = AvatarCollect.GetAvatarPropertyActived();
         if (avatarPropertyActived.Count > 0)
         {
             foreach (UserAvatarCollectionInfo current2 in avatarPropertyActived)
@@ -2789,11 +2449,11 @@ public class GamePlayer : IGamePlayer
                     int num14 = ClothGroupTemplateInfoMgr.CountClothGroupWithID(current2.AvatarID);
                     if (current2.Items.Count >= num14 / 2 && current2.Items.Count < num14)
                     {
-                        GuardAvatar += (double)clothProperty.Guard;
+                        GuardAvatar += clothProperty.Guard;
                     }
                     else if (current2.Items.Count == num14)
                     {
-                        GuardAvatar += (double)(clothProperty.Guard * 2);
+                        GuardAvatar += clothProperty.Guard * 2;
                     }
                 }
             }
@@ -2807,8 +2467,8 @@ public class GamePlayer : IGamePlayer
                 defence += info.GetValue(7);
             }
         }
-        this.PlayerProp.UpadateBaseProp(true, "Armor", "Avatar", GuardAvatar);
-        defence += TotemMgr.GetTotemProp(m_character.totemId, "gua");
+        PlayerProp.UpadateBaseProp(true, "Armor", "Avatar", GuardAvatar);
+        defence += TotemMgr.GetTotemProp(UserVIPInfo.totemId, "gua");
         return defence + GuardAvatar + HoGiap;
     }
 
@@ -2865,7 +2525,7 @@ public class GamePlayer : IGamePlayer
             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
             for (int i = 0; i < allPlayers.Length; i++)
             {
-                allPlayers[i].Out.SendMessage(eMessageType.ChatNormal, msg);
+                _ = allPlayers[i].Out.SendMessage(eMessageType.ChatNormal, msg);
             }
         }
     }
@@ -2891,7 +2551,7 @@ public class GamePlayer : IGamePlayer
 
     public double getHertAddition(double para1, double para2)
     {
-        return Math.Round(para1 * Math.Pow(1.1, para2) - para1);
+        return Math.Round((para1 * Math.Pow(1.1, para2)) - para1);
     }
 
     public PlayerInventory GetInventory(eBageType bageType)
@@ -2899,29 +2559,29 @@ public class GamePlayer : IGamePlayer
         switch (bageType)
         {
             case eBageType.CaddyBag:
-                return m_caddyBag;
+                return CaddyBag;
             case eBageType.Consortia:
-                return m_ConsortiaBag;
+                return ConsortiaBag;
             case eBageType.FarmBag:
                 return FarmBag;
             case eBageType.Vegetable:
                 return Vegetable;
             case eBageType.EquipBag:
-                return m_equipBag;
+                return EquipBag;
             case eBageType.FightBag:
-                return m_fightBag;
+                return FightBag;
             case eBageType.Food:
-                return m_food;
+                return Food;
             case eBageType.PetEgg:
                 return m_petEgg;
             case eBageType.PropBag:
-                return m_propBag;
+                return PropBag;
             case eBageType.Store:
-                return m_storeBag;
+                return StoreBag;
             case eBageType.TempBag:
-                return m_tempBag;
+                return TempBag;
             case eBageType.BankBag:
-                return m_BankBag;
+                return BankBag;
             default:
                 log.Error($"Did not support this type bag: {bageType} PlayerID: {PlayerCharacter.ID} Nickname: {PlayerCharacter.NickName}");
                 return null;
@@ -2949,24 +2609,15 @@ public class GamePlayer : IGamePlayer
     public ItemInfo GetItemByTemplateID(int templateID)
     {
         ItemInfo itemByTemplateID = GetInventory(eBageType.EquipBag).GetItemByTemplateID(31, templateID);
-        if (itemByTemplateID == null)
-        {
-            itemByTemplateID = GetInventory(eBageType.PropBag).GetItemByTemplateID(0, templateID);
-        }
-        if (itemByTemplateID == null)
-        {
-            itemByTemplateID = GetInventory(eBageType.Consortia).GetItemByTemplateID(0, templateID);
-        }
-        if (itemByTemplateID == null)
-        {
-            itemByTemplateID = GetInventory(eBageType.BankBag).GetItemByTemplateID(0, templateID);
-        }
+        itemByTemplateID ??= GetInventory(eBageType.PropBag).GetItemByTemplateID(0, templateID);
+        itemByTemplateID ??= GetInventory(eBageType.Consortia).GetItemByTemplateID(0, templateID);
+        itemByTemplateID ??= GetInventory(eBageType.BankBag).GetItemByTemplateID(0, templateID);
         return itemByTemplateID;
     }
 
     public int GetItemCount(int templateId)
     {
-        return m_propBag.GetItemCount(templateId) + m_equipBag.GetItemCount(templateId) + m_ConsortiaBag.GetItemCount(templateId) + m_BankBag.GetItemCount(templateId);
+        return PropBag.GetItemCount(templateId) + EquipBag.GetItemCount(templateId) + ConsortiaBag.GetItemCount(templateId) + BankBag.GetItemCount(templateId);
     }
 
     public PlayerInventory GetItemInventory(ItemTemplateInfo template)
@@ -2976,7 +2627,7 @@ public class GamePlayer : IGamePlayer
 
     public void HideEquip(int categoryID, bool hide)
     {
-        if (categoryID >= 0 && categoryID < 10)
+        if (categoryID is >= 0 and < 10)
         {
             EquipShowImp(categoryID, (!hide) ? 1 : 2);
         }
@@ -2994,13 +2645,9 @@ public class GamePlayer : IGamePlayer
 
     public bool IsBlackFriend(int playerID)
     {
-        if (_friends != null)
+        if (Friends != null)
         {
-            if (_friends.ContainsKey(playerID))
-            {
-                return _friends[playerID] == 1;
-            }
-            return false;
+            return Friends.ContainsKey(playerID) && Friends[playerID] == 1;
         }
         return true;
     }
@@ -3073,32 +2720,25 @@ public class GamePlayer : IGamePlayer
 
     public bool IsPvePermission(int copyId, eHardLevel hardLevel)
     {
-        if (copyId <= m_pvepermissions.Length && copyId > 0)
-        {
-            return m_pvepermissions[copyId - 1] >= permissionChars[(int)hardLevel];
-        }
-        return true;
+        return copyId > m_pvepermissions.Length || copyId <= 0 || m_pvepermissions[copyId - 1] >= permissionChars[(int)hardLevel];
     }
 
     public void OnPropertiesChange()
     {
-        if (this.PropertiesChange != null)
-        {
-            this.PropertiesChange(PlayerCharacter);
-        }
+        PropertiesChange?.Invoke(PlayerCharacter);
     }
 
     public void LastVIPPackTime()
     {
-        m_character.LastVIPPackTime = DateTime.Now;
-        m_character.CanTakeVipReward = false;
+        UserVIPInfo.LastVIPPackTime = DateTime.Now;
+        UserVIPInfo.CanTakeVipReward = false;
     }
 
     public virtual bool LoadFromDatabase()
     {
         bool result = false;
-        using PlayerBussiness pb = new PlayerBussiness();
-        PlayerInfo info = pb.GetUserSingleByUserID(m_character.ID);
+        using PlayerBussiness pb = new();
+        PlayerInfo info = pb.GetUserSingleByUserID(UserVIPInfo.ID);
         if (info == null)
         {
             Out.SendKitoff(LanguageMgr.GetTranslation("UserLoginHandler.Forbid"));
@@ -3107,14 +2747,14 @@ public class GamePlayer : IGamePlayer
         }
         else
         {
-            this.TimeCheckHack = (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            m_character = info;
-            m_battle.LoadFromDatabase();
-            m_battle.UpdateLeagueGrade();
-            m_character.Texp = pb.GetUserTexpInfoSingle(m_character.ID);
-            if (m_character.Texp.IsValidadteTexp())
+            TimeCheckHack = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            UserVIPInfo = info;
+            BattleData.LoadFromDatabase();
+            BattleData.UpdateLeagueGrade();
+            UserVIPInfo.Texp = pb.GetUserTexpInfoSingle(UserVIPInfo.ID);
+            if (UserVIPInfo.Texp.IsValidadteTexp())
             {
-                m_character.Texp.texpCount = 0;
+                UserVIPInfo.Texp.texpCount = 0;
             }
             int[] updatedSlots = new int[6]
             {
@@ -3131,10 +2771,10 @@ public class GamePlayer : IGamePlayer
             ChecVipkExpireDay();
             EventSeven = pb.GetEventSevenDays(GameServer.Instance.Configuration.ZoneId);
             UpdateLevel();
-            UpdatePet(m_petBag.GetPetIsEquip());
-            if (m_character.CheckNewDay())
+            UpdatePet(PetBag.GetPetIsEquip());
+            if (UserVIPInfo.CheckNewDay())
             {
-                TimeSpan diff = DateTime.Now - m_character.NewDay;
+                TimeSpan diff = DateTime.Now - UserVIPInfo.NewDay;
                 if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
                 {
                     CheckAndSendWeeklyHonorReward();
@@ -3147,24 +2787,24 @@ public class GamePlayer : IGamePlayer
                     if (DateTime.Now >= startDate && DateTime.Now < stopDate)
                     {
                         //int Money = 1000; //3000000 olan değer 1000e düşürüldü not: yuti
-                        string msg = "Eski oyuncumuz [" + m_character.NickName + "] Bombom'a geri hoşgeldi. Eski oyuncu loncasına büyük miktarda varlık getirebilir."; //türkçeleştirildi not: yuti
+                        string msg = "Eski oyuncumuz [" + UserVIPInfo.NickName + "] Bombom'a geri hoşgeldi. Eski oyuncu loncasına büyük miktarda varlık getirebilir."; //türkçeleştirildi not: yuti
                         string Title = "Eski Oyuncu Geri Dönüşü"; //türkçeleştirildi not: yuti
                         string Cotent = "Tebrikler! 🎉 Uzun bir aradan sonra aramıza geri döndüğün için seni özel olarak karşılıyoruz! Bu ödüllerle macerana daha güçlü devam edebilirsin. Yeniden aramızda olman bizi çok mutlu etti! İyi oyunlar dileriz!"; //türkçeleştirildi not: yuti
-                        List<ItemInfo> items = new List<ItemInfo>();
+                        List<ItemInfo> items = [];
                         foreach (OldPlayerAwardInfo oldPlayerAward in OldPlayerAwardMgr.oldPlayerAwards)
                         {
                             items.Add(oldPlayerAward.itemInfo);
                         }
                         //AddMoneyLock(Money);
-                        
-                        m_character.IsOldPlayer = true;
-                        m_character.isOldPlayerHasValidEquitAtLogin = true;
-                        SendItemsToMail(items, Cotent, Title, eMailType.ItemOverdue);
-                        Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
+
+                        UserVIPInfo.IsOldPlayer = true;
+                        UserVIPInfo.isOldPlayerHasValidEquitAtLogin = true;
+                        _ = SendItemsToMail(items, Cotent, Title, eMailType.ItemOverdue);
+                        _ = Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
                         GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
                         for (int i = 0; i < allPlayers.Length; i++)
                         {
-                            allPlayers[i].Out.SendMessage(eMessageType.SYS_NOTICE, msg);
+                            _ = allPlayers[i].Out.SendMessage(eMessageType.SYS_NOTICE, msg);
                         }
                     }
                 }
@@ -3175,22 +2815,22 @@ public class GamePlayer : IGamePlayer
                                  $"🎮 İyi oyunlar dileriz!";
 
                 string title = $"{PlayerCharacter.NickName}, Yeni Güne Hoş Geldin!";
-                SendMailToUser(pb, content, title, eMailType.Manage);
+                _ = SendMailToUser(pb, content, title, eMailType.Manage);
                 //this.QuestInventory.Restart();
                 QuestInventory.ResetDailyQuest();
-                this.QuestInventory.LoadFromDatabase(this.PlayerCharacter.ID);
+                QuestInventory.LoadFromDatabase(PlayerCharacter.ID);
                 OnPlayerLogin();
-                m_character.NewDay = DateTime.Now;
-                m_character.BoxGetDate = DateTime.Now;
-                m_character.damageScores = 0;
-                m_character.Score = 0;
-                m_character.DailyMoneyUsed = 0;
-                m_battle.Reset();
-                m_extra.Info.MinHotSpring = 60;
-                m_extra.Info.LastFreeTimeHotSpring = DateTime.Now;
-                m_extra.Info.FreeSendMailCount = 0;
-                m_extra.Info.LeftRoutteCount = GameProperties.LeftRouterMaxDay;
-                m_extra.Info.LeftRoutteRate = 0f;
+                UserVIPInfo.NewDay = DateTime.Now;
+                UserVIPInfo.BoxGetDate = DateTime.Now;
+                UserVIPInfo.damageScores = 0;
+                UserVIPInfo.Score = 0;
+                UserVIPInfo.DailyMoneyUsed = 0;
+                BattleData.Reset();
+                Extra.Info.MinHotSpring = 60;
+                Extra.Info.LastFreeTimeHotSpring = DateTime.Now;
+                Extra.Info.FreeSendMailCount = 0;
+                Extra.Info.LeftRoutteCount = GameProperties.LeftRouterMaxDay;
+                Extra.Info.LeftRoutteRate = 0f;
                 //Extra.ResetNoviceEvent(NoviceActiveType.DISCORD_HOPARLORU);
                 Extra.ResetNoviceEvent(NoviceActiveType.Gunluk_Harcama);
                 if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
@@ -3198,42 +2838,41 @@ public class GamePlayer : IGamePlayer
                     //Extra.ResetNoviceEvent(NoviceActiveType.IKI_VS_IKI_SAVAS);
                     Extra.ResetNoviceEvent(NoviceActiveType.Haftalık_Harcama);
                 }
-                m_character.MaxBuyHonor = 0;
+                UserVIPInfo.MaxBuyHonor = 0;
                 Farm.ResetFarmProp();
                 AccumulativeUpdate();
-                this.ChangeDailyExpVip();
+                _ = ChangeDailyExpVip();
             }
-            if (this.m_character.Grade > 30)
+            if (UserVIPInfo.Grade > 30)
             {
-                this.LoadGemStone(pb);
+                LoadGemStone(pb);
             }
-            m_pvepermissions = (string.IsNullOrEmpty(m_character.PvePermission) ? InitPvePermission() : m_character.PvePermission.ToCharArray());
-            m_fightlabpermissions = (string.IsNullOrEmpty(m_character.FightLabPermission) ? InitFightLabPermission() : m_character.FightLabPermission.ToCharArray());
-            this.LoadPvePermission();
-            this._friends = new Dictionary<int, int>();
-            this._friends = pb.GetFriendsIDAll(m_character.ID);
-            ViFarms = new List<int>();
-            this.m_character.State = 1;
-            this.ClearStoreBag();
-            this.ClearCaddyBag();
-            m_equipGhostList = JsonConvert.DeserializeObject<Dictionary<string, UserEquipGhostInfo>>(m_character.GhostEquipList);
-            if (m_equipGhostList == null)
-                m_equipGhostList = new Dictionary<string, UserEquipGhostInfo>();
+            m_pvepermissions = string.IsNullOrEmpty(UserVIPInfo.PvePermission) ? InitPvePermission() : UserVIPInfo.PvePermission.ToCharArray();
+            m_fightlabpermissions = string.IsNullOrEmpty(UserVIPInfo.FightLabPermission) ? InitFightLabPermission() : UserVIPInfo.FightLabPermission.ToCharArray();
+            LoadPvePermission();
+            Friends = [];
+            Friends = pb.GetFriendsIDAll(UserVIPInfo.ID);
+            ViFarms = [];
+            UserVIPInfo.State = 1;
+            ClearStoreBag();
+            ClearCaddyBag();
+            m_equipGhostList = JsonConvert.DeserializeObject<Dictionary<string, UserEquipGhostInfo>>(UserVIPInfo.GhostEquipList);
+            m_equipGhostList ??= [];
             PlayerCharacter.VIPNextLevelDaysNeeded = GetVIPNextLevelDaysNeeded(PlayerCharacter.VIPLevel, PlayerCharacter.VIPExp);
-            if (m_character.totemId > TotemMgr.MaxTotem())
+            if (UserVIPInfo.totemId > TotemMgr.MaxTotem())
             {
-                m_character.totemId = TotemMgr.MaxTotem();
+                UserVIPInfo.totemId = TotemMgr.MaxTotem();
             }
 
-           
 
-            pb.UpdateUserTexpInfo(m_character.Texp);
-            pb.UpdatePlayer(m_character);
-            pb.UpdateUserMatchInfo(MatchInfo);
-            this.LoadMedals();
-            this.LoadRepute();
-            this.SaveIntoDatabase();
-            this.SavePlayerInfo();
+
+            _ = pb.UpdateUserTexpInfo(UserVIPInfo.Texp);
+            _ = pb.UpdatePlayer(UserVIPInfo);
+            _ = pb.UpdateUserMatchInfo(MatchInfo);
+            LoadMedals();
+            LoadRepute();
+            _ = SaveIntoDatabase();
+            _ = SavePlayerInfo();
             result = true;
         }
         return result;
@@ -3259,9 +2898,9 @@ public class GamePlayer : IGamePlayer
 
         // Maksimum VIP seviyesi kontrolü (Seviye 9+ için günlük XP verilmez)
         const int MAX_VIP_LEVEL_FOR_DAILY_EXP = 9;
-        if (this.m_character.VIPLevel >= MAX_VIP_LEVEL_FOR_DAILY_EXP)
+        if (UserVIPInfo.VIPLevel >= MAX_VIP_LEVEL_FOR_DAILY_EXP)
         {
-            LogInfo($"Karakter {this.m_character.NickName} zaten maksimum VIP seviyesinde ({this.m_character.VIPLevel}). Günlük XP atlandı.");
+            LogInfo($"Karakter {UserVIPInfo.NickName} zaten maksimum VIP seviyesinde ({UserVIPInfo.VIPLevel}). Günlük XP atlandı.");
             return false;
         }
 
@@ -3300,7 +2939,7 @@ public class GamePlayer : IGamePlayer
     /// </summary>
     private bool IsVipMembershipActive()
     {
-        return this.m_character.typeVIP > 0;
+        return UserVIPInfo.typeVIP > 0;
     }
 
     /// <summary>
@@ -3315,16 +2954,16 @@ public class GamePlayer : IGamePlayer
         AddExpVip(bonusExpAmount);
 
         // VIP penceresini güncelle (AddExpVip içinde de çağrılabilir ama garanti olsun)
-        this.Out.SendOpenVIP(this);
+        _ = Out.SendOpenVIP(this);
 
         // Sonraki seviyeye kalan günleri güncelle
         UpdateVipNextLevelProgress();
 
         // Oyuncuya bildirim gönder
         string welcomeMessage = BuildVipWelcomeMessage(bonusExpAmount);
-        this.SendMessage(welcomeMessage);
+        SendMessage(welcomeMessage);
 
-        LogInfo($"VIP günlük bonus verildi. Karakter: {this.m_character.NickName}, XP: +{bonusExpAmount}, Mevcut Seviye: {this.m_character.VIPLevel}");
+        LogInfo($"VIP günlük bonus verildi. Karakter: {UserVIPInfo.NickName}, XP: +{bonusExpAmount}, Mevcut Seviye: {UserVIPInfo.VIPLevel}");
     }
 
     /// <summary>
@@ -3338,13 +2977,13 @@ public class GamePlayer : IGamePlayer
         if (expRemoved)
         {
             string penaltyMessage = BuildVipPenaltyMessage(expAmount);
-            this.SendMessage(penaltyMessage);
+            SendMessage(penaltyMessage);
 
-            LogInfo($"VIP pasif cezası uygulandı. Karakter: {this.m_character.NickName}, XP: -{expAmount}");
+            LogInfo($"VIP pasif cezası uygulandı. Karakter: {UserVIPInfo.NickName}, XP: -{expAmount}");
         }
         else
         {
-            LogWarning($"VIP XP düşürülemedi. Karakter: {this.m_character.NickName}, Miktar: {expAmount}");
+            LogWarning($"VIP XP düşürülemedi. Karakter: {UserVIPInfo.NickName}, Miktar: {expAmount}");
         }
     }
 
@@ -3359,13 +2998,13 @@ public class GamePlayer : IGamePlayer
             // RemoveExpVip(amount);
 
             // Yoksa manuel düşür (AddExpVip'in tersi)
-            if (this.m_character.VIPExp >= amount)
+            if (UserVIPInfo.VIPExp >= amount)
             {
-                this.m_character.VIPExp -= amount;
+                UserVIPInfo.VIPExp -= amount;
             }
             else
             {
-                this.m_character.VIPExp = 0; // Negatif olmasın
+                UserVIPInfo.VIPExp = 0; // Negatif olmasın
             }
 
             return true;
@@ -3382,9 +3021,9 @@ public class GamePlayer : IGamePlayer
     /// </summary>
     private void UpdateVipNextLevelProgress()
     {
-        this.m_character.VIPNextLevelDaysNeeded = GetVIPNextLevelDaysNeeded(
-            this.m_character.VIPLevel,
-            this.m_character.VIPExp
+        UserVIPInfo.VIPNextLevelDaysNeeded = GetVIPNextLevelDaysNeeded(
+            UserVIPInfo.VIPLevel,
+            UserVIPInfo.VIPExp
         );
     }
 
@@ -3393,12 +3032,12 @@ public class GamePlayer : IGamePlayer
     /// </summary>
     private string BuildVipWelcomeMessage(int expAmount)
     {
-        int nextLevel = this.m_character.VIPLevel + 1;
+        int nextLevel = UserVIPInfo.VIPLevel + 1;
         string levelUpHint = nextLevel <= 9 ? $" VIP {nextLevel} olmaya çok yakınsınız!" : " Maksimum VIP seviyesindesiniz!";
 
-        return $"🌟 Tekrar Hoş Geldiniz, {this.m_character.NickName}! " +
+        return $"🌟 Tekrar Hoş Geldiniz, {UserVIPInfo.NickName}! " +
                $"VIP üyeliğiniz sayesinde bugün {expAmount} bonus deneyim puanı kazandınız!{levelUpHint} " +
-               $"Şu an VIP {this.m_character.VIPLevel} ({this.m_character.VIPExp} XP) seviyesindesiniz.";
+               $"Şu an VIP {UserVIPInfo.VIPLevel} ({UserVIPInfo.VIPExp} XP) seviyesindesiniz.";
     }
 
     /// <summary>
@@ -3406,7 +3045,7 @@ public class GamePlayer : IGamePlayer
     /// </summary>
     private string BuildVipPenaltyMessage(int expAmount)
     {
-        int remainingExp = this.m_character.VIPExp;
+        int remainingExp = UserVIPInfo.VIPExp;
         string warningLevel = remainingExp < 100 ? " VIP seviyeniz kritik düzeyde!" : "";
 
         return $"⚠️ Yeni güne başladınız fakat aktif VIP üyeliğiniz bulunmuyor. " +
@@ -3416,24 +3055,27 @@ public class GamePlayer : IGamePlayer
     }
 
     // Yardımcı log metodları
-    private void LogInfo(string message) => Console.WriteLine($"[INFO] {DateTime.Now}: {message}");
-    private void LogWarning(string message) => Console.WriteLine($"[WARN] {DateTime.Now}: {message}");
-    private void LogError(string message) => Console.WriteLine($"[ERROR] {DateTime.Now}: {message}");
-    
-    
+    private void LogInfo(string message)
+    {
+        Console.WriteLine($"[INFO] {DateTime.Now}: {message}");
+    }
+
+    private void LogWarning(string message)
+    {
+        Console.WriteLine($"[WARN] {DateTime.Now}: {message}");
+    }
+
+    private void LogError(string message)
+    {
+        Console.WriteLine($"[ERROR] {DateTime.Now}: {message}");
+    }
+
     public char[] InitFightLabPermission()
     {
         char[] array = new char[50];
         for (int i = 0; i < 50; i++)
         {
-            if (i == 0)
-            {
-                array[i] = '1';
-            }
-            else
-            {
-                array[i] = '0';
-            }
+            array[i] = i == 0 ? '1' : '0';
         }
         return array;
     }
@@ -3475,7 +3117,7 @@ public class GamePlayer : IGamePlayer
             int money = 0;
             int giftToken = 0;
             int gp = 0;
-            List<ItemInfo> info = new List<ItemInfo>();
+            List<ItemInfo> info = [];
             if (DropInventory.FightLabUserDrop(missionId, ref info) && info != null)
             {
                 bool flag = false;
@@ -3485,35 +3127,35 @@ public class GamePlayer : IGamePlayer
                     text = text + LanguageMgr.GetTranslation("Game.Server.Quests.FinishQuest.RewardProp", item.Template.Name, item.Count) + " ";
                     if (info.Count > 0 && PropBag.GetEmptyCount() < 1)
                     {
-                        if (item.TemplateID != 11107 && item.TemplateID != -100 && item.TemplateID != -200 && item.TemplateID != -300)
+                        if (item.TemplateID is not 11107 and not -100 and not -200 and not -300)
                         {
                             string translation = LanguageMgr.GetTranslation("Game.Server.GameUtils.Content2");
                             string translation2 = LanguageMgr.GetTranslation("Game.Server.GameUtils.Title2");
-                            if (SendItemsToMail(new List<ItemInfo>
-                            {
+                            if (SendItemsToMail(
+                            [
                                 item
-                            }, translation, translation2, eMailType.ItemOverdue))
+                            ], translation, translation2, eMailType.ItemOverdue))
                             {
-                                Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
+                                _ = Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
                             }
                             flag = true;
                         }
                     }
                     else if (!PropBag.StackItemToAnother(item) && item.TemplateID != 11107 && item.TemplateID != -100 && item.TemplateID != -200 && item.TemplateID != -300)
                     {
-                        PropBag.AddItem(item);
+                        _ = PropBag.AddItem(item);
                     }
-                    ItemInfo.FindSpecialItemInfo(item, ref gold, ref money, ref giftToken, ref gp);
+                    _ = ItemInfo.FindSpecialItemInfo(item, ref gold, ref money, ref giftToken, ref gp);
                 }
-                AddGold(gold);
-                AddMoney(money);
-                AddGiftToken(giftToken);
-                AddGP(gp, false);
+                _ = AddGold(gold);
+                _ = AddMoney(money);
+                _ = AddGiftToken(giftToken);
+                _ = AddGP(gp, false);
                 if (flag)
                 {
                     text += LanguageMgr.GetTranslation("Game.Server.GameUtils.Title2");
                 }
-                Out.SendMessage(eMessageType.GM_NOTICE, text);
+                _ = Out.SendMessage(eMessageType.GM_NOTICE, text);
             }
         }
         if (copyId == 5 && hardLevel == eHardLevel.Normal)
@@ -3539,7 +3181,7 @@ public class GamePlayer : IGamePlayer
         {
             m_fightlabpermissions[num] = fightlabpermissionChars[(int)(hardLevel + 2)];
         }
-        m_character.FightLabPermission = new string(m_fightlabpermissions).ToString();
+        UserVIPInfo.FightLabPermission = new string(m_fightlabpermissions).ToString();
         OnPropertiesChanged();
         return true;
     }
@@ -3556,33 +3198,31 @@ public class GamePlayer : IGamePlayer
 
     public eHardLevel GetMaxFightLabPermission(int copyId)
     {
-        if (copyId > m_fightlabpermissions.Length)
-        {
-            return eHardLevel.Simple;
-        }
-        return m_fightlabpermissions[copyId - 5] switch
-        {
-            '3' => eHardLevel.Hard,
-            '2' => eHardLevel.Normal,
-            _ => eHardLevel.Simple,
-        };
+        return copyId > m_fightlabpermissions.Length
+            ? eHardLevel.Simple
+            : m_fightlabpermissions[copyId - 5] switch
+            {
+                '3' => eHardLevel.Hard,
+                '2' => eHardLevel.Normal,
+                _ => eHardLevel.Simple,
+            };
     }
 
     public void LoadMedals()
     {
-        m_character.medal = GetMedalNum();
-        this.SavePlayerInfo();
+        UserVIPInfo.medal = GetMedalNum();
+        _ = SavePlayerInfo();
     }
     public void LoadRepute()
     {
-        PlayerBussiness db = new PlayerBussiness();
-        m_character.Repute = db.GetXepHang(m_character.ID);
-        this.SavePlayerInfo();
+        PlayerBussiness db = new();
+        UserVIPInfo.Repute = db.GetXepHang(UserVIPInfo.ID);
+        _ = SavePlayerInfo();
     }
 
     public void LoadMarryMessage()
     {
-        using PlayerBussiness playerBussiness = new PlayerBussiness();
+        using PlayerBussiness playerBussiness = new();
         MarryApplyInfo[] playerMarryApply = playerBussiness.GetPlayerMarryApply(PlayerCharacter.ID);
         if (playerMarryApply == null)
         {
@@ -3596,17 +3236,17 @@ public class GamePlayer : IGamePlayer
             switch (marryApplyInfo.ApplyType)
             {
                 case 1:
-                    Out.SendPlayerMarryApply(this, marryApplyInfo.ApplyUserID, marryApplyInfo.ApplyUserName, marryApplyInfo.LoveProclamation, marryApplyInfo.ID);
+                    _ = Out.SendPlayerMarryApply(this, marryApplyInfo.ApplyUserID, marryApplyInfo.ApplyUserName, marryApplyInfo.LoveProclamation, marryApplyInfo.ID);
                     break;
                 case 2:
-                    Out.SendMarryApplyReply(this, marryApplyInfo.ApplyUserID, marryApplyInfo.ApplyUserName, marryApplyInfo.ApplyResult, isApplicant: true, marryApplyInfo.ID);
+                    _ = Out.SendMarryApplyReply(this, marryApplyInfo.ApplyUserID, marryApplyInfo.ApplyUserName, marryApplyInfo.ApplyResult, isApplicant: true, marryApplyInfo.ID);
                     if (!marryApplyInfo.ApplyResult)
                     {
-                        Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
+                        _ = Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
                     }
                     break;
                 case 3:
-                    Out.SendPlayerDivorceApply(this, result: true, isProposer: false);
+                    _ = Out.SendPlayerDivorceApply(this, result: true, isProposer: false);
                     break;
             }
         }
@@ -3614,7 +3254,7 @@ public class GamePlayer : IGamePlayer
 
     public void LoadMarryProp()
     {
-        using PlayerBussiness playerBussiness = new PlayerBussiness();
+        using PlayerBussiness playerBussiness = new();
         MarryProp marryProp = playerBussiness.GetMarryProp(PlayerCharacter.ID);
         PlayerCharacter.IsMarried = marryProp.IsMarried;
         PlayerCharacter.SpouseID = marryProp.SpouseID;
@@ -3622,7 +3262,7 @@ public class GamePlayer : IGamePlayer
         PlayerCharacter.IsCreatedMarryRoom = marryProp.IsCreatedMarryRoom;
         PlayerCharacter.SelfMarryRoomID = marryProp.SelfMarryRoomID;
         PlayerCharacter.IsGotRing = marryProp.IsGotRing;
-        Out.SendMarryProp(this, marryProp);
+        _ = Out.SendMarryProp(this, marryProp);
     }
 
     public void LoadPvePermission()
@@ -3632,10 +3272,10 @@ public class GamePlayer : IGamePlayer
         PveInfo[] array2 = array;
         foreach (PveInfo pveInfo2 in array2)
         {
-            if (m_character.Grade > pveInfo2.LevelLimits)
+            if (UserVIPInfo.Grade > pveInfo2.LevelLimits)
             {
-                eHardLevel level = (pveInfo2.ID == 1 || pveInfo2.ID == 2 || pveInfo2.ID == 7 || pveInfo2.ID == 12 || pveInfo2.ID == 13) ? eHardLevel.Easy : eHardLevel.Normal;
-                bool flag = SetPvePermission(pveInfo2.ID, level);
+                eHardLevel level = (pveInfo2.ID is 1 or 2 or 7 or 12 or 13) ? eHardLevel.Easy : eHardLevel.Normal;
+                _ = SetPvePermission(pveInfo2.ID, level);
                 //if (flag)
                 //{
                 //    flag = SetPvePermission(pveInfo2.ID, eHardLevel.Normal);
@@ -3660,7 +3300,7 @@ public class GamePlayer : IGamePlayer
     /// <returns>Giriş işleminin başarılı olup olmadığını belirtir.</returns>
     public bool Login()
     {
-        if (WorldMgr.AddPlayer(m_character.ID, this))
+        if (WorldMgr.AddPlayer(UserVIPInfo.ID, this))
         {
             try
             {
@@ -3676,42 +3316,45 @@ public class GamePlayer : IGamePlayer
                     {
                         Actives.SendLittleGameActived();
                     }
-                    Out.SendUpdatePublicPlayer(PlayerCharacter, MatchInfo, Extra.Info);
+                    _ = Out.SendUpdatePublicPlayer(PlayerCharacter, MatchInfo, Extra.Info);
                     Out.SendWeaklessGuildProgress(PlayerCharacter);
                     ProcessConsortiaAndPet();
                     Out.SendDateTime();
-                    Out.SendDailyAward(this);
+                    _ = Out.SendDailyAward(this);
                     LoadMarryMessage();
-                    if (!m_showPP)
+                    if (!ShowPP)
                     {
-                        m_playerProp.ViewCurrent();
-                        m_showPP = true;
+                        PlayerProp.ViewCurrent();
+                        ShowPP = true;
                     }
                     _ = PlayerCharacter.ID;
                     Rank.SendUserRanks();
-                    if (this.m_character.honorId != 0)
-                        this.UpdateHonor(this.m_character.honorId);
+                    if (UserVIPInfo.honorId != 0)
+                    {
+                        UpdateHonor(UserVIPInfo.honorId);
+                    }
+
                     Farm.LoadFarmLand();
-                    Out.SendOpenVIP(this);
+                    _ = Out.SendOpenVIP(this);
                     EquipBag.UpdatePlayerProperties();
                     PetBag.UpdateEatPets();
                     SetupProcessor();
                     Actives.SendEvent();
                     Out.SendEnthrallLight();
-                    this.Out.SendAvatarCollect(this.AvatarCollect);
-                    this.AvatarCollect.ScanAvatarVaildDate();
+                    _ = Out.SendAvatarCollect(AvatarCollect);
+                    AvatarCollect.ScanAvatarVaildDate();
                     Out.SendEdictumVersion();
-                    m_playerState = ePlayerState.Manual;
-                    Out.SendBufferList(this, m_bufferList.GetAllBufferByTemplate());
-                    Out.SendUpdateAchievementData(AchievementInventory.GetSuccessAchievement());
+                    PlayerState = ePlayerState.Manual;
+                    _ = Out.SendBufferList(this, BufferList.GetAllBufferByTemplate());
+                    _ = Out.SendUpdateAchievementData(AchievementInventory.GetSuccessAchievement());
                     BoxBeginTime = DateTime.Now;
-                    this.TimeCheckHack = (long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                    TimeCheckHack = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
                     OpenAllNoviceActive();
-                    if (this.PlayerCharacter.Grade >= 30)
+                    if (PlayerCharacter.Grade >= 30)
                     {
-                        this.Out.SendPlayerFigSpiritinit(this.PlayerCharacter.ID, this.GemStone);
+                        _ = Out.SendPlayerFigSpiritinit(PlayerCharacter.ID, GemStone);
                     }
-                    WorldMgr.IsAccountLimit(this);
+                    _ = WorldMgr.IsAccountLimit(this);
                     Out.SendUpdateFirstRecharge(PlayerCharacter.IsRecharged, PlayerCharacter.IsGetAward);
                     ChargeToUser();
                     ConsortiaTaskMgr.AddPlayer(this);
@@ -3721,43 +3364,43 @@ public class GamePlayer : IGamePlayer
                         Out.SendLeftRouleteOpen(Extra.Info);
                     }
                     Extra.BeginPingOnlineTimer();
-                    if (userWonderFulActivityManager == null)
-                    {
-                        userWonderFulActivityManager = new UserWonderFulActivityManager(this);
-                    }
+                    userWonderFulActivityManager ??= new UserWonderFulActivityManager(this);
                     userWonderFulActivityManager.SignToday();
-                   // userWonderFulActivityManager.MountUp(15);
-                   // userWonderFulActivityManager.TempleUp(15);
-                   // userWonderFulActivityManager.ConsumeMoney(1);
+                    // userWonderFulActivityManager.MountUp(15);
+                    // userWonderFulActivityManager.TempleUp(15);
+                    // userWonderFulActivityManager.ConsumeMoney(1);
                     //userWonderFulActivityManager.ChargeMoney(1);
                     if (ActiveSystemMgr.IsLeagueOpen)
                     {
-                        Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.MatchInfo.maxCount, 1);
+                        Out.SendLeagueNotice(UserVIPInfo.ID, BattleData.MatchInfo.restCount, BattleData.MatchInfo.maxCount, 1);
                         SendMessage(eMessageType.SYS_NOTICE, "Lig Başladı! Birlik savaşlarında kim kimi yenecek bakalım!");
                     }
                     else
                     {
-                        Out.SendLeagueNotice(m_character.ID, BattleData.MatchInfo.restCount, BattleData.MatchInfo.maxCount, 2);
+                        Out.SendLeagueNotice(UserVIPInfo.ID, BattleData.MatchInfo.restCount, BattleData.MatchInfo.maxCount, 2);
                     }
                     if (ActiveSystemMgr.IsGoldTimeOpen)
                     {
                         SendMessage(eMessageType.SYS_NOTICE, "Altın Saat Etkinliği başladı! Haydi Oyun salonunda buluşalım!");
                     }
-                    Out.SendUserSyncEquipGhost(this);
+                    _ = Out.SendUserSyncEquipGhost(this);
                     Out.SendGuildMemberWeekOpenClose(Extra.Info);
-                    this.Dice.SendDiceActiveOpen();
-                    Out.SendNecklaceStrength(PlayerCharacter);
+                    Dice.SendDiceActiveOpen();
+                    _ = Out.SendNecklaceStrength(PlayerCharacter);
                     WorldMgr.Test();
                     if (PlayerCharacter.VIPLevel >= 3)
                     {
                         string NoticeOnline = string.Format("Sayın VIP {1}. seviye olan üye [{0}] çevrimiçi oldu!", PlayerCharacter.NickName, PlayerCharacter.VIPLevel);
                         WorldMgr.SendMessageAll(NoticeOnline);
                     }
-                    if (PlayerCharacter.Repute > 0 && PlayerCharacter.Repute <= 10)
+                    if (PlayerCharacter.Repute is > 0 and <= 10)
                     {
                         string Ranked = PlayerCharacter.Honor;
                         if (Ranked == null | Ranked.Length < 1)
+                        {
                             Ranked = "Oyuncu";
+                        }
+
                         string NoticeOnline = string.Format("|{0}| Onur Listesi Sıralaması'nda {4}. olan - |{1}| ünvanlı [{2}] oyuna giriş yaptı! Tam tamına {3} savaş gücüyle sizlere meydan okuyor!", ZoneName, Ranked, PlayerCharacter.NickName, PlayerCharacter.FightPower, PlayerCharacter.Repute);
                         WorldMgr.SendMessageAll(NoticeOnline);
                     }
@@ -3776,24 +3419,26 @@ public class GamePlayer : IGamePlayer
                         string NoticeOnline = string.Format("Yönetici [elementt] oyuna giriş yaptı!");
                         WorldMgr.SendMessageAll(NoticeOnline);
                     }
-                    if (this.PlayerCharacter.Grade >= 13 && this.Actives.IsPyramidOpen())
+                    if (PlayerCharacter.Grade >= 13 && Actives.IsPyramidOpen())
                     {
-                        this.Out.SendPyramidOpenClose(this.Actives.PyramidConfig);
-                        if (!this.Actives.IsYearMonsterOpen())
-                            this.Out.SendCatchBeastOpen(m_character.ID, true);
+                        Out.SendPyramidOpenClose(Actives.PyramidConfig);
+                        if (!Actives.IsYearMonsterOpen())
+                        {
+                            Out.SendCatchBeastOpen(UserVIPInfo.ID, true);
+                        }
                     }
-                    GmActivityMgr.OnPlayerUpgradeVIP(this, m_character.VIPLevel);
-                    Out.SendUpdateChickActivation(this.Actives.GetChickActiveData());
-                    Out.SendOpenHappyRecharge(this.PlayerCharacter.ID);
+                    GmActivityMgr.OnPlayerUpgradeVIP(this, UserVIPInfo.VIPLevel);
+                    Out.SendUpdateChickActivation(Actives.GetChickActiveData());
+                    Out.SendOpenHappyRecharge(PlayerCharacter.ID);
                     Out.SendLeftRouleteOpen(Extra.Info);
                     Out.SendGuildMemberWeekOpenClose(Extra.Info);
-                    Out.SendOpenHappyRecharge(m_character.ID);
+                    Out.SendOpenHappyRecharge(UserVIPInfo.ID);
 
 
 
                     return true;
                 }
-                WorldMgr.RemovePlayer(m_character.ID);
+                _ = WorldMgr.RemovePlayer(UserVIPInfo.ID);
             }
             catch (Exception exception)
             {
@@ -3809,7 +3454,7 @@ public class GamePlayer : IGamePlayer
         try
         {
             // Oyuncunun Onur Listesi sıralamasını kontrol et (1-10 arası)
-            if (PlayerCharacter.Repute > 0 && PlayerCharacter.Repute <= 10)
+            if (PlayerCharacter.Repute is > 0 and <= 10)
             {
                 // Ödül içeriğini sıralamaya göre belirle
                 WeeklyHonorReward reward = GetRewardByRank(PlayerCharacter.Repute);
@@ -3832,8 +3477,10 @@ public class GamePlayer : IGamePlayer
 
     private WeeklyHonorReward GetRewardByRank(int rank)
     {
-        WeeklyHonorReward reward = new WeeklyHonorReward();
-        reward.Rank = rank;
+        WeeklyHonorReward reward = new()
+        {
+            Rank = rank
+        };
 
         // Sıralamaya göre ödül içeriği
         switch (rank)
@@ -3874,10 +3521,10 @@ public class GamePlayer : IGamePlayer
                 reward.Title = "Haftanın Yedincisi";
                 break;
             case 8: // 8. sıra
-                    reward.Gold = 22000;
-                    reward.Coins = 30;
-                    reward.Title = "Haftanın Sekizincisi";
-                    break;
+                reward.Gold = 22000;
+                reward.Coins = 30;
+                reward.Title = "Haftanın Sekizincisi";
+                break;
             case 9: // 9. sıra
                 reward.Gold = 21000;
                 reward.Coins = 20;
@@ -3901,42 +3548,44 @@ public class GamePlayer : IGamePlayer
     {
         try
         {
-            MailInfo mail = new MailInfo();
-            mail.SenderID = 0; // Sistem maili
-            mail.Sender = "Sistem";
-            mail.ReceiverID = PlayerCharacter.ID;
-            mail.Receiver = PlayerCharacter.NickName;
-            mail.Title = string.Format("Haftalık Onur Listesi Ödülü - {0}. Sıra", reward.Rank);
+            MailInfo mail = new()
+            {
+                SenderID = 0, // Sistem maili
+                Sender = "Sistem",
+                ReceiverID = PlayerCharacter.ID,
+                Receiver = PlayerCharacter.NickName,
+                Title = string.Format("Haftalık Onur Listesi Ödülü - {0}. Sıra", reward.Rank),
 
-            // İçerik kısmında ödülleri yazıyla belirtelim
-            mail.Content = BuildMailContent(reward);
+                // İçerik kısmında ödülleri yazıyla belirtelim
+                Content = BuildMailContent(reward),
 
-            mail.Type = 1; // Sistem maili tipi
+                Type = 1, // Sistem maili tipi
 
-            // BURASI ÖNEMLİ: Altın ve Para direkt ekleniyor (Hatasız çalışır)
-            mail.Gold = reward.Gold;
-            mail.Money = reward.Coins;
+                // BURASI ÖNEMLİ: Altın ve Para direkt ekleniyor (Hatasız çalışır)
+                Gold = reward.Gold,
+                Money = reward.Coins,
 
-            mail.ValidDate = 7; // 7 gün geçerli
+                ValidDate = 7, // 7 gün geçerli
 
-            // DİKKAT: Annex alanlarını BOŞ BIRAKIYORUZ.
-            // Çünkü Annex alanı "ItemID:Count" formatını kabul etmiyor, 
-            // sadece veritabanındaki Item Instance ID'sini (integer) kabul ediyor.
-            // Eğer eşya göndermek istersen, önce UserItem tablosuna kayıt atıp ID'sini alman gerekir.
-            mail.Annex1 = "";
-            mail.Annex2 = "";
-            mail.Annex3 = "";
-            mail.Annex4 = "";
-            mail.Annex5 = "";
+                // DİKKAT: Annex alanlarını BOŞ BIRAKIYORUZ.
+                // Çünkü Annex alanı "ItemID:Count" formatını kabul etmiyor, 
+                // sadece veritabanındaki Item Instance ID'sini (integer) kabul ediyor.
+                // Eğer eşya göndermek istersen, önce UserItem tablosuna kayıt atıp ID'sini alman gerekir.
+                Annex1 = "",
+                Annex2 = "",
+                Annex3 = "",
+                Annex4 = "",
+                Annex5 = ""
+            };
 
             // Maili gönder
-            using (PlayerBussiness db = new PlayerBussiness())
+            using (PlayerBussiness db = new())
             {
-                db.SendMail(mail);
+                _ = db.SendMail(mail);
             }
 
             // Oyuncuya mail bildirimi gönder
-            Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
+            _ = Out.SendMailResponse(PlayerCharacter.ID, eMailRespose.Receiver);
         }
         catch (Exception ex)
         {
@@ -3946,27 +3595,27 @@ public class GamePlayer : IGamePlayer
 
     private string BuildMailContent(WeeklyHonorReward reward)
     {
-        StringBuilder content = new StringBuilder();
-        content.AppendLine("Tebrikler!");
-        content.AppendLine(string.Format("Onur Listesi'nde bu hafta {0}. sırada yer alarak özel ödülleri almaya hak kazandınız!", reward.Rank));
-        content.AppendLine("Ödülleriniz:");
-        content.AppendLine(string.Format("- Altın: {0}", reward.Gold));
-        content.AppendLine(string.Format("- Kupon: {0}", reward.Coins));
-        content.AppendLine("Başarılarınızın devamını dileriz!");
-        content.AppendLine("Bu ödül haftalık olarak Pazartesi günleri verilmektedir.");
+        StringBuilder content = new();
+        _ = content.AppendLine("Tebrikler!");
+        _ = content.AppendLine(string.Format("Onur Listesi'nde bu hafta {0}. sırada yer alarak özel ödülleri almaya hak kazandınız!", reward.Rank));
+        _ = content.AppendLine("Ödülleriniz:");
+        _ = content.AppendLine(string.Format("- Altın: {0}", reward.Gold));
+        _ = content.AppendLine(string.Format("- Kupon: {0}", reward.Coins));
+        _ = content.AppendLine("Başarılarınızın devamını dileriz!");
+        _ = content.AppendLine("Bu ödül haftalık olarak Pazartesi günleri verilmektedir.");
 
         return content.ToString();
     }
 
     private string GetRankText(int rank)
     {
-        switch (rank)
+        return rank switch
         {
-            case 1: return "1. sıra";
-            case 2: return "2. sıra";
-            case 3: return "3. sıra";
-            default: return string.Format("{0}. sıra", rank);
-        }
+            1 => "1. sıra",
+            2 => "2. sıra",
+            3 => "3. sıra",
+            _ => string.Format("{0}. sıra", rank),
+        };
     }
 
     // Yardımcı sınıflar
@@ -3980,7 +3629,7 @@ public class GamePlayer : IGamePlayer
 
         public WeeklyHonorReward()
         {
-            Items = new List<RewardItem>();
+            Items = [];
             Title = "";
         }
     }
@@ -3996,24 +3645,18 @@ public class GamePlayer : IGamePlayer
             Count = count;
         }
     }
-    public UserWonderFulActivityManager userWonderFulActivityManager { get; set; } 
+    public UserWonderFulActivityManager userWonderFulActivityManager { get; set; }
 
-    public PlayerGmActivity GmActivity
-    {
-        get
-        {
-            return this.m_gmActivity;
-        }
-    }
+    public PlayerGmActivity GmActivity { get; }
 
     private void ProcessConsortiaAndPet()
     {
-        consortiaProcessor_0 = new ConsortiaProcessor(m_consortiaProcessor);
-        petProcessor_0 = new PetProcessor(m_petProcessor);
+        Consortia = new ConsortiaProcessor(m_consortiaProcessor);
+        PetHandler = new PetProcessor(m_petProcessor);
     }
 
 
-   
+
 
     public bool GiftTokenDirect(int value)
     {
@@ -4021,285 +3664,198 @@ public class GamePlayer : IGamePlayer
         {
             return false;
         }
-        RemoveGiftToken(value);
+        _ = RemoveGiftToken(value);
         return true;
     }
-  
+
 
     public void OnAchievementFinish(AchievementData info)
     {
-        if (this.AchievementFinishEvent != null)
-        {
-            this.AchievementFinishEvent(info);
-        }
+        AchievementFinishEvent?.Invoke(info);
     }
 
     public void OnAdoptPetEvent()
     {
-        if (this.AdoptPetEvent != null)
-        {
-            this.AdoptPetEvent();
-        }
+        AdoptPetEvent?.Invoke();
     }
 
     public void OnCropPrimaryEvent()
     {
-        if (this.CropPrimaryEvent != null)
-        {
-            this.CropPrimaryEvent();
-        }
+        CropPrimaryEvent?.Invoke();
     }
 
     public void OnEnterHotSpring()
     {
-        if (this.EnterHotSpringEvent != null)
-        {
-            this.EnterHotSpringEvent(this);
-        }
+        EnterHotSpringEvent?.Invoke(this);
     }
 
     public void OnFightAddOffer(int offer)
     {
-        if (this.FightAddOfferEvent != null)
-        {
-            this.FightAddOfferEvent(offer);
-        }
+        FightAddOfferEvent?.Invoke(offer);
     }
 
     public void OnGuildChanged()
     {
-        if (this.GuildChanged != null)
-        {
-            this.GuildChanged();
-        }
+        GuildChanged?.Invoke();
     }
 
     public void OnHotSpingExpAdd(int minutes, int exp)
     {
-        if (this.HotSpingExpAdd != null)
-        {
-            this.HotSpingExpAdd(minutes, exp);
-        }
+        HotSpingExpAdd?.Invoke(minutes, exp);
     }
 
     public void OnOnlineGameAdd(GamePlayer player)
     {
-        if (this.OnlineGameAdd != null)
-        {
-            this.OnlineGameAdd(player);
-        }
+        OnlineGameAdd?.Invoke(player);
     }
 
     public void OnItemCompose(int composeType)
     {
-        if (this.ItemCompose != null)
-        {
-            this.ItemCompose(composeType);
-        }
+        ItemCompose?.Invoke(composeType);
     }
 
     public void OnItemFusion(int fusionType)
     {
-        if (this.ItemFusion != null)
-        {
-            this.ItemFusion(fusionType);
-        }
+        ItemFusion?.Invoke(fusionType);
     }
 
     public void OnItemInsert()
     {
-        if (this.ItemInsert != null)
-        {
-            this.ItemInsert();
-        }
+        ItemInsert?.Invoke();
     }
 
     public void OnItemMelt(int categoryID)
     {
-        if (this.ItemMelt != null)
-        {
-            this.ItemMelt(categoryID);
-        }
+        ItemMelt?.Invoke(categoryID);
     }
 
     public void OnItemStrengthen(int categoryID, int level)
     {
-        if (this.ItemStrengthen != null)
-        {
-            this.ItemStrengthen(categoryID, level);
-        }
+        ItemStrengthen?.Invoke(categoryID, level);
     }
 
     public void OnMoneyCharge(int money)
     {
-        if (this.MoneyCharge != null)
-        {
-            this.MoneyCharge(money);
-        }
+        MoneyCharge?.Invoke(money);
     }
 
     public void OnMoneyChargeWeek(int money)
     {
-        if (this.MoneyChargeWeek != null)
-        {
-            this.MoneyChargeWeek(money);
-        }
+        MoneyChargeWeek?.Invoke(money);
     }
 
     public void OnAchievementQuest()
     {
-        if (this.AchievementQuest != null)
-        {
-            this.AchievementQuest();
-        }
+        AchievementQuest?.Invoke();
     }
 
     public void OnKillingBoss(AbstractGame game, NpcInfo npc, int damage)
     {
-        if (this.AfterKillingBoss != null)
-        {
-            this.AfterKillingBoss(game, npc, damage);
-        }
+        AfterKillingBoss?.Invoke(game, npc, damage);
     }
 
     public void OnKillingLiving(AbstractGame game, int type, int id, bool isLiving, int damage)
     {
-        if (this.AfterKillingLiving != null)
+        AfterKillingLiving?.Invoke(game, type, id, isLiving, damage, isSpanArea: false);
+        if (!(GameKillDrop == null || isLiving))
         {
-            this.AfterKillingLiving(game, type, id, isLiving, damage, isSpanArea: false);
-        }
-        if (!(this.GameKillDrop == null || isLiving))
-        {
-            this.GameKillDrop(game, type, id, isLiving);
+            GameKillDrop(game, type, id, isLiving);
         }
         if (!isLiving)
         {
             if (id == 1243)
             {
-                m_rank.AddNewRank(1000, 3);
-                GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice($"Dünya BOSS'a meydan okuyan değerli oyuncumuz [{m_character.NickName}], son vuruşunu başarıyla gerçekleştirdi ve ek ödüller kazandı! Tebrikler!")); //türkçeleştirildi not: yuti
+                Rank.AddNewRank(1000, 3);
+                GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice($"Dünya BOSS'a meydan okuyan değerli oyuncumuz [{UserVIPInfo.NickName}], son vuruşunu başarıyla gerçekleştirdi ve ek ödüller kazandı! Tebrikler!")); //türkçeleştirildi not: yuti
             }
             else if (id == 30004)
             {
-                m_rank.AddNewRank(1001, 3);
-                GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice($"Dünya BOSS'a meydan okuyan değerli oyuncumuz [{m_character.NickName}], son vuruşunu başarıyla gerçekleştirdi ve ek ödüller kazandı! Tebrikler!")); //türkçeleştirildi not: yuti
+                Rank.AddNewRank(1001, 3);
+                GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice($"Dünya BOSS'a meydan okuyan değerli oyuncumuz [{UserVIPInfo.NickName}], son vuruşunu başarıyla gerçekleştirdi ve ek ödüller kazandı! Tebrikler!")); //türkçeleştirildi not: yuti
             }
         }
     }
 
     public void OnLevelUp(int grade)
     {
-        if (this.LevelUp != null)
-        {
-            this.LevelUp(this);
-        }
+        LevelUp?.Invoke(this);
     }
 
     public void OnMissionOver(AbstractGame game, bool isWin, int missionId, int turnNum)
     {
-        if (this.MissionOver != null)
+        MissionOver?.Invoke(game, missionId, isWin);
+        if (MissionTurnOver != null && isWin)
         {
-            this.MissionOver(game, missionId, isWin);
+            MissionTurnOver(game, missionId, turnNum);
         }
-        if (this.MissionTurnOver != null && isWin)
-        {
-            this.MissionTurnOver(game, missionId, turnNum);
-        }
-        if (this.MissionFullOver != null)
-        {
-            this.MissionFullOver(game, missionId, isWin, turnNum);
-        }
+        MissionFullOver?.Invoke(game, missionId, isWin, turnNum);
     }
 
     public void OnNewGearEvent(ItemInfo item)
     {
-        if (this.NewGearEvent != null)
-        {
-            this.NewGearEvent(item);
-        }
+        NewGearEvent?.Invoke(item);
     }
 
     public void OnSeedFoodPetEvent()
     {
-        if (this.SeedFoodPetEvent != null)
-        {
-            this.SeedFoodPetEvent();
-        }
+        SeedFoodPetEvent?.Invoke();
     }
 
     public void OnPaid(int money, int gold, int offer, int gifttoken, int petScore, int medal, int damageScores, string payGoods)
     {
-        if (this.Paid != null)
-        {
-            this.Paid(money, gold, offer, gifttoken, petScore, medal, damageScores, payGoods);
-        }
+        Paid?.Invoke(money, gold, offer, gifttoken, petScore, medal, damageScores, payGoods);
     }
 
     protected void OnPropertiesChanged()
     {
         UpdateProperties();
-        OnPlayerPropertyChanged(m_character);
+        OnPlayerPropertyChanged(UserVIPInfo);
     }
 
     public void OnUnknowQuestConditionEvent()
     {
-        if (this.UnknowQuestConditionEvent != null)
-        {
-            this.UnknowQuestConditionEvent();
-        }
+        UnknowQuestConditionEvent?.Invoke();
     }
 
     public void OnUpLevelPetEvent()
     {
-        if (this.UpLevelPetEvent != null)
-        {
-            this.UpLevelPetEvent();
-        }
+        UpLevelPetEvent?.Invoke();
     }
 
     public void OnUseBuffer()
     {
-        if (this.UseBuffer != null)
-        {
-            this.UseBuffer(this);
-        }
+        UseBuffer?.Invoke(this);
     }
 
     public void OnUserToemGemstoneEvent()
     {
-        if (this.UserToemGemstonetEvent != null)
-        {
-            this.UserToemGemstonetEvent();
-        }
+        UserToemGemstonetEvent?.Invoke();
     }
 
     public void OnUsingItem(int templateID, int count)
     {
-        if (this.AfterUsingItem != null)
-        {
-            this.AfterUsingItem(templateID, count);
-        }
+        AfterUsingItem?.Invoke(templateID, count);
     }
 
     public void OpenVIP(int days)
     {
         DateTime vIPExpireDay = DateTime.Now.AddDays(days);
-        m_character.typeVIP = SetTypeVIP(days);
-        m_character.VIPLevel = 1;
-        m_character.VIPExp = 0;
-        m_character.VIPExpireDay = vIPExpireDay;
-        m_character.VIPLastDate = DateTime.Now;
-        m_character.VIPNextLevelDaysNeeded = 0;
-        m_character.CanTakeVipReward = true;
+        UserVIPInfo.typeVIP = SetTypeVIP(days);
+        UserVIPInfo.VIPLevel = 1;
+        UserVIPInfo.VIPExp = 0;
+        UserVIPInfo.VIPExpireDay = vIPExpireDay;
+        UserVIPInfo.VIPLastDate = DateTime.Now;
+        UserVIPInfo.VIPNextLevelDaysNeeded = 0;
+        UserVIPInfo.CanTakeVipReward = true;
     }
 
     public void OpenVIP(int days, DateTime ExpireDayOut)
     {
-        m_character.typeVIP = SetTypeVIP(days);
-        m_character.VIPExpireDay = ExpireDayOut;
-        m_character.VIPLastDate = DateTime.Now;
-        m_character.VIPNextLevelDaysNeeded = 10;
-        m_character.CanTakeVipReward = true;
+        UserVIPInfo.typeVIP = SetTypeVIP(days);
+        UserVIPInfo.VIPExpireDay = ExpireDayOut;
+        UserVIPInfo.VIPLastDate = DateTime.Now;
+        UserVIPInfo.VIPNextLevelDaysNeeded = 10;
+        UserVIPInfo.CanTakeVipReward = true;
         if (Extra.CheckNoviceActiveOpen(NoviceActiveType.VIP_LEVEL))
         {
             Extra.UpdateEventCondition((int)NoviceActiveType.VIP_LEVEL, PlayerCharacter.VIPLevel);
@@ -4308,21 +3864,21 @@ public class GamePlayer : IGamePlayer
 
     public void ContinuousVIP(int days, DateTime ExpireDayOut)
     {
-        int vIPLevel = m_character.VIPLevel;
+        int vIPLevel = UserVIPInfo.VIPLevel;
         if (vIPLevel < 6 && days == 180)
         {
-            m_character.VIPExpireDay = ExpireDayOut;
-            m_character.typeVIP = SetTypeVIP(days);
+            UserVIPInfo.VIPExpireDay = ExpireDayOut;
+            UserVIPInfo.typeVIP = SetTypeVIP(days);
         }
         else if (vIPLevel < 4 && days == 90)
         {
-            m_character.VIPExpireDay = ExpireDayOut;
-            m_character.typeVIP = SetTypeVIP(days);
+            UserVIPInfo.VIPExpireDay = ExpireDayOut;
+            UserVIPInfo.typeVIP = SetTypeVIP(days);
         }
         else
         {
-            m_character.VIPExpireDay = ExpireDayOut;
-            m_character.typeVIP = SetTypeVIP(days);
+            UserVIPInfo.VIPExpireDay = ExpireDayOut;
+            UserVIPInfo.typeVIP = SetTypeVIP(days);
         }
         if (Extra.CheckNoviceActiveOpen(NoviceActiveType.VIP_LEVEL))
         {
@@ -4333,7 +3889,7 @@ public class GamePlayer : IGamePlayer
     public byte SetTypeVIP(int days)
     {
         byte result = 1;
-        if (m_character.typeVIP == 2)
+        if (UserVIPInfo.typeVIP == 2)
         {
             result = 2;
         }
@@ -4348,8 +3904,8 @@ public class GamePlayer : IGamePlayer
     {
         Lottery = -1;
         LotteryID = 0;
-        LotteryItems = new List<ItemBoxInfo>();
-        LotteryAwardList = new List<ItemInfo>();
+        LotteryItems = [];
+        LotteryAwardList = [];
     }
 
     public virtual bool Quit()
@@ -4362,30 +3918,25 @@ public class GamePlayer : IGamePlayer
                 {
                     ItemInfo itemInfo = ItemInfo.CreateFromTemplate(ItemMgr.FindItemTemplate(7008), 1, 105);
                     itemInfo.ValidDate = 365;
-                    EquipBag.AddItemTo(itemInfo, 6);
+                    _ = EquipBag.AddItemTo(itemInfo, 6);
                 }
                 if (CurrentRoom != null)
                 {
-                    CurrentRoom.RemovePlayerUnsafe(this);
+                    _ = CurrentRoom.RemovePlayerUnsafe(this);
                     CurrentRoom = null;
                 }
                 else
                 {
-                    RoomMgr.WaitingRoom.RemovePlayer(this);
+                    _ = RoomMgr.WaitingRoom.RemovePlayer(this);
                 }
-                if (CurrentMarryRoom != null)
-                {
-                    CurrentMarryRoom.RemovePlayer(this);
-                    CurrentMarryRoom = null;
-                }
-                if (CurrentHotSpringRoom != null)
-                {
-                    CurrentHotSpringRoom.RemovePlayer(this);
-                    CurrentHotSpringRoom = null;
-                }
+
+                CurrentMarryRoom?.RemovePlayer(this);
+                CurrentMarryRoom = null;
+                CurrentHotSpringRoom?.RemovePlayer(this);
+                CurrentHotSpringRoom = null;
                 if (LotteryAwardList.Count > 0 && Lottery != -1)
                 {
-                    SendItemsToMail(LotteryAwardList, "", LanguageMgr.GetTranslation("Game.Server.Lottery.Oversea.MailTitle"), eMailType.BuyItem);
+                    _ = SendItemsToMail(LotteryAwardList, "", LanguageMgr.GetTranslation("Game.Server.Lottery.Oversea.MailTitle"), eMailType.BuyItem);
                     ResetLottery();
                 }
                 ConsortiaTaskMgr.RemovePlayer(this);
@@ -4393,9 +3944,9 @@ public class GamePlayer : IGamePlayer
                 {
                     LittleGameWorldMgr.RemovePlayer(this);
                 }
-                RoomMgr.WorldBossRoom.RemovePlayer(this);
+                _ = RoomMgr.WorldBossRoom.RemovePlayer(this);
                 RoomMgr.ChristmasRoom.SetMonterDie(PlayerCharacter.ID);
-                RoomMgr.ChristmasRoom.RemovePlayer(this);
+                _ = RoomMgr.ChristmasRoom.RemovePlayer(this);
                 Actives.StopChristmasTimer();
                 Extra.StopAllTimer();
             }
@@ -4403,8 +3954,8 @@ public class GamePlayer : IGamePlayer
             {
                 log.Error("Player exit Game Error!", exception);
             }
-            m_character.State = 0;
-            SaveIntoDatabase();
+            UserVIPInfo.State = 0;
+            _ = SaveIntoDatabase();
         }
         catch (Exception exception2)
         {
@@ -4412,7 +3963,7 @@ public class GamePlayer : IGamePlayer
         }
         finally
         {
-            WorldMgr.RemovePlayer(m_character.ID);
+            _ = WorldMgr.RemovePlayer(UserVIPInfo.ID);
         }
         return true;
     }
@@ -4424,26 +3975,22 @@ public class GamePlayer : IGamePlayer
 
     public bool RemoveCountFromStack(ItemInfo item, int count)
     {
-        if (item.BagType == m_propBag.BagType)
+        if (item.BagType == PropBag.BagType)
         {
-            return m_propBag.RemoveCountFromStack(item, count);
+            return PropBag.RemoveCountFromStack(item, count);
         }
-        if (item.BagType == m_ConsortiaBag.BagType)
+        if (item.BagType == ConsortiaBag.BagType)
         {
-            return m_ConsortiaBag.RemoveCountFromStack(item, count);
+            return ConsortiaBag.RemoveCountFromStack(item, count);
         }
-        if (item.BagType == m_BankBag.BagType)
-        {
-            return m_BankBag.RemoveCountFromStack(item, count);
-        }
-        return m_equipBag.RemoveCountFromStack(item, count);
+        return item.BagType == BankBag.BagType ? BankBag.RemoveCountFromStack(item, count) : EquipBag.RemoveCountFromStack(item, count);
     }
 
     public int RemoveGold(int value)
     {
-        if (value > 0 && value <= m_character.Gold)
+        if (value > 0 && value <= UserVIPInfo.Gold)
         {
-            m_character.Gold -= value;
+            UserVIPInfo.Gold -= value;
             OnPropertiesChanged();
             UpdateProperties();
             return value;
@@ -4455,15 +4002,15 @@ public class GamePlayer : IGamePlayer
     {
         if (gp > 0)
         {
-            m_character.GP -= gp;
-            if (m_character.GP < 1)
+            UserVIPInfo.GP -= gp;
+            if (UserVIPInfo.GP < 1)
             {
-                m_character.GP = 1;
+                UserVIPInfo.GP = 1;
             }
-            int level = LevelMgr.GetLevel(m_character.GP);
+            int level = LevelMgr.GetLevel(UserVIPInfo.GP);
             if (Level > level)
             {
-                m_character.GP += gp;
+                UserVIPInfo.GP += gp;
             }
             UpdateProperties();
             UpdateLevel();
@@ -4474,9 +4021,9 @@ public class GamePlayer : IGamePlayer
 
     public int RemoveGiftToken(int value)
     {
-        if (value > 0 && value <= m_character.GiftToken)
+        if (value > 0 && value <= UserVIPInfo.GiftToken)
         {
-            m_character.GiftToken -= value;
+            UserVIPInfo.GiftToken -= value;
             OnPropertiesChanged();
             UpdateProperties();
             return value;
@@ -4486,12 +4033,8 @@ public class GamePlayer : IGamePlayer
 
     public bool RemoveHealstone()
     {
-        ItemInfo itemAt = m_equipBag.GetItemAt(18);
-        if (itemAt != null && itemAt.Count > 0)
-        {
-            return m_equipBag.RemoveCountFromStack(itemAt, 1);
-        }
-        return false;
+        ItemInfo itemAt = EquipBag.GetItemAt(18);
+        return itemAt != null && itemAt.Count > 0 && EquipBag.RemoveCountFromStack(itemAt, 1);
     }
 
     public bool RemoveItem(ItemInfo item)
@@ -4500,40 +4043,40 @@ public class GamePlayer : IGamePlayer
         {
             return FarmBag.RemoveItem(item);
         }
-        if (item.BagType == m_propBag.BagType)
+        if (item.BagType == PropBag.BagType)
         {
-            return m_propBag.RemoveItem(item);
+            return PropBag.RemoveItem(item);
         }
-        if (item.BagType == m_fightBag.BagType)
+        if (item.BagType == FightBag.BagType)
         {
-            return m_fightBag.RemoveItem(item);
-        }
-
-        if (item.BagType == m_ConsortiaBag.BagType)
-        {
-            return m_ConsortiaBag.RemoveItem(item);
+            return FightBag.RemoveItem(item);
         }
 
-        if (item.BagType == m_BankBag.BagType)
+        if (item.BagType == ConsortiaBag.BagType)
         {
-            return m_BankBag.RemoveItem(item);
+            return ConsortiaBag.RemoveItem(item);
         }
 
-        if (item.BagType == m_storeBag.BagType)
+        if (item.BagType == BankBag.BagType)
         {
-            return m_storeBag.RemoveItem(item);
+            return BankBag.RemoveItem(item);
         }
 
-        if (item.BagType == m_caddyBag.BagType)
+        if (item.BagType == StoreBag.BagType)
         {
-            return m_caddyBag.RemoveItem(item);
+            return StoreBag.RemoveItem(item);
+        }
+
+        if (item.BagType == CaddyBag.BagType)
+        {
+            return CaddyBag.RemoveItem(item);
         }
 
         //eBageType.Consortia => m_ConsortiaBag,
         //eBageType.BankBag => m_BankBag,
         //eBageType.Store => m_storeBag,
 
-        return m_equipBag.RemoveItem(item);
+        return EquipBag.RemoveItem(item);
     }
 
     public int AddMedal(int value)
@@ -4543,17 +4086,17 @@ public class GamePlayer : IGamePlayer
             ItemInfo itemByTemplateID = GetInventory(eBageType.PropBag).GetItemByTemplateID(1, 11408);
             if (itemByTemplateID != null)
             {
-                PropBag.AddCountToStack(itemByTemplateID, value);
+                _ = PropBag.AddCountToStack(itemByTemplateID, value);
                 PropBag.UpdateItem(itemByTemplateID);
             }
             else
             {
-                PropBag.AddTemplate(ItemInfo.CreateFromTemplate(ItemMgr.FindItemTemplate(11408), value, 104), value);
+                _ = PropBag.AddTemplate(ItemInfo.CreateFromTemplate(ItemMgr.FindItemTemplate(11408), value, 104), value);
             }
-            m_character.medal = GetMedalNum();
+            UserVIPInfo.medal = GetMedalNum();
             OnPropertiesChanged();
             UpdateProperties();
-            UpdateChangedPlaces();
+            _ = UpdateChangedPlaces();
             return value;
         }
         return 0;
@@ -4561,13 +4104,13 @@ public class GamePlayer : IGamePlayer
 
     public int RemoveMedal(int value)
     {
-        if (value > 0 && value <= m_character.medal)
+        if (value > 0 && value <= UserVIPInfo.medal)
         {
-            RemoveTemplate(11408, value);
-            m_character.medal = GetMedalNum();
+            _ = RemoveTemplate(11408, value);
+            UserVIPInfo.medal = GetMedalNum();
             OnPropertiesChanged();
             UpdateProperties();
-            UpdateChangedPlaces();
+            _ = UpdateChangedPlaces();
             return value;
         }
         return 0;
@@ -4575,9 +4118,9 @@ public class GamePlayer : IGamePlayer
 
     public int RemoveMoneyNoviceActive(int value)
     {
-        if (value > 0 && value <= m_character.Money)
+        if (value > 0 && value <= UserVIPInfo.Money)
         {
-            m_character.Money -= value;
+            UserVIPInfo.Money -= value;
             OnPropertiesChanged();
             UpdateProperties();
             return value;
@@ -4600,14 +4143,14 @@ public class GamePlayer : IGamePlayer
             : 16000;
 
         // Eğer yapılacak harcama, kalan limiti aşıyorsa
-        if (m_character.DailyMoneyUsed + value > dailyLimit)
+        if (UserVIPInfo.DailyMoneyUsed + value > dailyLimit)
         {
-            SendMessage(string.Format("Günlük harcama limitinizi aşıyorsunuz! Kalan Limit: {0} Kupon", dailyLimit - m_character.DailyMoneyUsed));
+            SendMessage(string.Format("Günlük harcama limitinizi aşıyorsunuz! Kalan Limit: {0} Kupon", dailyLimit - UserVIPInfo.DailyMoneyUsed));
             return false;
         }
 
         // Yeterli bakiye kontrolü (Opsiyonel, normalde handler'da vardır ama garanti olsun)
-        if (m_character.Money < value)
+        if (UserVIPInfo.Money < value)
         {
             SendMessage("Yeterli kupona sahip değilsiniz.");
             return false;
@@ -4622,22 +4165,22 @@ public class GamePlayer : IGamePlayer
             .TryGetValue(PlayerCharacter.NickName, out int _cl)
             ? _cl
             : GameApiServer.DailyMoneyLimit;
-        if (m_character.DailyMoneyUsed + value > dailyLimit)
+        if (UserVIPInfo.DailyMoneyUsed + value > dailyLimit)
         {
             // Limit aşıldı, işlemi engelle ve uyarı gönder
-            SendMessage(string.Format("Günlük kupon harcama limitini aştınız! (Limit: {0}, Harcanan: {1})", dailyLimit, m_character.DailyMoneyUsed));
+            SendMessage(string.Format("Günlük kupon harcama limitini aştınız! (Limit: {0}, Harcanan: {1})", dailyLimit, UserVIPInfo.DailyMoneyUsed));
             return 0;
         }
 
         if (value > 0)
         {
             // Normal Kupon (Money) Kontrolü
-            if (value <= m_character.Money)
+            if (value <= UserVIPInfo.Money)
             {
-                m_character.Money -= value;
+                UserVIPInfo.Money -= value;
 
                 // Günlük harcamayı artır
-                m_character.DailyMoneyUsed += value;
+                UserVIPInfo.DailyMoneyUsed += value;
 
                 // Görev/Event kontrolleri (mevcut kodunuzdaki gibi)
                 if (!isNoviceActive)
@@ -4656,9 +4199,9 @@ public class GamePlayer : IGamePlayer
                 return value;
             }
             // Kilitli Kupon (MoneyLock) Kontrolü
-            else if (value <= m_character.MoneyLock)
+            else if (value <= UserVIPInfo.MoneyLock)
             {
-                m_character.MoneyLock -= value;
+                UserVIPInfo.MoneyLock -= value;
 
                 // Kilitli kupon harcaması da sayılırsa buraya ekleyebilirsiniz (isteğe bağlı)
                 // m_character.DailyMoneyUsed += value; 
@@ -4672,9 +4215,9 @@ public class GamePlayer : IGamePlayer
     }
     public int RemoveMoneyLock(int value)
     {
-        if (value > 0 && value <= m_character.MoneyLock)
+        if (value > 0 && value <= UserVIPInfo.MoneyLock)
         {
-            m_character.MoneyLock -= value;
+            UserVIPInfo.MoneyLock -= value;
             OnPropertiesChanged();
             UpdateProperties();
             return value;
@@ -4686,11 +4229,11 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            if (value >= m_character.Offer)
+            if (value >= UserVIPInfo.Offer)
             {
-                value = m_character.Offer;
+                value = UserVIPInfo.Offer;
             }
-            m_character.Offer -= value;
+            UserVIPInfo.Offer -= value;
             OnPropertiesChanged();
             UpdateProperties();
             return value;
@@ -4702,11 +4245,11 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            if (value >= m_character.RichesOffer)
+            if (value >= UserVIPInfo.RichesOffer)
             {
-                value = m_character.RichesOffer;
+                value = UserVIPInfo.RichesOffer;
             }
-            m_character.RichesOffer -= value;
+            UserVIPInfo.RichesOffer -= value;
             OnPropertiesChanged();
             UpdateProperties();
             return value;
@@ -4718,11 +4261,11 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            if (value >= m_character.ConsortiaRiches)
+            if (value >= UserVIPInfo.ConsortiaRiches)
             {
-                value = m_character.ConsortiaRiches;
+                value = UserVIPInfo.ConsortiaRiches;
             }
-            m_character.ConsortiaRiches -= value;
+            UserVIPInfo.ConsortiaRiches -= value;
             OnPropertiesChanged();
             UpdateProperties();
             OnGuildChanged();
@@ -4733,9 +4276,9 @@ public class GamePlayer : IGamePlayer
 
     public int RemovePetScore(int value)
     {
-        if (value > 0 && value <= m_character.petScore)
+        if (value > 0 && value <= UserVIPInfo.petScore)
         {
-            m_character.petScore -= value;
+            UserVIPInfo.petScore -= value;
             OnPropertiesChanged();
             UpdateProperties();
             return value;
@@ -4789,34 +4332,34 @@ public class GamePlayer : IGamePlayer
 
     public bool RemoveTemplate(int templateId, int count)
     {
-        int mainItem = m_equipBag.GetItemCount(templateId);
-        int propItem = m_propBag.GetItemCount(templateId);
-        int consortiaItem = m_ConsortiaBag.GetItemCount(templateId);
-        int bankItem = m_BankBag.GetItemCount(templateId);
+        int mainItem = EquipBag.GetItemCount(templateId);
+        int propItem = PropBag.GetItemCount(templateId);
+        int consortiaItem = ConsortiaBag.GetItemCount(templateId);
+        int bankItem = BankBag.GetItemCount(templateId);
         int tempCount = mainItem + propItem + consortiaItem + bankItem;
         ItemTemplateInfo itemTemplateInfo = ItemMgr.FindItemTemplate(templateId);
         if (templateId == 11408 && count <= propItem + consortiaItem + bankItem)
         {
-            m_character.medal -= count;
+            UserVIPInfo.medal -= count;
             UpdateProperties();
         }
         if (itemTemplateInfo != null && tempCount >= count)
         {
             if (mainItem > 0 && count > 0 && RemoveTempate(eBageType.EquipBag, itemTemplateInfo, (mainItem > count) ? count : mainItem))
             {
-                count = ((count >= mainItem) ? (count - mainItem) : 0);
+                count = (count >= mainItem) ? (count - mainItem) : 0;
             }
             if (propItem > 0 && count > 0 && RemoveTempate(eBageType.PropBag, itemTemplateInfo, (propItem > count) ? count : propItem))
             {
-                count = ((count >= propItem) ? (count - propItem) : 0);
+                count = (count >= propItem) ? (count - propItem) : 0;
             }
             if (consortiaItem > 0 && count > 0 && RemoveTempate(eBageType.Consortia, itemTemplateInfo, (consortiaItem > count) ? count : consortiaItem))
             {
-                count = ((count >= consortiaItem) ? (count - consortiaItem) : 0);
+                count = (count >= consortiaItem) ? (count - consortiaItem) : 0;
             }
             if (bankItem > 0 && count > 0 && RemoveTempate(eBageType.BankBag, itemTemplateInfo, (bankItem > count) ? count : bankItem))
             {
-                count = ((count >= bankItem) ? (count - bankItem) : 0);
+                count = (count >= bankItem) ? (count - bankItem) : 0;
             }
             if (count == 0)
             {
@@ -4824,7 +4367,7 @@ public class GamePlayer : IGamePlayer
             }
             if (log.IsErrorEnabled)
             {
-                log.Error($"Item Remover Error：PlayerId {m_playerId} Remover TemplateId{templateId} Is Not Zero!");
+                log.Error($"Item Remover Error：PlayerId {PlayerId} Remover TemplateId{templateId} Is Not Zero!");
             }
         }
         return false;
@@ -4832,37 +4375,39 @@ public class GamePlayer : IGamePlayer
 
     public UserLabyrinthInfo LoadLabyrinth(int sType) //savaşçının gizli yeri not: yuti
     {
-        if (userLabyrinthInfo == null)
+        if (Labyrinth == null)
         {
-            using PlayerBussiness playerBussiness = new PlayerBussiness();
-            userLabyrinthInfo = playerBussiness.GetSingleLabyrinth(PlayerCharacter.ID);
-            if (userLabyrinthInfo == null)
+            using PlayerBussiness playerBussiness = new();
+            Labyrinth = playerBussiness.GetSingleLabyrinth(PlayerCharacter.ID);
+            if (Labyrinth == null)
             {
-                userLabyrinthInfo = new UserLabyrinthInfo();
-                userLabyrinthInfo.UserID = PlayerCharacter.ID;
-                userLabyrinthInfo.sType = sType;
-                userLabyrinthInfo.myProgress = 0;
-                userLabyrinthInfo.myRanking = 0;
-                userLabyrinthInfo.completeChallenge = true;
-                userLabyrinthInfo.isDoubleAward = false;
-                userLabyrinthInfo.currentFloor = 1;
-                userLabyrinthInfo.accumulateExp = 0;
-                userLabyrinthInfo.remainTime = 0;
-                userLabyrinthInfo.currentRemainTime = 0;
-                userLabyrinthInfo.cleanOutAllTime = 0;
-                userLabyrinthInfo.cleanOutGold = 50;
-                userLabyrinthInfo.tryAgainComplete = true;
-                userLabyrinthInfo.isInGame = false;
-                userLabyrinthInfo.isCleanOut = false;
-                userLabyrinthInfo.serverMultiplyingPower = false;
-                userLabyrinthInfo.LastDate = DateTime.Now;
-                userLabyrinthInfo.ProcessAward = InitProcessAward();
-                playerBussiness.AddUserLabyrinth(userLabyrinthInfo);
+                Labyrinth = new UserLabyrinthInfo
+                {
+                    UserID = PlayerCharacter.ID,
+                    sType = sType,
+                    myProgress = 0,
+                    myRanking = 0,
+                    completeChallenge = true,
+                    isDoubleAward = false,
+                    currentFloor = 1,
+                    accumulateExp = 0,
+                    remainTime = 0,
+                    currentRemainTime = 0,
+                    cleanOutAllTime = 0,
+                    cleanOutGold = 50,
+                    tryAgainComplete = true,
+                    isInGame = false,
+                    isCleanOut = false,
+                    serverMultiplyingPower = false,
+                    LastDate = DateTime.Now,
+                    ProcessAward = InitProcessAward()
+                };
+                _ = playerBussiness.AddUserLabyrinth(Labyrinth);
             }
             else
             {
-                ProcessLabyrinthAward = userLabyrinthInfo.ProcessAward;
-                userLabyrinthInfo.sType = sType;
+                ProcessLabyrinthAward = Labyrinth.ProcessAward;
+                Labyrinth.sType = sType;
             }
         }
         return Labyrinth;
@@ -4886,7 +4431,7 @@ public class GamePlayer : IGamePlayer
         {
             array[i] = "i";
         }
-        string[] array2 = userLabyrinthInfo.ProcessAward.Split('-');
+        string[] array2 = Labyrinth.ProcessAward.Split('-');
         string text = string.Join("-", array);
         for (int j = floor; j < array2.Length; j++)
         {
@@ -4897,16 +4442,12 @@ public class GamePlayer : IGamePlayer
 
     public bool isDoubleAward()
     {
-        if (userLabyrinthInfo == null)
-        {
-            return false;
-        }
-        return userLabyrinthInfo.isDoubleAward;
+        return Labyrinth != null && Labyrinth.isDoubleAward;
     }
 
     public void OutLabyrinth(bool isWin)
     {
-        if (!isWin && userLabyrinthInfo != null && userLabyrinthInfo.currentFloor > 1)
+        if (!isWin && Labyrinth != null && Labyrinth.currentFloor > 1)
         {
             SendLabyrinthTryAgain();
         }
@@ -4915,7 +4456,7 @@ public class GamePlayer : IGamePlayer
 
     public void SendLabyrinthTryAgain()
     {
-        GSPacketIn gSPacketIn = new GSPacketIn(131, PlayerId);
+        GSPacketIn gSPacketIn = new(131, PlayerId);
         gSPacketIn.WriteByte(9);
         gSPacketIn.WriteInt(LabyrinthTryAgainMoney());
         SendTCP(gSPacketIn);
@@ -4935,27 +4476,27 @@ public class GamePlayer : IGamePlayer
 
     public void ResetLabyrinth()
     {
-        if (userLabyrinthInfo != null)
+        if (Labyrinth != null)
         {
-            userLabyrinthInfo.isInGame = false;
-            userLabyrinthInfo.completeChallenge = false;
-            userLabyrinthInfo.ProcessAward = InitProcessAward();
+            Labyrinth.isInGame = false;
+            Labyrinth.completeChallenge = false;
+            Labyrinth.ProcessAward = InitProcessAward();
         }
     }
 
     public void CalculatorClearnOutLabyrinth()
     {
-        if (userLabyrinthInfo != null)
+        if (Labyrinth != null)
         {
             int num = 0;
-            for (int i = userLabyrinthInfo.currentFloor; i <= userLabyrinthInfo.myProgress; i++)
+            for (int i = Labyrinth.currentFloor; i <= Labyrinth.myProgress; i++)
             {
                 num += 2;
             }
             int num2 = num * 60;
-            userLabyrinthInfo.remainTime = num2;
-            userLabyrinthInfo.currentRemainTime = num2;
-            userLabyrinthInfo.cleanOutAllTime = num2;
+            Labyrinth.remainTime = num2;
+            Labyrinth.currentRemainTime = num2;
+            Labyrinth.cleanOutAllTime = num2;
         }
     }
 
@@ -4974,38 +4515,38 @@ public class GamePlayer : IGamePlayer
     public void UpdateLabyrinth(int floor, int m_missionInfoId, bool bigAward)
     {
         int[] array = CreateExps();
-        int num = ((floor - 1 > array.Length) ? (array.Length - 1) : (floor - 1));
-        int num2 = ((num >= 0) ? num : 0);
+        int num = (floor - 1 > array.Length) ? (array.Length - 1) : (floor - 1);
+        int num2 = (num >= 0) ? num : 0;
         int num3 = array[num2];
         string text = labyrinthGolds[num2];
         int num4 = int.Parse(text.Split('|')[0]);
         int num5 = int.Parse(text.Split('|')[1]);
-        if (userLabyrinthInfo != null)
+        if (Labyrinth != null)
         {
             floor++;
             ProcessLabyrinthAward = CompleteGetAward(floor);
-            userLabyrinthInfo.ProcessAward = ProcessLabyrinthAward;
+            Labyrinth.ProcessAward = ProcessLabyrinthAward;
             if (PropBag.GetItemByTemplateID(0, 11916) == null || !RemoveTemplate(11916, 1))
             {
-                userLabyrinthInfo.isDoubleAward = false;
+                Labyrinth.isDoubleAward = false;
             }
-            if (userLabyrinthInfo.isDoubleAward)
+            if (Labyrinth.isDoubleAward)
             {
                 num3 *= 2;
                 num4 *= 2;
                 num5 *= 2;
             }
-            if (floor > userLabyrinthInfo.myProgress)
+            if (floor > Labyrinth.myProgress)
             {
-                userLabyrinthInfo.myProgress = floor;
+                Labyrinth.myProgress = floor;
             }
-            if (floor > userLabyrinthInfo.currentFloor)
+            if (floor > Labyrinth.currentFloor)
             {
-                userLabyrinthInfo.currentFloor = floor;
+                Labyrinth.currentFloor = floor;
             }
-            userLabyrinthInfo.accumulateExp += num3;
+            Labyrinth.accumulateExp += num3;
             string text2 = LanguageMgr.GetTranslation("UpdateLabyrinth.Exp", num3);
-            AddGP(num3, false);
+            _ = AddGP(num3, false);
             if (bigAward)
             {
                 List<ItemInfo> list = CopyDrop(2, 40002);
@@ -5014,16 +4555,16 @@ public class GamePlayer : IGamePlayer
                     foreach (ItemInfo item in list)
                     {
                         item.IsBinds = true;
-                        AddTemplate(item, item.Template.BagType, num4, backToMail: true);
+                        _ = AddTemplate(item, item.Template.BagType, num4, backToMail: true);
                         text2 += $", {item.Template.Name} x{num4}";
                     }
                 }
-                AddHardCurrency(num5);
+                _ = AddHardCurrency(num5);
                 text2 = text2 + LanguageMgr.GetTranslation("UpdateLabyrinth.GoldLaby") + num5;
             }
             SendHideMessage(text2);
         }
-        Out.SendLabyrinthUpdataInfo(userLabyrinthInfo.UserID, userLabyrinthInfo);
+        _ = Out.SendLabyrinthUpdataInfo(Labyrinth.UserID, Labyrinth);
     }
 
 
@@ -5043,17 +4584,24 @@ public class GamePlayer : IGamePlayer
     {
         try
         {
-            if (m_character == null || m_character.ID <= 0) return false;
-            SaveEquipGhost();
-            if (m_character.IsDirty)
+            if (UserVIPInfo == null || UserVIPInfo.ID <= 0)
             {
-                using (PlayerBussiness pb = new PlayerBussiness())
+                return false;
+            }
+
+            SaveEquipGhost();
+            if (UserVIPInfo.IsDirty)
+            {
+                using PlayerBussiness pb = new();
+                _ = pb.UpdatePlayer(UserVIPInfo);
+                if (Labyrinth != null)
                 {
-                    pb.UpdatePlayer(this.m_character);
-                    if (this.userLabyrinthInfo != null)
-                        pb.UpdateLabyrinthInfo(this.userLabyrinthInfo);
-                    foreach (UserGemStone g in this.m_GemStone)
-                        pb.UpdateGemStoneInfo(g);
+                    _ = pb.UpdateLabyrinthInfo(Labyrinth);
+                }
+
+                foreach (UserGemStone g in GemStone)
+                {
+                    _ = pb.UpdateGemStoneInfo(g);
                 }
             }
             EquipBag.SaveToDatabase();
@@ -5072,26 +4620,26 @@ public class GamePlayer : IGamePlayer
             FarmBag.SaveToDatabase();
             Farm.SaveToDatabase();
             Actives.SaveToDatabase();
-            this.Dice.SaveToDatabase();
-            this.AvatarCollect.SaveToDatabase();
-            m_gmActivity.SaveToDatabase();
+            Dice.SaveToDatabase();
+            AvatarCollect.SaveToDatabase();
+            GmActivity.SaveToDatabase();
             try
             {
-                if (DateTime.Compare(this.m_character.CheckDate.AddMinutes(20.0), DateTime.Now) > 0 && this.m_character.CheckCode != "baodeptrai")
+                if (DateTime.Compare(UserVIPInfo.CheckDate.AddMinutes(20.0), DateTime.Now) > 0 && UserVIPInfo.CheckCode != "baodeptrai")
                 {
-                    this.m_character.CheckCode = "baodeptrai";
-                    this.Disconnect();
+                    UserVIPInfo.CheckCode = "baodeptrai";
+                    Disconnect();
                 }
             }
             catch (Exception e)
             {
-                log.Error("Error Checking hack: " + m_character.NickName + "!", e);
+                log.Error("Error Checking hack: " + UserVIPInfo.NickName + "!", e);
             }
             return true;
         }
         catch (Exception exception)
         {
-            log.Error("Error saving player " + m_character.NickName + "!", exception);
+            log.Error("Error saving player " + UserVIPInfo.NickName + "!", exception);
             return false;
         }
     }
@@ -5107,7 +4655,7 @@ public class GamePlayer : IGamePlayer
             int ıD = PlayerCharacter.ID;
             if (PlayerCharacter.Grade >= 20)
             {
-               
+
                 if (ActiveSystemMgr.IsLeagueOpen)
                 {
                     try
@@ -5130,24 +4678,24 @@ public class GamePlayer : IGamePlayer
                         Console.WriteLine(ex3.ToString());
                     }
                 }
-             
+
             }
             if (PlayerCharacter.Grade >= 30)
             {
                 try
                 {
-                    Out.SendPlayerFigSpiritinit(ıD, GemStone);
+                    _ = Out.SendPlayerFigSpiritinit(ıD, GemStone);
                 }
                 catch (Exception ex6)
                 {
                     Console.WriteLine(ex6.ToString());
                 }
             }
-           
-           
-         
-          
-            
+
+
+
+
+
         }
         catch (Exception ex11)
         {
@@ -5179,7 +4727,7 @@ public class GamePlayer : IGamePlayer
         }
         catch (Exception exception)
         {
-            log.Error("Error saving Save Bag Into Database " + m_character.NickName + "!", exception);
+            log.Error("Error saving Save Bag Into Database " + UserVIPInfo.NickName + "!", exception);
             return false;
         }
     }
@@ -5188,17 +4736,21 @@ public class GamePlayer : IGamePlayer
     {
         try
         {
-            if (m_character == null && m_character.ID <= 0) return false;
-            if (this.m_character.IsDirty)
+            if (UserVIPInfo == null && UserVIPInfo.ID <= 0)
             {
-                using (PlayerBussiness pb = new PlayerBussiness())
-                    pb.UpdatePlayer(this.m_character);
+                return false;
+            }
+
+            if (UserVIPInfo.IsDirty)
+            {
+                using PlayerBussiness pb = new();
+                _ = pb.UpdatePlayer(UserVIPInfo);
             }
             return true;
         }
         catch (Exception exception)
         {
-            log.Error("Error saving player info of " + m_character.UserName + "!", exception);
+            log.Error("Error saving player info of " + UserVIPInfo.UserName + "!", exception);
             return false;
         }
     }
@@ -5206,7 +4758,7 @@ public class GamePlayer : IGamePlayer
     public void SendConsortiaBossInfo(ConsortiaInfo info)
     {
         RankingPersonInfo rankingPersonInfo = null;
-        List<RankingPersonInfo> list = new List<RankingPersonInfo>();
+        List<RankingPersonInfo> list = [];
         foreach (RankingPersonInfo value in info.RankList.Values)
         {
             if (value.Name == PlayerCharacter.NickName)
@@ -5218,7 +4770,7 @@ public class GamePlayer : IGamePlayer
                 list.Add(value);
             }
         }
-        GSPacketIn gSPacketIn = new GSPacketIn(129, PlayerCharacter.ID);
+        GSPacketIn gSPacketIn = new(129, PlayerCharacter.ID);
         gSPacketIn.WriteByte(30);
         gSPacketIn.WriteByte((byte)info.bossState);
         gSPacketIn.WriteBoolean(rankingPersonInfo != null);
@@ -5246,7 +4798,7 @@ public class GamePlayer : IGamePlayer
 
     public void SendConsortiaBossOpenClose(int type)
     {
-        GSPacketIn gSPacketIn = new GSPacketIn(129, PlayerCharacter.ID);
+        GSPacketIn gSPacketIn = new(129, PlayerCharacter.ID);
         gSPacketIn.WriteByte(31);
         gSPacketIn.WriteByte((byte)type);
         SendTCP(gSPacketIn);
@@ -5254,7 +4806,7 @@ public class GamePlayer : IGamePlayer
 
     public void SendConsortiaFight(int consortiaID, int riches, string msg)
     {
-        GSPacketIn gSPacketIn = new GSPacketIn(158);
+        GSPacketIn gSPacketIn = new(158);
         gSPacketIn.WriteInt(consortiaID);
         gSPacketIn.WriteInt(riches);
         gSPacketIn.WriteString(msg);
@@ -5263,7 +4815,7 @@ public class GamePlayer : IGamePlayer
 
     public void SendHideMessage(string msg)
     {
-        GSPacketIn gSPacketIn = new GSPacketIn(3);
+        GSPacketIn gSPacketIn = new(3);
         gSPacketIn.WriteInt(3);
         gSPacketIn.WriteString(msg);
         SendTCP(gSPacketIn);
@@ -5271,7 +4823,7 @@ public class GamePlayer : IGamePlayer
 
     public void SendInsufficientMoney(int type)
     {
-        GSPacketIn gSPacketIn = new GSPacketIn(88, PlayerId);
+        GSPacketIn gSPacketIn = new(88, PlayerId);
         gSPacketIn.WriteByte((byte)type);
         gSPacketIn.WriteBoolean(val: false);
         SendTCP(gSPacketIn);
@@ -5284,22 +4836,13 @@ public class GamePlayer : IGamePlayer
             return;
         }
         int num = 0;
-        switch (typeGet)
+        num = typeGet switch
         {
-            case 0:
-            case 1:
-                num = 2;
-                break;
-            case 2:
-            case 3:
-            case 4:
-                num = 1;
-                break;
-            default:
-                num = 3;
-                break;
-        }
-        GSPacketIn gSPacketIn = new GSPacketIn(14);
+            0 or 1 => 2,
+            2 or 3 or 4 => 1,
+            _ => 3,
+        };
+        GSPacketIn gSPacketIn = new(14);
         gSPacketIn.WriteString(PlayerCharacter.NickName);
         gSPacketIn.WriteInt(typeGet);
         gSPacketIn.WriteInt(info.TemplateID);
@@ -5321,16 +4864,16 @@ public class GamePlayer : IGamePlayer
 
     public bool SendItemsToMail(ItemInfo item, string content, string title, eMailType type)
     {
-        return SendItemsToMail(new List<ItemInfo>
-        {
+        return SendItemsToMail(
+        [
             item
-        }, content, title, type);
+        ], content, title, type);
     }
 
     public bool SendItemsToMail(List<ItemInfo> items, string content, string title, eMailType type)
     {
-        using PlayerBussiness pb = new PlayerBussiness();
-        List<ItemInfo> list = new List<ItemInfo>();
+        using PlayerBussiness pb = new();
+        List<ItemInfo> list = [];
         foreach (ItemInfo item in items)
         {
             if (item.Template.MaxCount == 1)
@@ -5355,9 +4898,9 @@ public class GamePlayer : IGamePlayer
         bool result = true;
         for (int i = 0; i < items.Count; i += 5)
         {
-            MailInfo mailInfo = new MailInfo
+            MailInfo mailInfo = new()
             {
-                Title = ((title != null) ? title : LanguageMgr.GetTranslation("Game.Server.GameUtils.Title")),
+                Title = title ?? LanguageMgr.GetTranslation("Game.Server.GameUtils.Title"),
                 Gold = 0,
                 IsExist = true,
                 Money = 0,
@@ -5368,18 +4911,18 @@ public class GamePlayer : IGamePlayer
                 Type = (int)type,
                 GiftToken = 0
             };
-            List<ItemInfo> list = new List<ItemInfo>();
-            StringBuilder stringBuilder = new StringBuilder();
-            StringBuilder stringBuilder2 = new StringBuilder();
-            stringBuilder.Append(LanguageMgr.GetTranslation("Game.Server.GameUtils.CommonBag.AnnexRemark"));
-            content = ((content != null) ? LanguageMgr.GetTranslation(content) : "");
+            List<ItemInfo> list = [];
+            StringBuilder stringBuilder = new();
+            StringBuilder stringBuilder2 = new();
+            _ = stringBuilder.Append(LanguageMgr.GetTranslation("Game.Server.GameUtils.CommonBag.AnnexRemark"));
+            content = (content != null) ? LanguageMgr.GetTranslation(content) : "";
             int num = i;
             if (items.Count > num)
             {
                 ItemInfo itemInfo = items[num];
                 if (itemInfo.ItemID == 0)
                 {
-                    pb.AddGoods(itemInfo);
+                    _ = pb.AddGoods(itemInfo);
                 }
                 else
                 {
@@ -5391,8 +4934,8 @@ public class GamePlayer : IGamePlayer
                 }
                 mailInfo.Annex1 = itemInfo.ItemID.ToString();
                 mailInfo.Annex1Name = itemInfo.Template.Name;
-                stringBuilder.Append("1、" + mailInfo.Annex1Name + "x" + itemInfo.Count + ";");
-                stringBuilder2.Append("1、" + mailInfo.Annex1Name + "x" + itemInfo.Count + ";");
+                _ = stringBuilder.Append("1、" + mailInfo.Annex1Name + "x" + itemInfo.Count + ";");
+                _ = stringBuilder2.Append("1、" + mailInfo.Annex1Name + "x" + itemInfo.Count + ";");
             }
             num = i + 1;
             if (items.Count > num)
@@ -5400,7 +4943,7 @@ public class GamePlayer : IGamePlayer
                 ItemInfo itemInfo2 = items[num];
                 if (itemInfo2.ItemID == 0)
                 {
-                    pb.AddGoods(itemInfo2);
+                    _ = pb.AddGoods(itemInfo2);
                 }
                 else
                 {
@@ -5408,8 +4951,8 @@ public class GamePlayer : IGamePlayer
                 }
                 mailInfo.Annex2 = itemInfo2.ItemID.ToString();
                 mailInfo.Annex2Name = itemInfo2.Template.Name;
-                stringBuilder.Append("2、" + mailInfo.Annex2Name + "x" + itemInfo2.Count + ";");
-                stringBuilder2.Append("2、" + mailInfo.Annex2Name + "x" + itemInfo2.Count + ";");
+                _ = stringBuilder.Append("2、" + mailInfo.Annex2Name + "x" + itemInfo2.Count + ";");
+                _ = stringBuilder2.Append("2、" + mailInfo.Annex2Name + "x" + itemInfo2.Count + ";");
             }
             num = i + 2;
             if (items.Count > num)
@@ -5417,7 +4960,7 @@ public class GamePlayer : IGamePlayer
                 ItemInfo itemInfo3 = items[num];
                 if (itemInfo3.ItemID == 0)
                 {
-                    pb.AddGoods(itemInfo3);
+                    _ = pb.AddGoods(itemInfo3);
                 }
                 else
                 {
@@ -5425,8 +4968,8 @@ public class GamePlayer : IGamePlayer
                 }
                 mailInfo.Annex3 = itemInfo3.ItemID.ToString();
                 mailInfo.Annex3Name = itemInfo3.Template.Name;
-                stringBuilder.Append("3、" + mailInfo.Annex3Name + "x" + itemInfo3.Count + ";");
-                stringBuilder2.Append("3、" + mailInfo.Annex3Name + "x" + itemInfo3.Count + ";");
+                _ = stringBuilder.Append("3、" + mailInfo.Annex3Name + "x" + itemInfo3.Count + ";");
+                _ = stringBuilder2.Append("3、" + mailInfo.Annex3Name + "x" + itemInfo3.Count + ";");
             }
             num = i + 3;
             if (items.Count > num)
@@ -5434,7 +4977,7 @@ public class GamePlayer : IGamePlayer
                 ItemInfo itemInfo4 = items[num];
                 if (itemInfo4.ItemID == 0)
                 {
-                    pb.AddGoods(itemInfo4);
+                    _ = pb.AddGoods(itemInfo4);
                 }
                 else
                 {
@@ -5442,8 +4985,8 @@ public class GamePlayer : IGamePlayer
                 }
                 mailInfo.Annex4 = itemInfo4.ItemID.ToString();
                 mailInfo.Annex4Name = itemInfo4.Template.Name;
-                stringBuilder.Append("4、" + mailInfo.Annex4Name + "x" + itemInfo4.Count + ";");
-                stringBuilder2.Append("4、" + mailInfo.Annex4Name + "x" + itemInfo4.Count + ";");
+                _ = stringBuilder.Append("4、" + mailInfo.Annex4Name + "x" + itemInfo4.Count + ";");
+                _ = stringBuilder2.Append("4、" + mailInfo.Annex4Name + "x" + itemInfo4.Count + ";");
             }
             num = i + 4;
             if (items.Count > num)
@@ -5451,7 +4994,7 @@ public class GamePlayer : IGamePlayer
                 ItemInfo itemInfo5 = items[num];
                 if (itemInfo5.ItemID == 0)
                 {
-                    pb.AddGoods(itemInfo5);
+                    _ = pb.AddGoods(itemInfo5);
                 }
                 else
                 {
@@ -5459,27 +5002,23 @@ public class GamePlayer : IGamePlayer
                 }
                 mailInfo.Annex5 = itemInfo5.ItemID.ToString();
                 mailInfo.Annex5Name = itemInfo5.Template.Name;
-                stringBuilder.Append("5、" + mailInfo.Annex5Name + "x" + itemInfo5.Count + ";");
-                stringBuilder2.Append("5、" + mailInfo.Annex5Name + "x" + itemInfo5.Count + ";");
+                _ = stringBuilder.Append("5、" + mailInfo.Annex5Name + "x" + itemInfo5.Count + ";");
+                _ = stringBuilder2.Append("5、" + mailInfo.Annex5Name + "x" + itemInfo5.Count + ";");
             }
             mailInfo.AnnexRemark = stringBuilder.ToString();
             if (content == null && stringBuilder2.ToString() == null)
             {
                 mailInfo.Content = LanguageMgr.GetTranslation("Game.Server.GameUtils.Content");
             }
-            else if (content != "")
-            {
-                mailInfo.Content = content;
-            }
             else
             {
-                mailInfo.Content = stringBuilder2.ToString();
+                mailInfo.Content = content != "" ? content : stringBuilder2.ToString();
             }
             if (pb.SendMail(mailInfo))
             {
                 foreach (ItemInfo item in list)
                 {
-                    TakeOutItem(item);
+                    _ = TakeOutItem(item);
                 }
             }
             else
@@ -5502,7 +5041,7 @@ public class GamePlayer : IGamePlayer
     {
         if (ViFarms.Contains(playerID))
         {
-            ViFarms.Remove(playerID);
+            _ = ViFarms.Remove(playerID);
         }
     }
 
@@ -5525,7 +5064,7 @@ public class GamePlayer : IGamePlayer
 
     public bool SendItemToMail(ItemInfo item, string content, string title, eMailType type)
     {
-        using PlayerBussiness pb = new PlayerBussiness();
+        using PlayerBussiness pb = new();
         return SendItemToMail(item, pb, content, title, type);
     }
 
@@ -5533,10 +5072,10 @@ public class GamePlayer : IGamePlayer
     {
         int originalBagType = item.BagType;
         bool saveToDb = true;
-        MailInfo mailInfo = new MailInfo
+        MailInfo mailInfo = new()
         {
-            Content = ((content != null) ? content : LanguageMgr.GetTranslation("Game.Server.GameUtils.Content")),
-            Title = ((title != null) ? title : LanguageMgr.GetTranslation("Game.Server.GameUtils.Title")),
+            Content = content ?? LanguageMgr.GetTranslation("Game.Server.GameUtils.Content"),
+            Title = title ?? LanguageMgr.GetTranslation("Game.Server.GameUtils.Title"),
             Gold = 0,
             IsExist = true,
             Money = 0,
@@ -5550,16 +5089,16 @@ public class GamePlayer : IGamePlayer
         if (item.ItemID == 0)
         {
             saveToDb = false;
-            pb.AddGoods(item);
+            _ = pb.AddGoods(item);
         }
         mailInfo.Annex1 = item.ItemID.ToString();
         mailInfo.Annex1Name = item.Template.Name;
         if (pb.SendMail(mailInfo))
         {
-            TakeOutItem(item);
+            _ = TakeOutItem(item);
             if (originalBagType != -1 && saveToDb)
             {
-                this.GetInventory((eBageType)originalBagType).SaveRemovedItems();
+                GetInventory((eBageType)originalBagType).SaveRemovedItems();
             }
 
             return true;
@@ -5569,16 +5108,14 @@ public class GamePlayer : IGamePlayer
 
     public bool SendItemToMailEvent(ItemInfo item, string content, string title, eMailType type)
     {
-        using (PlayerBussiness pb = new PlayerBussiness())
-        {
-            return SendItemToMailEvent(item, pb, content, title, type);
-        }
+        using PlayerBussiness pb = new();
+        return SendItemToMailEvent(item, pb, content, title, type);
     }
 
 
     public bool SendItemToMailEvent(ItemInfo item, PlayerBussiness pb, string content, string title, eMailType type)
     {
-        MailInfo mail = new MailInfo
+        MailInfo mail = new()
         {
             Content = content ?? LanguageMgr.GetTranslation("Game.Server.GameUtils.Content"),
             Title = title ?? LanguageMgr.GetTranslation("Game.Server.GameUtils.Title"),
@@ -5594,13 +5131,13 @@ public class GamePlayer : IGamePlayer
         };
         if (item.ItemID == 0)
         {
-            pb.AddGoods(item);
+            _ = pb.AddGoods(item);
         }
         mail.Annex1 = item.ItemID.ToString();
         mail.Annex1Name = item.Template.Name;
         if (pb.SendMail(mail))
         {
-            TakeOutItem(item);
+            _ = TakeOutItem(item);
             return true;
         }
         return false;
@@ -5608,7 +5145,7 @@ public class GamePlayer : IGamePlayer
 
     public bool SendMailToUser(PlayerBussiness pb, string content, string title, eMailType type)
     {
-        MailInfo mailInfo = new MailInfo
+        MailInfo mailInfo = new()
         {
             Content = content,
             Title = title,
@@ -5620,16 +5157,16 @@ public class GamePlayer : IGamePlayer
             ReceiverID = PlayerCharacter.ID,
             Sender = PlayerCharacter.NickName,
             SenderID = PlayerCharacter.ID,
-            Type = (int)type
+            Type = (int)type,
+            Annex1 = "",
+            Annex1Name = ""
         };
-        mailInfo.Annex1 = "";
-        mailInfo.Annex1Name = "";
         return pb.SendMail(mailInfo);
     }
 
     public void SendMessage(string msg)
     {
-        GSPacketIn gSPacketIn = new GSPacketIn(3);
+        GSPacketIn gSPacketIn = new(3);
         gSPacketIn.WriteInt(0);
         gSPacketIn.WriteString(msg);
         SendTCP(gSPacketIn);
@@ -5637,7 +5174,7 @@ public class GamePlayer : IGamePlayer
 
     public void SendMessage(eMessageType type, string msg)
     {
-        GSPacketIn gSPacketIn = new GSPacketIn(3);
+        GSPacketIn gSPacketIn = new(3);
         gSPacketIn.WriteInt((int)type);
         gSPacketIn.WriteString(msg);
         SendTCP(gSPacketIn);
@@ -5645,13 +5182,13 @@ public class GamePlayer : IGamePlayer
 
     public bool SendMoneyMailToUser(string title, string content, int money, eMailType type)
     {
-        using PlayerBussiness pb = new PlayerBussiness();
+        using PlayerBussiness pb = new();
         return SendMoneyMailToUser(pb, content, title, money, type);
     }
 
     public bool SendMoneyMailToUser(PlayerBussiness pb, string content, string title, int money, eMailType type)
     {
-        MailInfo mailInfo = new MailInfo
+        MailInfo mailInfo = new()
         {
             Content = content,
             Title = title,
@@ -5663,16 +5200,16 @@ public class GamePlayer : IGamePlayer
             ReceiverID = PlayerCharacter.ID,
             Sender = PlayerCharacter.NickName,
             SenderID = PlayerCharacter.ID,
-            Type = (int)type
+            Type = (int)type,
+            Annex1 = "",
+            Annex1Name = ""
         };
-        mailInfo.Annex1 = "";
-        mailInfo.Annex1Name = "";
         return pb.SendMail(mailInfo);
     }
 
     public void SendPrivateChat(int receiverID, string receiver, string sender, string msg, bool isAutoReply)
     {
-        GSPacketIn gSPacketIn = new GSPacketIn(37, PlayerCharacter.ID);
+        GSPacketIn gSPacketIn = new(37, PlayerCharacter.ID);
         gSPacketIn.WriteInt(receiverID);
         gSPacketIn.WriteString(receiver);
         gSPacketIn.WriteString(sender);
@@ -5694,8 +5231,8 @@ public class GamePlayer : IGamePlayer
 
         if (copyId <= m_pvepermissions.Length && copyId > 0 && hardLevel != eHardLevel.Epic && m_pvepermissions[copyId - 1] == permissionChars[(int)hardLevel - 1 < 0 ? (int)hardLevel : (int)hardLevel - 1])
         {
-            m_pvepermissions[copyId - 1] = permissionChars[(int)(hardLevel)];
-            m_character.PvePermission = ConverterPvePermission(m_pvepermissions);
+            m_pvepermissions[copyId - 1] = permissionChars[(int)hardLevel];
+            UserVIPInfo.PvePermission = ConverterPvePermission(m_pvepermissions);
             OnPropertiesChanged();
             return true;
         }
@@ -5704,19 +5241,17 @@ public class GamePlayer : IGamePlayer
 
     public void OpenAllNoviceActive()
     {
-        DateTime startTime = DateTime.Now;
-        DateTime endTime = DateTime.Now.AddYears(2);
+        _ = DateTime.Now;
+        _ = DateTime.Now.AddYears(2);
         DateTime startDate = DateTime.Parse(GameProperties.EventStartDate);
         DateTime stopDate = DateTime.Parse(GameProperties.EventEndDate);
-        using (PlayerBussiness pb = new PlayerBussiness())
+        using PlayerBussiness pb = new();
+        EventRewardProcessInfo[] userEventProcess = pb.GetUserEventProcess(PlayerId);
+        foreach (EventRewardProcessInfo eventRewardProcessInfo in userEventProcess)
         {
-            EventRewardProcessInfo[] userEventProcess = pb.GetUserEventProcess(PlayerId);
-            foreach (EventRewardProcessInfo eventRewardProcessInfo in userEventProcess)
-            {
-                startTime = startDate;
-                endTime = stopDate;
-                Out.SendOpenNoviceActive(0, eventRewardProcessInfo.ActiveType, eventRewardProcessInfo.Conditions, eventRewardProcessInfo.AwardGot, startTime, endTime);
-            }
+            DateTime startTime = startDate;
+            DateTime endTime = stopDate;
+            Out.SendOpenNoviceActive(0, eventRewardProcessInfo.ActiveType, eventRewardProcessInfo.Conditions, eventRewardProcessInfo.AwardGot, startTime, endTime);
         }
     }
 
@@ -5742,7 +5277,7 @@ public class GamePlayer : IGamePlayer
 
     public void TakeFootballCard(CardInfoOld card)
     {
-        List<ItemInfo> list = new List<ItemInfo>();
+        List<ItemInfo> list = [];
         for (int i = 0; i < CardsTakeOut.Length; i++)
         {
             if (card.place == i)
@@ -5764,40 +5299,36 @@ public class GamePlayer : IGamePlayer
         }
         foreach (ItemInfo item in list)
         {
-            AddTemplate(list);
+            _ = AddTemplate(list);
         }
     }
 
     public bool TakeOutItem(ItemInfo item)
     {
-        if (item.BagType == m_propBag.BagType)
+        if (item.BagType == PropBag.BagType)
         {
-            return m_propBag.TakeOutItem(item);
+            return PropBag.TakeOutItem(item);
         }
-        if (item.BagType == m_fightBag.BagType)
+        if (item.BagType == FightBag.BagType)
         {
-            return m_fightBag.TakeOutItem(item);
+            return FightBag.TakeOutItem(item);
         }
-        if (item.BagType == m_ConsortiaBag.BagType)
+        if (item.BagType == ConsortiaBag.BagType)
         {
-            return m_ConsortiaBag.TakeOutItem(item);
+            return ConsortiaBag.TakeOutItem(item);
         }
-        if (item.BagType == m_BankBag.BagType)
-        {
-            return m_BankBag.TakeOutItem(item);
-        }
-        return m_equipBag.TakeOutItem(item);
+        return item.BagType == BankBag.BagType ? BankBag.TakeOutItem(item) : EquipBag.TakeOutItem(item);
     }
 
     public void TestQuest()
     {
-        using ProduceBussiness produceBussiness = new ProduceBussiness();
+        using ProduceBussiness produceBussiness = new();
         QuestInfo[] aLlQuest = produceBussiness.GetALlQuest();
         QuestInfo[] array = aLlQuest;
         QuestInfo[] array2 = array;
         foreach (QuestInfo info in array2)
         {
-            QuestInventory.AddQuest(info, out var _);
+            _ = QuestInventory.AddQuest(info, out _);
         }
     }
 
@@ -5829,7 +5360,7 @@ public class GamePlayer : IGamePlayer
 
     public void UpdateBadgeId(int Id)
     {
-        m_character.badgeID = Id;
+        UserVIPInfo.badgeID = Id;
     }
 
     public void UpdateBarrier(int barrier, string pic)
@@ -5844,15 +5375,15 @@ public class GamePlayer : IGamePlayer
 
     public void UpdateBaseProperties(int attack, int defence, int agility, int lucky, int hp, int Guard)
     {
-        if (attack != m_character.Attack || defence != m_character.Defence || agility != m_character.Agility || lucky != m_character.Luck)
+        if (attack != UserVIPInfo.Attack || defence != UserVIPInfo.Defence || agility != UserVIPInfo.Agility || lucky != UserVIPInfo.Luck)
         {
-            m_character.Attack = attack;
-            m_character.Defence = defence;
-            m_character.Agility = agility;
-            m_character.Luck = lucky;
+            UserVIPInfo.Attack = attack;
+            UserVIPInfo.Defence = defence;
+            UserVIPInfo.Agility = agility;
+            UserVIPInfo.Luck = lucky;
             OnPropertiesChanged();
         }
-        m_character.hp = (int)((double)(hp + LevelPlusBlood + m_character.Defence / 10) * GetBaseBlood());
+        UserVIPInfo.hp = (int)((hp + LevelPlusBlood + (UserVIPInfo.Defence / 10)) * GetBaseBlood());
         HoGiap = Guard;
     }
 
@@ -5866,14 +5397,14 @@ public class GamePlayer : IGamePlayer
         }
         catch (Exception exception)
         {
-            log.Error("Error Update Changed Places " + m_character.NickName + "!", exception);
+            log.Error("Error Update Changed Places " + UserVIPInfo.NickName + "!", exception);
             return false;
         }
     }
 
     public void UpdateDrill(int index, UserDrillInfo drill)
     {
-        m_userDrills[index] = drill;
+        UserDrills[index] = drill;
     }
 
     public void UpdateFightBuff(BufferInfo info)
@@ -5904,34 +5435,34 @@ public class GamePlayer : IGamePlayer
         num += PlayerCharacter.Luck;
         double baseAttack = GetBaseAttack(); //hasar
         double baseDefence = GetBaseDefence(); //zırh
-        FightPower += (int)((double)(num + 1000) * (baseAttack * baseAttack * baseAttack + 3.5 * baseDefence * baseDefence * baseDefence) / 100000000.0 + (double)hp * 0.95);
+        FightPower += (int)(((num + 1000) * ((baseAttack * baseAttack * baseAttack) + (3.5 * baseDefence * baseDefence * baseDefence)) / 100000000.0) + (hp * 0.95));
         if (m_currentSecondWeapon != null)
         {
-            FightPower += (int)((double)m_currentSecondWeapon.Template.Property7 * Math.Pow(1.1, m_currentSecondWeapon.StrengthenLevel));
+            FightPower += (int)(m_currentSecondWeapon.Template.Property7 * Math.Pow(1.1, m_currentSecondWeapon.StrengthenLevel));
         }
         if (FightPower < 0)
         {
             FightPower = int.MaxValue;
         }
         PlayerCharacter.FightPower = FightPower;
-        OnPlayerPropertyChanged(m_character);
-        Extra.CheckNoviceActiveOpen(NoviceActiveType.SAVAS_GUCU);
-        Extra.UpdateEventCondition((int)NoviceActiveType.SAVAS_GUCU, m_character.FightPower);
+        OnPlayerPropertyChanged(UserVIPInfo);
+        _ = Extra.CheckNoviceActiveOpen(NoviceActiveType.SAVAS_GUCU);
+        Extra.UpdateEventCondition((int)NoviceActiveType.SAVAS_GUCU, UserVIPInfo.FightPower);
     }
 
     public void UpdateHealstone(ItemInfo item)
     {
         if (item != null)
         {
-            m_healstone = item;
+            Healstone = item;
         }
     }
 
     public void UpdateHide(int hide)
     {
-        if (hide != m_character.Hide)
+        if (hide != UserVIPInfo.Hide)
         {
-            m_character.Hide = hide;
+            UserVIPInfo.Hide = hide;
             OnPropertiesChanged();
         }
     }
@@ -5994,29 +5525,29 @@ public class GamePlayer : IGamePlayer
 
     public void UpdateItemForUser(object state)
     {
-        m_extra.LoadFromDatabase();
-        m_battle.LoadFromDatabase();
-        m_equipBag.LoadFromDatabase();
-        m_propBag.LoadFromDatabase();
-        m_ConsortiaBag.LoadFromDatabase();
-        m_BankBag.LoadFromDatabase();
-        m_storeBag.LoadFromDatabase();
-        m_cardBag.LoadFromDatabase();
-        m_questInventory.LoadFromDatabase(m_character.ID);
-        m_achievementInventory.LoadFromDatabase(m_character.ID);
-        m_eventLiveInventory.LoadFromDatabase();
-        m_bufferList.LoadFromDatabase(m_character.ID);
-        m_rank.LoadFromDatabase();
-        m_petBag.LoadFromDatabase();
-        this.m_dice.LoadFromDatabase();
+        Extra.LoadFromDatabase();
+        BattleData.LoadFromDatabase();
+        EquipBag.LoadFromDatabase();
+        PropBag.LoadFromDatabase();
+        ConsortiaBag.LoadFromDatabase();
+        BankBag.LoadFromDatabase();
+        StoreBag.LoadFromDatabase();
+        CardBag.LoadFromDatabase();
+        QuestInventory.LoadFromDatabase(UserVIPInfo.ID);
+        AchievementInventory.LoadFromDatabase(UserVIPInfo.ID);
+        EventLiveInventory.LoadFromDatabase();
+        BufferList.LoadFromDatabase(UserVIPInfo.ID);
+        Rank.LoadFromDatabase();
+        PetBag.LoadFromDatabase();
+        Dice.LoadFromDatabase();
         FarmBag.LoadFromDatabase();
-        m_playerActive.LoadFromDatabase();
-        this.m_avatarcollect.LoadFromDatabase();
+        Actives.LoadFromDatabase();
+        AvatarCollect.LoadFromDatabase();
     }
 
     public void UpdateLevel()
     {
-        Level = LevelMgr.GetLevel(m_character.GP);
+        Level = LevelMgr.GetLevel(UserVIPInfo.GP);
         int maxLevel = LevelMgr.MaxLevel;
         LevelInfo levelInfo = LevelMgr.FindLevel(maxLevel);
         if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Level_Atlama))
@@ -6026,7 +5557,7 @@ public class GamePlayer : IGamePlayer
         OnLevelUp(Level);
         if (Level == maxLevel && levelInfo != null)
         {
-            m_character.GP = levelInfo.GP;
+            UserVIPInfo.GP = levelInfo.GP;
         }
     }
 
@@ -6034,30 +5565,27 @@ public class GamePlayer : IGamePlayer
     {
         info.ServerID = GameServer.Instance.Configuration.ZoneId;
         info.UserID = UserID;
-        using (PlayerBussiness pb = new PlayerBussiness())
-            pb.UpdateEventSevenDays(info);
+        using PlayerBussiness pb = new();
+        _ = pb.UpdateEventSevenDays(info);
     }
 
     public void UpdatePet(UsersPetInfo pet)
     {
-        m_pet = pet;
+        Pet = pet;
     }
 
     public void UpdateProperties()
     {
-        Out.SendUpdatePrivateInfo(m_character, GetMedalNum());
-        GSPacketIn pkg = Out.SendUpdatePublicPlayer(m_character, MatchInfo, m_extra.Info);
-        if (m_currentRoom != null)
-        {
-            m_currentRoom.SendToAll(pkg, this);
-        }
+        Out.SendUpdatePrivateInfo(UserVIPInfo, GetMedalNum());
+        GSPacketIn pkg = Out.SendUpdatePublicPlayer(UserVIPInfo, MatchInfo, Extra.Info);
+        CurrentRoom?.SendToAll(pkg, this);
     }
 
     public void UpdatePveResult(string type, int value, bool option)
     {
-        var damageScore = 0;
-        var honor = 0;
-        var msg = "";
+        int damageScore = 0;
+        int honor = 0;
+        string msg = "";
         switch (type)
         {
             case "worldboss":
@@ -6067,9 +5595,9 @@ public class GamePlayer : IGamePlayer
                         damageScore = value / 400;
                         honor = value / 1200;
                         msg = LanguageMgr.GetTranslation("Savaş başarıyla tamamlandı! " + damageScore + " Puan ve " + honor + " onur kazandınız!"); //türkçeleştirildi not: yuti
-                        AddDamageScores(damageScore);
+                        _ = AddDamageScores(damageScore);
                         RoomMgr.WorldBossRoom.UpdateRank(this, damageScore, honor);
-                        RoomMgr.WorldBossRoom.ReduceBlood(value);
+                        _ = RoomMgr.WorldBossRoom.ReduceBlood(value);
                         if (option)
                         {
                             RoomMgr.WorldBossRoom.SendFightOver();
@@ -6081,9 +5609,11 @@ public class GamePlayer : IGamePlayer
                 break;
         }
 
-        AddHonor(honor);
+        _ = AddHonor(honor);
         if (!string.IsNullOrEmpty(msg))
+        {
             SendMessage(msg);
+        }
     }
 
     public int AddEliteScore(int value)
@@ -6115,7 +5645,7 @@ public class GamePlayer : IGamePlayer
         EliteGameRoundInfo eliteGameRoundInfo = ExerciseMgr.FindEliteRoundByUser(PlayerCharacter.ID);
         if (eliteGameRoundInfo != null)
         {
-            eliteGameRoundInfo.PlayerWin = ((eliteGameRoundInfo.PlayerOne.UserID == PlayerCharacter.ID) ? eliteGameRoundInfo.PlayerOne : eliteGameRoundInfo.PlayerTwo);
+            eliteGameRoundInfo.PlayerWin = (eliteGameRoundInfo.PlayerOne.UserID == PlayerCharacter.ID) ? eliteGameRoundInfo.PlayerOne : eliteGameRoundInfo.PlayerTwo;
             GameServer.Instance.LoginServer.SendEliteChampionRoundUpdate(eliteGameRoundInfo);
             ExerciseMgr.RemoveEliteRound(eliteGameRoundInfo);
         }
@@ -6151,11 +5681,11 @@ public class GamePlayer : IGamePlayer
 
     public void UpdateStyle(string style, string colors, string skin)
     {
-        if (style != m_character.Style || colors != m_character.Colors || skin != m_character.Skin)
+        if (style != UserVIPInfo.Style || colors != UserVIPInfo.Colors || skin != UserVIPInfo.Skin)
         {
-            m_character.Style = style;
-            m_character.Colors = colors;
-            m_character.Skin = skin;
+            UserVIPInfo.Style = style;
+            UserVIPInfo.Colors = colors;
+            UserVIPInfo.Skin = skin;
             OnPropertiesChanged();
         }
     }
@@ -6180,9 +5710,9 @@ public class GamePlayer : IGamePlayer
 
     public void UpdateWeapon(ItemInfo item)
     {
-        if (item != m_MainWeapon)
+        if (item != MainWeapon)
         {
-            m_MainWeapon = item;
+            MainWeapon = item;
             OnPropertiesChanged();
         }
     }
@@ -6199,23 +5729,23 @@ public class GamePlayer : IGamePlayer
                 {
                     return true;
                 }
-                ItemInfo itemAt = m_propBag.GetItemAt(place);
+                ItemInfo itemAt = PropBag.GetItemAt(place);
                 if (itemAt != null && itemAt.IsValidItem() && itemAt.Count >= 0)
                 {
-                    m_propBag.RemoveCountFromStack(itemAt, 1);
+                    _ = PropBag.RemoveCountFromStack(itemAt, 1);
                     return true;
                 }
             }
         }
         else
         {
-            ItemInfo itemAt2 = m_fightBag.GetItemAt(place);
+            ItemInfo itemAt2 = FightBag.GetItemAt(place);
             if (itemAt2 != null)
             {
                 OnUsingItem(itemAt2.TemplateID, 1);
                 if (itemAt2.TemplateID == templateId)
                 {
-                    return m_fightBag.RemoveItem(itemAt2);
+                    return FightBag.RemoveItem(itemAt2);
                 }
             }
         }
@@ -6224,98 +5754,90 @@ public class GamePlayer : IGamePlayer
 
     public void OnPlayerAddItem(string type, int value)
     {
-        if (this.PlayerAddItem != null)
-        {
-            this.PlayerAddItem(type, value);
-        }
+        PlayerAddItem?.Invoke(type, value);
     }
 
     public void OnPlayerSpa(int onlineTimeSpa)
     {
-        if (this.PlayerSpa != null)
-        {
-            this.PlayerSpa(onlineTimeSpa);
-        }
+        PlayerSpa?.Invoke(onlineTimeSpa);
     }
 
     public void OnPlayerQuestFinish(BaseQuest baseQuest)
     {
-        if (this.PlayerQuestFinish != null)
-        {
-            this.PlayerQuestFinish(baseQuest);
-        }
+        PlayerQuestFinish?.Invoke(baseQuest);
     }
 
     public void OnPlayerLogin()
     {
-        if (this.PlayerLogin != null)
-        {
-            this.PlayerLogin();
-        }
+        PlayerLogin?.Invoke();
     }
 
     public void OnPlayerPropertyChanged(PlayerInfo character)
     {
-        if (this.PlayerPropertyChanged != null)
-        {
-            this.PlayerPropertyChanged(character);
-        }
+        PlayerPropertyChanged?.Invoke(character);
     }
 
     public void OnVIPUpgrade(int level, int exp)
     {
-        if (this.Event_0 != null && m_character.typeVIP > 0 && m_character.VIPLevel == level)
+        if (Event_0 != null && UserVIPInfo.typeVIP > 0 && UserVIPInfo.VIPLevel == level)
         {
-            this.Event_0(level, exp);
+            Event_0(level, exp);
         }
     }
 
     public void OnUseBugle(int value)
     {
-        if (this.UseBugle != null)
-        {
-            this.UseBugle(value);
-        }
+        UseBugle?.Invoke(value);
     }
 
     public void OnPlayerMarry()
     {
-        if (this.PlayerMarry != null)
-        {
-            this.PlayerMarry();
-        }
+        PlayerMarry?.Invoke();
     }
 
     public void OnPlayerDispatches()
     {
-        if (this.PlayerDispatches != null)
-        {
-            this.PlayerDispatches();
-        }
+        PlayerDispatches?.Invoke();
     }
 
     public void OnGameOver(AbstractGame game, bool isWin, int gainXp, bool isSpanArea, bool isCouple, int blood, int playerCount)
     {
         if (game.RoomType == eRoomType.Match)
         {
-            if (isWin) m_character.Win++;
-            m_character.Total++;
+            if (isWin)
+            {
+                UserVIPInfo.Win++;
+            }
+
+            UserVIPInfo.Total++;
         }
-        if (blood == 1) OnFightOneBloodIsWin(game.RoomType, isWin);
-        if (playerCount == 4) OnGameOver2v2(isWin);
-        if (isCouple && this.GameMarryTeam != null) this.GameMarryTeam(game, isWin, gainXp, playerCount);
-        if (this.GameOverCountTeam != null) this.GameOverCountTeam(game, isWin, gainXp, playerCount);
-        if (this.GameOver != null) this.GameOver(game, isWin, gainXp, isSpanArea, isCouple);
+        if (blood == 1)
+        {
+            OnFightOneBloodIsWin(game.RoomType, isWin);
+        }
+
+        if (playerCount == 4)
+        {
+            OnGameOver2v2(isWin);
+        }
+
+        if (isCouple && GameMarryTeam != null)
+        {
+            GameMarryTeam(game, isWin, gainXp, playerCount);
+        }
+
+        GameOverCountTeam?.Invoke(game, isWin, gainXp, playerCount);
+        GameOver?.Invoke(game, isWin, gainXp, isSpanArea, isCouple);
         ClearFightBuffOneMatch();
         if (isWin)
         {
-            this.winningStreak++;
+            winningStreak++;
         }
         else
         {
-            this.winningStreak = 0;
+            winningStreak = 0;
         }
-        if (m_character.ConsortiaID > 0)
+        if (UserVIPInfo.ConsortiaID > 0)
         {
             int richesAdd = 0;
             if (isWin)
@@ -6331,14 +5853,14 @@ public class GamePlayer : IGamePlayer
 
             if (richesAdd > 0)
             {
-                AddRichesOffer(richesAdd);
+                _ = AddRichesOffer(richesAdd);
                 OnDonateRiches(richesAdd, 2);
             }
         }
         int totalDamage = 0;
-        if (this.Players != null)
+        if (Players != null)
         {
-            totalDamage = this.Players.TotalAllHurt;
+            totalDamage = Players.TotalAllHurt;
         }
         switch (game.RoomType)
         {
@@ -6379,57 +5901,57 @@ public class GamePlayer : IGamePlayer
                         // BOGO KEŞİFİ (ID: 1)
                         //if (pveId == 1)
                         //{
-                            // 1. Genel Bogo Görevi (Tüm zorluklar için)
-                           // var bogoInfo = Extra.GetEventProcess((int)NoviceActiveType.BOGO_KESIFI);
-                           // if (bogoInfo != null)
-                           // {
-                           //     Extra.UpdateEventCondition((int)NoviceActiveType.BOGO_KESIFI, bogoInfo.Conditions + 1);
-                           // }
+                        // 1. Genel Bogo Görevi (Tüm zorluklar için)
+                        // var bogoInfo = Extra.GetEventProcess((int)NoviceActiveType.BOGO_KESIFI);
+                        // if (bogoInfo != null)
+                        // {
+                        //     Extra.UpdateEventCondition((int)NoviceActiveType.BOGO_KESIFI, bogoInfo.Conditions + 1);
+                        // }
 
-                            // 2. Zorluk Seviyesine Göre Görevler
-                            // Not: NoviceActiveType enum'ına BOGO_KESIFI_ZOR vb. tanımlamalısınız.
-                          //  if (hardLevel == eHardLevel.Normal)
-                           // {
-                                // Normal zorluk görevi (Örnek)
-                                // var info = Extra.GetEventProcess((int)NoviceActiveType.BOGO_KESIFI_NORMAL);
-                                // if (info != null) Extra.UpdateEventCondition((int)NoviceActiveType.BOGO_KESIFI_NORMAL, info.Conditions + 1);
-                           // }
-                           // else if (hardLevel == eHardLevel.Hard) // Zor Mod
-                           // {
-                            //    if (Extra.CheckNoviceActiveOpen(NoviceActiveType.BOGO_KESIFI_ZOR))
-                             //   {
-                              //      Extra.UpdateEventCondition((int)NoviceActiveType.BOGO_KESIFI_ZOR, 1);
-                               // }
-                           // }
-                            //else if (hardLevel == eHardLevel.Terror) // Dehşet/Ejderha Modu
-                            //{
-                                // Terror zorluk görevi (Örnek)
-                            //}
+                        // 2. Zorluk Seviyesine Göre Görevler
+                        // Not: NoviceActiveType enum'ına BOGO_KESIFI_ZOR vb. tanımlamalısınız.
+                        //  if (hardLevel == eHardLevel.Normal)
+                        // {
+                        // Normal zorluk görevi (Örnek)
+                        // var info = Extra.GetEventProcess((int)NoviceActiveType.BOGO_KESIFI_NORMAL);
+                        // if (info != null) Extra.UpdateEventCondition((int)NoviceActiveType.BOGO_KESIFI_NORMAL, info.Conditions + 1);
+                        // }
+                        // else if (hardLevel == eHardLevel.Hard) // Zor Mod
+                        // {
+                        //    if (Extra.CheckNoviceActiveOpen(NoviceActiveType.BOGO_KESIFI_ZOR))
+                        //   {
+                        //      Extra.UpdateEventCondition((int)NoviceActiveType.BOGO_KESIFI_ZOR, 1);
+                        // }
+                        // }
+                        //else if (hardLevel == eHardLevel.Terror) // Dehşet/Ejderha Modu
+                        //{
+                        // Terror zorluk görevi (Örnek)
+                        //}
                         //}
 
                         // KARINCA KEŞİFİ (ID: 2)
-//                        if (pveId == 2)
-  //                      {
-                            // 1. Genel Karınca Görevi
-    //                        var karincaInfo = Extra.GetEventProcess((int)NoviceActiveType.KARINCA_KESIFI);
-      //                      if (karincaInfo != null)
-        //                    {
-          //                      Extra.UpdateEventCondition((int)NoviceActiveType.KARINCA_KESIFI, karincaInfo.Conditions + 1);
-            //                }
+                        //                        if (pveId == 2)
+                        //                      {
+                        // 1. Genel Karınca Görevi
+                        //                        var karincaInfo = Extra.GetEventProcess((int)NoviceActiveType.KARINCA_KESIFI);
+                        //                      if (karincaInfo != null)
+                        //                    {
+                        //                      Extra.UpdateEventCondition((int)NoviceActiveType.KARINCA_KESIFI, karincaInfo.Conditions + 1);
+                        //                }
 
-                            // 2. Zorluk Seviyesine Göre Görevler
-              //              if (hardLevel == eHardLevel.Normal)
-                //            {
-                                // Normal zorluk görevi
-                  //          }
-                    //        else if (hardLevel == eHardLevel.Hard) // Zor Mod
-                      //      {
+                        // 2. Zorluk Seviyesine Göre Görevler
+                        //              if (hardLevel == eHardLevel.Normal)
+                        //            {
+                        // Normal zorluk görevi
+                        //          }
+                        //        else if (hardLevel == eHardLevel.Hard) // Zor Mod
+                        //      {
                         //        if (Extra.CheckNoviceActiveOpen(NoviceActiveType.KARINCA_KESIFI_ZOR))
-                          //      {
-                            //        Extra.UpdateEventCondition((int)NoviceActiveType.KARINCA_KESIFI_ZOR, 1);
-                              //  }
-                          //  }
-                       // }
+                        //      {
+                        //        Extra.UpdateEventCondition((int)NoviceActiveType.KARINCA_KESIFI_ZOR, 1);
+                        //  }
+                        //  }
+                        // }
                     }
                 }
                 break;
@@ -6437,20 +5959,20 @@ public class GamePlayer : IGamePlayer
                 break;
         }
 
-        if (DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday)
+        if (DateTime.Now.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
         {
             int bonusGold = isWin ? 500 : 100;
-            AddGold(bonusGold);
-             SendMessage("Hafta Sonu Bonusu: +" + bonusGold + " Altın!");
+            _ = AddGold(bonusGold);
+            SendMessage("Hafta Sonu Bonusu: +" + bonusGold + " Altın!");
         }
         if (isWin && blood == 1)
         {
-         //    if (Extra.CheckNoviceActiveOpen(NoviceActiveType.PERFECT_WIN))
-          //   {
-           //      Extra.UpdateEventCondition((int)NoviceActiveType.PERFECT_WIN, 1);
+            //    if (Extra.CheckNoviceActiveOpen(NoviceActiveType.PERFECT_WIN))
+            //   {
+            //      Extra.UpdateEventCondition((int)NoviceActiveType.PERFECT_WIN, 1);
             // }
         }
-        ThreadPool.QueueUserWorkItem(delegate (object state)
+        _ = ThreadPool.QueueUserWorkItem(delegate (object state)
         {
             try
             {
@@ -6458,27 +5980,32 @@ public class GamePlayer : IGamePlayer
                 // KENDI WEBHOOK LINKINI YAZMAYI UNUTMA
                 string webhookUrl = "https://discord.com/api/webhooks/1474082590058352749/kv9vo5Hj-1j0hROIg89LsWeV9d_SYYTiiUGErBdQaQPaJlr6471GbDii_Afwbo0otzPm";
 
-                if (string.IsNullOrEmpty(webhookUrl) || !webhookUrl.StartsWith("http")) return;
+                if (string.IsNullOrEmpty(webhookUrl) || !webhookUrl.StartsWith("http"))
+                {
+                    return;
+                }
 
                 string durum = isWin ? "Kazandı" : "Kaybetti";
                 string odaTipi = game != null ? game.RoomType.ToString() : "Bilinmiyor";
-                string oyuncuIsmi = m_character != null ? m_character.NickName : "Bilinmeyen";
-                int seviye = m_character != null ? m_character.Grade : 0;
+                string oyuncuIsmi = UserVIPInfo != null ? UserVIPInfo.NickName : "Bilinmeyen";
+                int seviye = UserVIPInfo != null ? UserVIPInfo.Grade : 0;
 
                 // Rakip Bulma
-                List<string> rakipler = new List<string>();
-                if (this.CurrentRoom != null)
+                List<string> rakipler = [];
+                if (CurrentRoom != null)
                 {
-                    foreach (GamePlayer p in this.CurrentRoom.GetPlayers())
+                    foreach (GamePlayer p in CurrentRoom.GetPlayers())
                     {
-                        if (p != null && p != this && p.CurrentRoomTeam != this.CurrentRoomTeam && p.PlayerCharacter != null)
+                        if (p != null && p != this && p.CurrentRoomTeam != CurrentRoomTeam && p.PlayerCharacter != null)
+                        {
                             rakipler.Add(p.PlayerCharacter.NickName);
+                        }
                     }
                 }
                 string rakipIsimleri = rakipler.Count > 0 ? string.Join(", ", rakipler) : "Bot / NPC";
 
-                int hasar = this.Players != null ? this.Players.TotalAllHurt : 0;
-                int kalanCan = this.Players != null ? this.Players.Blood : blood;
+                int hasar = Players != null ? Players.TotalAllHurt : 0;
+                int kalanCan = Players != null ? Players.Blood : blood;
 
                 // SÜS YOK, DİREKT PYTHON'UN OKUYACAĞI ŞİFRELİ METNİ YOLLUYORUZ
                 string rawData = string.Format("[Oyun Logu Alındı]|Oyuncu: {0}|Seviye: {1}|Rakipler: {2}|Oda Tipi: {3}|Durum: {4}|Hasar: {5}|Kalan Can: {6}|Kazanç XP: {7}",
@@ -6487,13 +6014,11 @@ public class GamePlayer : IGamePlayer
                 var payload = new { content = rawData, username = "Oyun Logu" };
                 string jsonPayload = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
 
-                using (System.Net.WebClient client = new System.Net.WebClient())
-                {
-                    client.Encoding = System.Text.Encoding.UTF8;
-                    client.Headers.Add("User-Agent", "Mozilla/5.0");
-                    client.Headers[System.Net.HttpRequestHeader.ContentType] = "application/json";
-                    client.UploadString(webhookUrl, "POST", jsonPayload);
-                }
+                using System.Net.WebClient client = new();
+                client.Encoding = System.Text.Encoding.UTF8;
+                client.Headers.Add("User-Agent", "Mozilla/5.0");
+                client.Headers[System.Net.HttpRequestHeader.ContentType] = "application/json";
+                _ = client.UploadString(webhookUrl, "POST", jsonPayload);
             }
             catch (Exception ex) { log.Error("Discord Webhook Hata: ", ex); }
         });
@@ -6501,36 +6026,22 @@ public class GamePlayer : IGamePlayer
 
     public void OnFightOneBloodIsWin(eRoomType roomType, bool isWin)
     {
-        if (this.FightOneBloodIsWin != null)
-        {
-            this.FightOneBloodIsWin(roomType, isWin);
-        }
+        FightOneBloodIsWin?.Invoke(roomType, isWin);
     }
 
     public void OnGameOver2v2(bool isWin)
     {
-        if (this.GameOver2v2 != null)
-        {     
-            this.GameOver2v2(isWin);
-          //  var info = Client.Player.Extra.GetEventProcess((int)NoviceActiveType.IKI_VS_IKI);
-           // Client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.IKI_VS_IKI, info.Conditions + 1);
-        }
+        GameOver2v2?.Invoke(isWin);
     }
 
     public void OnAcademyEvent(GamePlayer friendly, int type)
     {
-        if (this.AcademyEvent != null)
-        {
-            this.AcademyEvent(friendly, type);
-        }
+        AcademyEvent?.Invoke(friendly, type);
     }
 
     public void OnEquipCardEvent()
     {
-        if (this.EquipCardEvent != null)
-        {
-            this.EquipCardEvent();
-        }
+        EquipCardEvent?.Invoke();
     }
 
     public bool IsLimitMail()
@@ -6550,8 +6061,8 @@ public class GamePlayer : IGamePlayer
 
     public static List<Suit_TemplateInfo> Load_Template_Suit_info()
     {
-        List<Suit_TemplateInfo> list = new List<Suit_TemplateInfo>();
-        using (ProduceBussiness produceBussiness = new ProduceBussiness())
+        List<Suit_TemplateInfo> list = [];
+        using (ProduceBussiness produceBussiness = new())
         {
             Suit_TemplateInfo[] array = produceBussiness.Load_Suit_TemplateInfo();
             Suit_TemplateInfo[] array2 = array;
@@ -6566,8 +6077,8 @@ public class GamePlayer : IGamePlayer
 
     public static List<Suit_TemplateID> Load_Suit_TemplateID()
     {
-        List<Suit_TemplateID> list = new List<Suit_TemplateID>();
-        using (ProduceBussiness produceBussiness = new ProduceBussiness())
+        List<Suit_TemplateID> list = [];
+        using (ProduceBussiness produceBussiness = new())
         {
             Suit_TemplateID[] array = produceBussiness.Load_Suit_TemplateID();
             for (int i = 0; i < array.Length; i++)
@@ -6580,7 +6091,7 @@ public class GamePlayer : IGamePlayer
 
     private static List<int> DS_Item_Suit()
     {
-        List<int> list = new List<int>();
+        List<int> list = [];
         List<Suit_TemplateID> list2 = Load_Suit_TemplateID();
         for (int i = 0; i < list2.Count; i++)
         {
@@ -6603,7 +6114,7 @@ public class GamePlayer : IGamePlayer
 
     private static int[] tachchuoi(string A)
     {
-        List<int> list = new List<int>();
+        List<int> list = [];
         if (!A.Contains(","))
         {
             list.Add(int.Parse(A));
@@ -6632,7 +6143,7 @@ public class GamePlayer : IGamePlayer
 
     public void ClearStoreBagWithOutPlace(int place)
     {
-        List<ItemInfo> list = new List<ItemInfo>();
+        List<ItemInfo> list = [];
         for (int i = 0; i < StoreBag.Capalility; i++)
         {
             if (i == place)
@@ -6655,7 +6166,7 @@ public class GamePlayer : IGamePlayer
                 }
                 else
                 {
-                    StoreBag.TakeOutItem(itemAt);
+                    _ = StoreBag.TakeOutItem(itemAt);
                     //StoreBag.SaveToDatabase();
                 }
             }
@@ -6669,7 +6180,7 @@ public class GamePlayer : IGamePlayer
                 }
                 else
                 {
-                    StoreBag.TakeOutItem(itemAt);
+                    _ = StoreBag.TakeOutItem(itemAt);
                     //StoreBag.SaveToDatabase();
                 }
             }
@@ -6677,10 +6188,10 @@ public class GamePlayer : IGamePlayer
         if (list.Count > 0)
         {
             StoreBag.ClearBagWithoutPlace(place);
-            SendItemsToMail(list, "Demirciden gelen eşyaları buradan gönderelim istedik. Sırt çantanız dolmuş.", "Çantanız Dolu", eMailType.StoreCanel); //türkçeleştirildi not: yuti
+            _ = SendItemsToMail(list, "Demirciden gelen eşyaları buradan gönderelim istedik. Sırt çantanız dolmuş.", "Çantanız Dolu", eMailType.StoreCanel); //türkçeleştirildi not: yuti
 
         }
-        this.SaveIntoDatabase();
+        _ = SaveIntoDatabase();
     }
 
     public void ResetRoom(bool isWin, string parram)
@@ -6704,7 +6215,7 @@ public class GamePlayer : IGamePlayer
     public WorldBossProcessor WorldBoss { get; private set; }
     public EventSevenDaysInfo EventSeven { get; private set; }
 
-    private WorldBossLogicProcessor _worldBossProcessor;
+    private readonly WorldBossLogicProcessor _worldBossProcessor;
     public int AddDamageScores(int value) //trminhpc
     {
         if (value > 0)
@@ -6751,13 +6262,15 @@ public class GamePlayer : IGamePlayer
         if (GameProperties.IsActiveMoney)
         {
             if (value < 1)
+            {
                 return false;
+            }
 
             if (Actives.Info.ActiveMoney >= value)
             {
                 // Burada RemoveActiveMoney zaten "kupon harcandı" mesajını basacak
-                RemoveActiveMoney(value);
-                RemoveMoney(value);
+                _ = RemoveActiveMoney(value);
+                _ = RemoveMoney(value);
                 return true;
             }
 
@@ -6773,23 +6286,19 @@ public class GamePlayer : IGamePlayer
     }
     public bool MoneyDirect(int value)
     {
-        if (GameProperties.IsDDTMoneyActive)
-        {
-            return this.MoneyDirect(MoneyType.DDTMoney, value);
-        }
-        return this.MoneyDirect(MoneyType.Money, value);
+        return GameProperties.IsDDTMoneyActive ? MoneyDirect(MoneyType.DDTMoney, value) : MoneyDirect(MoneyType.Money, value);
     }
 
     public bool MoneyDirect(MoneyType type, int value)
     {
-        if (value < 0 || value > 2147483647)
+        if (value is < 0 or > 2147483647)
         {
             return false;
         }
         if (type == MoneyType.Money)
         {
             // Önce bakiye kontrolü
-            if (this.PlayerCharacter.Money >= value)
+            if (PlayerCharacter.Money >= value)
             {
                 // RemoveMoney artık limit kontrolü yapıyor.
                 // Eğer limit dolduysa 0 döner, işlem başarısız olur.
@@ -6803,16 +6312,16 @@ public class GamePlayer : IGamePlayer
                     return false;
                 }
             }
-            this.SendInsufficientMoney(0);
+            SendInsufficientMoney(0);
         }
         else
         {
-            if (this.PlayerCharacter.GiftToken >= value)
+            if (PlayerCharacter.GiftToken >= value)
             {
-                this.RemoveGiftToken(value);
+                _ = RemoveGiftToken(value);
                 return true;
             }
-            this.SendMessage("Hediye altınınız yeterli değil.");
+            SendMessage("Hediye altınınız yeterli değil.");
         }
         return false;
     }
@@ -6824,7 +6333,7 @@ public class GamePlayer : IGamePlayer
 
     public bool MoneyDirect(MoneyType type, int value, bool IsAntiMult, bool NoviceActive, bool CanMoneyLock)
     {
-        if (value >= 0 && value <= int.MaxValue)
+        if (value is >= 0 and <= int.MaxValue)
         {
             if (type == MoneyType.Money)
             {
@@ -6833,7 +6342,7 @@ public class GamePlayer : IGamePlayer
                     // RemoveMoney'nin sonucunu kontrol et (Limit kontrolü için)
                     if (RemoveMoney(value, IsAntiMult, NoviceActive) > 0)
                     {
-                        AddLog("RemoveMoney", "Tài khoản " + m_character.UserName + "sử dụng " + value + "xu ở tài khoản" + m_character.NickName);
+                        AddLog("RemoveMoney", "Tài khoản " + UserVIPInfo.UserName + "sử dụng " + value + "xu ở tài khoản" + UserVIPInfo.NickName);
                         UpdateProperties();
                         return true;
                     }
@@ -6847,7 +6356,7 @@ public class GamePlayer : IGamePlayer
                 {
                     // Kilitli kupon için de limit kontrolü istenirse buraya eklenebilir.
                     // Şimdilik sadece RemoveMoney'deki limiti baz alıyoruz.
-                    RemoveMoneyLock(value);
+                    _ = RemoveMoneyLock(value);
                     UpdateProperties();
                     return true;
                 }
@@ -6857,8 +6366,8 @@ public class GamePlayer : IGamePlayer
             {
                 if (PlayerCharacter.GiftToken >= value)
                 {
-                    RemoveGiftToken(value);
-                    AddLog("RemoveGiftToken", "Tài khoản " + m_character.UserName + "sử dụng " + value + "lễ kim ở tài khoản" + m_character.NickName);
+                    _ = RemoveGiftToken(value);
+                    AddLog("RemoveGiftToken", "Tài khoản " + UserVIPInfo.UserName + "sử dụng " + value + "lễ kim ở tài khoản" + UserVIPInfo.NickName);
                     UpdateProperties();
                     return true;
                 }
@@ -6914,32 +6423,37 @@ public class GamePlayer : IGamePlayer
 
     public void LoadGemStone(PlayerBussiness db)
     {
-        lock (this.m_GemStone)
+        lock (GemStone)
         {
-            this.m_GemStone = db.GetSingleGemStones(this.m_character.ID);
-            if (this.m_GemStone.Count != 0)
+            GemStone = db.GetSingleGemStones(UserVIPInfo.ID);
+            if (GemStone.Count != 0)
+            {
                 return;
-            List<int> intList1 = new List<int>()
-        {
+            }
+
+            List<int> intList1 =
+        [
           11,
           5,
           2,
           3,
           13
-        };
-            List<int> intList2 = new List<int>()
-        {
+        ];
+            List<int> intList2 =
+        [
           100002,
           100003,
           100001,
           100004,
           100005
-        };
+        ];
             for (int index = 0; index < intList1.Count; ++index)
             {
-                UserGemStone userGemStone1 = new UserGemStone();
-                userGemStone1.ID = 0;
-                int id = this.m_character.ID;
+                UserGemStone userGemStone1 = new()
+                {
+                    ID = 0
+                };
+                int id = UserVIPInfo.ID;
                 userGemStone1.UserID = id;
                 int num1 = intList2[index];
                 userGemStone1.FigSpiritId = num1;
@@ -6948,26 +6462,26 @@ public class GamePlayer : IGamePlayer
                 int num2 = intList1[index];
                 userGemStone1.EquipPlace = num2;
                 UserGemStone userGemStone2 = userGemStone1;
-                this.m_GemStone.Add(userGemStone2);
-                db.AddUserGemStone(userGemStone2);
+                GemStone.Add(userGemStone2);
+                _ = db.AddUserGemStone(userGemStone2);
             }
         }
     }
 
     public UserGemStone GetGemStone(int place)
     {
-        return this.m_GemStone.FirstOrDefault<UserGemStone>((Func<UserGemStone, bool>)(g => place == g.EquipPlace));
+        return GemStone.FirstOrDefault<UserGemStone>(g => place == g.EquipPlace);
     }
 
     public void UpdateGemStone(int place, UserGemStone gem)
     {
-        lock (this.m_GemStone)
+        lock (GemStone)
         {
-            for (int index = 0; index < this.m_GemStone.Count; ++index)
+            for (int index = 0; index < GemStone.Count; ++index)
             {
-                if (place == this.m_GemStone[index].EquipPlace)
+                if (place == GemStone[index].EquipPlace)
                 {
-                    this.m_GemStone[index] = gem;
+                    GemStone[index] = gem;
                     break;
                 }
             }
@@ -6985,7 +6499,11 @@ public class GamePlayer : IGamePlayer
             if (bag.AddTemplate(cloneItem, count))
             {
 
-                if (CurrentRoom != null && CurrentRoom.IsPlaying) SendItemNotice(cloneItem);
+                if (CurrentRoom != null && CurrentRoom.IsPlaying)
+                {
+                    SendItemNotice(cloneItem);
+                }
+
                 return true;
             }
         }
@@ -6996,17 +6514,17 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            m_character.totemId = value;
+            UserVIPInfo.totemId = value;
             OnPropertiesChanged();
             return value;
         }
-        return m_character.totemId;
+        return UserVIPInfo.totemId;
     }
     public int AddHonor(int value)
     {
         if (value > 0)
         {
-            m_character.myHonor += value;
+            UserVIPInfo.myHonor += value;
             OnPropertiesChanged();
             return value;
         }
@@ -7018,9 +6536,9 @@ public class GamePlayer : IGamePlayer
 
     public int RemovemyHonor(int value)
     {
-        if (value > 0 && value <= m_character.myHonor)
+        if (value > 0 && value <= UserVIPInfo.myHonor)
         {
-            m_character.myHonor -= value;
+            UserVIPInfo.myHonor -= value;
             OnPropertiesChanged();
             return value;
         }
@@ -7031,7 +6549,7 @@ public class GamePlayer : IGamePlayer
     {
         if (value > 0)
         {
-            m_character.MaxBuyHonor += value;
+            UserVIPInfo.MaxBuyHonor += value;
             OnPropertiesChanged();
             return value;
         }
@@ -7042,21 +6560,19 @@ public class GamePlayer : IGamePlayer
     {
         lock (m_equipGhostList)
         {
-            if (m_equipGhostList.ContainsKey(bagType + "_" + place))
-            {
-                return m_equipGhostList[bagType + "_" + place];
-            }
-            return null;
+            return m_equipGhostList.ContainsKey(bagType + "_" + place) ? m_equipGhostList[bagType + "_" + place] : null;
         }
     }
 
     public List<UserEquipGhostInfo> GetAllEquipGhost()
     {
-        List<UserEquipGhostInfo> list = new List<UserEquipGhostInfo>();
+        List<UserEquipGhostInfo> list = [];
         lock (m_equipGhostList)
         {
             foreach (UserEquipGhostInfo info in m_equipGhostList.Values)
+            {
                 list.Add(info);
+            }
         }
         return list;
     }
@@ -7065,7 +6581,7 @@ public class GamePlayer : IGamePlayer
     {
         lock (m_equipGhostList)
         {
-            m_character.GhostEquipList = JsonConvert.SerializeObject(m_equipGhostList);
+            UserVIPInfo.GhostEquipList = JsonConvert.SerializeObject(m_equipGhostList);
         }
     }
 
@@ -7096,7 +6612,10 @@ public class GamePlayer : IGamePlayer
         int lostid = isWin == false ? PlayerId : GuildBattleEnemyId;
 
         UserGuildBattleInfo u = GameMgr.GuildBattle.FindUser(PlayerId);
-        if (u == null) return;
+        if (u == null)
+        {
+            return;
+        }
 
         if (tieStatus != -1)
         {
@@ -7104,11 +6623,11 @@ public class GamePlayer : IGamePlayer
 
             if (isWin)
             {
-                m_character.ReduceStartBlood = leftBlood;
+                UserVIPInfo.ReduceStartBlood = leftBlood;
             }
             else
             {
-                m_character.ReduceStartBlood = m_character.hp;
+                UserVIPInfo.ReduceStartBlood = UserVIPInfo.hp;
                 GameMgr.GuildBattle.AddCountDownRevive(u, 30);
             }
         }
@@ -7118,7 +6637,7 @@ public class GamePlayer : IGamePlayer
         }
 
         GuildBattleEnemyId = 0;
-        m_character.ActivePowFirstGame = false;
+        UserVIPInfo.ActivePowFirstGame = false;
 
         if (u.IsActive)
         {

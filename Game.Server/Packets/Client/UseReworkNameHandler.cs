@@ -1,8 +1,6 @@
-using System;
-using Game.Base.Packets;
-using Game.Server.GameObjects;
-using Game.Server.GameUtils;
 using Bussiness;
+using Game.Base.Packets;
+using Game.Server.GameUtils;
 using SqlDataProvider.Data;
 
 namespace Game.Server.Packets.Client
@@ -27,13 +25,11 @@ namespace Game.Server.Packets.Client
             }
             if (card.TemplateID == (int)EquipType.CHANGE_NAME_CARD)
             {
-                using (PlayerBussiness pb = new PlayerBussiness())
+                using PlayerBussiness pb = new();
+                if (pb.RenameNick(client.Player.PlayerCharacter.UserName, client.Player.PlayerCharacter.NickName, newNickname))
                 {
-                    if (pb.RenameNick(client.Player.PlayerCharacter.UserName, client.Player.PlayerCharacter.NickName, newNickname))
-                    {
-                        inventory.RemoveCountFromStack(card, 1);
-                        msg = "";
-                    }
+                    _ = inventory.RemoveCountFromStack(card, 1);
+                    msg = "";
                 }
             }
             if (msg != "")

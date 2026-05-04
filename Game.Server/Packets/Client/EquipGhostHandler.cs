@@ -1,20 +1,17 @@
 ﻿using Bussiness;
 using Game.Base.Packets;
-using Game.Logic;
 using Game.Server.Managers;
 using SqlDataProvider.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Game.Server.Packets.Client
 {
     [PacketHandler((int)ePackageType.EQUIP_GHOST, "user ac action")]
     public class EquipGhostHandler : IPacketHandler
     {
-        public static Random random = new Random();
+        public static Random random = new();
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             ItemInfo item = client.Player.StoreBag.GetItemAt(1);
@@ -53,12 +50,14 @@ namespace Game.Server.Packets.Client
 
             if (equip == null)
             {
-                equip = new UserEquipGhostInfo();
-                equip.UserID = client.Player.PlayerId;
-                equip.BagType = spiList[0].BagType;
-                equip.Place = spiList[0].BagPlace;
-                equip.Level = 0;
-                equip.TotalGhost = 0;
+                equip = new UserEquipGhostInfo
+                {
+                    UserID = client.Player.PlayerId,
+                    BagType = spiList[0].BagType,
+                    Place = spiList[0].BagPlace,
+                    Level = 0,
+                    TotalGhost = 0
+                };
                 client.Player.AddEquipGhost(equip);
             }
 
@@ -67,17 +66,17 @@ namespace Game.Server.Packets.Client
 
             if (nextLevelInfo != null)
             {
-                double luckratio = (luckItem != null) ? (1 + (float)luckItem.Template.Property2 / 100f) : 1f;
-                double rawRatio = 5f * Math.Pow(2f, Math.Pow(2f, (stone.Template.Level - 1f)) + 2f - (float)nextLevelInfo.Level) * luckratio;
+                double luckratio = (luckItem != null) ? (1 + (luckItem.Template.Property2 / 100f)) : 1f;
+                double rawRatio = 5f * Math.Pow(2f, Math.Pow(2f, stone.Template.Level - 1f) + 2f - nextLevelInfo.Level) * luckratio;
 
                 //Console.WriteLine("equipRatio Debug: " + rawRatio + "|ratioInt: " + (int)(rawRatio * 100));
 
-                client.Player.StoreBag.RemoveCountFromStack(stone, 1);
-                client.Player.StoreBag.RemoveCountFromStack(luckItem, 1);
+                _ = client.Player.StoreBag.RemoveCountFromStack(stone, 1);
+                _ = client.Player.StoreBag.RemoveCountFromStack(luckItem, 1);
 
                 bool isSuccess = false;
                 int Rate = 0;
-                if (client.Player.PlayerCharacter.UserName == "khanhlam" || client.Player.PlayerCharacter.UserName == "khanglklk76" || client.Player.PlayerCharacter.UserName == "bnmnb123")
+                if (client.Player.PlayerCharacter.UserName is "khanhlam" or "khanglklk76" or "bnmnb123")
                 {
                     Rate = 10000;
                 }
@@ -89,13 +88,9 @@ namespace Game.Server.Packets.Client
                 {
                     Rate = 45000;
                 }
-                else if (stone.Template.TemplateID == 11188)
-                {
-                    Rate = 25000;
-                }
                 else
                 {
-                    Rate = 70000;
+                    Rate = stone.Template.TemplateID == 11188 ? 25000 : 70000;
                 }
                 if (random.Next(Rate) < (int)(rawRatio * 100))
                 {
@@ -104,7 +99,7 @@ namespace Game.Server.Packets.Client
                     equip.Level++;
                     client.Player.CountMissedEquipGhost = 0;
                     client.Player.EquipBag.UpdatePlayerProperties();
-                    client.Out.SendUserSyncEquipGhost(client.Player);
+                    _ = client.Out.SendUserSyncEquipGhost(client.Player);
                 }
                 else
                 {
@@ -115,52 +110,29 @@ namespace Game.Server.Packets.Client
                     client.Player.CountMissedEquipGhost = 0;
                     string title = "Orta Sonbahar Festivali Etkinlik Ödülleri";
                     string content = "Yıldızınızı 500 kez artırmayı başaramazsanız NEWGUN'dan ek seviye 3 Yıldız Artırma Taşı alacaksınız";
-                    client.Player.SendItemToMail(11188, 10, content, title);
+                    _ = client.Player.SendItemToMail(11188, 10, content, title);
                 }
                 double levelGhost = 0;
-                switch (equip.Level)
+                levelGhost = equip.Level switch
                 {
-                    case 1:
-                        levelGhost = 0.5;
-                        break;
-                    case 2:
-                        levelGhost = 1;
-                        break;
-                    case 3:
-                        levelGhost = 1.5;
-                        break;
-                    case 4:
-                        levelGhost = 2;
-                        break;
-                    case 5:
-                        levelGhost = 2.5;
-                        break;
-                    case 6:
-                        levelGhost = 3;
-                        break;
-                    case 7:
-                        levelGhost = 3.5;
-                        break;
-                    case 8:
-                        levelGhost = 4;
-                        break;
-                    case 9:
-                        levelGhost = 4.5;
-                        break;
-                    case 10:
-                        levelGhost = 5;
-                        break;
-                    default:
-                        levelGhost = 0;
-                        break;
-                }
-
+                    1 => 0.5,
+                    2 => 1,
+                    3 => 1.5,
+                    4 => 2,
+                    5 => 2.5,
+                    6 => 3,
+                    7 => 3.5,
+                    8 => 4,
+                    9 => 4.5,
+                    10 => 5,
+                    _ => 0,
+                };
                 if (isSuccess && equip.Level >= 3)
                 {
                     GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice(eMessageType.ChatNormal, LanguageMgr.GetTranslation("EquipGhostHandler.congratulation", client.Player.ZoneName, client.Player.PlayerCharacter.NickName, item.TemplateID, levelGhost), item.ItemID, item.TemplateID, null));
                 }
 
-                GSPacketIn pkg = new GSPacketIn((int)ePackageType.EQUIP_GHOST);
+                GSPacketIn pkg = new((int)ePackageType.EQUIP_GHOST);
                 pkg.WriteBoolean(isSuccess);
                 client.SendTCP(pkg);
             }

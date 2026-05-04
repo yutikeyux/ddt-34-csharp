@@ -1,18 +1,17 @@
 ﻿using Game.Logic.PetEffects.ContinueElement;
 using Game.Logic.Phy.Object;
-using System;
 
 namespace Game.Logic.PetEffects.Element.Actives
 {
     public class AE1152 : BasePetEffect
     {
-        private int m_type = 0;
-        private int m_count = 0;
+        private readonly int m_type = 0;
+        private readonly int m_count = 0;
         private int m_probability = 0;
-        private int m_delay = 0;
-        private int m_coldDown = 0;
-        private int m_currentId;
-        private int m_added = 0;
+        private readonly int m_delay = 0;
+        private readonly int m_coldDown = 0;
+        private readonly int m_currentId;
+        private readonly int m_added = 0;
 
         public AE1152(int count, int probability, int type, int skillId, int delay, string elementID)
             : base(ePetEffectType.AE1152, elementID)
@@ -27,8 +26,7 @@ namespace Game.Logic.PetEffects.Element.Actives
 
         public override bool Start(Living living)
         {
-            AE1152 effect = living.PetEffectList.GetOfType(ePetEffectType.AE1152) as AE1152;
-            if (effect != null)
+            if (living.PetEffectList.GetOfType(ePetEffectType.AE1152) is AE1152 effect)
             {
                 effect.m_probability = m_probability > effect.m_probability ? m_probability : effect.m_probability;
                 return true;
@@ -42,7 +40,7 @@ namespace Game.Logic.PetEffects.Element.Actives
         protected override void OnAttachedToPlayer(Player player)
         {
             player.AfterKillingLiving += Player_AfterKillingLiving;
-            player.PlayerBuffSkillPet += Player_PlayerBuffSkillPet;      
+            player.PlayerBuffSkillPet += Player_PlayerBuffSkillPet;
         }
 
         private void Player_PlayerBuffSkillPet(Player player)
@@ -66,6 +64,6 @@ namespace Game.Logic.PetEffects.Element.Actives
         {
             player.AfterKillingLiving -= Player_AfterKillingLiving;
             player.PlayerBuffSkillPet -= Player_PlayerBuffSkillPet;
-        }         
+        }
     }
 }

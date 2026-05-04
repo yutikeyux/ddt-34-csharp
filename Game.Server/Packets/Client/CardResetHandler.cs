@@ -14,7 +14,7 @@ namespace Game.Server.Packets.Client
         {
             int num = packet.ReadInt();
             int num2 = packet.ReadInt();
-            RandomSafe randomSafe = new RandomSafe();
+            RandomSafe randomSafe = new();
             CardInventory cardBag = client.Player.CardBag;
             List<UsersCardInfo> infos;
             if (client.Player.PlayerCharacter.Grade < 20)
@@ -22,7 +22,7 @@ namespace Game.Server.Packets.Client
                 client.Player.SendMessage(LanguageMgr.GetTranslation("GameServer.LevelErrorUsing"));
                 return 0;
             }
-            using (PlayerBussiness playerBussiness = new PlayerBussiness())
+            using (PlayerBussiness playerBussiness = new())
             {
                 infos = playerBussiness.GetUserCardEuqip(client.Player.PlayerCharacter.ID);
             }
@@ -70,7 +70,7 @@ namespace Game.Server.Packets.Client
                         {
                             client.Player.CardResetTempProp.Add(itemAt.TemplateID, array);
                         }
-                        GSPacketIn gSPacketIn = new GSPacketIn(196);
+                        GSPacketIn gSPacketIn = new(196);
                         gSPacketIn.WriteInt(4);
                         gSPacketIn.WriteInt(itemAt.Attack + array[0]);
                         gSPacketIn.WriteInt(itemAt.Defence + array[1]);
@@ -104,7 +104,7 @@ namespace Game.Server.Packets.Client
                 }
                 //client.Player.OnCardEquipEvent(infos);
                 cardBag.UpdateCard(itemAt);
-                client.Player.CardResetTempProp.Remove(itemAt.TemplateID);
+                _ = client.Player.CardResetTempProp.Remove(itemAt.TemplateID);
                 client.Player.SendMessage(LanguageMgr.GetTranslation("GameServer.CardReset.Msg1"));
             }
             return 0;

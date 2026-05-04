@@ -13,9 +13,10 @@ namespace Game.Server.Packets.Client
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             //GSPacketIn pkg = packet.Clone();
-            GSPacketIn pkg = new GSPacketIn((byte)ePackageType.ITEM_TRANSFER, client.Player.PlayerCharacter.ID);
+            GSPacketIn pkg = new((byte)ePackageType.ITEM_TRANSFER, client.Player.PlayerCharacter.ID);
             //pkg.ClearContext();
-            StringBuilder str = new StringBuilder();
+            _ = new            //pkg.ClearContext();
+            StringBuilder();
             int mustGold = 10000;
             bool _moveHole = packet.ReadBoolean();
             bool _moveFivSixHole = packet.ReadBoolean();
@@ -25,10 +26,10 @@ namespace Game.Server.Packets.Client
             {
                 if (client.Player.PlayerCharacter.Gold < mustGold)
                 {
-                    client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("ItemTransferHandler.NoGold"));
+                    _ = client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("ItemTransferHandler.NoGold"));
                     return 1;
                 }
-                client.Player.RemoveGold(mustGold);
+                _ = client.Player.RemoveGold(mustGold);
                 StrengthenMgr.InheritTransferProperty(ref ordItem, ref newItem, _moveHole, _moveFivSixHole);
                 int m_temIdOrd = OrginWeaponID(ordItem);
                 int m_temIdNew = OrginWeaponID(newItem);
@@ -62,8 +63,8 @@ namespace Game.Server.Packets.Client
                                 }
                             }
                         }
-                        client.Player.StoreBag.RemoveItemAt(0);
-                        client.Player.StoreBag.AddItemTo(itemZero, 0);
+                        _ = client.Player.StoreBag.RemoveItemAt(0);
+                        _ = client.Player.StoreBag.AddItemTo(itemZero, 0);
                     }
                     if (temOrd != null && temNew != null)
                     {
@@ -81,8 +82,8 @@ namespace Game.Server.Packets.Client
                                 }
                             }
                         }
-                        client.Player.StoreBag.RemoveItemAt(1);
-                        client.Player.StoreBag.AddItemTo(itemOne, 1);
+                        _ = client.Player.StoreBag.RemoveItemAt(1);
+                        _ = client.Player.StoreBag.AddItemTo(itemOne, 1);
                     }
                 }
                 else
@@ -96,7 +97,7 @@ namespace Game.Server.Packets.Client
             }
             else
             {
-                client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("itemtransferhandler.nocondition"));
+                _ = client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("itemtransferhandler.nocondition"));
             }
             return 0;
         }
@@ -166,37 +167,58 @@ namespace Game.Server.Packets.Client
                 case 10:
                     info = StrengthenMgr.FindTransferInfo(strengthenLevel, transId);
                     if (info == null)
+                    {
                         return -1;
+                    }
+
                     return info.GainEquip;
                 case 11:
                     info = StrengthenMgr.FindTransferInfo(strengthenLevel, transId);
                     if (info == null)
+                    {
                         return -1;
+                    }
+
                     return info.GainEquip;
                 case 12:
                     info = StrengthenMgr.FindTransferInfo(strengthenLevel, transId);
                     if (info == null)
+                    {
                         return -1;
+                    }
+
                     return info.GainEquip;
                 case 13:
                     info = StrengthenMgr.FindTransferInfo(strengthenLevel, transId);
                     if (info == null)
+                    {
                         return -1;
+                    }
+
                     return info.GainEquip;
                 case 14:
                     info = StrengthenMgr.FindTransferInfo(strengthenLevel, transId);
                     if (info == null)
+                    {
                         return -1;
+                    }
+
                     return info.GainEquip;
                 case 15:
                     info = StrengthenMgr.FindTransferInfo(strengthenLevel, transId);
                     if (info == null)
+                    {
                         return -1;
+                    }
+
                     return info.GainEquip;
                 default:
                     info = StrengthenMgr.FindTransferInfo(transId);
                     if (info == null)
+                    {
                         return -1;
+                    }
+
                     return info.OrginEquip;
             }
         }

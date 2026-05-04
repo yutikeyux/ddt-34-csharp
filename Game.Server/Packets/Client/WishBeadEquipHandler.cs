@@ -11,7 +11,7 @@ namespace Game.Server.Packets.Client
     [PacketHandler((byte)ePackageType.WISHBEADEQUIP, "场景用户离开")]
     public class WishBeadEquipHandler : IPacketHandler
     {
-        public static Random random = new Random();
+        public static Random random = new();
 
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
@@ -21,7 +21,7 @@ namespace Game.Server.Packets.Client
             int PlaceBead = packet.ReadInt();//_loc_3.Place
             int BagTypeBead = packet.ReadInt();//_loc_3.BagType
             int BeadId = packet.ReadInt();//_loc_3.TemplateID
-            GSPacketIn pkg = new GSPacketIn((byte)ePackageType.WISHBEADEQUIP, client.Player.PlayerCharacter.ID);
+            GSPacketIn pkg = new((byte)ePackageType.WISHBEADEQUIP, client.Player.PlayerCharacter.ID);
             PlayerInventory itemBag = client.Player.GetInventory((eBageType)BagType);
             PlayerInventory beadBag = client.Player.GetInventory((eBageType)BagTypeBead);
             ItemInfo item = itemBag.GetItemAt(Place);
@@ -33,14 +33,14 @@ namespace Game.Server.Packets.Client
             }
             if (bead == null || item == null)
             {
-                client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("WishBeadEquipHandler.Msg1"));
+                _ = client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("WishBeadEquipHandler.Msg1"));
                 pkg.WriteInt(5);
                 client.Out.SendTCP(pkg);
                 return 0;
             }
             if (bead.Count < 1 || bead.TemplateID != BeadId)
             {
-                client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("WishBeadEquipHandler.Msg2"));
+                _ = client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("WishBeadEquipHandler.Msg2"));
                 pkg.WriteInt(5);
                 client.Out.SendTCP(pkg);
                 return 0;
@@ -51,18 +51,14 @@ namespace Game.Server.Packets.Client
                 client.Out.SendTCP(pkg);
                 return 0;
             }
-            int probability = 0;// Tỉ lệ dát vàng
+            int probability;
             if (GameServer.Instance.Configuration.ZoneId == 1001)
             {
                 probability = 50;
             }
-            else if (GameServer.Instance.Configuration.ZoneId == 1002)
-            {
-                probability = 40;
-            }
             else
             {
-                probability = 8;
+                probability = GameServer.Instance.Configuration.ZoneId == 1002 ? 40 : 8;
             }
             GoldEquipTemplateInfo goldEquip = GoldEquipMgr.FindGoldEquipByTemplate(templateID);
             item.IsBinds = true;
@@ -89,7 +85,7 @@ namespace Game.Server.Packets.Client
                         }
                     }
                     client.Player.UpdateItem(item);
-                    client.Player.SaveIntoDatabase();
+                    _ = client.Player.SaveIntoDatabase();
                     pkg.WriteInt(0);
                     GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice(eMessageType.ChatNormal, $"|{client.Player.ZoneName}| oyuncusu değerli [{client.Player.PlayerCharacter.NickName}], {item.TemplateID} silahını başarıyla yaldızladı!", item.ItemID, item.TemplateID, null));
                 }
@@ -97,7 +93,7 @@ namespace Game.Server.Packets.Client
                 {
                     pkg.WriteInt(1);
                 }
-                beadBag.RemoveCountFromStack(bead, 1);
+                _ = beadBag.RemoveCountFromStack(bead, 1);
             }
             else
             {
@@ -117,11 +113,7 @@ namespace Game.Server.Packets.Client
             {
                 return true;
             }
-            if (beatID == 11562 && CategoryID == 1)
-            {
-                return true;
-            }
-            return false;
+            return beatID == 11562 && CategoryID == 1;
         }
     }
 }

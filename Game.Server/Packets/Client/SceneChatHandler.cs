@@ -29,7 +29,7 @@ namespace Game.Server.Packets.Client
         private static readonly ILog log = LogManager.GetLogger(typeof(SceneChatHandler));
 
         private const int CHAT_COOLDOWN_SECONDS = 1;
-        private const int GLOBAL_CHAT_COOLDOWN_SECONDS = 2; 
+        private const int GLOBAL_CHAT_COOLDOWN_SECONDS = 2;
         private const int MAX_MESSAGE_LENGTH = 200;
         private const int MAX_COMMAND_ARGS = 10;
         private const string ADMIN_FILE_PATH = "./Yetki.txt";
@@ -151,11 +151,11 @@ namespace Game.Server.Packets.Client
             catch (Exception ex)
             {
                 log.Error("Error in CensorBlacklistWords", ex);
-                return message; 
+                return message;
             }
         }
 
-      
+
         private bool ValidateMessage(GameClient client, string message, byte chatType)
         {
             if (string.IsNullOrWhiteSpace(message) || message.Length > MAX_MESSAGE_LENGTH)
@@ -164,7 +164,7 @@ namespace Game.Server.Packets.Client
                 return false;
             }
 
-           
+
             if (client.Player.PlayerCharacter.GoXu == 445566)
             {
                 client.Out.SendMessage(eMessageType.ChatERROR, "Konuşmanız yasaklanmıştır.");
@@ -1374,7 +1374,7 @@ Mükafat: {8:N0}",
                 client.Player.CanX2Exp = !client.Player.CanX2Exp;
                 // Şu an için basit bir mesaj
                 client.Player.CanX3Exp = !client.Player.CanX3Exp; // X3 de aynı şekilde toggle yapalım
-                
+
                 client.Player.SendMessage("EXP kazanım durumu değiştirildi. (Bu özellik için karakter güncellemesi gerekli)");
             }
             catch (Exception ex)

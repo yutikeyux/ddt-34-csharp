@@ -9,7 +9,7 @@ namespace Game.Server.Packets.Client
     {
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
-			return 1;
+            return 1;
         }
     }
 }

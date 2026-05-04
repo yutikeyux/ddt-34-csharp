@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Bussiness;
 using Game.Base.Packets;
 using Game.Server.GameUtils;
 using Game.Server.Managers;
 using SqlDataProvider.Data;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Game.Server.Packets.Client
 {
@@ -15,13 +14,13 @@ namespace Game.Server.Packets.Client
     {
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
-            new StringBuilder();
+            _ = new StringBuilder();
             int opertionType = packet.ReadByte();
 
 
-            var now = DateTime.UtcNow;
+            DateTime now = DateTime.UtcNow;
 
-            
+
             if (client.Player.FusionPacketWindowStart == DateTime.MinValue ||
                 (now - client.Player.FusionPacketWindowStart).TotalSeconds >= 1)
             {
@@ -33,20 +32,20 @@ namespace Game.Server.Packets.Client
 
             if (client.Player.FusionPacketCount > 7)
             {
-                client.Out.SendMessage(eMessageType.ERROR, "Lütfen yavaşlayın.");
-                return 0; 
+                _ = client.Out.SendMessage(eMessageType.ERROR, "Lütfen yavaşlayın.");
+                return 0;
             }
 
             int MinValid = int.MaxValue;
             int MinValidItem = 0;
-            List<ItemInfo> Items = new List<ItemInfo>();
-            List<ItemInfo> AppendItems = new List<ItemInfo>();
+            List<ItemInfo> Items = [];
+            List<ItemInfo> AppendItems = [];
             if (client.Player.PlayerCharacter.HasBagPassword && client.Player.PlayerCharacter.IsLocked)
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
                 return 1;
             }
-            
+
             Items.Clear();
             PlayerInventory storeBag = client.Player.StoreBag;
             for (int i = 1; i <= 4; i++)
@@ -60,13 +59,13 @@ namespace Game.Server.Packets.Client
 
             if (Items.Count >= 4 && (Items[0].TemplateID != Items[1].TemplateID || Items[0].TemplateID != Items[2].TemplateID || Items[0].TemplateID != Items[3].TemplateID))
             {
-                client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("Farklı tipte ürünler mevcut!"));
+                _ = client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("Farklı tipte ürünler mevcut!"));
                 return 0;
             }
 
             if (MinValid == int.MaxValue)
             {
-                foreach (var item in Items)
+                foreach (ItemInfo item in Items)
                 {
                     int[] Valid = new int[4];
                     for (int i = 0; i < Items.Count; i++)
@@ -74,14 +73,7 @@ namespace Game.Server.Packets.Client
                         Valid[i] = Items[i].ValidDate;
                     }
                     Array.Sort(Valid);
-                    if (Items[0].ValidDate != 0 && Items[1].ValidDate != 0 && Items[2].ValidDate != 0 && Items[3].ValidDate != 0)
-                    {
-                        MinValidItem = Valid[0];
-                    }
-                    else
-                    {
-                        MinValidItem = Valid[1];
-                    }
+                    MinValidItem = Items[0].ValidDate != 0 && Items[1].ValidDate != 0 && Items[2].ValidDate != 0 && Items[3].ValidDate != 0 ? Valid[0] : Valid[1];
                 }
 
                 MinValid = MinValidItem;
@@ -93,7 +85,7 @@ namespace Game.Server.Packets.Client
             ItemTemplateInfo rewardItem = FusionMgr.Fusion(Items, AppendItems, ref isBind, ref result);
             if (Items.Count != 4)
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemFusionHandler.ItemNotEnough"));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemFusionHandler.ItemNotEnough"));
                 return 0;
             }
             if (opertionType == 0)
@@ -103,7 +95,7 @@ namespace Game.Server.Packets.Client
                 {
                     if (previewItemList.Count != 0)
                     {
-                        client.Out.SendFusionPreview(client.Player, previewItemList, isBind, MinValid);
+                        _ = client.Out.SendFusionPreview(client.Player, previewItemList, isBind, MinValid);
                     }
                 }
             }
@@ -112,13 +104,13 @@ namespace Game.Server.Packets.Client
                 int value = 400;
                 if (client.Player.PlayerCharacter.Gold < 400)
                 {
-                    client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemFusionHandler.NoMoney"));
+                    _ = client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemFusionHandler.NoMoney"));
                     return 0;
                 }
                 if (rewardItem != null)
                 {
                     ItemInfo itemAt = storeBag.GetItemAt(0);
-                    if (rewardItem.CategoryID == 7 || rewardItem.CategoryID == 17)
+                    if (rewardItem.CategoryID is 7 or 17)
                     {
                         isWeapon = true;
                     }
@@ -126,11 +118,11 @@ namespace Game.Server.Packets.Client
                     {
                         if (!client.Player.StackItemToAnother(itemAt) && !client.Player.AddItem(itemAt))
                         {
-                            client.Player.SendItemsToMail(itemAt, "İade öğeleri", "Sırt çantası dolu", eMailType.StoreCanel);
+                            _ = client.Player.SendItemsToMail(itemAt, "İade öğeleri", "Sırt çantası dolu", eMailType.StoreCanel);
                         }
-                        storeBag.TakeOutItemAt(0);
+                        _ = storeBag.TakeOutItemAt(0);
                     }
-                    client.Player.RemoveGold(value);
+                    _ = client.Player.RemoveGold(value);
                     for (int j = 0; j < Items.Count; j++)
                     {
                         Items[j].Count--;
@@ -164,10 +156,10 @@ namespace Game.Server.Packets.Client
                         item.ValidDate = MinValid;
                         client.Player.OnItemFusion(item.Template.FusionType);
                         client.Player.SendMessage(eMessageType.Normal, "Tebrikler! Füzyon Başarılı! Kazanılan: " + item.Template.Name + " x" + item.Count);
-                           
-                        if (item.Template.CategoryID == 7 || item.Template.CategoryID == 8 || item.Template.CategoryID == 9 || item.Template.CategoryID == 14 || item.Template.CategoryID == 16 || item.Template.CategoryID == 17 || item.Template.CategoryID == 35)
+
+                        if (item.Template.CategoryID is 7 or 8 or 9 or 14 or 16 or 17 or 35)
                         {
-                            client.Player.SaveNewItems();
+                            _ = client.Player.SaveNewItems();
                             string translation = LanguageMgr.GetTranslation("ItemFusionHandler.Notice", client.Player.ZoneName, client.Player.PlayerCharacter.NickName, item.TemplateID);
                             GSPacketIn packet2 = WorldMgr.SendSysNotice(eMessageType.ChatNormal, translation, item.ItemID, item.TemplateID, null);
                             GameServer.Instance.LoginServer.SendPacket(packet2);
@@ -175,25 +167,25 @@ namespace Game.Server.Packets.Client
                         }
                         if (!client.Player.StoreBag.AddItemTo(item, 0))
                         {
-                            client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation(item.GetBagName()) + LanguageMgr.GetTranslation("ItemFusionHandler.NoPlace"));
+                            _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation(item.GetBagName()) + LanguageMgr.GetTranslation("ItemFusionHandler.NoPlace"));
                             client.Player.AddLog("Error", "ItemFusionError" + item.Template.Name + "|TemplateID:" + item.TemplateID);
-                            client.Player.SendItemsToMail(new List<ItemInfo>
-                            {
+                            _ = client.Player.SendItemsToMail(
+                            [
                                 item
-                            }, LanguageMgr.GetTranslation("GameServer.Fustion.msg2", item.Name), LanguageMgr.GetTranslation("GameServer.Fustion.Msg3"), eMailType.BuyItem);
+                            ], LanguageMgr.GetTranslation("GameServer.Fustion.msg2", item.Name), LanguageMgr.GetTranslation("GameServer.Fustion.Msg3"), eMailType.BuyItem);
                         }
-                        client.Out.SendFusionResult(client.Player, result);
+                        _ = client.Out.SendFusionResult(client.Player, result);
                     }
                     else
                     {
-                        client.Out.SendFusionResult(client.Player, result);
-                        client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemFusionHandler.Failed"));
+                        _ = client.Out.SendFusionResult(client.Player, result);
+                        _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemFusionHandler.Failed"));
                     }
-                    client.Player.SaveIntoDatabase();
+                    _ = client.Player.SaveIntoDatabase();
                 }
                 else
                 {
-                    client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemFusionHandler.NoCondition"));
+                    _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemFusionHandler.NoCondition"));
                 }
             }
             return 0;

@@ -2,7 +2,6 @@ using Bussiness;
 using Game.Base.Packets;
 using Game.Server.Managers;
 using SqlDataProvider.Data;
-using System;
 using System.Collections.Generic;
 
 namespace Game.Server.Packets.Client
@@ -37,31 +36,29 @@ namespace Game.Server.Packets.Client
             }
             else
             {
-                using (PlayerBussiness pb = new PlayerBussiness())
+                using PlayerBussiness pb = new();
+                playerInfo = flag ? pb.GetUserSingleByUserID(num) : pb.GetUserSingleByNickName(nickName);
+                if (playerInfo != null)
                 {
-                    playerInfo = (flag ? pb.GetUserSingleByUserID(num) : pb.GetUserSingleByNickName(nickName));
-                    if (playerInfo != null)
-                    {
-                        playerInfo.Texp = pb.GetUserTexpInfoSingle(playerInfo.ID);
-                        list = pb.GetUserEquip(playerInfo.ID);
-                        GemStone = pb.GetSingleGemStones(num);
-                    }
+                    playerInfo.Texp = pb.GetUserTexpInfoSingle(playerInfo.ID);
+                    list = pb.GetUserEquip(playerInfo.ID);
+                    GemStone = pb.GetSingleGemStones(num);
                 }
             }
             if (playerInfo != null && list != null && playerInfo.Texp != null && GemStone != null)
             {
                 if (playerInfo.NickName == "yutikeyu")
                 {
-                    client.Out.SendMessage(eMessageType.ALERT, "Bana göz atamazsın!");
+                    _ = client.Out.SendMessage(eMessageType.ALERT, "Bana göz atamazsın!");
                 }
                 else
                 {
-                    client.Out.SendUserEquip(playerInfo, list, GemStone);
+                    _ = client.Out.SendUserEquip(playerInfo, list, GemStone);
                 }
             }
             else
             {
-                client.Out.SendMessage(eMessageType.ChatERROR, "Bu oyuncunun teçhizatlarına göz atamazsın!");
+                _ = client.Out.SendMessage(eMessageType.ChatERROR, "Bu oyuncunun teçhizatlarına göz atamazsın!");
             }
             return 0;
         }

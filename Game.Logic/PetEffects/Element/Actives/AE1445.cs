@@ -1,18 +1,17 @@
 ﻿using Game.Logic.PetEffects.ContinueElement;
 using Game.Logic.Phy.Object;
-using System;
 
 namespace Game.Logic.PetEffects.Element.Actives
 {
     public class AE1445 : BasePetEffect
     {
-        private int m_type = 0;
-        private int m_count = 0;
+        private readonly int m_type = 0;
+        private readonly int m_count = 0;
         private int m_probability = 0;
-        private int m_delay = 0;
-        private int m_coldDown = 0;
-        private int m_currentId;
-        private int m_added = 0;
+        private readonly int m_delay = 0;
+        private readonly int m_coldDown = 0;
+        private readonly int m_currentId;
+        private readonly int m_added = 0;
 
         public AE1445(int count, int probability, int type, int skillId, int delay, string elementID)
             : base(ePetEffectType.AE1445, elementID)
@@ -27,8 +26,7 @@ namespace Game.Logic.PetEffects.Element.Actives
 
         public override bool Start(Living living)
         {
-            AE1445 effect = living.PetEffectList.GetOfType(ePetEffectType.AE1445) as AE1445;
-            if (effect != null)
+            if (living.PetEffectList.GetOfType(ePetEffectType.AE1445) is AE1445 effect)
             {
                 effect.m_probability = m_probability > effect.m_probability ? m_probability : effect.m_probability;
                 return true;
@@ -40,16 +38,16 @@ namespace Game.Logic.PetEffects.Element.Actives
         }
 
         protected override void OnAttachedToPlayer(Player player)
-        {            
+        {
             player.PlayerBuffSkillPet += new PlayerEventHandle(player_AfterBuffSkillPetByLiving);
         }
-        
+
         protected override void OnRemovedFromPlayer(Player player)
         {
             player.PlayerBuffSkillPet -= new PlayerEventHandle(player_AfterBuffSkillPetByLiving);
         }
 
-        void player_AfterBuffSkillPetByLiving(Player player)
+        private void player_AfterBuffSkillPetByLiving(Player player)
         {
             if (player.PetEffects.CurrentUseSkill == m_currentId)
             {
@@ -57,6 +55,6 @@ namespace Game.Logic.PetEffects.Element.Actives
                 player.AddPetEffect(new CE1445(1, m_probability, m_type, m_currentId, m_delay, ElementInfo.ID.ToString()), 0);
                 //Console.WriteLine("Buff Name: {2}, ID: {0}, player.CurrentDamagePlus: {1}", ElementInfo.ID, player.CurrentDamagePlus, ElementInfo.Name);
             }
-        }        
+        }
     }
 }

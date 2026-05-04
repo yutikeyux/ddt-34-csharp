@@ -1,8 +1,8 @@
-using System;
 using Bussiness;
 using Game.Base.Packets;
 using Game.Server.Managers;
 using SqlDataProvider.Data;
+using System;
 
 namespace Game.Server.Packets.Client
 {
@@ -36,7 +36,7 @@ namespace Game.Server.Packets.Client
                                         Type = 1,
                                         CreateTime = DateTime.Now
                                     });
-                                    GSPacketIn gSPacketIn2 = new GSPacketIn(141);
+                                    GSPacketIn gSPacketIn2 = new(141);
                                     gSPacketIn2.WriteByte(4);
                                     gSPacketIn2.WriteInt(client.Player.PlayerId);
                                     gSPacketIn2.WriteString(client.Player.PlayerCharacter.NickName);
@@ -50,7 +50,7 @@ namespace Game.Server.Packets.Client
                             }
                             else
                             {
-                                client.Player.SendMessage(string.Format("Daha önceden zaten terk ettiğiniz için kısıtlandınız. Kalan Zamanınız: {0}.", this.checkDate(client.Player.PlayerCharacter.freezesDate)));
+                                client.Player.SendMessage(string.Format("Daha önceden zaten terk ettiğiniz için kısıtlandınız. Kalan Zamanınız: {0}.", checkDate(client.Player.PlayerCharacter.freezesDate)));
                             }
                         }
                         break;
@@ -76,7 +76,7 @@ namespace Game.Server.Packets.Client
                                         Type = 0,
                                         CreateTime = DateTime.Now
                                     });
-                                    GSPacketIn gSPacketIn3 = new GSPacketIn(141);
+                                    GSPacketIn gSPacketIn3 = new(141);
                                     gSPacketIn3.WriteByte(5);
                                     gSPacketIn3.WriteInt(client.Player.PlayerId);
                                     gSPacketIn3.WriteString(client.Player.PlayerCharacter.NickName);
@@ -90,7 +90,7 @@ namespace Game.Server.Packets.Client
                             }
                             else
                             {
-                                client.Player.SendMessage(string.Format("Daha önceden terk ettiğiniz için kısıtlandınız. Kalan zamanınız: {0}.", this.checkDate(client.Player.PlayerCharacter.freezesDate)));
+                                client.Player.SendMessage(string.Format("Daha önceden terk ettiğiniz için kısıtlandınız. Kalan zamanınız: {0}.", checkDate(client.Player.PlayerCharacter.freezesDate)));
                             }
                         }
                         break;
@@ -116,7 +116,7 @@ namespace Game.Server.Packets.Client
                                         bool flag11 = AcademyMgr.AddApprentice(client.Player, playerById5);
                                         if (flag11)
                                         {
-                                            playerById5.Out.SendAcademySystemNotice(string.Concat(new string[]
+                                            _ = playerById5.Out.SendAcademySystemNotice(string.Concat(new string[]
                                             {
                                         "Hey, |",
                                         client.Player.PlayerCharacter.Honor,
@@ -124,7 +124,7 @@ namespace Game.Server.Packets.Client
                                         client.Player.PlayerCharacter.NickName,
                                         "] seni çırak olarak yanına aldı! Ondan bol bol yardım iste. Onsuz sen bir hiçsin!"
                                             }), true);
-                                            client.Player.SendMailToUser(new PlayerBussiness(), "Bir çırağa sahip olduğunuz için tebrikler. Çırak 10, 15 ve 18. seviyeye ulaştığınızda, ilgili seviyede bir hazine sandığı alacaksınız. Sandığı içinde çok renkli çiçekler, altın paralar ve deneyim puanları gibi birçok ilginç eşya var! ", "Akademi Bilgileri!", eMailType.ItemOverdue);
+                                            _ = client.Player.SendMailToUser(new PlayerBussiness(), "Bir çırağa sahip olduğunuz için tebrikler. Çırak 10, 15 ve 18. seviyeye ulaştığınızda, ilgili seviyede bir hazine sandığı alacaksınız. Sandığı içinde çok renkli çiçekler, altın paralar ve deneyim puanları gibi birçok ilginç eşya var! ", "Akademi Bilgileri!", eMailType.ItemOverdue);
                                             client.Player.SendMessage("[" + playerById5.PlayerCharacter.NickName + "] adlı oyuncuyu çırak olarak kabul ettin! Ona bol bol yardım et! Sensiz o bir hiç!");
                                         }
                                         else
@@ -144,7 +144,7 @@ namespace Game.Server.Packets.Client
                             }
                             else
                             {
-                                client.Player.SendMessage(string.Format("Daha önce çırağınızı/ustasınızı terk ettiğiniz için sınırlandırıldınız. Kalan zamanınız: {0}.", this.checkDate(client.Player.PlayerCharacter.freezesDate)));
+                                client.Player.SendMessage(string.Format("Daha önce çırağınızı/ustasınızı terk ettiğiniz için sınırlandırıldınız. Kalan zamanınız: {0}.", checkDate(client.Player.PlayerCharacter.freezesDate)));
                             }
                         }
                         else
@@ -174,11 +174,11 @@ namespace Game.Server.Packets.Client
                                         bool flag16 = AcademyMgr.AddApprentice(playerById6, client.Player);
                                         if (flag16)
                                         {
-                                            playerById6.Out.SendAcademySystemNotice(LanguageMgr.GetTranslation("Game.Server.AppSystem.ApprenticeConfirm", new object[]
+                                            _ = playerById6.Out.SendAcademySystemNotice(LanguageMgr.GetTranslation("Game.Server.AppSystem.ApprenticeConfirm", new object[]
                                             {
                                         client.Player.PlayerCharacter.NickName
                                             }), true);
-                                            playerById6.SendMailToUser(new PlayerBussiness(), LanguageMgr.GetTranslation("Game.Server.AppSystem.TakeApprenticeMail.Content", Array.Empty<object>()), LanguageMgr.GetTranslation("Game.Server.AppSystem.TakeApprenticeMail.Title", Array.Empty<object>()), eMailType.ItemOverdue);
+                                            _ = playerById6.SendMailToUser(new PlayerBussiness(), LanguageMgr.GetTranslation("Game.Server.AppSystem.TakeApprenticeMail.Content", Array.Empty<object>()), LanguageMgr.GetTranslation("Game.Server.AppSystem.TakeApprenticeMail.Title", Array.Empty<object>()), eMailType.ItemOverdue);
                                             client.Player.SendMessage(LanguageMgr.GetTranslation("Game.Server.AppSystem.MasterConfirm", new object[]
                                             {
                                         playerById6.PlayerCharacter.NickName
@@ -203,7 +203,7 @@ namespace Game.Server.Packets.Client
                             {
                                 client.Player.SendMessage(LanguageMgr.GetTranslation("Game.Server.AppSystem.BeApprentice.Frozen", new object[]
                                 {
-                            this.checkDate(client.Player.PlayerCharacter.freezesDate)
+                            checkDate(client.Player.PlayerCharacter.freezesDate)
                                 }));
                             }
                         }
@@ -222,13 +222,10 @@ namespace Game.Server.Packets.Client
                         {
                             AcademyMgr.RemoveRequest(request5);
                             GamePlayer playerById7 = WorldMgr.GetPlayerById(num9);
-                            if (playerById7 != null)
-                            {
-                                playerById7.Out.SendAcademySystemNotice(LanguageMgr.GetTranslation("Game.Server.AppSystem.MasterRefuse", new object[]
+                            _ = playerById7?.Out.SendAcademySystemNotice(LanguageMgr.GetTranslation("Game.Server.AppSystem.MasterRefuse", new object[]
                                 {
                             client.Player.PlayerCharacter.NickName
                                 }), false);
-                            }
                         }
                         break;
                     }
@@ -241,13 +238,10 @@ namespace Game.Server.Packets.Client
                         {
                             AcademyMgr.RemoveRequest(request6);
                             GamePlayer playerById8 = WorldMgr.GetPlayerById(num10);
-                            if (playerById8 != null)
-                            {
-                                playerById8.Out.SendAcademySystemNotice(LanguageMgr.GetTranslation("Game.Server.AppSystem.ApprenticeRefuse", new object[]
+                            _ = playerById8?.Out.SendAcademySystemNotice(LanguageMgr.GetTranslation("Game.Server.AppSystem.ApprenticeRefuse", new object[]
                                 {
                             client.Player.PlayerCharacter.NickName
                                 }), false);
-                            }
                         }
                         break;
                     }
@@ -260,12 +254,12 @@ namespace Game.Server.Packets.Client
                             bool flag20 = client.Player.PlayerCharacter.masterID == num11 && AcademyMgr.FireMaster(client.Player, false);
                             if (flag20)
                             {
-                                client.Player.PlayerCharacter.freezesDate = DateTime.Now.AddHours((double)GameProperties.AcademyApprenticeFreezeHours);
-                                using (PlayerBussiness playerBussiness2 = new PlayerBussiness())
+                                client.Player.PlayerCharacter.freezesDate = DateTime.Now.AddHours(GameProperties.AcademyApprenticeFreezeHours);
+                                using (PlayerBussiness playerBussiness2 = new())
                                 {
-                                    playerBussiness2.UpdateAcademyPlayer(client.Player.PlayerCharacter);
+                                    _ = playerBussiness2.UpdateAcademyPlayer(client.Player.PlayerCharacter);
                                 }
-                                client.Player.Out.SendAcademyAppState(client.Player.PlayerCharacter, num11);
+                                _ = client.Player.Out.SendAcademyAppState(client.Player.PlayerCharacter, num11);
                             }
                             else
                             {
@@ -287,12 +281,12 @@ namespace Game.Server.Packets.Client
                             bool flag22 = client.Player.PlayerCharacter.apprenticeshipState >= AcademyMgr.MASTER_STATE && AcademyMgr.FireApprentice(client.Player, num12, false);
                             if (flag22)
                             {
-                                client.Player.PlayerCharacter.freezesDate = DateTime.Now.AddHours((double)GameProperties.AcademyMasterFreezeHours);
-                                using (PlayerBussiness playerBussiness3 = new PlayerBussiness())
+                                client.Player.PlayerCharacter.freezesDate = DateTime.Now.AddHours(GameProperties.AcademyMasterFreezeHours);
+                                using (PlayerBussiness playerBussiness3 = new())
                                 {
-                                    playerBussiness3.UpdateAcademyPlayer(client.Player.PlayerCharacter);
+                                    _ = playerBussiness3.UpdateAcademyPlayer(client.Player.PlayerCharacter);
                                 }
-                                client.Player.Out.SendAcademyAppState(client.Player.PlayerCharacter, num12);
+                                _ = client.Player.Out.SendAcademyAppState(client.Player.PlayerCharacter, num12);
                             }
                             else
                             {
@@ -313,15 +307,7 @@ namespace Game.Server.Packets.Client
         private int checkDate(DateTime dateTime)
         {
             bool flag = dateTime > DateTime.Now;
-            int result;
-            if (flag)
-            {
-                result = (int)Math.Ceiling((dateTime - DateTime.Now).TotalHours);
-            }
-            else
-            {
-                result = 0;
-            }
+            int result = flag ? (int)Math.Ceiling((dateTime - DateTime.Now).TotalHours) : 0;
             return result;
         }
 

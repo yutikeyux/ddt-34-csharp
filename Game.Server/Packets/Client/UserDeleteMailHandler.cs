@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Bussiness;
-using SqlDataProvider.Data;
 using Game.Base.Packets;
+using SqlDataProvider.Data;
 
 namespace Game.Server.Packets.Client
 {
@@ -18,19 +14,17 @@ namespace Game.Server.Packets.Client
 
         public bool GetAnnex(string value, GamePlayer player)
         {
-            if(string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
                 return false;
             }
 
             int itemID = int.Parse(value);
-            using (PlayerBussiness playerBussiness = new PlayerBussiness())
+            using PlayerBussiness playerBussiness = new();
+            ItemInfo userItemSingle = playerBussiness.GetUserItemSingle(itemID);
+            if (userItemSingle != null && userItemSingle.UserID == 0)
             {
-                ItemInfo userItemSingle = playerBussiness.GetUserItemSingle(itemID);
-                if (userItemSingle != null && userItemSingle.UserID == 0)
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -38,17 +32,16 @@ namespace Game.Server.Packets.Client
 
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
-            GSPacketIn pkg = new GSPacketIn((byte)ePackageType.DELETE_MAIL, client.Player.PlayerCharacter.ID);
+            GSPacketIn pkg = new((byte)ePackageType.DELETE_MAIL, client.Player.PlayerCharacter.ID);
 
             if (client.Player.PlayerCharacter.HasBagPassword && client.Player.PlayerCharacter.IsLocked)
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
                 return 0;
             }
             int id = packet.ReadInt();
-            int senderID;
             pkg.WriteInt(id);
-            using (PlayerBussiness db = new PlayerBussiness())
+            using (PlayerBussiness db = new())
             {
                 MailInfo mail = db.GetMailSingle(client.Player.PlayerCharacter.ID, id);
                 if (mail != null)
@@ -56,11 +49,11 @@ namespace Game.Server.Packets.Client
                     if (GetAnnex(mail.Annex1) || GetAnnex(mail.Annex2) || GetAnnex(mail.Annex3) || GetAnnex(mail.Annex4) || GetAnnex(mail.Annex5))
                     {
                         pkg.WriteBoolean(false);
-                        client.Out.SendMailResponse(client.Player.PlayerId, eMailRespose.Receiver);
+                        _ = client.Out.SendMailResponse(client.Player.PlayerId, eMailRespose.Receiver);
                     }
-                    else if (db.DeleteMail(client.Player.PlayerCharacter.ID, id, out senderID))
+                    else if (db.DeleteMail(client.Player.PlayerCharacter.ID, id, out int senderID))
                     {
-                        client.Out.SendMailResponse(senderID, eMailRespose.Receiver);
+                        _ = client.Out.SendMailResponse(senderID, eMailRespose.Receiver);
                         pkg.WriteBoolean(true);
                     }
                     else
@@ -70,7 +63,7 @@ namespace Game.Server.Packets.Client
                 }
                 else
                 {
-                    client.Out.SendMessage(eMessageType.Normal, "Posta mevcut değil!");
+                    _ = client.Out.SendMessage(eMessageType.Normal, "Posta mevcut değil!");
                     return 0;
                 }
             }

@@ -1,8 +1,6 @@
-﻿using System;
-using Game.Base.Packets;
-using Game.Server.GameObjects;
-using Bussiness;
+﻿using Bussiness;
 using Bussiness.Managers;
+using Game.Base.Packets;
 using SqlDataProvider.Data;
 
 namespace Game.Server.Packets.Client
@@ -13,12 +11,12 @@ namespace Game.Server.Packets.Client
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             int type = packet.ReadByte();
-            bool isBland = packet.ReadBoolean();
+            _ = packet.ReadBoolean();
             //Console.WriteLine("?????type: " + type + " isBland:" + isBland);
             if (client.Player.PlayerCharacter.HasBagPassword && client.Player.PlayerCharacter.IsLocked)
             {
 
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
                 return 0;
             }
             if (client.Player.PlayerCharacter.Grade < 20) //25 ti 20 yaptım moruk
@@ -41,11 +39,11 @@ namespace Game.Server.Packets.Client
                         }
                         int needMoney = temp.NeedMoney;
                         int addHonnor = temp.AddHonor;
-                        if (client.Player.MoneyDirect(needMoney, IsAntiMult:true, false, true))
+                        if (client.Player.MoneyDirect(needMoney, IsAntiMult: true, false, true))
                         {
 
-                            client.Player.AddHonor(addHonnor);
-                            client.Player.AddMaxHonor(1);
+                            _ = client.Player.AddHonor(addHonnor);
+                            _ = client.Player.AddMaxHonor(1);
                             //client.Player.AddExpVip(needMoney);
                             //client.Player.RemoveMoney(needMoney);
                             //Console.WriteLine("????needMoney: " + needMoney);
@@ -53,7 +51,7 @@ namespace Game.Server.Packets.Client
                     }
                     break;
             }
-            client.Player.Out.SendUpdateUpCount(client.Player.PlayerCharacter);
+            _ = client.Player.Out.SendUpdateUpCount(client.Player.PlayerCharacter);
             return 0;
         }
     }

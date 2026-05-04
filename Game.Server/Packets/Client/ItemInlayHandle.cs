@@ -1,11 +1,9 @@
 using Bussiness;
 using Bussiness.Managers;
 using Game.Base.Packets;
-using Game.Server.Managers;
 using Game.Server.Statics;
 using SqlDataProvider.Data;
 using System;
-using System.Collections.Generic;
 
 namespace Game.Server.Packets.Client
 {
@@ -26,7 +24,7 @@ namespace Game.Server.Packets.Client
             ItemInfo Gem = client.Player.GetItemAt((eBageType)GemBagType, GemPlace);
             string BeginProperty = null;
             string AddItem = "";
-            using (ItemRecordBussiness db = new ItemRecordBussiness())
+            using (ItemRecordBussiness db = new())
             {
                 db.PropertyString(Item, ref BeginProperty);
             }
@@ -36,9 +34,9 @@ namespace Game.Server.Packets.Client
                 if (client.Player.PlayerCharacter.Gold > Glod)
                 {
                     string[] Hole = Item.Template.Hole.Split('|');
-                    if (HoleNum > 0 && HoleNum < 7)
+                    if (HoleNum is > 0 and < 7)
                     {
-                        client.Player.RemoveGold(Glod);
+                        _ = client.Player.RemoveGold(Glod);
                         bool result = false;
                         switch (HoleNum)
                         {
@@ -93,7 +91,7 @@ namespace Game.Server.Packets.Client
                                     //}
                                     if (!client.Player.AddItem(item))
                                     {
-                                        client.Player.SendItemsToMail(item, "Hazinelerle dolu çantayı çıkar.", "Hazinelerle dolu çantayı çıkar!", eMailType.BuyItem);
+                                        _ = client.Player.SendItemsToMail(item, "Hazinelerle dolu çantayı çıkar.", "Hazinelerle dolu çantayı çıkar!", eMailType.BuyItem);
                                     }
                                 }
                                 Item.Hole5 = Gem.TemplateID;
@@ -119,7 +117,7 @@ namespace Game.Server.Packets.Client
                                     //}
                                     if (!client.Player.AddItem(item))
                                     {
-                                        client.Player.SendItemsToMail(item, "Hazinelerle dolu çantayı çıkar!.", "Hazinelerle dolu çantayı çıkar!", eMailType.BuyItem);
+                                        _ = client.Player.SendItemsToMail(item, "Hazinelerle dolu çantayı çıkar!.", "Hazinelerle dolu çantayı çıkar!", eMailType.BuyItem);
                                     }
                                 }
                                 Item.Hole6 = Gem.TemplateID;
@@ -149,14 +147,14 @@ namespace Game.Server.Packets.Client
                     else
                     {
                         pkg.WriteByte(1);
-                        client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("ItemInlayHandle.NoPlace"));
+                        _ = client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("ItemInlayHandle.NoPlace"));
                     }
                     client.Player.SendTCP(pkg);
-                    client.Player.SaveIntoDatabase();
+                    _ = client.Player.SaveIntoDatabase();
                 }
                 else
                 {
-                    client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("UserBuyItemHandler.NoMoney"));
+                    _ = client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("UserBuyItemHandler.NoMoney"));
                 }
                 return 0;
             }

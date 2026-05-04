@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Game.Base.Packets;
-using Game.Server.Managers;
-using Game.Server.GameObjects;
-using Game.Server.GameUtils;
-using SqlDataProvider.Data;
-using Bussiness.Managers;
+﻿using Game.Base.Packets;
 
 namespace Game.Server.Packets.Client
 {
@@ -16,7 +7,7 @@ namespace Game.Server.Packets.Client
     {
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
-            GSPacketIn pkg = new GSPacketIn((short)ePackageType.SHOP_BUYLIMITEDCOUNT, client.Player.PlayerId);
+            GSPacketIn pkg = new((short)ePackageType.SHOP_BUYLIMITEDCOUNT, client.Player.PlayerId);
             //ShopCheapItemsInfo[] shop = ShopMgr.GetAllShopCheapItems();
             pkg.WriteInt(0);
             //foreach (ShopCheapItemsInfo s in shop)

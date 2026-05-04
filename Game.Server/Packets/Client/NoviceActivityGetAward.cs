@@ -1,7 +1,6 @@
 using Bussiness;
 using Bussiness.Managers;
 using Game.Base.Packets;
-using Game.Server.Managers;
 using SqlDataProvider.Data;
 using System;
 using System.Collections.Generic;
@@ -20,12 +19,11 @@ namespace Game.Server.Packets.Client
                 return 0;
             }
             bool isPlus = false;
-            int awardGot = 0;
             string translateId = "Error";
-            ProduceBussiness pb = new ProduceBussiness();
+            ProduceBussiness pb = new();
             EventRewardProcessInfo eventProcess = client.Player.Extra.GetEventProcess(ActivityType);
-            List<ItemInfo> list = new List<ItemInfo>();
-            awardGot = ((SubActivityType == 1) ? 1 : (eventProcess.AwardGot * 2 + 1));
+            List<ItemInfo> list = [];
+            int awardGot = SubActivityType == 1 ? 1 : eventProcess.AwardGot * 2 + 1;
             switch (awardGot)
             {
                 case 1:
@@ -80,7 +78,7 @@ namespace Game.Server.Packets.Client
                     {
                         client.Player.Extra.UpdateEventCondition(ActivityType, eventRewardInfo.Condition, isPlus, awardGot);
                         translateId = "Ödül alma başarılı!";
-                        client.Player.SendItemsToMail(list, $"Bu ödüller, Yeni Sunucu Etkinliklerinden gelen otomatik bir e-postadır, oyuncular lütfen yanıtlamasın.", LanguageMgr.GetTranslation("Yeni Sunucu Etkinlikleri"), eMailType.Manage);
+                        _ = client.Player.SendItemsToMail(list, $"Bu ödüller, Yeni Sunucu Etkinliklerinden gelen otomatik bir e-postadır, oyuncular lütfen yanıtlamasın.", LanguageMgr.GetTranslation("Yeni Sunucu Etkinlikleri"), eMailType.Manage);
                     }
                     else
                     {
@@ -88,7 +86,7 @@ namespace Game.Server.Packets.Client
                     }
                 }
             }
-            client.Player.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation(translateId));
+            _ = client.Player.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation(translateId));
             client.Player.LastOpenCard = DateTime.Now;
             return 1;
         }

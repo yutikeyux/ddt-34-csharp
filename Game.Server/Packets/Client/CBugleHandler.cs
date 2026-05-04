@@ -1,9 +1,9 @@
 using Bussiness;
 using Game.Base.Packets;
+using Game.Server.Api;
 using Game.Server.Managers;
 using SqlDataProvider.Data;
 using System;
-using Game.Server.Api;
 
 namespace Game.Server.Packets.Client
 {
@@ -19,15 +19,15 @@ namespace Game.Server.Packets.Client
             // Soğuma süresi kontrolü
             if (DateTime.Compare(client.Player.LastChatTime.AddSeconds(0.0), DateTime.Now) > 0)
             {
-                client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("Yavaşla!"));
+                _ = client.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("Yavaşla!"));
                 return 1;
             }
 
-            GSPacketIn gSPacketIn = new GSPacketIn(73, clientId);
+            GSPacketIn gSPacketIn = new(73, clientId);
 
             if (itemByTemplateID != null)
             {
-                packet.ReadString(); // İlk okuma (genelde boş veya format bilgisi)
+                _ = packet.ReadString(); // İlk okuma (genelde boş veya format bilgisi)
                 string str = packet.ReadString();
 
                 if (!string.IsNullOrWhiteSpace(str) && !str.StartsWith("!"))
@@ -43,7 +43,7 @@ namespace Game.Server.Packets.Client
                 }
 
                 // Eşyayı envanterden düş
-                client.Player.PropBag.RemoveCountFromStack(itemByTemplateID, 1);
+                _ = client.Player.PropBag.RemoveCountFromStack(itemByTemplateID, 1);
 
                 // Paket hazırlama
                 gSPacketIn.WriteInt(client.Player.ZoneId);
@@ -56,11 +56,11 @@ namespace Game.Server.Packets.Client
                 GameServer.Instance.LoginServer.SendPacket(gSPacketIn);
 
                 // Diğer Login Serverlara gönder
-                foreach (var item in GameServer.Instance.OtherLoginServer)
+                foreach (LoginServerConnector item in GameServer.Instance.OtherLoginServer)
                 {
                     if (item.IsConnected)
                     {
-                        GSPacketIn gSPacketIn2 = new GSPacketIn(72);
+                        GSPacketIn gSPacketIn2 = new(72);
                         gSPacketIn2.WriteInt(itemByTemplateID.Template.Property2);
                         gSPacketIn2.WriteInt(client.Player.PlayerCharacter.ID);
                         gSPacketIn2.WriteString(client.Player.PlayerCharacter.NickName);
@@ -76,7 +76,7 @@ namespace Game.Server.Packets.Client
                 // --- ÖNEMLİ DÜZELTME BURADA ---
                 // Görev/Event güncellemesi HERKES İÇİN DEĞİL, SADECE KULLANAN KİŞİ İÇİN 1 KEZ YAPILMALIDIR.
                 // Bu kodları 'foreach' döngüsünden çıkarıyoruz.
-                var info = client.Player.Extra.GetEventProcess((int)NoviceActiveType.DISCORD_HOPARLORU);
+                EventRewardProcessInfo info = client.Player.Extra.GetEventProcess((int)NoviceActiveType.DISCORD_HOPARLORU);
                 client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.DISCORD_HOPARLORU, info.Conditions + 1);
 
                 // Tüm oyunculara mesajı gönder

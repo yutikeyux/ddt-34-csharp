@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data;
-using System.Data.SqlClient;
-using Game.Base.Packets;
-using log4net;
-using SqlDataProvider.Data;
 using Bussiness;
 using Bussiness.Managers;
+using Game.Base.Packets;
 using Game.Server.GameUtils;
-using Game.Server.Managers;
+using log4net;
+using SqlDataProvider.Data;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 
 namespace Game.Server.Packets.Client
 {
@@ -31,7 +28,7 @@ namespace Game.Server.Packets.Client
             }
 
             int cmd = packet.ReadInt();
-            GSPacketIn pkg = new GSPacketIn((byte)ePackageType.NEWCHICKENBOX_SYS);
+            GSPacketIn pkg = new((byte)ePackageType.NEWCHICKENBOX_SYS);
             ActiveSystemInfo chickenBox = client.Player.Actives.Info;
 
             try
@@ -85,7 +82,7 @@ namespace Game.Server.Packets.Client
         {
             if (client.Player.PlayerCharacter.HasBagPassword && client.Player.PlayerCharacter.IsLocked)
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
                 return 1;
             }
 
@@ -154,7 +151,7 @@ namespace Game.Server.Packets.Client
                 client.Out.SendTCP(pkg);
 
                 // Veritabanını güncelle
-                client.Player.Actives.UpdateChickenBoxAward(item);
+                _ = client.Player.Actives.UpdateChickenBoxAward(item);
 
                 // Kullanıcıya bilgi ver
                 string composeInfo = GetComposeInfoString(item);
@@ -168,7 +165,7 @@ namespace Game.Server.Packets.Client
 
                 if (chickenBox.canOpenCounts == 0)
                 {
-                    GSPacketIn endPkg = new GSPacketIn((byte)ePackageType.NEWCHICKENBOX_SYS);
+                    GSPacketIn endPkg = new((byte)ePackageType.NEWCHICKENBOX_SYS);
                     endPkg.WriteInt((byte)NewChickenBoxPackageType.OVERSHOWITEMS);
                     client.Player.SendTCP(endPkg);
                 }
@@ -224,7 +221,7 @@ namespace Game.Server.Packets.Client
                 pkg.WriteInt(client.Player.Actives.freeEyeCount);
                 client.Player.SendTCP(pkg);
 
-                client.Player.Actives.UpdateChickenBoxAward(item);
+                _ = client.Player.Actives.UpdateChickenBoxAward(item);
                 chickenBox.canEagleEyeCounts--;
 
                 return 0;
@@ -253,40 +250,34 @@ namespace Game.Server.Packets.Client
                     cachedItem.LuckCompose == 0)
                 {
                     // Cache'de compose değerleri yoksa veritabanından çek
-                    using (SqlConnection conn = new SqlConnection())
-                    {
-                        conn.Open();
-                        string query = @"
+                    using SqlConnection conn = new();
+                    conn.Open();
+                    string query = @"
                             SELECT ID, ActivityType, TemplateID, Count, ValidDate, IsBinds, 
                                    StrengthenLevel, AttackCompose, DefendCompose, AgilityCompose, LuckCompose, 
                                    Random, IsSelect 
                             FROM Event_Award_Item 
                             WHERE ActivityType = 3 AND ID = @ID";
 
-                        using (SqlCommand cmd = new SqlCommand(query, conn))
-                        {
-                            // TemplateID üzerinden bul veya position ile ilişkilendir
-                            // Burada position ile TemplateID eşleştirmesi gerekebilir
-                            cmd.Parameters.AddWithValue("@ID", cachedItem.TemplateID); // Veya uygun ID
+                    using SqlCommand cmd = new(query, conn);
+                    // TemplateID üzerinden bul veya position ile ilişkilendir
+                    // Burada position ile TemplateID eşleştirmesi gerekebilir
+                    _ = cmd.Parameters.AddWithValue("@ID", cachedItem.TemplateID); // Veya uygun ID
 
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                if (reader.Read())
-                                {
-                                    cachedItem.AttackCompose = reader.GetInt32(reader.GetOrdinal("AttackCompose"));
-                                    cachedItem.DefendCompose = reader.GetInt32(reader.GetOrdinal("DefendCompose"));
-                                    cachedItem.AgilityCompose = reader.GetInt32(reader.GetOrdinal("AgilityCompose"));
-                                    cachedItem.LuckCompose = reader.GetInt32(reader.GetOrdinal("LuckCompose"));
-                                    cachedItem.StrengthenLevel = reader.GetInt32(reader.GetOrdinal("StrengthenLevel"));
+                    using SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        cachedItem.AttackCompose = reader.GetInt32(reader.GetOrdinal("AttackCompose"));
+                        cachedItem.DefendCompose = reader.GetInt32(reader.GetOrdinal("DefendCompose"));
+                        cachedItem.AgilityCompose = reader.GetInt32(reader.GetOrdinal("AgilityCompose"));
+                        cachedItem.LuckCompose = reader.GetInt32(reader.GetOrdinal("LuckCompose"));
+                        cachedItem.StrengthenLevel = reader.GetInt32(reader.GetOrdinal("StrengthenLevel"));
 
-                                    Logger.Info($"Database'den compose değerleri yüklendi - " +
-                                               $"Attack: {cachedItem.AttackCompose}, " +
-                                               $"Defend: {cachedItem.DefendCompose}, " +
-                                               $"Agility: {cachedItem.AgilityCompose}, " +
-                                               $"Luck: {cachedItem.LuckCompose}");
-                                }
-                            }
-                        }
+                        Logger.Info($"Database'den compose değerleri yüklendi - " +
+                                   $"Attack: {cachedItem.AttackCompose}, " +
+                                   $"Defend: {cachedItem.DefendCompose}, " +
+                                   $"Agility: {cachedItem.AgilityCompose}, " +
+                                   $"Luck: {cachedItem.LuckCompose}");
                     }
                 }
 
@@ -439,7 +430,7 @@ namespace Game.Server.Packets.Client
                     return 1;
                 }
 
-                bag.RemoveTemplate(luckystarID, 1);
+                _ = bag.RemoveTemplate(luckystarID, 1);
                 client.Player.Actives.ChangeLuckyStartAwardPlace();
                 client.Player.Actives.SendLuckStarTurnGoodsInfo();
                 client.Player.Actives.LuckyStartStartTurn = DateTime.Now;
@@ -485,7 +476,7 @@ namespace Game.Server.Packets.Client
                     if (item != null)
                     {
                         ApplyItemProperties(item, award);
-                        client.Player.AddTemplate(item, LanguageMgr.GetTranslation("Hazine Tarlası"));
+                        _ = client.Player.AddTemplate(item, LanguageMgr.GetTranslation("Hazine Tarlası"));
                     }
                 }
 
@@ -511,18 +502,32 @@ namespace Game.Server.Packets.Client
 
         private string GetComposeInfoString(NewChickenBoxItemInfo item)
         {
-            var composes = new List<string>();
+            List<string> composes = new();
 
             if (item.AttackCompose > 0)
+            {
                 composes.Add($"Atk+{item.AttackCompose}");
+            }
+
             if (item.DefendCompose > 0)
+            {
                 composes.Add($"Def+{item.DefendCompose}");
+            }
+
             if (item.AgilityCompose > 0)
+            {
                 composes.Add($"Agi+{item.AgilityCompose}");
+            }
+
             if (item.LuckCompose > 0)
+            {
                 composes.Add($"Luck+{item.LuckCompose}");
+            }
+
             if (item.StrengthenLevel > 0)
+            {
                 composes.Insert(0, $"+{item.StrengthenLevel}");
+            }
 
             return string.Join(", ", composes);
         }

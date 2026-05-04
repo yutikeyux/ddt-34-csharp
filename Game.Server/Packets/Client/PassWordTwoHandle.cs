@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Game.Base.Packets;
 using Bussiness;
+using Game.Base.Packets;
+using System;
 namespace Game.Server.Packets.Client
 {
     [PacketHandler((byte)ePackageType.BAG_LOCKED, "二级密码")]
@@ -16,8 +13,7 @@ namespace Game.Server.Packets.Client
             int reType = 0;
             bool addInfo = false;
             int count = 0;
-            byte cmd = 1;
-            GSPacketIn pkg = new GSPacketIn((byte)ePackageType.BAG_LOCKED, client.Player.PlayerCharacter.ID);
+            GSPacketIn pkg = new((byte)ePackageType.BAG_LOCKED, client.Player.PlayerCharacter.ID);
             string passwordTwo = packet.ReadString();
             string passwordTwoNew = packet.ReadString();
             int type = packet.ReadInt();
@@ -31,41 +27,40 @@ namespace Game.Server.Packets.Client
                     {
                         reType = 1;
                         if (string.IsNullOrEmpty(client.Player.PlayerCharacter.PasswordTwo))
-                            using (PlayerBussiness db = new PlayerBussiness())
+                        {
+                            using PlayerBussiness db = new();
+                            if (passwordTwo != "")
                             {
-                                if (passwordTwo != "")
+                                if (db.UpdatePasswordTwo(client.Player.PlayerCharacter.ID, passwordTwo))
                                 {
-                                    if (db.UpdatePasswordTwo(client.Player.PlayerCharacter.ID, passwordTwo))
-                                    {
-                                        client.Player.PlayerCharacter.PasswordTwo = passwordTwo;
-                                        client.Player.PlayerCharacter.IsLocked = false;
-                                        msg = "SetPassword.success";
-                                    }
+                                    client.Player.PlayerCharacter.PasswordTwo = passwordTwo;
+                                    client.Player.PlayerCharacter.IsLocked = false;
+                                    msg = "SetPassword.success";
                                 }
-                                if (passwordQuestion1 != "" && passwordAnswer1 != "" && passwordQuestion2 != "" && passwordAnswer2 != "")
-                                {
+                            }
+                            if (passwordQuestion1 != "" && passwordAnswer1 != "" && passwordQuestion2 != "" && passwordAnswer2 != "")
+                            {
 
-                                    if (db.UpdatePasswordInfo(client.Player.PlayerCharacter.ID, passwordQuestion1, passwordAnswer1, passwordQuestion2, passwordAnswer2, 5))
-                                    {
-                                        client.Player.PlayerCharacter.PasswordQuest1 = passwordQuestion1;
-                                        client.Player.PlayerCharacter.PasswordQuest2 = passwordAnswer1;
-                                        client.Player.PlayerCharacter.FailedPasswordAttemptCount = 5;
-                                        result = true;
-                                        addInfo = false;
-                                        msg = "UpdatePasswordInfo.Success";
-                                    }
-                                    else
-                                    {
-                                        result = false;
-                                    }
+                                if (db.UpdatePasswordInfo(client.Player.PlayerCharacter.ID, passwordQuestion1, passwordAnswer1, passwordQuestion2, passwordAnswer2, 5))
+                                {
+                                    client.Player.PlayerCharacter.PasswordQuest1 = passwordQuestion1;
+                                    client.Player.PlayerCharacter.PasswordQuest2 = passwordAnswer1;
+                                    client.Player.PlayerCharacter.FailedPasswordAttemptCount = 5;
+                                    result = true;
+                                    addInfo = false;
+                                    msg = "UpdatePasswordInfo.Success";
                                 }
                                 else
                                 {
-                                    result = true;
-                                    addInfo = true;
+                                    result = false;
                                 }
-
                             }
+                            else
+                            {
+                                result = true;
+                                addInfo = true;
+                            }
+                        }
                         else
                         {
                             msg = "SetPassword.Fail";
@@ -96,13 +91,16 @@ namespace Game.Server.Packets.Client
                 case 3:
                     {
                         if (DateTime.Compare(client.Player.WaitingProcessor.AddSeconds(3.0), DateTime.Now) > 0)
+                        {
                             return 1;
+                        }
+
                         reType = 3;
-                        using (PlayerBussiness db = new PlayerBussiness())
+                        using (PlayerBussiness db = new())
                         {
                             db.GetPasswordInfo(client.Player.PlayerCharacter.ID, ref passwordQuestion1, ref passwordAnswer1, ref passwordQuestion2, ref passwordAnswer2, ref count);
                             count--;
-                            db.UpdatePasswordInfo(client.Player.PlayerCharacter.ID, passwordQuestion1, passwordAnswer1, passwordQuestion2, passwordAnswer2, count);
+                            _ = db.UpdatePasswordInfo(client.Player.PlayerCharacter.ID, passwordQuestion1, passwordAnswer1, passwordQuestion2, passwordAnswer2, count);
 
                             if (passwordTwo == client.Player.PlayerCharacter.PasswordTwo)
                             {
@@ -136,17 +134,19 @@ namespace Game.Server.Packets.Client
                 case 4:
                     {
                         if (DateTime.Compare(client.Player.WaitingProcessor.AddSeconds(3.0), DateTime.Now) > 0)
+                        {
                             return 1;
+                        }
 
                         reType = 4;
                         string dbPasswordAnswer1 = "";
                         string PassWordTwo = "";
                         string dbPasswordAnswer2 = "";
-                        using (PlayerBussiness db = new PlayerBussiness())
+                        using (PlayerBussiness db = new())
                         {
                             db.GetPasswordInfo(client.Player.PlayerCharacter.ID, ref passwordQuestion1, ref dbPasswordAnswer1, ref passwordQuestion2, ref dbPasswordAnswer2, ref count);
                             count--;
-                            db.UpdatePasswordInfo(client.Player.PlayerCharacter.ID, passwordQuestion1, passwordAnswer1, passwordQuestion2, passwordAnswer2, count);
+                            _ = db.UpdatePasswordInfo(client.Player.PlayerCharacter.ID, passwordQuestion1, passwordAnswer1, passwordQuestion2, passwordAnswer2, count);
                             if (dbPasswordAnswer1 == passwordAnswer1 && dbPasswordAnswer2 == passwordAnswer2 && dbPasswordAnswer1 != "" && dbPasswordAnswer2 != "")
                             {
 
@@ -201,18 +201,16 @@ namespace Game.Server.Packets.Client
                         {
                             if (passwordQuestion1 != "" && passwordAnswer1 != "" && passwordQuestion2 != "" && passwordAnswer2 != "")
                             {
-                                using (PlayerBussiness db = new PlayerBussiness())
+                                using PlayerBussiness db = new();
+                                if (db.UpdatePasswordInfo(client.Player.PlayerCharacter.ID, passwordQuestion1, passwordAnswer1, passwordQuestion2, passwordAnswer2, 5))
                                 {
-                                    if (db.UpdatePasswordInfo(client.Player.PlayerCharacter.ID, passwordQuestion1, passwordAnswer1, passwordQuestion2, passwordAnswer2, 5))
-                                    {
-                                        result = true;
-                                        addInfo = false;
-                                        msg = "UpdatePasswordInfo.Success";
-                                    }
-                                    else
-                                    {
-                                        result = false;
-                                    }
+                                    result = true;
+                                    addInfo = false;
+                                    msg = "UpdatePasswordInfo.Success";
+                                }
+                                else
+                                {
+                                    result = false;
                                 }
                             }
                         }

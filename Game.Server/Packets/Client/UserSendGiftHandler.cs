@@ -14,7 +14,7 @@ namespace Game.Server.Packets.Client
             string text = packet.ReadString();
             int iD = packet.ReadInt();
             int num = packet.ReadInt();
-            packet.ReadInt();
+            _ = packet.ReadInt();
             if (text == client.Player.PlayerCharacter.NickName || num <= 0 || num > 9999)
             {
                 return 0;
@@ -25,53 +25,51 @@ namespace Game.Server.Packets.Client
                 return 0;
             }
             GamePlayer clientByPlayerNickName = WorldMgr.GetClientByPlayerNickName(text);
-            using (PlayerBussiness playerBussiness = new PlayerBussiness())
+            using PlayerBussiness playerBussiness = new();
+            PlayerInfo playerInfo = (clientByPlayerNickName == null) ? playerBussiness.GetUserSingleByNickName(text) : clientByPlayerNickName.PlayerCharacter;
+            if (playerInfo != null)
             {
-                PlayerInfo playerInfo = ((clientByPlayerNickName == null) ? playerBussiness.GetUserSingleByNickName(text) : clientByPlayerNickName.PlayerCharacter);
-                if (playerInfo != null)
+                int value = shopItemInfoById.AValue1 * num;
+                if (client.Player.RemoveMoney(value) > 0)
                 {
-                    int value = shopItemInfoById.AValue1 * num;
-                    if (client.Player.RemoveMoney(value) > 0)
+                    ItemTemplateInfo itemTemplateInfo = ItemMgr.FindItemTemplate(shopItemInfoById.TemplateID);
+                    int num2 = itemTemplateInfo.Property2 * num;
+                    _ = playerBussiness.AddUserGift(new UserGiftInfo
                     {
-                        ItemTemplateInfo itemTemplateInfo = ItemMgr.FindItemTemplate(shopItemInfoById.TemplateID);
-                        int num2 = itemTemplateInfo.Property2 * num;
-                        playerBussiness.AddUserGift(new UserGiftInfo
-                        {
-                            SenderID = client.Player.PlayerCharacter.ID,
-                            ReceiverID = playerInfo.ID,
-                            TemplateID = itemTemplateInfo.TemplateID,
-                            Count = num
-                        });
-                        playerBussiness.UpdateUserCharmGP(playerInfo.ID, num2);
-                        if (playerBussiness.SendMail(new MailInfo
-                        {
-                            SenderID = client.Player.PlayerCharacter.ID,
-                            Sender = client.Player.PlayerCharacter.NickName,
-                            ReceiverID = playerInfo.ID,
-                            Receiver = playerInfo.NickName,
-                            Title = LanguageMgr.GetTranslation("Hediyelik Eşya"),
-                            Content = LanguageMgr.GetTranslation("Değerli arkadaşım, TrBombom oyuncusu olan ben " + client.Player.PlayerCharacter.NickName + " sana senin kadar değerli bir hediye göndermek istedim. Çam sakızı çoban armağanı, umarım benim sana gönderdiğim bu [" + itemTemplateInfo.Name + "] hediyesini umarım beğenirsin ♥!"),
-                            Type = 55
-                        }) && clientByPlayerNickName != null)
-                        {
-                            clientByPlayerNickName.PlayerCharacter.charmGP += num2;
-                            clientByPlayerNickName.SendUpdatePublicPlayer();
-                            clientByPlayerNickName.Out.SendMailResponse(clientByPlayerNickName.PlayerCharacter.ID, eMailRespose.Gift);
-                        }
-                        GSPacketIn gSPacketIn = new GSPacketIn(221);
-                        gSPacketIn.WriteBoolean(val: true);
-                        client.SendTCP(gSPacketIn);
-                        client.Player.SendMessage(LanguageMgr.GetTranslation("GoodsPresentHandler.Success"));
-                    }
-                    else
+                        SenderID = client.Player.PlayerCharacter.ID,
+                        ReceiverID = playerInfo.ID,
+                        TemplateID = itemTemplateInfo.TemplateID,
+                        Count = num
+                    });
+                    _ = playerBussiness.UpdateUserCharmGP(playerInfo.ID, num2);
+                    if (playerBussiness.SendMail(new MailInfo
                     {
-                        client.Player.SendMessage(LanguageMgr.GetTranslation("GoodsPresentHandler.NoMoney"));
+                        SenderID = client.Player.PlayerCharacter.ID,
+                        Sender = client.Player.PlayerCharacter.NickName,
+                        ReceiverID = playerInfo.ID,
+                        Receiver = playerInfo.NickName,
+                        Title = LanguageMgr.GetTranslation("Hediyelik Eşya"),
+                        Content = LanguageMgr.GetTranslation("Değerli arkadaşım, TrBombom oyuncusu olan ben " + client.Player.PlayerCharacter.NickName + " sana senin kadar değerli bir hediye göndermek istedim. Çam sakızı çoban armağanı, umarım benim sana gönderdiğim bu [" + itemTemplateInfo.Name + "] hediyesini umarım beğenirsin ♥!"),
+                        Type = 55
+                    }) && clientByPlayerNickName != null)
+                    {
+                        clientByPlayerNickName.PlayerCharacter.charmGP += num2;
+                        clientByPlayerNickName.SendUpdatePublicPlayer();
+                        _ = clientByPlayerNickName.Out.SendMailResponse(clientByPlayerNickName.PlayerCharacter.ID, eMailRespose.Gift);
                     }
+                    GSPacketIn gSPacketIn = new(221);
+                    gSPacketIn.WriteBoolean(val: true);
+                    client.SendTCP(gSPacketIn);
+                    client.Player.SendMessage(LanguageMgr.GetTranslation("GoodsPresentHandler.Success"));
                 }
                 else
                 {
-                    client.Player.SendMessage(LanguageMgr.GetTranslation("GoodsPresentHandler.NoUser"));
+                    client.Player.SendMessage(LanguageMgr.GetTranslation("GoodsPresentHandler.NoMoney"));
                 }
+            }
+            else
+            {
+                client.Player.SendMessage(LanguageMgr.GetTranslation("GoodsPresentHandler.NoUser"));
             }
             return 0;
         }

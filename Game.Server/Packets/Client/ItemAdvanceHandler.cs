@@ -1,34 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Game.Base.Packets;
 using Bussiness;
 using Bussiness.Managers;
-using SqlDataProvider.Data;
-using System.Configuration;
+using Game.Base.Packets;
 using Game.Server.Managers;
-using Game.Server.Statics;
-using Game.Server.GameObjects;
-using Game.Server.GameUtils;
+using SqlDataProvider.Data;
+using System;
+using System.Text;
 
 namespace Game.Server.Packets.Client
 {
     [PacketHandler((int)ePackageType.ITEM_ADVANCE, "物品强化")]
     public class ItemAdvanceHandler : IPacketHandler
     {
-        public static ThreadSafeRandom random = new ThreadSafeRandom();
+        public static ThreadSafeRandom random = new();
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
-            StringBuilder str = new StringBuilder();
+            StringBuilder str = new();
             int RateAdvance = GameProperties.RateAdvance;
             bool isBinds = false;
-            bool consortia = packet.ReadBoolean();
-            bool MultiSelected = packet.ReadBoolean();
+            _ = packet.ReadBoolean();
+            _ = packet.ReadBoolean();
 
             //GSPacketIn pkg = packet.Clone();
             //pkg.ClearContext();           
-            GSPacketIn pkg = new GSPacketIn((byte)ePackageType.ITEM_ADVANCE, client.Player.PlayerCharacter.ID);
+            GSPacketIn pkg = new((byte)ePackageType.ITEM_ADVANCE, client.Player.PlayerCharacter.ID);
 
             ItemInfo stone = client.Player.StoreBag.GetItemAt(0);
             ItemInfo item = client.Player.StoreBag.GetItemAt(1);
@@ -40,35 +34,34 @@ namespace Game.Server.Packets.Client
             }
             if (stone == null || item == null || stone.Count <= 0)
             {
-                client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemAdvanceHandler.Msg1")); ;
+                _ = client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemAdvanceHandler.Msg1")); ;
                 return 0;
             }
             if (oldLv >= 15)
             {
-                client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemAdvanceHandler.Msg2"));
+                _ = client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemAdvanceHandler.Msg2"));
                 return 0;
             }
             int removeCount = 1;
-            string AddItem = "";
-            item.StrengthenTimes = (int)(DateTime.Now.Date.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            item.StrengthenTimes = (int)DateTime.Now.Date.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             if (item != null && item.Template.CanStrengthen && item.Template.CategoryID < 18 && item.Count == 1)
             {
-                isBinds = isBinds ? true : item.IsBinds;
-                str.Append(item.ItemID + ":" + item.TemplateID + ",");
+                isBinds = isBinds || item.IsBinds;
+                _ = str.Append(item.ItemID + ":" + item.TemplateID + ",");
                 int stoneExp = 0;
                 if (stone.TemplateID == (int)EquipType.EXALT_ROCK)
                 {
-                    isBinds = isBinds ? true : stone.IsBinds;
-                    AddItem += "," + stone.ItemID.ToString() + ":" + stone.Template.Name;
+                    isBinds = isBinds || stone.IsBinds;
+                    _ = "," + stone.ItemID.ToString() + ":" + stone.Template.Name;
                     stoneExp = stone.Template.Property2 < 10 ? 10 : stone.Template.Property2;
                 }
                 else
                 {
-                    client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemAdvanceHandler.Msg3"));
+                    _ = client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemAdvanceHandler.Msg3"));
                     return 0;
                 }
 
-                str.Append("true");
+                _ = str.Append("true");
                 bool isUp = false;
                 int rand = random.Next(RateAdvance);
                 double probability = item.StrengthenExp / oldLv;
@@ -88,8 +81,8 @@ namespace Game.Server.Packets.Client
                         if (_temp != null)
                         {
                             ItemInfo newItem = ItemInfo.CloneFromTemplate(_temp, item);
-                            client.Player.StoreBag.RemoveItemAt(1);
-                            client.Player.StoreBag.AddItemTo(newItem, 1);
+                            _ = client.Player.StoreBag.RemoveItemAt(1);
+                            _ = client.Player.StoreBag.AddItemTo(newItem, 1);
                             item = newItem;
                         }
                     }
@@ -100,7 +93,7 @@ namespace Game.Server.Packets.Client
                     pkg.WriteByte(1);
                     pkg.WriteInt(stoneExp);
                 }
-                client.Player.StoreBag.RemoveCountFromStack(stone, removeCount);
+                _ = client.Player.StoreBag.RemoveCountFromStack(stone, removeCount);
                 client.Player.StoreBag.UpdateItem(item);
                 //LogMgr.LogItemAdd(client.Player.PlayerCharacter.ID, LogItemType.Strengthen, BeginProperty, item, AddItem, 1);//强化日志                
                 client.Out.SendTCP(pkg);
@@ -113,11 +106,11 @@ namespace Game.Server.Packets.Client
                     GameServer.Instance.LoginServer.SendPacket(sys_notice);
                 }
 
-                str.Append(item.StrengthenLevel);
+                _ = str.Append(item.StrengthenLevel);
             }
             else
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemStrengthenHandler.Content1") + stone.Template.Name + LanguageMgr.GetTranslation("ItemStrengthenHandler.Content2"));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemStrengthenHandler.Content1") + stone.Template.Name + LanguageMgr.GetTranslation("ItemStrengthenHandler.Content2"));
             }
             if (item.Place < 31)
             {

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Game.Logic;
+﻿using Game.Logic;
 using Game.Logic.AI;
-using Game.Logic.Phy.Object;
 using Game.Logic.Effects;
-using System.Drawing;
 using Game.Logic.Phy.Object;
-using Game.Logic.Phy.Maths;
-using SqlDataProvider.Data;
-using Bussiness;
+using System.Collections.Generic;
+using System.Drawing;
 
 
 namespace GameServerScript.AI.NPC
@@ -18,32 +12,32 @@ namespace GameServerScript.AI.NPC
     {
         private bool isBornEffect = false;
 
-        private int m_bloodReduce = 1000;
+        private readonly int m_bloodReduce = 1000;
 
-        private int maxShootPlayer = 4;
+        private readonly int maxShootPlayer = 4;
 
-        private int npcEnemyId = 3318;
+        private readonly int npcEnemyId = 3318;
 
         private SimpleNpc npcEnemy = null;
 
         private int m_turn = 0;
 
-        private List<PhysicalObj> phyFireObjs = new List<PhysicalObj>();
+        private List<PhysicalObj> phyFireObjs = [];
 
-        private List<Point> pointCreatePhy = new List<Point>();
+        private List<Point> pointCreatePhy = [];
 
         private int coldDownAttackNPC = 0;
 
-        public List<SimpleNpc> orchins = new List<SimpleNpc>();
+        public List<SimpleNpc> orchins = [];
 
         #region NPC 说话内容
-        private static string[] AllAttackChat = new string[]{
+        private static readonly string[] AllAttackChat = new string[]{
              "Tiếng gầm của hổ ...！",
 
              "Cảm nhận sự đau đớn của cổ họng！ "
         };
 
-        private static string[] ShootChat = new string[]{
+        private static readonly string[] ShootChat = new string[]{
              "Lửa địa ngục...",
 
              "Tam nhị chân hỏa !",
@@ -51,29 +45,29 @@ namespace GameServerScript.AI.NPC
              "Đốt ngươi chết luôn"
         };
 
-        private static string[] CallChat = new string[]{
+        private static readonly string[] CallChat = new string[]{
             "Xem đây，<br/>Cây đậu đáng ghét!!",
             "Biến khỏi đây không ??"
         };
 
-        private static string[] EnemyNPCChat = new string[]{
+        private static readonly string[] EnemyNPCChat = new string[]{
             "Thật nguy hiểm!!",
             "Ta không chịu thua ngươi đâu!",
             "Không bao giờ khuất phục."
         };
 
-        private static string[] KillAttackChat = new string[]{
+        private static readonly string[] KillAttackChat = new string[]{
             "Dám đến gần ta, chết đi...",
             "Nhìn mặt mà ngu vãi!!!",
             "Ta dẫm cho nát bét!!!!"
         };
 
-        private static string[] SealChat = new string[]{
+        private static readonly string[] SealChat = new string[]{
             "Chạy đường nào đây?",
             "Tìm chỗ mà núp đi nhé!!"
         };
 
-        private static string[] KillPlayerChat = new string[]{
+        private static readonly string[] KillPlayerChat = new string[]{
             "Lửa bất diệt cháy bừng lên đi!"
         };
         #endregion
@@ -83,7 +77,9 @@ namespace GameServerScript.AI.NPC
         {
             base.OnBeginSelfTurn();
             if (coldDownAttackNPC > 0)
+            {
                 coldDownAttackNPC--;
+            }
         }
 
         public override void OnBeginNewTurn()
@@ -170,7 +166,7 @@ namespace GameServerScript.AI.NPC
             int index = Game.Random.Next(0, AllAttackChat.Length);
             Body.Say(AllAttackChat[index], 1, 500);
             Body.PlayMovie("beatB", 1000, 3000);
-            Body.RangeAttacking(Body.X - 10000, Body.Y + 10000, "cry", 3000, null);
+            _ = Body.RangeAttacking(Body.X - 10000, Body.Y + 10000, "cry", 3000, null);
         }
 
         private void PersonAttack()
@@ -224,7 +220,7 @@ namespace GameServerScript.AI.NPC
             }
 
             CreateFlameEffect();
-            Body.RangeAttacking(Body.X - 10000, Body.Y + 10000, "cry", 100, null);
+            _ = Body.RangeAttacking(Body.X - 10000, Body.Y + 10000, "cry", 100, null);
         }
 
         private void AttackEnemyNPC()
@@ -246,13 +242,13 @@ namespace GameServerScript.AI.NPC
             if (npcEnemy.X <= 700)
             {
                 // ben trai => sang ben phai
-                npcEnemy.JumpTo(1225, 563, "born", 5000, 0, 100, null, 1);
+                _ = npcEnemy.JumpTo(1225, 563, "born", 5000, 0, 100, null, 1);
                 npcEnemy.ChangeDirection(-1, 6000);
                 Body.ChangeDirection(1, 6000);
             }
             else
             {
-                npcEnemy.JumpTo(468, 555, "born", 5000, 0, 100, null, 1);
+                _ = npcEnemy.JumpTo(468, 555, "born", 5000, 0, 100, null, 1);
                 npcEnemy.ChangeDirection(1, 6000);
                 Body.ChangeDirection(-1, 6000);
             }
@@ -266,7 +262,7 @@ namespace GameServerScript.AI.NPC
         {
             Body.Say("Thể xác ốm yếu này, đưa ta mượn tạm xem!", 0, 4000);
 
-            Body.MoveTo(761, 583, "walk", 5000);
+            _ = Body.MoveTo(761, 583, "walk", 5000);
 
             Body.Say("Lửa địa ngục hãy cháy lên!!!", 0, 6000);
 
@@ -309,7 +305,7 @@ namespace GameServerScript.AI.NPC
                 PhysicalObj phy = ((PVEGame)Game).Createlayer(p.X, p.Y, "", "game.assetmap.Flame", "", 1, 1);
                 phyFireObjs.Add(phy);
             }
-            pointCreatePhy = new List<Point>();
+            pointCreatePhy = [];
 
             Body.CallFuction(new LivingCallBack(Remove), 2000);
         }
@@ -319,9 +315,11 @@ namespace GameServerScript.AI.NPC
             foreach (PhysicalObj phy in phyFireObjs)
             {
                 if (phy != null)
+                {
                     Game.RemovePhysicalObj(phy, true);
+                }
             }
-            phyFireObjs = new List<PhysicalObj>();
+            phyFireObjs = [];
         }
 
         public void KillAttack(int fx, int mx)
@@ -330,7 +328,7 @@ namespace GameServerScript.AI.NPC
             int index = Game.Random.Next(0, KillAttackChat.Length);
             ((SimpleBoss)Body).Say(KillAttackChat[index], 1, 500);
             Body.PlayMovie("beatC", 2500, 0);
-            Body.RangeAttacking(fx, mx, "cry", 3300, null);
+            _ = Body.RangeAttacking(fx, mx, "cry", 3300, null);
         }
 
     }

@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using Bussiness;
 using Bussiness.Managers;
 using Game.Base.Packets;
 using Game.Server.Managers;
 using log4net;
 using SqlDataProvider.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace Game.Server.Packets.Client
 {
@@ -33,23 +33,23 @@ namespace Game.Server.Packets.Client
                 int petScore = 0;
                 int Score = 0;
                 int dmgScore = 0;
-                StringBuilder payGoods = new StringBuilder();
+                StringBuilder payGoods = new();
                 eMessageType eMsg = eMessageType.GM_NOTICE;
                 string msg = "UserBuyItemHandler.Success";
-                GSPacketIn gSPacketIn = new GSPacketIn(44, client.Player.PlayerCharacter.ID);
-                List<ItemInfo> buyitems = new List<ItemInfo>();
-                Dictionary<int, int> needitemsinfo = new Dictionary<int, int>();
-                List<bool> dresses = new List<bool>();
-                List<int> places = new List<int>();
-                StringBuilder types = new StringBuilder();
+                GSPacketIn gSPacketIn = new(44, client.Player.PlayerCharacter.ID);
+                List<ItemInfo> buyitems = [];
+                Dictionary<int, int> needitemsinfo = [];
+                List<bool> dresses = [];
+                List<int> places = [];
+                StringBuilder types = new();
                 bool isBinds = true;
                 ShopItemInfo shopItem = null;
                 ConsortiaInfo consotia = ConsortiaMgr.FindConsortiaInfo(client.Player.PlayerCharacter.ConsortiaID);
                 int count = packet.ReadInt();
-                bool flag3 = count > 0 && count <= 99;
+                bool flag3 = count is > 0 and <= 99;
                 if (flag3)
                 {
-                    List<string> ids = new List<string>();
+                    List<string> ids = [];
                     for (int i = 0; i < count; i++)
                     {
                         int GoodsID = packet.ReadInt();
@@ -66,7 +66,7 @@ namespace Game.Server.Packets.Client
                             bool flag5 = shopItem.ShopID != 2 && ShopMgr.CanBuy(shopItem.ShopID, (consotia != null) ? consotia.ShopLevel : 1, ref isBinds, client.Player.PlayerCharacter.ConsortiaID, client.Player.PlayerCharacter.Riches);
                             if (!flag5)
                             {
-                                client.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("UserBuyItemHandler.FailByPermission", Array.Empty<object>()));
+                                _ = client.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("UserBuyItemHandler.FailByPermission", Array.Empty<object>()));
                                 return 1;
                             }
                             bool flag6 = shopItem.ShopID == 20;
@@ -75,7 +75,7 @@ namespace Game.Server.Packets.Client
                                 bool flag7 = client.Player.PlayerCharacter.ShopFinallyGottenTime.Date == DateTime.Now.Date || !WorldMgr.UpdateShopFreeCount(shopItem.ID, shopItem.LimitCount);
                                 if (flag7)
                                 {
-                                    client.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("UserBuyItemHandler.FailByPermission2", Array.Empty<object>()));
+                                    _ = client.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("UserBuyItemHandler.FailByPermission2", Array.Empty<object>()));
                                     return 1;
                                 }
                                 List<ShopFreeCountInfo> allShopFreeCount = WorldMgr.GetAllShopFreeCount();
@@ -124,12 +124,12 @@ namespace Game.Server.Packets.Client
                             bool flag15 = item == null && shopItem == null;
                             if (!flag15)
                             {
-                                item.Color = ((color == null) ? "" : color);
-                                item.Skin = ((skin == null) ? "" : skin);
-                                item.IsBinds = (isBinds || Convert.ToBoolean(shopItem.IsBind));
+                                item.Color = color ?? "";
+                                item.Skin = skin ?? "";
+                                item.IsBinds = isBinds || Convert.ToBoolean(shopItem.IsBind);
                                 item.IsBinds = true;
-                                types.Append(type);
-                                types.Append(",");
+                                _ = types.Append(type);
+                                _ = types.Append(",");
                                 buyitems.Add(item);
                                 dresses.Add(dress);
                                 places.Add(place);
@@ -161,7 +161,7 @@ namespace Game.Server.Packets.Client
                         bool flag18 = client.Player.PlayerCharacter.HasBagPassword && client.Player.PlayerCharacter.IsLocked;
                         if (flag18)
                         {
-                            client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Bag.Locked", Array.Empty<object>()));
+                            _ = client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Bag.Locked", Array.Empty<object>()));
                             result = 1;
                         }
                         else
@@ -179,7 +179,7 @@ namespace Game.Server.Packets.Client
                             if (flag20)
                             {
                                 string translateId2 = "UserBuyItemHandler.NoBuyItem";
-                                client.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation(translateId2, Array.Empty<object>()));
+                                _ = client.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation(translateId2, Array.Empty<object>()));
                                 result = 1;
                             }
                             else
@@ -195,7 +195,7 @@ namespace Game.Server.Packets.Client
                                         bool flag23 = shopItem.LimitCount == 0 || buyitems.Count > shopItem.LimitCount;
                                         if (flag23)
                                         {
-                                            client.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("UserBuyItemHandler.LimitCount1", new object[]
+                                            _ = client.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("UserBuyItemHandler.LimitCount1", new object[]
                                             {
                                                 shopItem.LimitCount
                                             }));
@@ -226,12 +226,12 @@ namespace Game.Server.Packets.Client
                                         // 2. Eğer ödeme başarılıysa (Limit uygunsa) işlemleri yap
                                         if (moneySuccess)
                                         {
-                                            client.Player.RemoveGold(gold);
-                                            client.Player.RemoveOffer(offer);
-                                            client.Player.RemoveGiftToken(gifttoken);
-                                            client.Player.RemovePetScore(petScore);
-                                            client.Player.RemoveScore(Score);
-                                            client.Player.RemoveDamageScores(dmgScore);
+                                            _ = client.Player.RemoveGold(gold);
+                                            _ = client.Player.RemoveOffer(offer);
+                                            _ = client.Player.RemoveGiftToken(gifttoken);
+                                            _ = client.Player.RemovePetScore(petScore);
+                                            _ = client.Player.RemoveScore(Score);
+                                            _ = client.Player.RemoveDamageScores(dmgScore);
 
                                             bool flag26 = shopItem != null;
                                             if (flag26)
@@ -242,8 +242,8 @@ namespace Game.Server.Packets.Client
                                                     shopItem.LimitCount -= buyitems.Count;
                                                 }
                                             }
-                                            ProduceBussiness pb = new ProduceBussiness();
-                                            pb.UpdateShop(shopItem);
+                                            ProduceBussiness pb = new();
+                                            _ = pb.UpdateShop(shopItem);
                                             int moneyAfter = client.Player.PlayerCharacter.Money;
                                             int moneyLockAfter = client.Player.PlayerCharacter.MoneyLock;
                                             string str = string.Format("money: {0} | gold: {1} | offter: {2} | gifttoken: {3} | petScore: {4} | boguScore: {5} | moneyBefore: {6} | moneyAfter: {7} | dmg Score: {8} | moneyLockBefore: {9} | moneyLockAfter: {10}", new object[]
@@ -265,9 +265,9 @@ namespace Game.Server.Packets.Client
                                                 bool flag28 = item3.Key != -9999;
                                                 if (flag28)
                                                 {
-                                                    client.Player.RemoveTemplateInShop(item3.Key, item3.Value);
+                                                    _ = client.Player.RemoveTemplateInShop(item3.Key, item3.Value);
                                                 }
-                                                payGoods.Append(item3.Key.ToString() + ",");
+                                                _ = payGoods.Append(item3.Key.ToString() + ",");
                                             }
                                             bool flag29 = needitemsinfo.Count > 0;
                                             if (flag29)
@@ -277,9 +277,9 @@ namespace Game.Server.Packets.Client
                                             string str2 = str + " | itemNeed: " + string.Join<int>(",", needitemsinfo.Keys.ToArray<int>());
                                             string text3 = "";
                                             int num5 = 0;
-                                            MailInfo mailInfo = new MailInfo();
-                                            StringBuilder stringBuilder3 = new StringBuilder();
-                                            stringBuilder3.Append(LanguageMgr.GetTranslation("GoodsPresentHandler.AnnexRemark", Array.Empty<object>()));
+                                            MailInfo mailInfo = new();
+                                            StringBuilder stringBuilder3 = new();
+                                            _ = stringBuilder3.Append(LanguageMgr.GetTranslation("GoodsPresentHandler.AnnexRemark", Array.Empty<object>()));
                                             for (int k = 0; k < buyitems.Count; k++)
                                             {
                                                 string str3 = text3;
@@ -315,77 +315,75 @@ namespace Game.Server.Packets.Client
                                                         {
                                                             num6 = places[k];
                                                         }
-                                                        client.Player.EquipBag.MoveItem(buyitems[k].Place, num6, 0);
+                                                        _ = client.Player.EquipBag.MoveItem(buyitems[k].Place, num6, 0);
                                                         msg = "UserBuyItemHandler.Save";
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    using (PlayerBussiness playerBussiness = new PlayerBussiness())
+                                                    using PlayerBussiness playerBussiness = new();
+                                                    buyitems[k].UserID = 0;
+                                                    _ = playerBussiness.AddGoods(buyitems[k]);
+                                                    num5++;
+                                                    _ = stringBuilder3.Append(num5);
+                                                    _ = stringBuilder3.Append("、");
+                                                    _ = stringBuilder3.Append(buyitems[k].Template.Name);
+                                                    _ = stringBuilder3.Append("x");
+                                                    _ = stringBuilder3.Append(buyitems[k].Count);
+                                                    _ = stringBuilder3.Append(";");
+                                                    switch (num5)
                                                     {
-                                                        buyitems[k].UserID = 0;
-                                                        playerBussiness.AddGoods(buyitems[k]);
-                                                        num5++;
-                                                        stringBuilder3.Append(num5);
-                                                        stringBuilder3.Append("、");
-                                                        stringBuilder3.Append(buyitems[k].Template.Name);
-                                                        stringBuilder3.Append("x");
-                                                        stringBuilder3.Append(buyitems[k].Count);
-                                                        stringBuilder3.Append(";");
-                                                        switch (num5)
-                                                        {
-                                                            case 1:
-                                                                {
-                                                                    string text4 = mailInfo.Annex1 = buyitems[k].ItemID.ToString();
-                                                                    mailInfo.Annex1Name = buyitems[k].Template.Name;
-                                                                    break;
-                                                                }
-                                                            case 2:
-                                                                {
-                                                                    string text4 = mailInfo.Annex2 = buyitems[k].ItemID.ToString();
-                                                                    mailInfo.Annex2Name = buyitems[k].Template.Name;
-                                                                    break;
-                                                                }
-                                                            case 3:
-                                                                {
-                                                                    string text4 = mailInfo.Annex3 = buyitems[k].ItemID.ToString();
-                                                                    mailInfo.Annex3Name = buyitems[k].Template.Name;
-                                                                    break;
-                                                                }
-                                                            case 4:
-                                                                {
-                                                                    string text4 = mailInfo.Annex4 = buyitems[k].ItemID.ToString();
-                                                                    mailInfo.Annex4Name = buyitems[k].Template.Name;
-                                                                    break;
-                                                                }
-                                                            case 5:
-                                                                {
-                                                                    string text4 = mailInfo.Annex5 = buyitems[k].ItemID.ToString();
-                                                                    mailInfo.Annex5Name = buyitems[k].Template.Name;
-                                                                    break;
-                                                                }
-                                                        }
-                                                        bool flag35 = num5 == 5;
-                                                        if (flag35)
-                                                        {
-                                                            num5 = 0;
-                                                            mailInfo.AnnexRemark = stringBuilder3.ToString();
-                                                            stringBuilder3.Remove(0, stringBuilder3.Length);
-                                                            stringBuilder3.Append(LanguageMgr.GetTranslation("GoodsPresentHandler.AnnexRemark", Array.Empty<object>()));
-                                                            mailInfo.Content = LanguageMgr.GetTranslation("UserBuyItemHandler.Title", Array.Empty<object>()) + mailInfo.Annex1Name + "]";
-                                                            mailInfo.Gold = 0;
-                                                            mailInfo.Money = 0;
-                                                            mailInfo.Receiver = client.Player.PlayerCharacter.NickName;
-                                                            mailInfo.ReceiverID = client.Player.PlayerCharacter.ID;
-                                                            mailInfo.Sender = mailInfo.Receiver;
-                                                            mailInfo.SenderID = mailInfo.ReceiverID;
-                                                            mailInfo.Title = mailInfo.Content;
-                                                            mailInfo.Type = 8;
-                                                            playerBussiness.SendMail(mailInfo);
-                                                            eMsg = eMessageType.BIGBUGLE_NOTICE;
-                                                            msg = "UserBuyItemHandler.Mail";
-                                                            mailInfo.Revert();
-                                                        }
+                                                        case 1:
+                                                            {
+                                                                string text4 = mailInfo.Annex1 = buyitems[k].ItemID.ToString();
+                                                                mailInfo.Annex1Name = buyitems[k].Template.Name;
+                                                                break;
+                                                            }
+                                                        case 2:
+                                                            {
+                                                                string text4 = mailInfo.Annex2 = buyitems[k].ItemID.ToString();
+                                                                mailInfo.Annex2Name = buyitems[k].Template.Name;
+                                                                break;
+                                                            }
+                                                        case 3:
+                                                            {
+                                                                string text4 = mailInfo.Annex3 = buyitems[k].ItemID.ToString();
+                                                                mailInfo.Annex3Name = buyitems[k].Template.Name;
+                                                                break;
+                                                            }
+                                                        case 4:
+                                                            {
+                                                                string text4 = mailInfo.Annex4 = buyitems[k].ItemID.ToString();
+                                                                mailInfo.Annex4Name = buyitems[k].Template.Name;
+                                                                break;
+                                                            }
+                                                        case 5:
+                                                            {
+                                                                string text4 = mailInfo.Annex5 = buyitems[k].ItemID.ToString();
+                                                                mailInfo.Annex5Name = buyitems[k].Template.Name;
+                                                                break;
+                                                            }
+                                                    }
+                                                    bool flag35 = num5 == 5;
+                                                    if (flag35)
+                                                    {
+                                                        num5 = 0;
+                                                        mailInfo.AnnexRemark = stringBuilder3.ToString();
+                                                        _ = stringBuilder3.Remove(0, stringBuilder3.Length);
+                                                        _ = stringBuilder3.Append(LanguageMgr.GetTranslation("GoodsPresentHandler.AnnexRemark", Array.Empty<object>()));
+                                                        mailInfo.Content = LanguageMgr.GetTranslation("UserBuyItemHandler.Title", Array.Empty<object>()) + mailInfo.Annex1Name + "]";
+                                                        mailInfo.Gold = 0;
+                                                        mailInfo.Money = 0;
+                                                        mailInfo.Receiver = client.Player.PlayerCharacter.NickName;
+                                                        mailInfo.ReceiverID = client.Player.PlayerCharacter.ID;
+                                                        mailInfo.Sender = mailInfo.Receiver;
+                                                        mailInfo.SenderID = mailInfo.ReceiverID;
+                                                        mailInfo.Title = mailInfo.Content;
+                                                        mailInfo.Type = 8;
+                                                        _ = playerBussiness.SendMail(mailInfo);
+                                                        eMsg = eMessageType.BIGBUGLE_NOTICE;
+                                                        msg = "UserBuyItemHandler.Mail";
+                                                        mailInfo.Revert();
                                                     }
                                                 }
                                             }
@@ -393,27 +391,25 @@ namespace Game.Server.Packets.Client
                                             bool flag36 = num5 > 0;
                                             if (flag36)
                                             {
-                                                using (PlayerBussiness playerBussiness2 = new PlayerBussiness())
-                                                {
-                                                    mailInfo.AnnexRemark = stringBuilder3.ToString();
-                                                    mailInfo.Content = LanguageMgr.GetTranslation("UserBuyItemHandler.Title", Array.Empty<object>()) + mailInfo.Annex1Name + "]";
-                                                    mailInfo.Gold = 0;
-                                                    mailInfo.Money = 0;
-                                                    mailInfo.Receiver = client.Player.PlayerCharacter.NickName;
-                                                    mailInfo.ReceiverID = client.Player.PlayerCharacter.ID;
-                                                    mailInfo.Sender = mailInfo.Receiver;
-                                                    mailInfo.SenderID = mailInfo.ReceiverID;
-                                                    mailInfo.Title = mailInfo.Content;
-                                                    mailInfo.Type = 8;
-                                                    playerBussiness2.SendMail(mailInfo);
-                                                    eMsg = eMessageType.BIGBUGLE_NOTICE;
-                                                    msg = "UserBuyItemHandler.Mail";
-                                                }
+                                                using PlayerBussiness playerBussiness2 = new();
+                                                mailInfo.AnnexRemark = stringBuilder3.ToString();
+                                                mailInfo.Content = LanguageMgr.GetTranslation("UserBuyItemHandler.Title", Array.Empty<object>()) + mailInfo.Annex1Name + "]";
+                                                mailInfo.Gold = 0;
+                                                mailInfo.Money = 0;
+                                                mailInfo.Receiver = client.Player.PlayerCharacter.NickName;
+                                                mailInfo.ReceiverID = client.Player.PlayerCharacter.ID;
+                                                mailInfo.Sender = mailInfo.Receiver;
+                                                mailInfo.SenderID = mailInfo.ReceiverID;
+                                                mailInfo.Title = mailInfo.Content;
+                                                mailInfo.Type = 8;
+                                                _ = playerBussiness2.SendMail(mailInfo);
+                                                eMsg = eMessageType.BIGBUGLE_NOTICE;
+                                                msg = "UserBuyItemHandler.Mail";
                                             }
                                             bool flag37 = eMsg == eMessageType.BIGBUGLE_NOTICE;
                                             if (flag37)
                                             {
-                                                client.Out.SendMailResponse(client.Player.PlayerCharacter.ID, eMailRespose.Receiver);
+                                                _ = client.Out.SendMailResponse(client.Player.PlayerCharacter.ID, eMailRespose.Receiver);
                                             }
                                             client.Player.OnPaid(money, gold, offer, gifttoken, petScore, 0, dmgScore, payGoods.ToString());
                                             client.Player.AddLog("Buy Shop", content);
@@ -421,7 +417,7 @@ namespace Game.Server.Packets.Client
                                         // ÖDEME BAŞARISIZSA (LİMİT DOLU)
                                         else
                                         {
-                                            client.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, "Satın alma başarısız! Günlük kupon harcama limitinizi aşmış olabilirsiniz.");
+                                            _ = client.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, "Satın alma başarısız! Günlük kupon harcama limitinizi aşmış olabilirsiniz.");
                                             return 0;
                                         }
                                         // ---------------------------------------------------------
@@ -467,7 +463,7 @@ namespace Game.Server.Packets.Client
                                         }
                                         eMsg = eMessageType.BIGBUGLE_NOTICE;
                                     }
-                                    client.Out.SendMessage(eMsg, LanguageMgr.GetTranslation(msg, Array.Empty<object>()));
+                                    _ = client.Out.SendMessage(eMsg, LanguageMgr.GetTranslation(msg, Array.Empty<object>()));
                                     gSPacketIn.WriteInt(1);
                                     gSPacketIn.WriteInt(3);
                                     client.Player.SendTCP(gSPacketIn);

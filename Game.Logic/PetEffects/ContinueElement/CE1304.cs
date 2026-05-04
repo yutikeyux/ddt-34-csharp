@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using Game.Logic.Phy.Object;
+﻿using Game.Logic.Phy.Object;
 
 namespace Game.Logic.PetEffects.ContinueElement
 {
     public class CE1304 : BasePetEffect
     {
-        private int m_type = 0;
-        private int m_count = 0;
+        private readonly int m_type = 0;
+        private readonly int m_count = 0;
         private int m_probability = 0;
-        private int m_delay = 0;
-        private int m_coldDown = 0;
-        private int m_currentId;
-        private int m_added = 0;
+        private readonly int m_delay = 0;
+        private readonly int m_coldDown = 0;
+        private readonly int m_currentId;
+        private readonly int m_added = 0;
 
         public CE1304(int count, int probability, int type, int skillId, int delay, string elementID)
             : base(ePetEffectType.CE1304, elementID)
@@ -27,8 +25,7 @@ namespace Game.Logic.PetEffects.ContinueElement
 
         public override bool Start(Living living)
         {
-            CE1304 effect = living.PetEffectList.GetOfType(ePetEffectType.CE1304) as CE1304;
-            if (effect != null)
+            if (living.PetEffectList.GetOfType(ePetEffectType.CE1304) is CE1304 effect)
             {
                 effect.m_probability = m_probability > effect.m_probability ? m_probability : effect.m_probability;
                 return true;
@@ -47,13 +44,13 @@ namespace Game.Logic.PetEffects.ContinueElement
 
         private void Player_PlayerClearBuffSkillPet(Player player)
         {
-            Stop();
+            _ = Stop();
         }
 
         private void Player_BeginSelfTurn(Living living)
         {
-            
-            Stop();
+
+            _ = Stop();
         }
 
         protected override void OnRemovedFromPlayer(Player player)

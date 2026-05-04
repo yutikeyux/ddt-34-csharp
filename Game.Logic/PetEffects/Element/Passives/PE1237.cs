@@ -1,17 +1,15 @@
-﻿using Game.Logic.PetEffects.ContinueElement;
-using Game.Logic.Phy.Object;
-using System;
+﻿using Game.Logic.Phy.Object;
 
 namespace Game.Logic.PetEffects.Element.Passives
 {
     public class PE1237 : BasePetEffect
     {
-        private int m_type = 0;
-        private int m_count = 0;
+        private readonly int m_type = 0;
+        private readonly int m_count = 0;
         private int m_probability = 0;
-        private int m_delay = 0;
-        private int m_coldDown = 0;
-        private int m_currentId;
+        private readonly int m_delay = 0;
+        private readonly int m_coldDown = 0;
+        private readonly int m_currentId;
         private int m_added = 0;
 
         public PE1237(int count, int probability, int type, int skillId, int delay, string elementID)
@@ -27,8 +25,7 @@ namespace Game.Logic.PetEffects.Element.Passives
 
         public override bool Start(Living living)
         {
-            PE1237 effect = living.PetEffectList.GetOfType(ePetEffectType.PE1237) as PE1237;
-            if (effect != null)
+            if (living.PetEffectList.GetOfType(ePetEffectType.PE1237) is PE1237 effect)
             {
                 effect.m_probability = m_probability > effect.m_probability ? m_probability : effect.m_probability;
                 return true;
@@ -50,15 +47,17 @@ namespace Game.Logic.PetEffects.Element.Passives
             {
                 m_added = 800;
                 source.SyncAtTime = true;
-                source.AddBlood(-m_added, 1);
+                _ = source.AddBlood(-m_added, 1);
                 source.SyncAtTime = false;
                 if (source.Blood < 0)
                 {
                     source.Die();
-                    if (living != null && living is Player)
+                    if (living is not null and Player)
+                    {
                         (living as Player).PlayerDetail.OnKillingLiving(living.Game, 2, source.Id, source.IsLiving, m_added);
+                    }
                 }
-                living.PetEffects.ReboundDamage = m_added;                
+                living.PetEffects.ReboundDamage = m_added;
             }
         }
 

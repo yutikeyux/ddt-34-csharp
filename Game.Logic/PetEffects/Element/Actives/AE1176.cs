@@ -1,19 +1,18 @@
 ﻿using Game.Logic.PetEffects.ContinueElement;
 using Game.Logic.Phy.Object;
-using System;
 using System.Collections.Generic;
 
 namespace Game.Logic.PetEffects.Element.Actives
 {
     public class AE1176 : BasePetEffect
     {
-        private int m_type = 0;
-        private int m_count = 0;
+        private readonly int m_type = 0;
+        private readonly int m_count = 0;
         private int m_probability = 0;
-        private int m_delay = 0;
-        private int m_coldDown = 0;
-        private int m_currentId;
-        private int m_added = 0;
+        private readonly int m_delay = 0;
+        private readonly int m_coldDown = 0;
+        private readonly int m_currentId;
+        private readonly int m_added = 0;
 
         public AE1176(int count, int probability, int type, int skillId, int delay, string elementID)
             : base(ePetEffectType.AE1176, elementID)
@@ -28,8 +27,7 @@ namespace Game.Logic.PetEffects.Element.Actives
 
         public override bool Start(Living living)
         {
-            AE1176 effect = living.PetEffectList.GetOfType(ePetEffectType.AE1176) as AE1176;
-            if (effect != null)
+            if (living.PetEffectList.GetOfType(ePetEffectType.AE1176) is AE1176 effect)
             {
                 effect.m_probability = m_probability > effect.m_probability ? m_probability : effect.m_probability;
                 return true;
@@ -42,7 +40,7 @@ namespace Game.Logic.PetEffects.Element.Actives
 
         protected override void OnAttachedToPlayer(Player player)
         {
-            player.PlayerBuffSkillPet += Player_PlayerBuffSkillPet;      
+            player.PlayerBuffSkillPet += Player_PlayerBuffSkillPet;
         }
 
         private void Player_PlayerBuffSkillPet(Player player)
@@ -56,11 +54,11 @@ namespace Game.Logic.PetEffects.Element.Actives
                     enemy.AddPetEffect(new CE1176(3, m_probability, m_type, m_currentId, m_delay, ElementInfo.ID.ToString(), player), 0);
                 }
             }
-        }        
+        }
 
         protected override void OnRemovedFromPlayer(Player player)
         {
             player.PlayerBuffSkillPet -= Player_PlayerBuffSkillPet;
-        }         
+        }
     }
 }

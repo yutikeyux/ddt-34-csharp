@@ -1,9 +1,7 @@
-using System;
-using Game.Server.GameObjects;
-using Game.Base.Packets;
-using SqlDataProvider.Data;
-using Game.Server.GameUtils;
 using Bussiness;
+using Game.Base.Packets;
+using Game.Server.GameUtils;
+using SqlDataProvider.Data;
 
 namespace Game.Server.Packets.Client
 {
@@ -14,7 +12,10 @@ namespace Game.Server.Packets.Client
         {
             //已经开始游戏则不处理
             if (client.Player.CurrentRoom != null && client.Player.CurrentRoom.IsPlaying)
+            {
                 return 0;
+            }
+
             int bagType = packet.ReadByte();
             int place = packet.ReadInt();
             PlayerInventory inventory = client.Player.GetInventory((eBageType)bagType);
@@ -35,8 +36,8 @@ namespace Game.Server.Packets.Client
                             }
                             if (slot == -1 || !inventory.MoveItem(item.Place, slot, item.Count))
                             {
-                                client.Player.SendItemToMail(item, LanguageMgr.GetTranslation("ItemOverdueHandler.Content"), LanguageMgr.GetTranslation("ItemOverdueHandler.Title"), eMailType.ItemOverdue);
-                                client.Player.Out.SendMailResponse(client.Player.PlayerCharacter.ID, eMailRespose.Receiver);
+                                _ = client.Player.SendItemToMail(item, LanguageMgr.GetTranslation("ItemOverdueHandler.Content"), LanguageMgr.GetTranslation("ItemOverdueHandler.Title"), eMailType.ItemOverdue);
+                                _ = client.Player.Out.SendMailResponse(client.Player.PlayerCharacter.ID, eMailRespose.Receiver);
                                 //Console.WriteLine("ItemOverdueHandler {0}", item.Template.Name);
                             }
                         }

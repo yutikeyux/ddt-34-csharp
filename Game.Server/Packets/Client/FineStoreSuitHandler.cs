@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Game.Base.Packets;
-using log4net;
-using Game.Server.Managers;
-using SqlDataProvider.Data;
-using Bussiness;
+﻿using Bussiness;
 using Bussiness.Managers;
-using Game.Server.Statics;
+using Game.Base.Packets;
+using SqlDataProvider.Data;
+using System;
 
 namespace Game.Server.Packets.Client
 {
@@ -39,13 +33,16 @@ namespace Game.Server.Packets.Client
                         {
                             if (count == 0)
                             {
-                                count = item.Count;
+                                _ = item.Count;
                             }
 
                             int maxExp = SetsBuildTempMgr.SetsBuildMax();
                             int needCount = (useItem.Exp - client.Player.PlayerCharacter.fineSuitExp) / 10; ++needCount;
                             if (needCount > item.Count)
+                            {
                                 needCount = item.Count;
+                            }
+
                             fineSuitExp += item.Template.Property2 * needCount;
                             if (fineSuitExp > maxExp)
                             {
@@ -55,7 +52,7 @@ namespace Game.Server.Packets.Client
                                 {
                                     needCount = needExp / item.Template.Property2;
                                     ItemInfo addBack = ItemInfo.CreateFromTemplate(item.Template, needCount, 105);
-                                    client.Player.AddTemplate(addBack);
+                                    _ = client.Player.AddTemplate(addBack);
                                 }
                             }
 
@@ -67,7 +64,7 @@ namespace Game.Server.Packets.Client
                             Console.WriteLine("FineStoreSuitHandler::item not found!");
                         }
                     }
-                    GSPacketIn pkg = new GSPacketIn((int)ePackageType.STORE_FINE_SUIT);
+                    GSPacketIn pkg = new((int)ePackageType.STORE_FINE_SUIT);
                     pkg.WriteByte((byte)FineStorePackageType.FORGE_SUIT);
                     pkg.WriteBoolean(result);
                     pkg.WriteInt(fineSuitExp);

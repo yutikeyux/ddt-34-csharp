@@ -1,8 +1,6 @@
-using System;
-using Game.Base.Packets;
-using Game.Server.GameObjects;
-using Game.Server.GameUtils;
 using Bussiness;
+using Game.Base.Packets;
+using Game.Server.GameUtils;
 using SqlDataProvider.Data;
 
 namespace Game.Server.Packets.Client
@@ -18,37 +16,37 @@ namespace Game.Server.Packets.Client
             string newNickname = packet.ReadString();
             string msg = "";
             if (client.Player.PlayerCharacter.ConsortiaID == 0)
+            {
                 return 0;
+            }
 
             PlayerInventory inventory = client.Player.GetInventory((eBageType)bag);
             ItemInfo card = inventory.GetItemAt(place);
             if (card.TemplateID == (int)EquipType.CONSORTIA_CHANGE_NAME_CARD)
             {
 
-                using (ConsortiaBussiness pb = new ConsortiaBussiness())
+                using ConsortiaBussiness pb = new();
+                ConsortiaInfo info = pb.GetConsortiaSingle(consortiaID);
+                if (info == null)
                 {
-                    ConsortiaInfo info = pb.GetConsortiaSingle(consortiaID);
-                    if (info == null)
+                    client.Player.SendMessage(LanguageMgr.GetTranslation("UseConsortiaReworkNameHandler.Msg1"));
+                    return 0;
+                }
+                else
+                {
+                    if (client.Player.PlayerCharacter.ID != info.ChairmanID)
                     {
-                        client.Player.SendMessage(LanguageMgr.GetTranslation("UseConsortiaReworkNameHandler.Msg1"));
+                        client.Player.SendMessage(LanguageMgr.GetTranslation("UseConsortiaReworkNameHandler.Msg2"));
                         return 0;
                     }
-                    else
-                    {
-                        if (client.Player.PlayerCharacter.ID != info.ChairmanID)
-                        {
-                            client.Player.SendMessage(LanguageMgr.GetTranslation("UseConsortiaReworkNameHandler.Msg2"));
-                            return 0;
-                        }
-                    }
-                    if (pb.RenameConsortia(consortiaID, client.Player.PlayerCharacter.NickName, newNickname))
-                    {
-                        inventory.RemoveCountFromStack(card, 1);
-                    }
-                    else
-                    {
-                        msg = LanguageMgr.GetTranslation("UseConsortiaReworkNameHandler.Msg3");
-                    }
+                }
+                if (pb.RenameConsortia(consortiaID, client.Player.PlayerCharacter.NickName, newNickname))
+                {
+                    _ = inventory.RemoveCountFromStack(card, 1);
+                }
+                else
+                {
+                    msg = LanguageMgr.GetTranslation("UseConsortiaReworkNameHandler.Msg3");
                 }
             }
             if (msg != "")

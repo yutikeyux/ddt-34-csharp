@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Game.Base.Packets;
-using Game.Server.Managers;
-using Game.Server.GameObjects;
-using Game.Server.Packets;
-//using Game.Server.Packets.Package;
-using Game.Server.Rooms;
-using SqlDataProvider.Data;
+﻿using Bussiness;
 using Bussiness.Managers;
-using Bussiness;
-using Newtonsoft.Json;
+using Game.Base.Packets;
+//using Game.Server.Packets.Package;
+using SqlDataProvider.Data;
+using System;
+using System.Collections.Generic;
 //using Game.Server.LotteryTicket;
-using Bussiness.Protocol;
 
 namespace Game.Server.Packets.Client
 {
@@ -24,8 +16,8 @@ namespace Game.Server.Packets.Client
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             int cmd = packet.ReadInt();
-            int ID = client.Player.PlayerCharacter.ID;
-            ActiveSystemInfo ActivityPackage = client.Player.Actives.Info;
+            _ = client.Player.PlayerCharacter.ID;
+            _ = client.Player.Actives.Info;
             switch (cmd)
             {
                 #region GROWTHPACKAGE
@@ -138,7 +130,7 @@ namespace Game.Server.Packets.Client
                         int[] gradeVal = { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512 };
                         int[] levelNeed = { 5, 10, 25, 30, 40, 45, 48, 50, 55, 60 };
                         int type = packet.ReadInt();
-                        GSPacketIn pkg = new GSPacketIn((byte)ePackageType.ACTIVITY_PACKAGE, client.Player.PlayerCharacter.ID);
+                        GSPacketIn pkg = new((byte)ePackageType.ACTIVITY_PACKAGE, client.Player.PlayerCharacter.ID);
                         pkg.WriteInt((int)ChickActivationType.CHICKACTIVATION);
                         switch (type)
                         {
@@ -173,25 +165,23 @@ namespace Game.Server.Packets.Client
                                 if (codeEnter.Length == 14 && chickInfo.IsKeyOpened == 0)
                                 {
                                     // check code
-                                    using (PlayerBussiness pb = new PlayerBussiness())
+                                    using PlayerBussiness pb = new();
+                                    int result = pb.ActiveChickCode(client.Player.PlayerCharacter.ID, codeEnter);
+                                    switch (result)
                                     {
-                                        int result = pb.ActiveChickCode(client.Player.PlayerCharacter.ID, codeEnter);
-                                        switch (result)
-                                        {
-                                            case 0:
-                                                // complete
-                                                chickInfo.Active((client.Player.PlayerCharacter.Grade > 15) ? 2 : 1);
-                                                client.Player.Actives.SaveChickActiveData(chickInfo);
-                                                client.Player.Actives.SendUpdateChickActivation();
-                                                client.Player.SendMessage(LanguageMgr.GetTranslation("ActivityPackageHandler.ChickActivation.Success"));
-                                                break;
-                                            case 1:
-                                                client.Player.SendMessage(LanguageMgr.GetTranslation("ActivityPackageHandler.ChickActivation.NotExit"));
-                                                break;
-                                            case 2:
-                                                client.Player.SendMessage(LanguageMgr.GetTranslation("ActivityPackageHandler.ChickActivation.IsUsed"));
-                                                break;
-                                        }
+                                        case 0:
+                                            // complete
+                                            chickInfo.Active((client.Player.PlayerCharacter.Grade > 15) ? 2 : 1);
+                                            _ = client.Player.Actives.SaveChickActiveData(chickInfo);
+                                            client.Player.Actives.SendUpdateChickActivation();
+                                            client.Player.SendMessage(LanguageMgr.GetTranslation("ActivityPackageHandler.ChickActivation.Success"));
+                                            break;
+                                        case 1:
+                                            client.Player.SendMessage(LanguageMgr.GetTranslation("ActivityPackageHandler.ChickActivation.NotExit"));
+                                            break;
+                                        case 2:
+                                            client.Player.SendMessage(LanguageMgr.GetTranslation("ActivityPackageHandler.ChickActivation.IsUsed"));
+                                            break;
                                     }
                                 }
                                 break;
@@ -228,7 +218,7 @@ namespace Game.Server.Packets.Client
                                     else if (AwardType == 12 && gradeVal[AwardIndex - 1] > chickInfo.CurrentLvAward && client.Player.PlayerCharacter.Grade >= levelNeed[AwardIndex - 1] && chickInfo.KeyOpenedType == 1)
                                     {
                                         int[] qualityArr = { 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10000, 10009, 10010 };
-                                        chickInfo.CurrentLvAward = chickInfo.CurrentLvAward + gradeVal[AwardIndex - 1];
+                                        chickInfo.CurrentLvAward += gradeVal[AwardIndex - 1];
                                         lists = ActiveMgr.FindChickActivePakage(qualityArr[AwardIndex - 1]);
                                         title = LanguageMgr.GetTranslation("ActivityPackageHandler.ChickActivation.LevelAward.Title", levelNeed[AwardIndex - 1]);
                                         msg = LanguageMgr.GetTranslation("ActivityPackageHandler.ChickActivation.LevelAward.Msg", levelNeed[AwardIndex - 1]);
@@ -237,7 +227,7 @@ namespace Game.Server.Packets.Client
                                     // send item
                                     if (lists != null)
                                     {
-                                        List<ItemInfo> awards = new List<ItemInfo>();
+                                        List<ItemInfo> awards = [];
                                         foreach (ActivitySystemItemInfo info in lists)
                                         {
                                             ItemTemplateInfo temp = ItemMgr.FindItemTemplate(info.TemplateID);
@@ -257,12 +247,12 @@ namespace Game.Server.Packets.Client
                                         }
                                         if (awards.Count > 0)
                                         {
-                                            WorldEventMgr.SendItemsToMails(awards, client.Player.PlayerCharacter.ID, client.Player.PlayerCharacter.NickName, client.Player.ZoneId, null, title);
-                                            client.Out.SendMailResponse(client.Player.PlayerCharacter.ID, eMailRespose.Receiver);
+                                            _ = WorldEventMgr.SendItemsToMails(awards, client.Player.PlayerCharacter.ID, client.Player.PlayerCharacter.NickName, client.Player.ZoneId, null, title);
+                                            _ = client.Out.SendMailResponse(client.Player.PlayerCharacter.ID, eMailRespose.Receiver);
                                         }
-                                        client.Player.Actives.SaveChickActiveData(chickInfo);
+                                        _ = client.Player.Actives.SaveChickActiveData(chickInfo);
                                         client.Player.Actives.SendUpdateChickActivation();
-                                        client.Out.SendMessage(eMessageType.Normal, msg);
+                                        _ = client.Out.SendMessage(eMessageType.Normal, msg);
 
                                     }
                                     else

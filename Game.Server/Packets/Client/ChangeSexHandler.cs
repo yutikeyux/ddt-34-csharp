@@ -21,29 +21,31 @@ namespace Game.Server.Packet.Client
             }
             if (itemAt.TemplateID == 11569)
             {
-                using PlayerBussiness playerBussiness = new PlayerBussiness();
+                using PlayerBussiness playerBussiness = new();
                 PlayerInfo userSingleByUserID = playerBussiness.GetUserSingleByUserID(client.Player.PlayerCharacter.SpouseID);
                 if (userSingleByUserID == null || userSingleByUserID.Sex == client.Player.PlayerCharacter.Sex)
                 {
-                    MarryApplyInfo marryApplyInfo = new MarryApplyInfo();
-                    marryApplyInfo.UserID = client.Player.PlayerCharacter.SpouseID;
-                    marryApplyInfo.ApplyUserID = client.Player.PlayerCharacter.ID;
-                    marryApplyInfo.ApplyUserName = client.Player.PlayerCharacter.NickName;
-                    marryApplyInfo.ApplyType = 3;
-                    marryApplyInfo.LoveProclamation = "";
-                    marryApplyInfo.ApplyResult = false;
+                    MarryApplyInfo marryApplyInfo = new()
+                    {
+                        UserID = client.Player.PlayerCharacter.SpouseID,
+                        ApplyUserID = client.Player.PlayerCharacter.ID,
+                        ApplyUserName = client.Player.PlayerCharacter.NickName,
+                        ApplyType = 3,
+                        LoveProclamation = "",
+                        ApplyResult = false
+                    };
                     int id = 0;
                     if (playerBussiness.SavePlayerMarryNotice(marryApplyInfo, 0, ref id))
                     {
                         GameServer.Instance.LoginServer.SendUpdatePlayerMarriedStates(userSingleByUserID.ID);
                         client.Player.LoadMarryProp();
                     }
-                    client.Player.QuestInventory.ClearMarryQuest();
+                    _ = client.Player.QuestInventory.ClearMarryQuest();
                 }
-                bool newSex = ((!client.Player.PlayerCharacter.Sex) ? true : false);
+                bool newSex = (!client.Player.PlayerCharacter.Sex);
                 if (playerBussiness.ChangeSex(client.Player.PlayerCharacter.ID, newSex))
                 {
-                    inventory.RemoveCountFromStack(itemAt, 1);
+                    _ = inventory.RemoveCountFromStack(itemAt, 1);
                     client.Player.SendMessage(LanguageMgr.GetTranslation("ChangeSexHandlerHandler.Success"));
                 }
                 else

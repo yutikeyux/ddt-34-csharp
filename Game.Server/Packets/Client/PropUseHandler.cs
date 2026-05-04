@@ -1,17 +1,14 @@
-﻿using Game.Base.Packets;
+﻿using Bussiness;
+using Game.Base.Packets;
 using Game.Server.GameUtils;
 using SqlDataProvider.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Bussiness;
 namespace Game.Server.Packets.Client
 {
     [PacketHandler((int)ePackageType.PROP_USE, "场景用户离开")]
     public class PropUseHandler : IPacketHandler
     {
-        private Random rand = new Random();
+        private readonly Random rand = new();
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             eBageType bagType = (eBageType)packet.ReadInt();
@@ -32,9 +29,9 @@ namespace Game.Server.Packets.Client
                                 UserChickActiveInfo chickInfo = client.Player.Actives.GetChickActiveData();
                                 if (chickInfo.IsKeyOpened == 0 && prop != null && prop.Count >= 1)
                                 {
-                                    invent.RemoveCountFromStack(prop, 1);
+                                    _ = invent.RemoveCountFromStack(prop, 1);
                                     chickInfo.Active((client.Player.PlayerCharacter.Grade > 15) ? 2 : 1);
-                                    client.Player.Actives.SaveChickActiveData(chickInfo);
+                                    _ = client.Player.Actives.SaveChickActiveData(chickInfo);
                                     client.Player.SendMessage(LanguageMgr.GetTranslation("PropUseHandler.ChickActivation.Success"));
                                 }
                                 else
@@ -44,14 +41,15 @@ namespace Game.Server.Packets.Client
                                 break;
                             case 11963://lì xì phát tài
                                 int token = rand.Next(1, 1000);
-                                client.Player.AddGiftToken(token);
+                                _ = client.Player.AddGiftToken(token);
                                 client.Player.SendMessage(LanguageMgr.GetTranslation("PropUseHandler.GiftToken", token));
-                                invent.RemoveCountFromStack(prop, 1);
+                                _ = invent.RemoveCountFromStack(prop, 1);
                                 break;
                         }
                     }
-                    int payType = packet.ReadInt();
-                    bool unk = packet.ReadBoolean();
+
+                    _ = packet.ReadInt();
+                    _ = packet.ReadBoolean();
                 }
             }
             return 0;

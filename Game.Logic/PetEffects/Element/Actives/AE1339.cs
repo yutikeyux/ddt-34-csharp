@@ -1,18 +1,17 @@
 ﻿using Game.Logic.PetEffects.ContinueElement;
 using Game.Logic.Phy.Object;
-using System;
 
 namespace Game.Logic.PetEffects.Element.Actives
 {
     public class AE1339 : BasePetEffect
     {
-        private int m_type = 0;
-        private int m_count = 0;
+        private readonly int m_type = 0;
+        private readonly int m_count = 0;
         private int m_probability = 0;
-        private int m_delay = 0;
-        private int m_coldDown = 0;
-        private int m_currentId;
-        private int m_added = 0;
+        private readonly int m_delay = 0;
+        private readonly int m_coldDown = 0;
+        private readonly int m_currentId;
+        private readonly int m_added = 0;
 
         public AE1339(int count, int probability, int type, int skillId, int delay, string elementID)
             : base(ePetEffectType.AE1339, elementID)
@@ -27,8 +26,7 @@ namespace Game.Logic.PetEffects.Element.Actives
 
         public override bool Start(Living living)
         {
-            AE1339 effect = living.PetEffectList.GetOfType(ePetEffectType.AE1339) as AE1339;
-            if (effect != null)
+            if (living.PetEffectList.GetOfType(ePetEffectType.AE1339) is AE1339 effect)
             {
                 effect.m_probability = m_probability > effect.m_probability ? m_probability : effect.m_probability;
                 return true;
@@ -42,7 +40,7 @@ namespace Game.Logic.PetEffects.Element.Actives
         protected override void OnAttachedToPlayer(Player player)
         {
             player.PlayerBeginMoving += Player_PlayerBeginMoving;
-            player.PlayerBuffSkillPet += Player_PlayerBuffSkillPet;   
+            player.PlayerBuffSkillPet += Player_PlayerBuffSkillPet;
         }
 
         private void Player_PlayerBuffSkillPet(Player player)
@@ -56,18 +54,12 @@ namespace Game.Logic.PetEffects.Element.Actives
         private void Player_PlayerBeginMoving(Player player)
         {
             if (IsTrigger)
-            {               
+            {
                 CE1336 effect1 = player.PetEffectList.GetOfType(ePetEffectType.CE1336) as CE1336;
-                if (effect1 != null)
-                {
-                    effect1.Stop();
-                }
+                _ = effect1?.Stop();
 
                 CE1337 effect2 = player.PetEffectList.GetOfType(ePetEffectType.CE1337) as CE1337;
-                if (effect2 != null)
-                {
-                    effect2.Stop();
-                }
+                _ = effect2?.Stop();
                 player.PetEffects.AddGuardValue = 0;
                 IsTrigger = false;
             }
@@ -76,6 +68,6 @@ namespace Game.Logic.PetEffects.Element.Actives
         protected override void OnRemovedFromPlayer(Player player)
         {
             player.PlayerBeginMoving -= Player_PlayerBeginMoving;
-        }        
+        }
     }
 }

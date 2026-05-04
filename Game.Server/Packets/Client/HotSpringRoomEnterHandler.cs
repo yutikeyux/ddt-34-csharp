@@ -15,7 +15,7 @@ namespace Game.Server.Packets.Client
             int needGold = 10000;
             int needMoney = 10000;
             int roomId = packet.ReadInt();
-            string pass = packet.ReadString();
+            _ = packet.ReadString();
             if (client.Player.CurrentHotSpringRoom == null)
             {
                 HotSpringRoom room = HotSpringMgr.GetHotSpringRoombyID(roomId);
@@ -32,7 +32,7 @@ namespace Game.Server.Packets.Client
                         {
                             if (room.AddPlayer(client.Player) && client.Player.RemoveGold(needGold) > 0)
                             {
-                                client.Out.SendEnterHotSpringRoom(client.Player);
+                                _ = client.Out.SendEnterHotSpringRoom(client.Player);
                             }
                         }
                     }
@@ -47,7 +47,7 @@ namespace Game.Server.Packets.Client
                         {
                             if (room.AddPlayer(client.Player) && client.Player.MoneyDirect(needMoney, true, false, true))
                             {
-                                client.Out.SendEnterHotSpringRoom(client.Player);
+                                _ = client.Out.SendEnterHotSpringRoom(client.Player);
                             }
                         }
                     }

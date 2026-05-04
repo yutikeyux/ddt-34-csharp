@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Game.Base.Packets;
 using Bussiness;
-using SqlDataProvider.Data;
+using Game.Base.Packets;
 using Game.Server.GameUtils;
 using Game.Server.Managers;
 using log4net;
-using System.Reflection;
+using SqlDataProvider.Data;
+using System;
 
 namespace Game.Server.Packets.Client
 {
@@ -27,12 +23,12 @@ namespace Game.Server.Packets.Client
             PlayerInventory bag = client.Player.GetInventory(bagType);
             PlayerInventory toBag = client.Player.GetInventory(toBagType);
             ItemInfo item = bag.GetItemAt(place);
-            
-           // if (DateTime.Compare(client.Player.LastMovePlaceItem.AddMilliseconds(300.0), DateTime.Now) > 0)
+
+            // if (DateTime.Compare(client.Player.LastMovePlaceItem.AddMilliseconds(300.0), DateTime.Now) > 0)
             //{
             //   client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Yavaşla istersen!"));
             //    return 0;
-           // }
+            // }
             if (item == null)
             {
                 return 0;
@@ -55,22 +51,25 @@ namespace Game.Server.Packets.Client
             }
             bag.BeginChanges();
             toBag.BeginChanges();
-            
+
             try
             {
                 if (toBagType == eBageType.Consortia)
                 {
                     ConsortiaInfo info = ConsortiaMgr.FindConsortiaInfo(client.Player.PlayerCharacter.ConsortiaID);
                     if (info != null)
+                    {
                         toBag.Capalility = info.StoreLevel * 10;
+                    }
                 }
                 if (toBagType == eBageType.EquipBag)
                 {
                     if (toBag.FindFirstEmptySlot() == -1 && toPlace >= 31)
                     {
                         return 0;
-                    }    
-                } else
+                    }
+                }
+                else
                 {
                     if (toBag.FindFirstEmptySlot() == -1)
                     {
@@ -84,9 +83,13 @@ namespace Game.Server.Packets.Client
                     {
                         toPlace = toBag.FindFirstEmptySlot(toBag.BeginSlot);
                         if (toBag.AddItemTo(item, toPlace))
-                            bag.TakeOutItem(item);
+                        {
+                            _ = bag.TakeOutItem(item);
+                        }
                         else
+                        {
                             isFull = true;
+                        }
                     }
                     else if (bagType == toBagType && toBagType == eBageType.EquipBag)
                     {
@@ -96,18 +99,24 @@ namespace Game.Server.Packets.Client
                             toPlace = toBag.FindFirstEmptySlot(81);
                         }
                         if (!bag.MoveItem(place, toPlace, count))
+                        {
                             isFull = true;
+                        }
                     }
                     else
                     {
                         if (toBag.StackItemToAnother(item) || toBag.AddItem(item))
-                            bag.TakeOutItem(item);
+                        {
+                            _ = bag.TakeOutItem(item);
+                        }
                         else
+                        {
                             isFull = true;
+                        }
                     }
                     if (isFull)
                     {
-                        client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("UserChangeItemPlaceHandler.full"));
+                        _ = client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("UserChangeItemPlaceHandler.full"));
                         client.Player.LastMovePlaceItem = DateTime.Now;
                         return 0;
                     }
@@ -127,10 +136,12 @@ namespace Game.Server.Packets.Client
                         {
                             toPlace = toBag.FindFirstEmptySlot(81);
                         }
-                        bag.MoveItem(place, toPlace, count);
+                        _ = bag.MoveItem(place, toPlace, count);
                     }
                     else
-                        bag.MoveItem(place, toPlace, count);
+                    {
+                        _ = bag.MoveItem(place, toPlace, count);
+                    }
 
                     //Console.WriteLine("same change place!");
                     client.Player.OnNewGearEvent(item);
@@ -140,7 +151,7 @@ namespace Game.Server.Packets.Client
                 {
                     MoveFromStore(client, bag, item, toPlace, toBag, count);
                 }
-                else if (bagType == eBageType.Consortia || bagType == eBageType.BankBag)
+                else if (bagType is eBageType.Consortia or eBageType.BankBag)
                 {
                     ItemInfo itemTo = toBag.GetItemAt(toPlace);
                     if (itemTo != null)
@@ -168,7 +179,7 @@ namespace Game.Server.Packets.Client
                 }
                 else if (toBagType == eBageType.Store)
                 {
-                    int timestampnow = (int)(DateTime.Now.Date.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                    int timestampnow = (int)DateTime.Now.Date.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
                     if (timestampnow > item.StrengthenTimes)
                     {
                         item.StrengthenExp = 0;
@@ -176,7 +187,7 @@ namespace Game.Server.Packets.Client
                     MoveToStore(client, bag, item, toPlace, toBag, count);
                     //Console.WriteLine("Move to Store!");
                 }
-                else if (toBagType == eBageType.Consortia || toBagType == eBageType.BankBag)
+                else if (toBagType is eBageType.Consortia or eBageType.BankBag)
                 {
                     ItemInfo itemTo = toBag.GetItemAt(toPlace);
                     if (itemTo != null)
@@ -192,7 +203,7 @@ namespace Game.Server.Packets.Client
                 }
                 else if (toBag.AddItemTo(item, toPlace))
                 {
-                    bag.TakeOutItem(item);
+                    _ = bag.TakeOutItem(item);
                     log.ErrorFormat("User: {1} Add item to: {0}", toBag.BagType, client.Player.PlayerCharacter.UserName);
                 }
             }
@@ -207,20 +218,20 @@ namespace Game.Server.Packets.Client
 
         public void MoveFromStore(GameClient client, PlayerInventory storeBag, ItemInfo item, int toSlot, PlayerInventory bag, int count)
         {
-            if ((((client.Player != null && item != null) && storeBag != null) && bag != null) && ((int)item.Template.BagType == bag.BagType))
+            if (client.Player != null && item != null && storeBag != null && bag != null && ((int)item.Template.BagType == bag.BagType))
             {
                 if ((toSlot < bag.BeginSlot) || (toSlot > bag.Capalility))
                 {
                     if (bag.StackItemToAnother(item))
                     {
-                        storeBag.RemoveItem(item, eItemRemoveType.Stack);
+                        _ = storeBag.RemoveItem(item, eItemRemoveType.Stack);
                         return;
                     }
                     string key = string.Format("temp_place_{0}", item.ItemID);
                     if (client.Player.TempProperties.ContainsKey(key))
                     {
                         toSlot = (int)storeBag.Player.TempProperties[key];
-                        storeBag.Player.TempProperties.Remove(key);
+                        _ = storeBag.Player.TempProperties.Remove(key);
                     }
                     else
                     {
@@ -229,21 +240,21 @@ namespace Game.Server.Packets.Client
                 }
                 if (bag.StackItemToAnother(item) || bag.AddItemTo(item, toSlot))
                 {
-                    storeBag.TakeOutItem(item);
+                    _ = storeBag.TakeOutItem(item);
                 }
                 else
                 {
                     toSlot = bag.FindFirstEmptySlot();
                     if (bag.AddItemTo(item, toSlot))
                     {
-                        storeBag.TakeOutItem(item);
+                        _ = storeBag.TakeOutItem(item);
                     }
                     else
                     {
                         ItemInfo toItem = item.Clone();
-                        storeBag.RemoveItem(item);
-                        client.Player.SendItemToMail(toItem, LanguageMgr.GetTranslation("UserChangeItemPlaceHandler.full"), LanguageMgr.GetTranslation("UserChangeItemPlaceHandler.full"), eMailType.ItemOverdue);
-                        client.Player.Out.SendMailResponse(client.Player.PlayerCharacter.ID, eMailRespose.Receiver);
+                        _ = storeBag.RemoveItem(item);
+                        _ = client.Player.SendItemToMail(toItem, LanguageMgr.GetTranslation("UserChangeItemPlaceHandler.full"), LanguageMgr.GetTranslation("UserChangeItemPlaceHandler.full"), eMailType.ItemOverdue);
+                        _ = client.Player.Out.SendMailResponse(client.Player.PlayerCharacter.ID, eMailRespose.Receiver);
                     }
                 }
                 bag.SaveToDatabase();
@@ -253,7 +264,7 @@ namespace Game.Server.Packets.Client
         //
         public void MoveToStore(GameClient client, PlayerInventory bag, ItemInfo item, int toSlot, PlayerInventory storeBag, int count)
         {
-            if (((client.Player != null && bag != null) && item != null) && storeBag != null)
+            if (client.Player != null && bag != null && item != null && storeBag != null)
             {
                 int oldplace = item.Place;
                 string key;
@@ -262,10 +273,10 @@ namespace Game.Server.Packets.Client
                 {
                     if (item.Count == 1 && item.BagType == toItem.BagType)
                     {
-                        bag.TakeOutItem(item);
-                        storeBag.TakeOutItem(toItem);
-                        bag.AddItemTo(toItem, oldplace);
-                        storeBag.AddItemTo(item, toSlot);
+                        _ = bag.TakeOutItem(item);
+                        _ = storeBag.TakeOutItem(toItem);
+                        _ = bag.AddItemTo(toItem, oldplace);
+                        _ = storeBag.AddItemTo(item, toSlot);
                     }
                     else
                     {
@@ -276,10 +287,10 @@ namespace Game.Server.Packets.Client
                             if (client.Player.TempProperties.ContainsKey(key))
                             {
                                 int tempSlot = (int)client.Player.TempProperties[key];
-                                client.Player.TempProperties.Remove(key);
+                                _ = client.Player.TempProperties.Remove(key);
                                 if (tb.AddItemTo(toItem, tempSlot))
                                 {
-                                    storeBag.TakeOutItem(toItem);
+                                    _ = storeBag.TakeOutItem(toItem);
                                 }
                             }
 
@@ -287,15 +298,15 @@ namespace Game.Server.Packets.Client
                         else if (tb.StackItemToAnother(toItem))
                         {
                             //storeBag.RemoveItem(toItem, eItemRemoveType.Stack);
-                            storeBag.RemoveItem(toItem);
+                            _ = storeBag.RemoveItem(toItem);
                         }
                         else if (tb.AddItem(toItem))
                         {
-                            storeBag.TakeOutItem(toItem);
+                            _ = storeBag.TakeOutItem(toItem);
                         }
                         else
                         {
-                            client.Player.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("UserChangeItemPlaceHandler.full"));
+                            _ = client.Player.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("UserChangeItemPlaceHandler.full"));
                         }
                         //Console.WriteLine("toItem {0}", toItem.Template.Name);
                     }
@@ -306,7 +317,7 @@ namespace Game.Server.Packets.Client
                     {
                         if (storeBag.AddItemTo(item, toSlot))
                         {
-                            bag.TakeOutItem(item);
+                            _ = bag.TakeOutItem(item);
                             if (item.Template.BagType == eBageType.EquipBag && oldplace < 31)
                             {
                                 key = string.Format("temp_place_{0}", item.ItemID);
@@ -327,7 +338,7 @@ namespace Game.Server.Packets.Client
                         newItem.Count = count;
                         if (bag.RemoveCountFromStack(item, count, eItemRemoveType.Stack) && !storeBag.AddItemTo(newItem, toSlot))
                         {
-                            bag.AddCountToStack(item, count);
+                            _ = bag.AddCountToStack(item, count);
                         }
                     }
                 }
@@ -345,19 +356,21 @@ namespace Game.Server.Packets.Client
                     if (item.CanStackedTo(toItem) && ((item.Count + toItem.Count) <= item.Template.MaxCount))
                     {
                         if (bank.AddCountToStack(toItem, item.Count))
-                            bag.RemoveCountFromStack(item, item.Count);
+                        {
+                            _ = bag.RemoveCountFromStack(item, item.Count);
+                        }
                     }
                     else if ((int)toItem.Template.BagType == bag.BagType)
                     {
-                        bag.TakeOutItem(item);
-                        bank.TakeOutItem(toItem);
-                        bag.AddItemTo(toItem, place);
-                        bank.AddItemTo(item, toplace);
+                        _ = bag.TakeOutItem(item);
+                        _ = bank.TakeOutItem(toItem);
+                        _ = bag.AddItemTo(toItem, place);
+                        _ = bank.AddItemTo(item, toplace);
                     }
                 }
                 else if (bank.AddItemTo(item, toplace))
                 {
-                    bag.TakeOutItem(item);
+                    _ = bag.TakeOutItem(item);
                 }
             }
         }
@@ -373,27 +386,27 @@ namespace Game.Server.Packets.Client
                     {
                         if (tb.AddItemTo(item, toplace))
                         {
-                            bag.TakeOutItem(item);
+                            _ = bag.TakeOutItem(item);
                         }
                     }
                     else if (item.CanStackedTo(toitem) && ((item.Count + toitem.Count) <= item.Template.MaxCount))
                     {
                         if (tb.AddCountToStack(toitem, item.Count))
                         {
-                            bag.RemoveCountFromStack(item, item.Count);
+                            _ = bag.RemoveCountFromStack(item, item.Count);
                         }
                     }
                     else
                     {
-                        tb.TakeOutItem(toitem);
-                        bag.TakeOutItem(item);
-                        tb.AddItemTo(item, toplace);
-                        bag.AddItemTo(toitem, place);
+                        _ = tb.TakeOutItem(toitem);
+                        _ = bag.TakeOutItem(item);
+                        _ = tb.AddItemTo(item, toplace);
+                        _ = bag.AddItemTo(toitem, place);
                     }
                 }
                 else if (tb.AddItem(item))
                 {
-                    bag.TakeOutItem(item);
+                    _ = bag.TakeOutItem(item);
                 }
             }
         }

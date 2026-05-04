@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Game.Base.Packets;
-using Bussiness;
-using SqlDataProvider.Data;
-using Game.Server.GameUtils;
+﻿using Game.Base.Packets;
 using Game.Server.Managers;
-using Game.Server.Statics;
-using Game.Server.GameObjects;
-using Bussiness.Managers;
+using SqlDataProvider.Data;
 
 namespace Game.Server.Packets.Client
 {
@@ -24,9 +15,15 @@ namespace Game.Server.Packets.Client
             //Console.WriteLine(string.Format("stonePlace {0} count {1} param3 {2}", stonePlace, count, type));
             ItemInfo stone = client.Player.PropBag.GetItemAt(stonePlace);
             if (stone == null)
+            {
                 return 0;
+            }
+
             if (stone.Count < count)
+            {
                 count = stone.Count;
+            }
+
             switch (type)
             {
                 case 1:
@@ -42,7 +39,7 @@ namespace Game.Server.Packets.Client
                         int currentExpAdd = client.Player.PlayerCharacter.necklaceExpAdd;
                         if (currentLv < MAX_LEVEL && stone != null && stone.TemplateID == (int)EquipType.NECKLACE_PTETROCHEM_STONE && count > 0)
                         {
-                            int totalExp = client.Player.PlayerCharacter.necklaceExp + stoneExp * count;
+                            int totalExp = client.Player.PlayerCharacter.necklaceExp + (stoneExp * count);
                             int maxExp = NecklaceMgr.GetNecklaceMaxExp();
                             if (maxExp == 0)
                             {
@@ -58,17 +55,19 @@ namespace Game.Server.Packets.Client
                             client.Player.PlayerCharacter.necklaceExp = totalExp;
                             int nextExpAdd = NecklaceMgr.GetNecklaceExpAdd(client.Player.PlayerCharacter.necklaceExp, currentExpAdd);
                             if (currentExpAdd < nextExpAdd)
+                            {
                                 client.Player.EquipBag.UpdatePlayerProperties();
+                            }
 
                             client.Player.PlayerCharacter.necklaceExpAdd = nextExpAdd;
-                            client.Player.RemoveTemplate(stone.TemplateID, count);
+                            _ = client.Player.RemoveTemplate(stone.TemplateID, count);
                             //Console.WriteLine(string.Format("necklaceExp {0} necklaceExpAdd {1} num {2}", client.Player.PlayerCharacter.necklaceExp, client.Player.PlayerCharacter.necklaceExpAdd, count));
 
                         }
                     }
                     break;
             }
-            client.Player.Out.SendNecklaceStrength(client.Player.PlayerCharacter);
+            _ = client.Player.Out.SendNecklaceStrength(client.Player.PlayerCharacter);
             return 0;
         }
 

@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Game.Server.GameObjects;
-using Game.Base.Packets;
 using Bussiness;
-using Game.Server.GameUtils;
+using Game.Base.Packets;
 using SqlDataProvider.Data;
-using Game.Server.Statics;
+using System;
 
 namespace Game.Server.Packets.Client
 {
@@ -18,28 +12,30 @@ namespace Game.Server.Packets.Client
         {
             eBageType bagType = (eBageType)packet.ReadByte();
             int place = packet.ReadInt();
-            int payType = packet.ReadByte();
+            _ = packet.ReadByte();
             int price = packet.ReadInt();
             int mouthful = packet.ReadInt();
             int validDate = packet.ReadInt();
             int goodsCount = packet.ReadInt();
 
             string msg = "AuctionAddHandler.Fail";
-            payType = 1;
+            int payType = 1;
 
             if (client.Player.isPlayerWarrior())
             {
-                client.Out.SendMessage(eMessageType.GM_NOTICE, "Sizin bu işlevi gerçekleştirme izniniz maalesef yok..");
+                _ = client.Out.SendMessage(eMessageType.GM_NOTICE, "Sizin bu işlevi gerçekleştirme izniniz maalesef yok..");
                 return 0;
             }
             if (client.Player.PlayerCharacter.HasBagPassword && client.Player.PlayerCharacter.IsLocked)
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
                 return 0;
             }
 
             if (price < 0 || (mouthful != 0 && mouthful < price))
+            {
                 return 0;
+            }
 
             int multiple = 1;
             if (payType != 0)
@@ -59,17 +55,19 @@ namespace Game.Server.Packets.Client
 
             if (goods.Count < goodsCount || goodsCount < 0)
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("AuctionAddHandler.Msg11"));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("AuctionAddHandler.Msg11"));
                 return 0;
             }
             if (client.Player.IsLimitCount(goodsCount))
+            {
                 return 0;
+            }
 
             int TotalItemAt = goods.Count - goodsCount;
             int limit = GameProperties.LimitLevel(1);
             if (client.Player.PlayerCharacter.Grade < limit)
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("AuctionAddHandler.Msg12", limit));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("AuctionAddHandler.Msg12", limit));
                 return 0;
             }
             if (price < 0)
@@ -100,22 +98,24 @@ namespace Game.Server.Packets.Client
                 //Console.WriteLine("goodsCount: " + goodsCount);
                 if (itemAddAution.ItemID == 0)
                 {
-                    using (PlayerBussiness playerBussiness = new PlayerBussiness())
-                        playerBussiness.AddGoods(itemAddAution);
+                    using PlayerBussiness playerBussiness = new();
+                    _ = playerBussiness.AddGoods(itemAddAution);
                 }
 
-                AuctionInfo info = new AuctionInfo();
-                info.AuctioneerID = client.Player.PlayerCharacter.ID;//获取物品ID
-                info.AuctioneerName = client.Player.PlayerCharacter.NickName;//获取物品妮称
-                info.BeginDate = DateTime.Now;
-                info.BuyerID = 0;
-                info.BuyerName = "";
-                info.IsExist = true;
-                info.ItemID = itemAddAution.ItemID;
-                info.Mouthful = mouthful;
-                info.PayType = payType;
-                info.Price = price;
-                info.Rise = price / 10;
+                AuctionInfo info = new()
+                {
+                    AuctioneerID = client.Player.PlayerCharacter.ID,//获取物品ID
+                    AuctioneerName = client.Player.PlayerCharacter.NickName,//获取物品妮称
+                    BeginDate = DateTime.Now,
+                    BuyerID = 0,
+                    BuyerName = "",
+                    IsExist = true,
+                    ItemID = itemAddAution.ItemID,
+                    Mouthful = mouthful,
+                    PayType = payType,
+                    Price = price,
+                    Rise = price / 10
+                };
                 info.Rise = info.Rise < 1 ? 1 : info.Rise;
                 info.Name = itemAddAution.Template.Name;
                 info.Category = itemAddAution.Template.CategoryID;
@@ -123,26 +123,24 @@ namespace Game.Server.Packets.Client
                 info.TemplateID = itemAddAution.TemplateID;
                 info.goodsCount = goodsCount;
                 info.Random = ThreadSafeRandom.NextStatic(GameProperties.BeginAuction, GameProperties.EndAuction);
-                using (PlayerBussiness db = new PlayerBussiness())//写数据库
+                using PlayerBussiness db = new();//写数据库
+                if (db.AddAuction(info))
                 {
-                    if (db.AddAuction(info))
+                    //goods.Count = goodsCount;
+                    _ = client.Player.RemoveAt(bagType, place);// TakeOutItem(goods);
+                    if (TotalItemAt > 0)
                     {
-                        //goods.Count = goodsCount;
-                        client.Player.RemoveAt(bagType, place);// TakeOutItem(goods);
-                        if (TotalItemAt > 0)
-                        {
-                            newitem.Count = TotalItemAt;
-                            client.Player.AddTemplate(newitem, bagType, TotalItemAt, eGameView.CaddyTypeGet);
-                        }
-                        client.Player.SaveIntoDatabase();
-                        client.Player.RemoveGold(needGold);
-                        msg = "AuctionAddHandler.Msg6";
-                        client.Out.SendAuctionRefresh(info, info.AuctionID, true, itemAddAution);
+                        newitem.Count = TotalItemAt;
+                        _ = client.Player.AddTemplate(newitem, bagType, TotalItemAt, eGameView.CaddyTypeGet);
                     }
+                    _ = client.Player.SaveIntoDatabase();
+                    _ = client.Player.RemoveGold(needGold);
+                    msg = "AuctionAddHandler.Msg6";
+                    _ = client.Out.SendAuctionRefresh(info, info.AuctionID, true, itemAddAution);
                 }
             }
             //client.Out.SendMailResponse(client.Player.PlayerCharacter.ID, eMailRespose.Receiver);
-            client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation(msg));
+            _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation(msg));
             return 0;
         }
     }

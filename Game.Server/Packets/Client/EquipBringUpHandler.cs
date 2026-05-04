@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Bussiness;
+using Bussiness.Managers;
 using Game.Base.Packets;
-using log4net;
 using Game.Server.Managers;
 using SqlDataProvider.Data;
-using Bussiness;
-using Bussiness.Managers;
-using Game.Server.Statics;
 
 namespace Game.Server.Packets.Client
 {
@@ -40,27 +34,25 @@ namespace Game.Server.Packets.Client
             string msg = LanguageMgr.GetTranslation("EquipBringUpHandler.Update.Fail");
             string scorssMsg = string.Empty;
             int exp = 0;
-
-            int place = -1;
             if (count > 0)
             {
                 for (int i = 0; i < count; i++)
                 {
                     eBageType bagType = (eBageType)packet.ReadInt(); //pkg.writeInt(arg.shift());
-                    place = packet.ReadInt(); //pkg.writeInt(arg.shift());                        
+                    int place = packet.ReadInt();
                     ItemInfo beEatenItem = client.Player.GetItemAt(bagType, place);
                     if (beEatenItem != null && beEatenItem.IsBring() && !beEatenItem.cellLocked)
                     {
                         exp += CalculateExperience(tagItem.Template, beEatenItem);
                         int CategoryID = client.Player.GetItemAt(bagType, place).Template.CategoryID;
                         int TemplateID = client.Player.GetItemAt(bagType, place).TemplateID;
-                        if (CategoryID == 8 || CategoryID == 9)
+                        if (CategoryID is 8 or 9)
                         {
-                            client.Player.EquipBag.RemoveItemAt(place);
+                            _ = client.Player.EquipBag.RemoveItemAt(place);
                         }
                         else if (TemplateID == 12252)
                         {
-                            client.Player.RemoveTemplate(TemplateID, count);
+                            _ = client.Player.RemoveTemplate(TemplateID, count);
                         }
                         else
                         {
@@ -82,7 +74,7 @@ namespace Game.Server.Packets.Client
             }
             else
             {
-                packet.ReadInt(); //pkg.writeInt(arg.shift());
+                _ = packet.ReadInt(); //pkg.writeInt(arg.shift());
                 exp = packet.ReadInt(); //pkg.writeInt(arg.shift());
                 int needMoney = GameProperties.ItemDevelopPrice * exp;
                 if (client.Player.MoneyDirect(needMoney, IsAntiMult: false, true, true))
@@ -106,8 +98,8 @@ namespace Game.Server.Packets.Client
                     {
                         msg = LanguageMgr.GetTranslation("EquipBringUpHandler.Update.Success2", tagItem.Template.Name, nextItem.Name);
                         ItemInfo newItem = ItemInfo.CloneFromTemplate(nextItem, tagItem);
-                        client.Player.StoreBag.RemoveItemAt(0);
-                        client.Player.StoreBag.AddItemTo(newItem, 0);
+                        _ = client.Player.StoreBag.RemoveItemAt(0);
+                        _ = client.Player.StoreBag.AddItemTo(newItem, 0);
                         tagItem = newItem;
                         if (nextItem.Property1 >= 5)
                         {
@@ -119,14 +111,16 @@ namespace Game.Server.Packets.Client
                         msg = LanguageMgr.GetTranslation("EquipBringUpHandler.Update.Success1", exp);
                     }
                     if (nextItem != null)
+                    {
                         curExp += nextItem.Property2;
+                    }
                 }
                 tagItem.curExp = totalExp;
             }
 
             client.Player.SendMessage(msg);
 
-            GSPacketIn pkg = new GSPacketIn((int)ePackageType.EQUIP_BRING_UP);
+            GSPacketIn pkg = new((int)ePackageType.EQUIP_BRING_UP);
             pkg.WriteBoolean(isSuccessful);
             client.Player.SendTCP(pkg);
 
@@ -144,19 +138,18 @@ namespace Game.Server.Packets.Client
 
         private int CalculateExperience(ItemTemplateInfo tagItem, ItemInfo beEatenItem)
         {
-            var tagLevel = tagItem.Property1;
-            var tagQuality = tagItem.Property3;
+            int tagLevel = tagItem.Property1;
+            int tagQuality = tagItem.Property3;
 
-            var eatenLevel = beEatenItem.Template.Property1;
-            var eatenOrigExp = beEatenItem.Template.Property2;
-            var eatenQuality = beEatenItem.Template.Property3;
-            var eatenCurExp = beEatenItem.curExp;
+            int eatenLevel = beEatenItem.Template.Property1;
+            int eatenOrigExp = beEatenItem.Template.Property2;
+            int eatenQuality = beEatenItem.Template.Property3;
+            int eatenCurExp = beEatenItem.curExp;
 
             if (tagQuality < eatenQuality)
             {
                 ItemTemplateInfo beEatenTempleteInfo = GetTempleteInfoByLevel(eatenLevel, tagItem);
                 eatenOrigExp = beEatenTempleteInfo.Property2;
-                eatenQuality = tagQuality;
                 eatenCurExp = eatenOrigExp;
             }
 
@@ -175,7 +168,9 @@ namespace Game.Server.Packets.Client
                 while (curLevel > eatenLevel)
                 {
                     if (tagItemInfo.Property4 == 0)
+                    {
                         break;
+                    }
 
                     tagItemInfo = ItemMgr.FindItemTemplate(tagItemInfo.Property4);
                     curLevel = tagItemInfo.Property1;
@@ -186,7 +181,9 @@ namespace Game.Server.Packets.Client
                 while (curLevel < eatenLevel)
                 {
                     if (tagItemInfo.FineSuitType == 0)
+                    {
                         break;
+                    }
 
                     tagItemInfo = ItemMgr.FindItemTemplate(tagItemInfo.FineSuitType);
                     curLevel = tagItemInfo.Property1;

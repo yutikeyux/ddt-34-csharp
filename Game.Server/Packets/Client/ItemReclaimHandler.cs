@@ -1,7 +1,6 @@
 using Bussiness;
 using Game.Base.Packets;
 using Game.Server.GameUtils;
-using Game.Server.Managers;
 using SqlDataProvider.Data;
 
 namespace Game.Server.Packets.Client
@@ -25,32 +24,32 @@ namespace Game.Server.Packets.Client
                 int price = count * item.ReclaimValue;
                 if (item.ReclaimType == 3)
                 {
-                    client.Out.SendMessage(eMessageType.GM_NOTICE, $"Bu ürün satılamaz.");
+                    _ = client.Out.SendMessage(eMessageType.GM_NOTICE, $"Bu ürün satılamaz.");
                     return 0;
                     //client.Player.AddMoney(num3);
                     //client.Out.SendMessage(eMessageType.GM_NOTICE, $"Bạn nhận được {num3} xu.");
                 }
                 else if (item.ReclaimType == 2)
                 {
-                    client.Player.AddGiftToken(price);
+                    _ = client.Player.AddGiftToken(price);
                     //client.Out.SendMessage(eMessageType.GM_NOTICE, $"Bạn nhận được {num3} lễ kim.");
-                    client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemReclaimHandler.Success1", price));
+                    _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemReclaimHandler.Success1", price));
                 }
                 else if (item.ReclaimType == 1)
                 {
-                    client.Player.AddGold(price);
+                    _ = client.Player.AddGold(price);
                     //client.Out.SendMessage(eMessageType.GM_NOTICE, $"Bạn nhận được {price} vàng.");
-                    client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemReclaimHandler.Success2", price));
+                    _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemReclaimHandler.Success2", price));
                 }
                 if (item.TemplateID == 11408)
                 {
-                    client.Player.RemoveMedal(count);
+                    _ = client.Player.RemoveMedal(count);
                 }
-                bag.RemoveItemAt(place);
+                _ = bag.RemoveItemAt(place);
                 return 0;
             }
             //client.Out.SendMessage(eMessageType.GM_NOTICE, $"Bán vật phẩm không thành công.");
-            client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemReclaimHandler.NoSuccess"));
+            _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemReclaimHandler.NoSuccess"));
             return 1;
         }
     }

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Bussiness;
 using Game.Base.Packets;
-using Game.Server.Managers;
-using Game.Server.GameObjects;
-using Game.Server.Packets;
-using Game.Server.Rooms;
-using Bussiness;
+using Game.Logic;
 using Game.Server.Games;
 using Game.Server.GuildBattle;
+using Game.Server.Managers;
+using Game.Server.Rooms;
+using System;
 using System.Drawing;
-using Game.Logic;
 
 namespace Game.Server.Packets.Client
 {
@@ -38,7 +33,7 @@ namespace Game.Server.Packets.Client
             {
                 case (byte)ConsBatPackageType.DELETE_PLAYER:
                     {
-                        currentRoom.RemovePlayerUnsafe(client.Player);
+                        _ = currentRoom.RemovePlayerUnsafe(client.Player);
                         break;
                     }
                 case (byte)ConsBatPackageType.ADD_PLAYER:
@@ -72,9 +67,13 @@ namespace Game.Server.Packets.Client
                         GamePlayer p = WorldMgr.GetPlayerById(UserID);
 
                         if (p != null && p.IsActive && p.CurrentRoom != null && p.CurrentRoom.IsPlaying == false)
+                        {
                             GameMgr.GuildBattle.ChallengeGame(client.Player, p);
+                        }
                         else
+                        {
                             client.Player.SendMessage("Eşleştirme hatası.");
+                        }
                         //room.Challenge(PlayerID, ChallengeID);
                         break;
                     }
@@ -90,7 +89,7 @@ namespace Game.Server.Packets.Client
                 case (byte)ConsBatPackageType.CONSUME:
                     {
                         int type = packet.ReadInt();
-                        bool bandMoney = packet.ReadBoolean();
+                        _ = packet.ReadBoolean();
 
                         switch (type)
                         {
@@ -98,7 +97,7 @@ namespace Game.Server.Packets.Client
                                 // power
                                 if (client.Player.PlayerCharacter.Money >= 30000)
                                 {
-                                    client.Player.RemoveMoney(30000);
+                                    _ = client.Player.RemoveMoney(30000);
                                     client.Player.PlayerCharacter.ActivePowFirstGame = true;
                                 }
                                 break;
@@ -107,7 +106,7 @@ namespace Game.Server.Packets.Client
                                 //douplescore
                                 if (client.Player.PlayerCharacter.Money >= 300000)
                                 {
-                                    client.Player.RemoveMoney(300000);
+                                    _ = client.Player.RemoveMoney(300000);
                                     uinfo.DupeScoreConsortiaBattle = true;
                                 }
                                 break;
@@ -116,7 +115,7 @@ namespace Game.Server.Packets.Client
                                 //quick revive
                                 if (uinfo.IsDead && client.Player.PlayerCharacter.Money >= 10000)
                                 {
-                                    client.Player.RemoveMoney(10000);
+                                    _ = client.Player.RemoveMoney(10000);
                                     GameMgr.GuildBattle.QuickRevive(uinfo, false);
                                 }
                                 break;
@@ -125,7 +124,7 @@ namespace Game.Server.Packets.Client
                                 //quick revive stay
                                 if (uinfo.IsDead && client.Player.PlayerCharacter.Money >= 80000)
                                 {
-                                    client.Player.RemoveMoney(80000);
+                                    _ = client.Player.RemoveMoney(80000);
                                     GameMgr.GuildBattle.QuickRevive(uinfo, true);
                                 }
                                 break;

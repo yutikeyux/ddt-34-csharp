@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using Game.Logic.Phy.Object;
+﻿using Game.Logic.Phy.Object;
 
 namespace Game.Logic.PetEffects.ContinueElement
 {
     public class CE : BasePetEffect
     {
-        private int m_type = 0;
-        private int m_count = 0;
+        private readonly int m_type = 0;
+        private readonly int m_count = 0;
         private int m_probability = 0;
-        private int m_delay = 0;
-        private int m_coldDown = 0;
-        private int m_currentId;
-        private int m_added = 0;
+        private readonly int m_delay = 0;
+        private readonly int m_coldDown = 0;
+        private readonly int m_currentId;
+        private readonly int m_added = 0;
 
         public CE(int count, int probability, int type, int skillId, int delay, string elementID)
             : base(ePetEffectType.CE, elementID)
@@ -27,8 +25,7 @@ namespace Game.Logic.PetEffects.ContinueElement
 
         public override bool Start(Living living)
         {
-            CE effect = living.PetEffectList.GetOfType(ePetEffectType.CE) as CE;
-            if (effect != null)
+            if (living.PetEffectList.GetOfType(ePetEffectType.CE) is CE effect)
             {
                 effect.m_probability = m_probability > effect.m_probability ? m_probability : effect.m_probability;
                 return true;
@@ -46,7 +43,7 @@ namespace Game.Logic.PetEffects.ContinueElement
 
         private void Player_PlayerClearBuffSkillPet(Player player)
         {
-            Stop();
+            _ = Stop();
         }
 
         protected override void OnRemovedFromPlayer(Player player)

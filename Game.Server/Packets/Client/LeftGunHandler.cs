@@ -11,7 +11,7 @@ namespace Game.Server.Packets.Client
             //int cmd = packet.ReadInt();
             if (client.Player.Extra.Info.LeftRoutteCount > 0 && client.Player.Extra.Info.LeftRoutteRate <= 0f)
             {
-                RandomSafe randomSafe = new RandomSafe();
+                RandomSafe randomSafe = new();
                 float result = 0f;
                 string[] rates = GameProperties.LeftRouterRateData.Split('|');
                 int randNum = randomSafe.Next(55);

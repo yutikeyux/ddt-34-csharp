@@ -2,8 +2,6 @@
 using Game.Server.Managers;
 using SqlDataProvider.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Game.Server.Packets.Client
 {
@@ -88,7 +86,7 @@ namespace Game.Server.Packets.Client
             }
 
             // Check if player has the item
-            var playerItem = client.Player.EquipBag.GetItemByTemplateID(0, templateId);
+            ItemInfo playerItem = client.Player.EquipBag.GetItemByTemplateID(0, templateId);
             if (playerItem == null)
             {
                 client.Player.SendMessage(ERROR_BAG_FULL);
@@ -96,7 +94,7 @@ namespace Game.Server.Packets.Client
             }
 
             // Get cloth group info
-            var clothGroup = ClothGroupTemplateInfoMgr.GetClothGroup(groupId, templateId, sex);
+            ClothGroupTemplateInfo clothGroup = ClothGroupTemplateInfoMgr.GetClothGroup(groupId, templateId, sex);
             if (clothGroup == null)
             {
                 client.Player.SendMessage(ERROR_ITEM_NOT_FOUND);
@@ -104,7 +102,7 @@ namespace Game.Server.Packets.Client
             }
 
             // Get property info
-            var clothProperty = ClothPropertyTemplateInfoMgr.GetClothPropertyWithID(clothGroup.ID);
+            ClothPropertyTemplateInfo clothProperty = ClothPropertyTemplateInfoMgr.GetClothPropertyWithID(clothGroup.ID);
             if (clothProperty == null)
             {
                 client.Player.SendMessage(ERROR_SET_NOT_AVAILABLE);
@@ -165,15 +163,15 @@ namespace Game.Server.Packets.Client
             try
             {
                 // Get or create collection
-                var collection = GetOrCreateCollection(client, clothProperty);
+                UserAvatarCollectionInfo collection = GetOrCreateCollection(client, clothProperty);
 
                 // Add item to collection
-                var newItem = new UserAvatarCollectionDataInfo(clothGroup.TemplateID, clothGroup.Sex);
+                UserAvatarCollectionDataInfo newItem = new(clothGroup.TemplateID, clothGroup.Sex);
 
                 if (!collection.AddItem(newItem))
                 {
                     // Rollback gold
-                    client.Player.AddGold(clothGroup.Cost);
+                    _ = client.Player.AddGold(clothGroup.Cost);
                     client.Player.SendMessage(ERROR_ACTIVATION_FAILED);
                     return 1;
                 }
@@ -186,7 +184,7 @@ namespace Game.Server.Packets.Client
                 // Activate if half collection is complete and not already active
                 if (currentCount == requiredForActivation && !collection.IsActive)
                 {
-                    collection.ActiveAvatar(DEFAULT_ACTIVATE_DAYS);
+                    _ = collection.ActiveAvatar(DEFAULT_ACTIVATE_DAYS);
                     isNewlyActivated = true;
                 }
 
@@ -211,7 +209,7 @@ namespace Game.Server.Packets.Client
             catch (Exception ex)
             {
                 // Rollback gold on exception
-                client.Player.AddGold(clothGroup.Cost);
+                _ = client.Player.AddGold(clothGroup.Cost);
                 Console.WriteLine("[AvatarCollectionHandler] Activation error: " + ex);
                 client.Player.SendMessage(ERROR_ACTIVATION_FAILED);
                 return 0;
@@ -220,7 +218,7 @@ namespace Game.Server.Packets.Client
 
         private UserAvatarCollectionInfo GetOrCreateCollection(GameClient client, ClothPropertyTemplateInfo clothProperty)
         {
-            var collection = client.Player.AvatarCollect.GetAvatarCollectWithAvatarID(clothProperty.ID);
+            UserAvatarCollectionInfo collection = client.Player.AvatarCollect.GetAvatarCollectWithAvatarID(clothProperty.ID);
 
             if (collection == null)
             {
@@ -243,7 +241,7 @@ namespace Game.Server.Packets.Client
             // Send activation notification if newly activated
             if (isNewlyActivated)
             {
-                GSPacketIn activationPacket = new GSPacketIn(PACKET_ID);
+                GSPacketIn activationPacket = new(PACKET_ID);
                 activationPacket.WriteByte(4);
                 activationPacket.WriteInt(collection.AvatarID);
                 activationPacket.WriteInt(collection.Sex);
@@ -252,7 +250,7 @@ namespace Game.Server.Packets.Client
             }
 
             // Send item activation confirmation
-            GSPacketIn confirmPacket = new GSPacketIn(PACKET_ID);
+            GSPacketIn confirmPacket = new(PACKET_ID);
             confirmPacket.WriteByte(3);
             confirmPacket.WriteInt(clothGroup.ID);
             confirmPacket.WriteInt(clothGroup.TemplateID);

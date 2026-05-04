@@ -2,7 +2,6 @@
 using Bussiness.Managers;
 using Game.Logic;
 using Game.Server.Managers;
-using Game.Server.Packets;
 using log4net;
 using SqlDataProvider.Data;
 using System;
@@ -12,7 +11,7 @@ namespace Game.Server.GameUtils
 {
     public class PlayerEquipInventory : PlayerInventory
     {
-        public static readonly ILog log = LogManager.GetLogger("ItemLogger");
+        public static new readonly ILog log = LogManager.GetLogger("ItemLogger");
 
         private static readonly int[] StyleIndex = new int[15]
         {
@@ -260,7 +259,7 @@ namespace Game.Server.GameUtils
                 int clothBlood = 0;
                 int damage = 0;
                 List<UsersCardInfo> infos;
-                using (PlayerBussiness pb = new PlayerBussiness())
+                using (PlayerBussiness pb = new())
                 {
                     infos = pb.GetUserCardEuqip(m_player.PlayerCharacter.ID);
                 }
@@ -441,7 +440,7 @@ namespace Game.Server.GameUtils
                     lucky += array[3];
                     hp += array[4];
 
-                    List<UserAvatarCollectionInfo> avatarPropertyActived = this.m_player.AvatarCollect.GetAvatarPropertyActived();
+                    List<UserAvatarCollectionInfo> avatarPropertyActived = m_player.AvatarCollect.GetAvatarPropertyActived();
                     if (avatarPropertyActived.Count > 0)
                     {
                         foreach (UserAvatarCollectionInfo current2 in avatarPropertyActived)
@@ -504,7 +503,7 @@ namespace Game.Server.GameUtils
         public int[] PropertySuit()//
         {
             int[] array = new int[5];
-            using (ProduceBussiness pb = new ProduceBussiness())
+            using (ProduceBussiness pb = new())
             {
                 try
                 {
@@ -514,7 +513,7 @@ namespace Game.Server.GameUtils
                 {
                 }
             }
-            List<ItemInfo> DS = new List<ItemInfo>();
+            List<ItemInfo> DS = [];
             for (int k = 0; k < 31; k++)
             {
                 ItemInfo itemInfo = m_items[k];
@@ -524,10 +523,10 @@ namespace Game.Server.GameUtils
                 }
             }
             List<ItemInfo> GetAllSuit = DS.FindAll((ItemInfo a) => DS.IndexOf(DS[DS.FindIndex((ItemInfo b) => b.Template.SuitId == a.Template.SuitId)]) < DS.LastIndexOf(DS[DS.FindLastIndex((ItemInfo c) => c.Template.SuitId == a.Template.SuitId)]) && (a.Template.NeedSex == 0 || DS.FindIndex((ItemInfo b) => b.Template.NeedSex == a.Template.NeedSex) != DS.FindLastIndex((ItemInfo c) => c.Template.NeedSex == a.Template.NeedSex)));
-            List<List<ItemInfo>> list = new List<List<ItemInfo>>();
-            List<List<ItemInfo>> ListC = new List<List<ItemInfo>>();
-            List<int> list2 = new List<int>();
-            List<int> list3 = new List<int>();
+            List<List<ItemInfo>> list = [];
+            List<List<ItemInfo>> ListC = [];
+            List<int> list2 = [];
+            List<int> list3 = [];
             if (GetAllSuit.Count > 1)
             {
                 int j;
@@ -547,7 +546,7 @@ namespace Game.Server.GameUtils
                     {
                         if (list[l].Count < 1)
                         {
-                            ListC.Remove(list[l]);
+                            _ = ListC.Remove(list[l]);
                         }
                     }
                 }
@@ -607,10 +606,12 @@ namespace Game.Server.GameUtils
                 {
                     text = text + Kill_ + ",";
                 }
-                Suit_Manager suit_Manager = new Suit_Manager();
-                suit_Manager.Kill_List = text;
-                suit_Manager.UserID = base.Player.PlayerCharacter.ID;
-                using ProduceBussiness produceBussiness = new ProduceBussiness();
+                Suit_Manager suit_Manager = new()
+                {
+                    Kill_List = text,
+                    UserID = base.Player.PlayerCharacter.ID
+                };
+                using ProduceBussiness produceBussiness = new();
                 produceBussiness.Update_Suit_Kill(suit_Manager);
             }
             catch
@@ -620,12 +621,12 @@ namespace Game.Server.GameUtils
 
         private List<int> Load_Kill_Suit()
         {
-            List<int> list = new List<int>();
-            using (PlayerBussiness playerBussiness = new PlayerBussiness())
+            List<int> list = [];
+            using (PlayerBussiness playerBussiness = new())
             {
                 try
                 {
-                    Suit_Manager suit_Manager = new Suit_Manager();
+                    Suit_Manager suit_Manager = new();
                     suit_Manager = playerBussiness.Get_Suit_Manager(base.Player.PlayerCharacter.ID);
                     if (suit_Manager.UserID > 0)
                     {
@@ -634,8 +635,7 @@ namespace Game.Server.GameUtils
                         {
                             while (text.Contains(","))
                             {
-                                int result = 0;
-                                int.TryParse(text.Substring(0, text.IndexOf(",")), out result);
+                                _ = int.TryParse(text.Substring(0, text.IndexOf(",")), out int result);
                                 if (result == 0)
                                 {
                                     return list;
@@ -645,8 +645,7 @@ namespace Game.Server.GameUtils
                             }
                             if (!text.Contains(","))
                             {
-                                int result2 = 0;
-                                int.TryParse(text, out result2);
+                                _ = int.TryParse(text, out int result2);
                                 if (result2 > 0)
                                 {
                                     list.Add(result2);
@@ -665,7 +664,7 @@ namespace Game.Server.GameUtils
 
         private List<int> tachchuoi(string A)
         {
-            List<int> list = new List<int>();
+            List<int> list = [];
             if (!A.Contains(","))
             {
                 list.Add(int.Parse(A));
@@ -743,7 +742,7 @@ namespace Game.Server.GameUtils
             }
             if (num > 0)
             {
-                List<int> list = new List<int>();
+                List<int> list = [];
                 list = Load_Kill_Suit();
                 if (num > 0 && !list.Contains(num))
                 {
@@ -804,19 +803,14 @@ namespace Game.Server.GameUtils
 
         public bool CanEquipSlotContains(int slot, ItemTemplateInfo temp)
         {
-            if (temp.CategoryID == 8 || temp.CategoryID == 28)
+            if (temp.CategoryID is 8 or 28)
             {
-                return slot == 7 || slot == 8;
-                
+                return slot is 7 or 8;
+
             }
-            if (temp.CategoryID == 9 || temp.CategoryID == 29)
+            if (temp.CategoryID is 9 or 29)
             {
-                if (temp.IsRing())
-                {
-                    return slot == 16;
-                    
-                }
-                return slot == 9 || slot == 10;
+                return temp.IsRing() ? slot == 16 : slot is 9 or 10;
             }
             if (temp.CategoryID == 13)
             {
@@ -842,20 +836,12 @@ namespace Game.Server.GameUtils
             {
                 return slot == 6;
             }
-            if (temp.CategoryID == 40)
-            {
-                return slot == 17;
-            }
-            return temp.CategoryID - 1 == slot;
+            return temp.CategoryID == 40 ? slot == 17 : temp.CategoryID - 1 == slot;
         }
 
         public bool IsEquipSlot(int slot)
         {
-            if (slot >= 0)
-            {
-                return slot < 31;
-            }
-            return false;
+            return slot is >= 0 and < 31;
         }
 
         public void GetUserNimbus()
@@ -870,57 +856,57 @@ namespace Game.Server.GameUtils
                     continue;
                 }
                 int strengthenLevel = itemAt.StrengthenLevel;
-                if (strengthenLevel >= 5 && strengthenLevel <= 8)
+                if (strengthenLevel is >= 5 and <= 8)
                 {
-                    if (itemAt.Template.CategoryID == 1 || itemAt.Template.CategoryID == 5)
+                    if (itemAt.Template.CategoryID is 1 or 5)
                     {
-                        num = ((num <= 1) ? 1 : num);
+                        num = (num <= 1) ? 1 : num;
                     }
-                    if (itemAt.Template.CategoryID == 7 || itemAt.Template.CategoryID == 27)
+                    if (itemAt.Template.CategoryID is 7 or 27)
                     {
-                        num2 = ((num2 <= 1) ? 1 : num2);
+                        num2 = (num2 <= 1) ? 1 : num2;
                     }
                 }
-                if (strengthenLevel >= 9 && strengthenLevel <= 11)
+                if (strengthenLevel is >= 9 and <= 11)
                 {
-                    if (itemAt.Template.CategoryID == 1 || itemAt.Template.CategoryID == 5)
+                    if (itemAt.Template.CategoryID is 1 or 5)
                     {
-                        num = ((num > 1) ? num : 2);
+                        num = (num > 1) ? num : 2;
                     }
-                    if (itemAt.Template.CategoryID == 7 || itemAt.Template.CategoryID == 27)
+                    if (itemAt.Template.CategoryID is 7 or 27)
                     {
-                        num2 = ((num2 > 1) ? num2 : 2);
+                        num2 = (num2 > 1) ? num2 : 2;
                     }
                 }
-                if (strengthenLevel >= 12 && strengthenLevel <= 14)
+                if (strengthenLevel is >= 12 and <= 14)
                 {
-                    if (itemAt.Template.CategoryID == 1 || itemAt.Template.CategoryID == 5)
+                    if (itemAt.Template.CategoryID is 1 or 5)
                     {
-                        num = ((num > 1) ? num : 3);
+                        num = (num > 1) ? num : 3;
                     }
-                    if (itemAt.Template.CategoryID == 7 || itemAt.Template.CategoryID == 27)
+                    if (itemAt.Template.CategoryID is 7 or 27)
                     {
-                        num2 = ((num2 > 1) ? num2 : 3);
+                        num2 = (num2 > 1) ? num2 : 3;
                     }
                 }
                 if (strengthenLevel == 15)
                 {
-                    if (itemAt.Template.CategoryID == 1 || itemAt.Template.CategoryID == 5)
+                    if (itemAt.Template.CategoryID is 1 or 5)
                     {
-                        num = ((num > 1) ? num : 4);
+                        num = (num > 1) ? num : 4;
                     }
-                    if (itemAt.Template.CategoryID == 7 || itemAt.Template.CategoryID == 27)
+                    if (itemAt.Template.CategoryID is 7 or 27)
                     {
-                        num2 = ((num2 > 1) ? num2 : 4);
+                        num2 = (num2 > 1) ? num2 : 4;
                     }
                 }
                 if (itemAt.isGold)
                 {
-                    if (itemAt.Template.CategoryID == 1 || itemAt.Template.CategoryID == 5)
+                    if (itemAt.Template.CategoryID is 1 or 5)
                     {
                         num = 5;
                     }
-                    if (itemAt.Template.CategoryID == 7 || itemAt.Template.CategoryID == 27)
+                    if (itemAt.Template.CategoryID is 7 or 27)
                     {
                         num2 = 5;
                     }
@@ -936,17 +922,20 @@ namespace Game.Server.GameUtils
                     SpiritInfo info = SpiritInfoMgr.GetSingleSpirit(egInfo.BagType, egInfo.Place, egInfo.Level);
                     if (info != null && GetItemAt(egInfo.Place) != null)
                     {
-                        if (info.CategoryId == (int)EquipType.HEAD || info.CategoryId == (int)EquipType.CLOTH)
+                        if (info.CategoryId is ((int)EquipType.HEAD) or ((int)EquipType.CLOTH))
+                        {
                             num = 06;
+                        }
                         else if (info.CategoryId == (int)EquipType.ARM)
+                        {
                             num2 = 06;
-
+                        }
                     }
                 }
             }
 
-            m_player.PlayerCharacter.Nimbus = num * 100 + num2;
-            m_player.Out.SendUpdatePublicPlayer(m_player.PlayerCharacter, m_player.MatchInfo, m_player.Extra.Info);
+            m_player.PlayerCharacter.Nimbus = (num * 100) + num2;
+            _ = m_player.Out.SendUpdatePublicPlayer(m_player.PlayerCharacter, m_player.MatchInfo, m_player.Extra.Info);
         }
 
         public void EquipBuffer()
@@ -1097,26 +1086,24 @@ namespace Game.Server.GameUtils
         {
             if (Player.PlayerCharacter.ID > 0)
             {
-                using (PlayerBussiness pb = new PlayerBussiness())
+                using PlayerBussiness pb = new();
+                List<UserRankInfo> singleUserRank = pb.GetSingleUserRank(Player.PlayerCharacter.ID);
+                if (singleUserRank != null)
                 {
-                    List<UserRankInfo> singleUserRank = pb.GetSingleUserRank(Player.PlayerCharacter.ID);
-                    if (singleUserRank != null)
+                    foreach (UserRankInfo item in singleUserRank)
                     {
-                        foreach (var item in singleUserRank)
+                        if (item.IsValidRank())
                         {
-                            if(item.IsValidRank())
+                            attack += item.Attack;
+                            defence += item.Defence;
+                            agility += item.Agility;
+                            lucky += item.Luck;
+                            if (NewTitleMgr.FindNewTitle(item.NewTitleID) != null)
                             {
-                                attack += item.Attack;
-                                defence += item.Defence;
-                                agility += item.Agility;
-                                lucky += item.Luck;
-                                if (NewTitleMgr.FindNewTitle(item.NewTitleID) != null)
-                                {
-                                    attack += NewTitleMgr.FindNewTitle(item.NewTitleID).Att;
-                                    defence += NewTitleMgr.FindNewTitle(item.NewTitleID).Def;
-                                    agility += NewTitleMgr.FindNewTitle(item.NewTitleID).Agi;
-                                    lucky += NewTitleMgr.FindNewTitle(item.NewTitleID).Luck;
-                                }
+                                attack += NewTitleMgr.FindNewTitle(item.NewTitleID).Att;
+                                defence += NewTitleMgr.FindNewTitle(item.NewTitleID).Def;
+                                agility += NewTitleMgr.FindNewTitle(item.NewTitleID).Agi;
+                                lucky += NewTitleMgr.FindNewTitle(item.NewTitleID).Luck;
                             }
                         }
                     }

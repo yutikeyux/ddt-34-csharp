@@ -23,18 +23,12 @@ namespace Game.Server.Packets.Client
                 }
                 if (client.Player.PlayerCharacter.HasBagPassword && client.Player.PlayerCharacter.IsLocked)
                 {
-                    client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Bag.Locked"));
+                    _ = client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Bag.Locked"));
                     return 0;
                 }
-                if (client.Player.CurrentRoom != null)
-                {
-                    client.Player.CurrentRoom.RemovePlayerUnsafe(client.Player);
-                }
-                if (client.Player.CurrentMarryRoom != null)
-                {
-                    client.Player.CurrentMarryRoom.RemovePlayer(client.Player);
-                }
-                MarryRoomInfo marryRoomInfo = new MarryRoomInfo
+                _ = client.Player.CurrentRoom?.RemovePlayerUnsafe(client.Player);
+                client.Player.CurrentMarryRoom?.RemovePlayer(client.Player);
+                MarryRoomInfo marryRoomInfo = new()
                 {
                     Name = packet.ReadString(),
                     Pwd = packet.ReadString(),
@@ -46,8 +40,8 @@ namespace Game.Server.Packets.Client
                     ServerID = GameServer.Instance.Configuration.ServerID,
                     IsHymeneal = false
                 };
-                
-                int num = 1000;
+
+                int num;
                 switch (marryRoomInfo.AvailTime)
                 {
                     case 2:
@@ -70,10 +64,10 @@ namespace Game.Server.Packets.Client
                     if (marryRoom != null)
                     {
                         GSPacketIn packet2 = client.Player.Out.SendMarryRoomInfo(client.Player, marryRoom);
-                        client.Player.Out.SendMarryRoomLogin(client.Player, result: true);
+                        _ = client.Player.Out.SendMarryRoomLogin(client.Player, result: true);
                         marryRoom.SendToScenePlayer(packet2);
                         CountBussiness.InsertSystemPayCount(client.Player.PlayerCharacter.ID, num, 0, 0, 0);
-                        DailyRecordInfo info = new DailyRecordInfo
+                        DailyRecordInfo info = new()
                         {
                             UserID = client.Player.PlayerCharacter.ID,
                             Type = 4,

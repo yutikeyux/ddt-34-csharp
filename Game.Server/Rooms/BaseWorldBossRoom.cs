@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Bussiness;
-using Bussiness.Protocol;
-using Game.Base.Packets;
-using Game.Server.GameObjects;
+﻿using Game.Base.Packets;
 using Game.Server.Managers;
 using Game.Server.Packets;
 using SqlDataProvider.Data;
-using Game.Logic.Phy.Object; // GamePlayer için gerekebilir
-using System.Threading; // Threading için gerekebilir
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Game.Server.Rooms
 {
@@ -27,7 +22,7 @@ namespace Game.Server.Rooms
 
         public int Blood { get; set; }
 
-        public string Name { get; set; }
+        public new string Name { get; set; }
 
         public string BossResourceId { get; set; }
 
@@ -62,8 +57,8 @@ namespace Game.Server.Rooms
         // Hata çözümü: BaseRoom(int roomId)'i çağırıyoruz.
         public BaseWorldBossRoom() : base(0)
         {
-            _mList = new Dictionary<int, GamePlayer>();
-            _ranklist = new Dictionary<int, RankingPersonInfo>();
+            _mList = [];
+            _ranklist = [];
             IsDie = false;
             WorldOpen = false;
             FightOver = true;
@@ -75,8 +70,8 @@ namespace Game.Server.Rooms
 
         public void ResetConfigRoom()
         {
-            _mList = new Dictionary<int, GamePlayer>();
-            _ranklist = new Dictionary<int, RankingPersonInfo>();
+            _mList = [];
+            _ranklist = [];
             IsDie = false;
             WorldOpen = false;
             FightOver = true;
@@ -95,17 +90,19 @@ namespace Game.Server.Rooms
 
                 if (!_ranklist.ContainsKey(p.PlayerCharacter.ID))
                 {
-                    urank = new RankingPersonInfo();
-                    urank.Name = p.PlayerCharacter.NickName;
-                    urank.ID = p.PlayerCharacter.ID;
-                    urank.Damage = 0;
-                    urank.TotalDamage = 0;
-                    urank.Honor = 0;
+                    urank = new RankingPersonInfo
+                    {
+                        Name = p.PlayerCharacter.NickName,
+                        ID = p.PlayerCharacter.ID,
+                        Damage = 0,
+                        TotalDamage = 0,
+                        Honor = 0
+                    };
                     _ranklist.Add(p.PlayerCharacter.ID, urank);
                 }
                 else
                 {
-                   
+
                     urank = _ranklist[p.PlayerCharacter.ID];
                 }
 
@@ -114,7 +111,7 @@ namespace Game.Server.Rooms
                 urank.Honor += honor;
 
 
-                this.RankPlayerCommit();
+                _ = RankPlayerCommit();
             }
         }
 
@@ -148,14 +145,16 @@ namespace Game.Server.Rooms
         public void WorldBossClose()
         {
             WorldOpen = false;
-            var players = GetPlayersSafe();
-            foreach (var p in players)
-                RemovePlayer(p);
+            GamePlayer[] players = GetPlayersSafe();
+            foreach (GamePlayer p in players)
+            {
+                _ = RemovePlayer(p);
+            }
         }
 
         public void SendGiftForUserJoined()
         {
-            List<RankingPersonInfo> list_Top10 = new List<RankingPersonInfo>();
+            List<RankingPersonInfo> list_Top10 = [];
             lock (_ranklist)
             {
                 IOrderedEnumerable<KeyValuePair<int, RankingPersonInfo>> enumerable = _ranklist.OrderByDescending((KeyValuePair<int, RankingPersonInfo> pair) => pair.Value.TotalDamage);
@@ -179,23 +178,23 @@ namespace Game.Server.Rooms
         public bool ReduceBlood(int value)
         {
             bool result = true;
-            if (this.Blood <= 0 || value <= 0)
+            if (Blood <= 0 || value <= 0)
             {
                 result = false;
             }
-            else if (this.Blood >= value)
+            else if (Blood >= value)
             {
-                this.Blood -= value;
+                Blood -= value;
             }
             else
             {
-                this.Blood = 0;
+                Blood = 0;
             }
             var pkg = new GSPacketIn((byte)ePackageType.WORLDBOSS_CMD);
             pkg.WriteByte((byte)WorldBossPackageType.WORLDBOSS_BLOOD_UPDATE);
             pkg.WriteBoolean(false);
-            pkg.WriteInt(this.MaxBlood);
-            pkg.WriteInt(this.Blood);
+            pkg.WriteInt(MaxBlood);
+            pkg.WriteInt(Blood);
             SendToAllPlayers(pkg);
             return result;
         }
@@ -217,12 +216,12 @@ namespace Game.Server.Rooms
 
         public void SendEndedBossYouGotNotThing()
         {
-            var players = GetPlayersSafe();
+            _ = GetPlayersSafe();
         }
 
         public void SendAllOver()
         {
-            this.ResetConfigRoom();
+            ResetConfigRoom();
             var pkg = new GSPacketIn((byte)ePackageType.WORLDBOSS_CMD);
             pkg.WriteByte((byte)WorldBossPackageType.OVER);
             SendToAllPlayers(pkg);
@@ -247,9 +246,13 @@ namespace Game.Server.Rooms
             }
 
             if (type)
+            {
                 SendToAllPlayers(pkg);
+            }
             else
+            {
                 SendToAll(pkg);
+            }
         }
 
         public void SendPrivateInfo(string name)
@@ -265,13 +268,15 @@ namespace Game.Server.Rooms
             pkg.WriteByte((byte)WorldBossPackageType.WORLDBOSS_PRIVATE_INFO);
             pkg.WriteInt(damage);
             pkg.WriteInt(honor);
-            var players = GetPlayersSafe();
-            foreach (var p in players)
+            GamePlayer[] players = GetPlayersSafe();
+            foreach (GamePlayer p in players)
+            {
                 if (p.PlayerCharacter.NickName == name)
                 {
                     p.Out.SendTCP(pkg);
                     break;
                 }
+            }
         }
 
         public void SendUpdateBlood(GSPacketIn packet)
@@ -299,7 +304,7 @@ namespace Game.Server.Rooms
                     result = true;
                     SendPrivateInfo(player.PlayerCharacter.NickName);
                 }
-                RankPlayerCommit(player);
+                _ = RankPlayerCommit(player);
             }
 
             if (result)
@@ -347,12 +352,9 @@ namespace Game.Server.Rooms
 
             if (result)
             {
-                var pkg = player.Out.SendSceneRemovePlayer(player);
+                GSPacketIn pkg = player.Out.SendSceneRemovePlayer(player);
                 SendToAll(pkg, player);
-                if (player.CurrentRoom != null)
-                {
-                    player.CurrentRoom.RemovePlayerUnsafe(player);
-                }
+                _ = player.CurrentRoom?.RemovePlayerUnsafe(player);
             }
 
             return true;
@@ -373,16 +375,19 @@ namespace Game.Server.Rooms
 
         public void SendToAllPlayers(GSPacketIn packet)
         {
-            var players = WorldMgr.GetAllPlayers();
-            foreach (var p in players) p.SendTCP(packet);
+            GamePlayer[] players = WorldMgr.GetAllPlayers();
+            foreach (GamePlayer p in players)
+            {
+                p.SendTCP(packet);
+            }
         }
 
-        public void SendToAll(GSPacketIn packet)
+        public new void SendToAll(GSPacketIn packet)
         {
             SendToAll(packet, null);
         }
 
-        public void SendToAll(GSPacketIn packet, GamePlayer except)
+        public new void SendToAll(GSPacketIn packet, GamePlayer except)
         {
             GamePlayer[] temp = null;
             lock (_mList)
@@ -391,9 +396,13 @@ namespace Game.Server.Rooms
                 _mList.Values.CopyTo(temp, 0);
             }
 
-            foreach (var p in temp)
+            foreach (GamePlayer p in temp)
+            {
                 if (p != null && p != except)
+                {
                     p.Out.SendTCP(packet);
+                }
+            }
         }
 
         // Hata Çözümü: RankPlayerCommit metodu (GameApiServer'dan çağrılıyor)

@@ -1,6 +1,5 @@
 using Bussiness;
 using Game.Base.Packets;
-using Game.Server.Managers;
 using SqlDataProvider.Data;
 using System;
 
@@ -9,7 +8,7 @@ namespace Game.Server.Packets.Client
     [PacketHandler(217, "开孔")]
     public class OpenFiveSixHoleHandler : IPacketHandler
     {
-        public static Random random = new Random();
+        public static Random random = new();
 
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
@@ -18,7 +17,7 @@ namespace Game.Server.Packets.Client
             int templateId = packet.ReadInt();
             if (DateTime.Compare(client.Player.LastOpenHole.AddMilliseconds(100.0), DateTime.Now) > 0)
             {
-                client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Biraz Yavaşla"));
+                _ = client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("Biraz Yavaşla"));
                 return 0;
             }
             client.Player.LastOpenHole = DateTime.Now;
@@ -26,14 +25,13 @@ namespace Game.Server.Packets.Client
             if (itemAt != null && (itemAt.Template.CategoryID == 7 || itemAt.Template.CategoryID == 1 || itemAt.Template.CategoryID == 5))
             {
                 ItemInfo itemByTemplateID = client.Player.PropBag.GetItemByTemplateID(0, templateId);
-                bool isBinds = itemAt.IsBinds;
+                _ = itemAt.IsBinds;
                 if (itemByTemplateID == null || itemByTemplateID.Count <= 0)
                 {
                     return 0;
                 }
                 if ((itemAt != null && itemAt.IsBinds) || (itemByTemplateID?.IsBinds ?? false))
                 {
-                    isBinds = true;
                 }
                 if (itemByTemplateID.IsBinds && !itemAt.IsBinds)
                 {
@@ -45,7 +43,7 @@ namespace Game.Server.Packets.Client
                     case 6:
                         if (itemByTemplateID.isDrill(itemAt.Hole6Level))
                         {
-                            client.Player.PropBag.RemoveCountFromStack(itemByTemplateID, 1);
+                            _ = client.Player.PropBag.RemoveCountFromStack(itemByTemplateID, 1);
                             int num3 = random.Next(itemByTemplateID.Template.Property7, itemByTemplateID.Template.Property8);
                             itemAt.Hole6Exp += num3;
                             switch (itemAt.Hole6Level)
@@ -126,7 +124,7 @@ namespace Game.Server.Packets.Client
                     case 5:
                         if (itemByTemplateID.isDrill(itemAt.Hole5Level))
                         {
-                            client.Player.PropBag.RemoveCountFromStack(itemByTemplateID, 1);
+                            _ = client.Player.PropBag.RemoveCountFromStack(itemByTemplateID, 1);
                             int num2 = random.Next(itemByTemplateID.Template.Property7, itemByTemplateID.Template.Property8);
                             itemAt.Hole5Exp += num2;
                             switch (itemAt.Hole5Level)
@@ -210,7 +208,7 @@ namespace Game.Server.Packets.Client
                         break;
                 }
                 client.Player.StoreBag.UpdateItem(itemAt);
-                GSPacketIn gSPacketIn = new GSPacketIn(217);
+                GSPacketIn gSPacketIn = new(217);
                 gSPacketIn.WriteByte(0);
                 gSPacketIn.WriteBoolean(val);
                 gSPacketIn.WriteInt(num);

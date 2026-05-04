@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Game.Base.Packets;
 using Bussiness;
-using SqlDataProvider.Data;
-using System.Configuration;
+using Game.Base.Packets;
 using Game.Server.Managers;
-using Game.Server.Statics;
-using Game.Logic;
+using SqlDataProvider.Data;
+using System;
+using System.Text;
 
 
 namespace Game.Server.Packets.Client
@@ -16,16 +11,16 @@ namespace Game.Server.Packets.Client
     [PacketHandler((int)ePackageType.ITEM_COMPOSE, "物品合成")]
     public class ItemComposeHandler : IPacketHandler
     {
-        public static Random random = new Random();
+        public static Random random = new();
         private static readonly double[] composeRate = new double[] { 0.8, 0.5, 0.3, 0.1, 0.05 };
         //public static int countConnect = 0;
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             //GSPacketIn pkg = packet.Clone();
             //pkg.ClearContext();
-            GSPacketIn pkg = new GSPacketIn((byte)ePackageType.ITEM_COMPOSE, client.Player.PlayerCharacter.ID);
+            GSPacketIn pkg = new((byte)ePackageType.ITEM_COMPOSE, client.Player.PlayerCharacter.ID);
 
-            var now = DateTime.UtcNow;
+            DateTime now = DateTime.UtcNow;
 
             if (client.Player.ComposePacketWindowStart == DateTime.MinValue ||
                 (now - client.Player.ComposePacketWindowStart).TotalSeconds >= 1)
@@ -38,21 +33,21 @@ namespace Game.Server.Packets.Client
 
             if (client.Player.ComposePacketCount > 2)
             {
-                client.Out.SendMessage(eMessageType.ERROR, "Çok hızlı işlem yapıyorsunuz, lütfen yavaşlayın.");
+                _ = client.Out.SendMessage(eMessageType.ERROR, "Çok hızlı işlem yapıyorsunuz, lütfen yavaşlayın.");
                 return 0;
             }
 
 
-            StringBuilder str = new StringBuilder();
+            StringBuilder str = new();
             int mustGold = GameProperties.PRICE_COMPOSE_GOLD;
             if (client.Player.PlayerCharacter.HasBagPassword && client.Player.PlayerCharacter.IsLocked)
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
                 return 0;
             }
             if (client.Player.PlayerCharacter.Gold < mustGold)
             {
-                client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemComposeHandler.NoMoney"));
+                _ = client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemComposeHandler.NoMoney"));
                 return 0;
             }
             int itemPlace = -1;
@@ -66,34 +61,34 @@ namespace Game.Server.Packets.Client
             ItemInfo god = null;
             if (stone == null || item == null || stone.Count <= 0)
             {
-                client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemComposeHandler.Msg")); ;
+                _ = client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemComposeHandler.Msg")); ;
                 return 0;
             }
             string BeginProperty = null;
             string AddItem = null;
-            using (ItemRecordBussiness db = new ItemRecordBussiness())
+            using (ItemRecordBussiness db = new())
             {
                 db.PropertyString(item, ref BeginProperty);
             }
-            if (item != null && stone != null && item.Template.CanCompose && (item.Template.CategoryID < 10 || stone.Template.CategoryID == 11 && stone.Template.Property1 == 1))
+            if (item != null && stone != null && item.Template.CanCompose && (item.Template.CategoryID < 10 || (stone.Template.CategoryID == 11 && stone.Template.Property1 == 1)))
             {
 
-                isBinds = isBinds ? true : item.IsBinds;
-                isBinds = isBinds ? true : stone.IsBinds;
-                str.Append(item.ItemID + ":" + item.TemplateID + "," + stone.ItemID + ":" + stone.TemplateID + ",");
+                isBinds = isBinds || item.IsBinds;
+                isBinds = isBinds || stone.IsBinds;
+                _ = str.Append(item.ItemID + ":" + item.TemplateID + "," + stone.ItemID + ":" + stone.TemplateID + ",");
                 //Random random = new Random();
                 bool result = false;
                 byte isSuccess = 1;
                 //bool isGod = false;                
-                double probability = composeRate[(stone.Template.Quality - 1)] * 100;//stone.Template.Property2;
+                double probability = composeRate[stone.Template.Quality - 1] * 100;//stone.Template.Property2;
                 if (client.Player.StoreBag.GetItemAt(0) != null)
                 {
                     luck = client.Player.StoreBag.GetItemAt(0);
                     if (luck != null && luck.Template.CategoryID == 11 && luck.Template.Property1 == 3)
                     {
-                        isBinds = isBinds ? true : luck.IsBinds;
+                        isBinds = isBinds || luck.IsBinds;
                         AddItem += "|" + luck.ItemID + ":" + luck.Template.Name + "|" + stone.ItemID + ":" + stone.Template.Name;
-                        str.Append(luck.ItemID + ":" + luck.TemplateID + ",");
+                        _ = str.Append(luck.ItemID + ":" + luck.TemplateID + ",");
                         probability += probability * luck.Template.Property2 / 100;
                     }
 
@@ -107,9 +102,9 @@ namespace Game.Server.Packets.Client
                     god = client.Player.PropBag.GetItemAt(godPlace);
                     if (god != null && god.Template.CategoryID == 11 && god.Template.Property1 == 7)
                     {
-                        isBinds = isBinds ? true : god.IsBinds;
+                        isBinds = isBinds || god.IsBinds;
                         //isGod = true;
-                        str.Append(god.ItemID + ":" + god.TemplateID + ",");
+                        _ = str.Append(god.ItemID + ":" + god.TemplateID + ",");
                         AddItem += "," + god.ItemID + ":" + god.Template.Name;
                     }
                     else
@@ -123,24 +118,24 @@ namespace Game.Server.Packets.Client
 
                     ConsortiaInfo info = ConsortiaMgr.FindConsortiaInfo(client.Player.PlayerCharacter.ConsortiaID);
                     //这里添加公会权限限制的判断
-                    ConsortiaBussiness csbs = new ConsortiaBussiness();
+                    ConsortiaBussiness csbs = new();
                     ConsortiaEquipControlInfo cecInfo = csbs.GetConsortiaEquipRiches(client.Player.PlayerCharacter.ConsortiaID, 0, 2);
 
                     if (info == null)
                     {
-                        client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemStrengthenHandler.Fail"));
+                        _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemStrengthenHandler.Fail"));
                     }
                     else
                     {
 
                         if (client.Player.PlayerCharacter.Riches < cecInfo.Riches)
                         {
-                            client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemStrengthenHandler.FailbyPermission"));
+                            _ = client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("ItemStrengthenHandler.FailbyPermission"));
                             return 1;
                         }
                         else
                         {
-                            probability *= (1 + 0.1 * info.SmithLevel);
+                            probability *= 1 + 0.1 * info.SmithLevel;
 
                         }
                     }
@@ -158,7 +153,7 @@ namespace Game.Server.Packets.Client
                             if (stone.Template.Property4 != item.AttackCompose + 10)
                             {
                                 int gerekliSeviye = item.AttackCompose + 10;
-                                client.Out.SendMessage(eMessageType.ERROR, string.Format("Önce +{0} sentezini başarıyla basmanız gerekir.", gerekliSeviye));
+                                _ = client.Out.SendMessage(eMessageType.ERROR, string.Format("Önce +{0} sentezini başarıyla basmanız gerekir.", gerekliSeviye));
                                 return 0;
                             }
 
@@ -178,7 +173,7 @@ namespace Game.Server.Packets.Client
                             if (stone.Template.Property4 != item.DefendCompose + 10)
                             {
                                 int gerekliSeviye = item.DefendCompose + 10;
-                                client.Out.SendMessage(eMessageType.ERROR, string.Format("Önce +{0} sentezini başarıyla basmanız gerekir.", gerekliSeviye));
+                                _ = client.Out.SendMessage(eMessageType.ERROR, string.Format("Önce +{0} sentezini başarıyla basmanız gerekir.", gerekliSeviye));
                                 return 0;
                             }
 
@@ -198,7 +193,7 @@ namespace Game.Server.Packets.Client
                             if (stone.Template.Property4 != item.AgilityCompose + 10)
                             {
                                 int gerekliSeviye = item.AgilityCompose + 10;
-                                client.Out.SendMessage(eMessageType.ERROR, string.Format("Önce +{0} sentezini başarıyla basmanız gerekir.", gerekliSeviye));
+                                _ = client.Out.SendMessage(eMessageType.ERROR, string.Format("Önce +{0} sentezini başarıyla basmanız gerekir.", gerekliSeviye));
                                 return 0;
                             }
 
@@ -218,7 +213,7 @@ namespace Game.Server.Packets.Client
                             if (stone.Template.Property4 != item.LuckCompose + 10)
                             {
                                 int gerekliSeviye = item.LuckCompose + 10;
-                                client.Out.SendMessage(eMessageType.ERROR, string.Format("Önce +{0} sentezini başarıyla basmanız gerekir.", gerekliSeviye));
+                                _ = client.Out.SendMessage(eMessageType.ERROR, string.Format("Önce +{0} sentezini başarıyla basmanız gerekir.", gerekliSeviye));
                                 return 0;
                             }
 
@@ -238,30 +233,27 @@ namespace Game.Server.Packets.Client
                     item.IsBinds = isBinds;
                     if (isSuccess != 0)
                     {
-                        str.Append("false!");
-                        result = false;
-
+                        _ = str.Append("false!");
                     }
                     else
                     {
-                        str.Append("true!");
-                        result = true;
+                        _ = str.Append("true!");
                         client.Player.OnItemCompose(stone.TemplateID);
                     }
                     //LogMgr.LogItemAdd(client.Player.PlayerCharacter.ID, LogItemType.Compose, BeginProperty, item, AddItem, Convert.ToInt32(result));
                     //client.Player.RemoveItem(stone);
-                    client.Player.StoreBag.RemoveTemplate(stone.TemplateID, 1);
+                    _ = client.Player.StoreBag.RemoveTemplate(stone.TemplateID, 1);
                     //client.Player.SaveIntoDatabase();//保存到数据库
                     if (luck != null)
                     {
                         //client.Player.RemoveItem(luck);
-                        client.Player.StoreBag.RemoveTemplate(luck.TemplateID, 1);
+                        _ = client.Player.StoreBag.RemoveTemplate(luck.TemplateID, 1);
                     }
                     if (god != null)
                     {
-                        client.Player.RemoveItem(god);
+                        _ = client.Player.RemoveItem(god);
                     }
-                    client.Player.RemoveGold(mustGold);
+                    _ = client.Player.RemoveGold(mustGold);
                     //client.Player.StoreBag2.ClearBag();
                     //client.Player.StoreBag2.AddItemTo(item, 1);
                     client.Player.StoreBag.UpdateItem(item);
@@ -274,12 +266,12 @@ namespace Game.Server.Packets.Client
                 }
                 else
                 {
-                    client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemComposeHandler.NoLevel"));
+                    _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemComposeHandler.NoLevel"));
                 }
             }
             else
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemComposeHandler.Fail"));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemComposeHandler.Fail"));
             }
 
             return 0;

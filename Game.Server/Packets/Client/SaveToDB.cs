@@ -1,6 +1,4 @@
-using System;
 using Game.Base.Packets;
-using Game.Server.GameObjects;
 
 namespace Game.Server.Packets.Client
 {
@@ -9,7 +7,7 @@ namespace Game.Server.Packets.Client
     {
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
-            client.Player.SaveIntoDatabase();
+            _ = client.Player.SaveIntoDatabase();
             return 0;
         }
     }

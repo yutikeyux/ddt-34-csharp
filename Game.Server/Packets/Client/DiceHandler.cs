@@ -1,9 +1,8 @@
-﻿using System;
-using Bussiness;
+﻿using Bussiness;
 using Bussiness.Managers;
 using Game.Base.Packets;
-using Game.Server.GameObjects;
 using SqlDataProvider.Data;
+using System;
 
 namespace Game.Server.Packets.Client
 {
@@ -12,28 +11,22 @@ namespace Game.Server.Packets.Client
     {
         public int maxTime
         {
-            get
-            {
-                return 3500;
-            }
+            get => 3500;
 
-            set
-            {
-                throw new NotImplementedException();
-            }
+            set => throw new NotImplementedException();
         }
-        private ThreadSafeRandom threadSafeRandom = new ThreadSafeRandom();
-        int count;
+        private readonly ThreadSafeRandom threadSafeRandom = new();
+        private readonly int count;
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             byte b = packet.ReadByte();
-            int iD = client.Player.PlayerCharacter.ID;
+            _ = client.Player.PlayerCharacter.ID;
             int result;
             switch (b)
             {
                 case 10:
                     client.Player.Dice.ReceiveData();
-                    client.Player.Out.SendDiceReceiveData(client.Player.Dice);
+                    _ = client.Player.Out.SendDiceReceiveData(client.Player.Dice);
                     break;
                 case 11:
                     {
@@ -44,13 +37,13 @@ namespace Game.Server.Packets.Client
                         }
                         if (client.Player.PlayerCharacter.myScore == 16)
                         {
-                            client.Player.Out.SendMessage(eMessageType.ALERT, "Total zar atma liminite ulaştın. Sistem otomatik olarak güncelliyor !");
+                            _ = client.Player.Out.SendMessage(eMessageType.ALERT, "Total zar atma liminite ulaştın. Sistem otomatik olarak güncelliyor !");
                             client.Player.Dice.CreateDiceAward();
-                            client.Player.Out.SendDiceReceiveData(client.Player.Dice);
+                            _ = client.Player.Out.SendDiceReceiveData(client.Player.Dice);
                             client.Player.PlayerCharacter.myScore = 0;
                         }
                         int num = packet.ReadInt();
-                        packet.ReadInt();
+                        _ = packet.ReadInt();
                         int index;
                         int value;
                         switch (num)
@@ -91,7 +84,7 @@ namespace Game.Server.Packets.Client
                         if (client.Player.MoneyDirect(refreshPrice))
                         {
                             client.Player.Dice.CreateDiceAward();
-                            client.Player.Out.SendDiceReceiveData(client.Player.Dice);
+                            _ = client.Player.Out.SendDiceReceiveData(client.Player.Dice);
                         }
                         break;
                     }
@@ -102,7 +95,7 @@ namespace Game.Server.Packets.Client
 
         private void receiveResult(GamePlayer player, int index)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(134);
+            GSPacketIn gSPacketIn = new(134);
             gSPacketIn.WriteByte(4);
             gSPacketIn.WriteInt(player.Dice.Data.CurrentPosition);
             gSPacketIn.WriteInt(index);
@@ -119,7 +112,7 @@ namespace Game.Server.Packets.Client
             itemInfo.ValidDate = eventAwardInfo.ValidDate;
             if (!player.AddTemplate(itemInfo, "Zengin Adam"))
             {
-                player.SendItemToMail(itemInfo, itemInfo.Template.Name, "Evanter dolu !", eMailType.OpenUpArk);
+                _ = player.SendItemToMail(itemInfo, itemInfo.Template.Name, "Evanter dolu !", eMailType.OpenUpArk);
             }
             player.Dice.RewardName = itemInfo.Template.Name;
             int num = threadSafeRandom.Next(2, 13);

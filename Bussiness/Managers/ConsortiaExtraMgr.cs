@@ -15,18 +15,18 @@ namespace Bussiness.Managers
 
         private static Dictionary<int, ConsortiaBuffTempInfo> _consortiaBuffTemp;
 
-        private static Dictionary<int, ConsortiaBossConfigInfo> _consortiaBossConfig;
+        private static readonly Dictionary<int, ConsortiaBossConfigInfo> _consortiaBossConfig;
 
-        private static Dictionary<int, ConsortiaBadgeConfigInfo> m_consortiaBadgeConfigs = new Dictionary<int, ConsortiaBadgeConfigInfo>();
+        private static Dictionary<int, ConsortiaBadgeConfigInfo> m_consortiaBadgeConfigs = [];
 
-        private static ReaderWriterLock m_clientLocker = new ReaderWriterLock();
+        private static readonly ReaderWriterLock m_clientLocker = new();
 
         public static bool ReLoad()
         {
             try
             {
-                Dictionary<int, ConsortiaLevelInfo> tempConsortiaLevel = new Dictionary<int, ConsortiaLevelInfo>();
-                Dictionary<int, ConsortiaBuffTempInfo> tempConsortiaBuffTemp = new Dictionary<int, ConsortiaBuffTempInfo>();
+                Dictionary<int, ConsortiaLevelInfo> tempConsortiaLevel = [];
+                Dictionary<int, ConsortiaBuffTempInfo> tempConsortiaBuffTemp = [];
                 Dictionary<int, ConsortiaBadgeConfigInfo> tempConsortiaBadgeConfigs = LoadFromDatabase();
                 if (Load(tempConsortiaLevel, tempConsortiaBuffTemp))
                 {
@@ -37,7 +37,7 @@ namespace Bussiness.Managers
                         _consortiaBuffTemp = tempConsortiaBuffTemp;
                         if (tempConsortiaBadgeConfigs.Values.Count > 0)
                         {
-                            Interlocked.Exchange(ref m_consortiaBadgeConfigs, tempConsortiaBadgeConfigs);
+                            _ = Interlocked.Exchange(ref m_consortiaBadgeConfigs, tempConsortiaBadgeConfigs);
                         }
                         return true;
                     }
@@ -78,8 +78,8 @@ namespace Bussiness.Managers
 
         private static Dictionary<int, ConsortiaBadgeConfigInfo> LoadFromDatabase()
         {
-            Dictionary<int, ConsortiaBadgeConfigInfo> list = new Dictionary<int, ConsortiaBadgeConfigInfo>();
-            using (ProduceBussiness db = new ProduceBussiness())
+            Dictionary<int, ConsortiaBadgeConfigInfo> list = [];
+            using (ProduceBussiness db = new())
             {
                 ConsortiaBadgeConfigInfo[] consortiaBadgeConfigInfos = db.GetAllConsortiaBadgeConfig();
                 ConsortiaBadgeConfigInfo[] array = consortiaBadgeConfigInfos;
@@ -96,25 +96,23 @@ namespace Bussiness.Managers
 
         private static bool Load(Dictionary<int, ConsortiaLevelInfo> consortiaLevel, Dictionary<int, ConsortiaBuffTempInfo> consortiaBuffTemp)
         {
-            using (ProduceBussiness db = new ProduceBussiness())
+            using ProduceBussiness db = new();
+            ConsortiaLevelInfo[] infos = db.GetAllConsortiaLevel();
+            ConsortiaLevelInfo[] array = infos;
+            foreach (ConsortiaLevelInfo info in array)
             {
-                ConsortiaLevelInfo[] infos = db.GetAllConsortiaLevel();
-                ConsortiaLevelInfo[] array = infos;
-                foreach (ConsortiaLevelInfo info in array)
+                if (!consortiaLevel.ContainsKey(info.Level))
                 {
-                    if (!consortiaLevel.ContainsKey(info.Level))
-                    {
-                        consortiaLevel.Add(info.Level, info);
-                    }
+                    consortiaLevel.Add(info.Level, info);
                 }
-                ConsortiaBuffTempInfo[] buffInfos = db.GetAllConsortiaBuffTemp();
-                ConsortiaBuffTempInfo[] array2 = buffInfos;
-                foreach (ConsortiaBuffTempInfo info in array2)
+            }
+            ConsortiaBuffTempInfo[] buffInfos = db.GetAllConsortiaBuffTemp();
+            ConsortiaBuffTempInfo[] array2 = buffInfos;
+            foreach (ConsortiaBuffTempInfo info in array2)
+            {
+                if (!consortiaBuffTemp.ContainsKey(info.id))
                 {
-                    if (!consortiaBuffTemp.ContainsKey(info.id))
-                    {
-                        consortiaBuffTemp.Add(info.id, info);
-                    }
+                    consortiaBuffTemp.Add(info.id, info);
                 }
             }
             return true;
@@ -122,11 +120,7 @@ namespace Bussiness.Managers
 
         public static ConsortiaBadgeConfigInfo FindConsortiaBadgeConfig(int level)
         {
-            if (m_consortiaBadgeConfigs.ContainsKey(level))
-            {
-                return m_consortiaBadgeConfigs[level];
-            }
-            return null;
+            return m_consortiaBadgeConfigs.ContainsKey(level) ? m_consortiaBadgeConfigs[level] : null;
         }
 
         public static ConsortiaBossConfigInfo FindConsortiaBossInfo(int id)
@@ -192,7 +186,7 @@ namespace Bussiness.Managers
         public static List<ConsortiaBuffTempInfo> GetAllConsortiaBuff()
         {
             m_clientLocker.AcquireReaderLock(-1);
-            List<ConsortiaBuffTempInfo> list = new List<ConsortiaBuffTempInfo>();
+            List<ConsortiaBuffTempInfo> list = [];
             try
             {
                 foreach (ConsortiaBuffTempInfo buff in _consortiaBuffTemp.Values)
@@ -214,7 +208,7 @@ namespace Bussiness.Managers
         public static List<ConsortiaBuffTempInfo> GetAllConsortiaBuff(int level, int type)
         {
             m_clientLocker.AcquireReaderLock(-1);
-            List<ConsortiaBuffTempInfo> list = new List<ConsortiaBuffTempInfo>();
+            List<ConsortiaBuffTempInfo> list = [];
             try
             {
                 foreach (ConsortiaBuffTempInfo buff in _consortiaBuffTemp.Values)

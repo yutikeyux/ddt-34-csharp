@@ -2,7 +2,6 @@ using Bussiness;
 using Bussiness.Managers;
 using Game.Base.Packets;
 using Game.Server.Managers;
-using log4net.Core;
 using SqlDataProvider.Data;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,7 @@ namespace Game.Server.Packets.Client
     {
         public static int countConnect = 0;
 
-        private static RandomSafe random = new RandomSafe();
+        private static readonly RandomSafe random = new();
 
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
@@ -26,7 +25,7 @@ namespace Game.Server.Packets.Client
             GSPacketIn pkg = packet.Clone();
             pkg.ClearContext();
             bool isconsortia = packet.ReadBoolean();
-            List<ItemInfo> stones = new List<ItemInfo>();
+            List<ItemInfo> stones = [];
             ItemInfo item = client.Player.StoreBag.GetItemAt(5);
             ItemInfo luck = null;
             ItemInfo god = null;
@@ -61,7 +60,7 @@ namespace Game.Server.Packets.Client
                     luck = client.Player.StoreBag.GetItemAt(4);
                     if (luck != null && luck.Template.CategoryID == 11 && luck.Template.Property1 == 3)
                     {
-                        symbol += probability + (double)(luck.Template.Property2 / 100);
+                        symbol += probability + luck.Template.Property2 / 100;
                     }
                     else
                     {
@@ -80,8 +79,8 @@ namespace Game.Server.Packets.Client
                         god = null;
                     }
                 }
-                double rateBasic = probability * 100.0 / (double)StrengthenMgr.GetNeedRate(item);
-                double rateSymbol = symbol * 100.0 / (double)StrengthenMgr.GetNeedRate(item);
+                double rateBasic = probability * 100.0 / StrengthenMgr.GetNeedRate(item);
+                double rateSymbol = symbol * 100.0 / StrengthenMgr.GetNeedRate(item);
                 if ((stone1 != null && stone1.IsBinds) || (stone2 != null && stone2.IsBinds) || (stone3 != null && stone3.IsBinds) || (luck != null && luck.IsBinds) || (god?.IsBinds ?? false))
                 {
                     isBinds = true;
@@ -92,22 +91,22 @@ namespace Game.Server.Packets.Client
                     ConsortiaEquipControlInfo consortiaEuqipRiches = new ConsortiaBussiness().GetConsortiaEquipRiches(client.Player.PlayerCharacter.ConsortiaID, 0, 2);
                     if (consortiaInfo == null)
                     {
-                        client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("ItemStrengthenHandler.Fail"));
+                        _ = client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("ItemStrengthenHandler.Fail"));
                     }
                     else if (client.Player.PlayerCharacter.Riches < consortiaEuqipRiches.Riches)
                     {
-                        client.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("ItemStrengthenHandler.FailbyPermission"));
+                        _ = client.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("ItemStrengthenHandler.FailbyPermission"));
                     }
                     else
                     {
-                        rateConsortia = rateBasic * (0.1 * (double)consortiaInfo.SmithLevel);
+                        rateConsortia = rateBasic * (0.1 * consortiaInfo.SmithLevel);
                     }
                 }
                 if (client.Player.PlayerCharacter.typeVIP > 0)
                 {
                     rateVIP += StrengthenMgr.VIPStrengthenEx * rateBasic;
                 }
-                if (client.Player.PlayerCharacter.Grade < 15 && item.StrengthenLevel >= 7 && item.Template.CategoryID == 7)              
+                if (client.Player.PlayerCharacter.Grade < 15 && item.StrengthenLevel >= 7 && item.Template.CategoryID == 7)
                 {
                     client.Player.SendMessage("Silah güçlendirme limitine eriştin. 15. seviyeye ulaş!");
                     return 0;
@@ -259,7 +258,7 @@ namespace Game.Server.Packets.Client
                     {
                         Rd = 0;
                     }
-                    if (Rate > (double)Rd)
+                    if (Rate > Rd)
                     {
                         pkg.WriteByte(0);
                         pkg.WriteBoolean(val: true);
@@ -271,14 +270,14 @@ namespace Game.Server.Packets.Client
                             if (itemTemplateInfo != null)
                             {
                                 ItemInfo itemInfo3 = ItemInfo.CloneFromTemplate(itemTemplateInfo, item);
-                                client.Player.StoreBag.RemoveItemAt(5);
+                                _ = client.Player.StoreBag.RemoveItemAt(5);
                                 item = itemInfo3;
                             }
                         }
                         ItemInfo.OpenHole(ref item);
-                        client.Player.StoreBag.AddItemTo(item, 5);
+                        _ = client.Player.StoreBag.AddItemTo(item, 5);
                         client.Player.OnItemStrengthen(item.Template.CategoryID, item.StrengthenLevel);
-                        client.Player.SaveIntoDatabase();
+                        _ = client.Player.SaveIntoDatabase();
                         if (item.StrengthenLevel >= 7)
                         {
                             GameServer.Instance.LoginServer.SendPacket(WorldMgr.SendSysNotice(eMessageType.ChatNormal, LanguageMgr.GetTranslation("ItemStrengthenHandler.congratulation2", client.Player.ZoneName, client.Player.PlayerCharacter.NickName, item.TemplateID, item.StrengthenLevel), item.ItemID, item.TemplateID, null));
@@ -308,7 +307,7 @@ namespace Game.Server.Packets.Client
                         {
                             if (item.Template.Level == 3)
                             {
-                                item.StrengthenLevel = ((item.StrengthenLevel < 5) ? item.StrengthenLevel : (item.StrengthenLevel - 1));
+                                item.StrengthenLevel = (item.StrengthenLevel < 5) ? item.StrengthenLevel : (item.StrengthenLevel - 1);
                                 StrengthenGoodsInfo strengthenGoodsInfo2 = StrengthenMgr.FindRealStrengthenGoodInfo(item.StrengthenLevel, item.TemplateID);
                                 if (strengthenGoodsInfo2 != null && item.Template.CategoryID == 7 && item.TemplateID != strengthenGoodsInfo2.GainEquip)
                                 {
@@ -316,24 +315,24 @@ namespace Game.Server.Packets.Client
                                     if (itemTemplateInfo2 != null)
                                     {
                                         ItemInfo itemInfo4 = ItemInfo.CloneFromTemplate(itemTemplateInfo2, item);
-                                        client.Player.StoreBag.RemoveItemAt(5);
+                                        _ = client.Player.StoreBag.RemoveItemAt(5);
                                         item = itemInfo4;
                                     }
                                 }
-                                client.Player.StoreBag.AddItemTo(item, 5);
+                                _ = client.Player.StoreBag.AddItemTo(item, 5);
                             }
                             else
                             {
                                 item.Count--;
-                                client.Player.StoreBag.AddItemTo(item, 5);
+                                _ = client.Player.StoreBag.AddItemTo(item, 5);
                             }
                         }
                         else
                         {
-                            client.Player.StoreBag.AddItemTo(item, 5);
+                            _ = client.Player.StoreBag.AddItemTo(item, 5);
                         }
                         ItemInfo.OpenHole(ref item);
-                        client.Player.SaveIntoDatabase();
+                        _ = client.Player.SaveIntoDatabase();
                     }
                     client.Out.SendTCP(pkg);
                     if (item.Place < 31)
@@ -343,12 +342,12 @@ namespace Game.Server.Packets.Client
                 }
                 else
                 {
-                    client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("ItemStrengthenHandler.Content1") + 1 + LanguageMgr.GetTranslation("ItemStrengthenHandler.Content2"));
+                    _ = client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("ItemStrengthenHandler.Content1") + 1 + LanguageMgr.GetTranslation("ItemStrengthenHandler.Content2"));
                 }
             }
             else
             {
-                client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("ItemStrengthenHandler.Success"));
+                _ = client.Out.SendMessage(eMessageType.GM_NOTICE, LanguageMgr.GetTranslation("ItemStrengthenHandler.Success"));
             }
             return 0;
         }

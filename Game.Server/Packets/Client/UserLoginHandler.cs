@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Game.Server.Packets.Client
 {
@@ -82,7 +83,7 @@ namespace Game.Server.Packets.Client
             }
 
             // Session key oluşturma
-            if (!TryExtractSessionKey(decryptedData, client, out byte[] sessionKey))
+            if (!TryExtractSessionKey(decryptedData, client, out _))
             {
                 HandleError(client, "UserLoginHandler.InvalidKey");
                 return 0;
@@ -122,7 +123,9 @@ namespace Game.Server.Packets.Client
             {
                 string endpoint = client?.TcpEndpoint;
                 if (string.IsNullOrEmpty(endpoint))
+                {
                     return null;
+                }
 
                 // Format genelde "IP:Port" veya "[IPv6]:Port" şeklindedir
                 int portSeparator = endpoint.LastIndexOf(':');
@@ -132,7 +135,9 @@ namespace Game.Server.Packets.Client
 
                     // IPv6 köşeli parantezlerini temizle (Örn: [::1] -> ::1)
                     if (ipPart.StartsWith("[") && ipPart.EndsWith("]"))
+                    {
                         ipPart = ipPart.Substring(1, ipPart.Length - 2);
+                    }
 
                     return ipPart;
                 }
@@ -154,17 +159,23 @@ namespace Game.Server.Packets.Client
             {
                 GameClient[] allClients = GameServer.Instance?.GetAllClients();
                 if (allClients == null || allClients.Length == 0)
+                {
                     return false;
+                }
 
                 foreach (GameClient c in allClients)
                 {
                     // Kendisi null ise, kendisi ise veya bağlantısı kopuk ise atla
                     if (c == null || c == currentClient || !c.IsConnected)
+                    {
                         continue;
+                    }
 
                     // Sadece oyuna başarılı bir şekilde girmiş olanları kontrol et
                     if (c.Player == null)
+                    {
                         continue;
+                    }
 
                     string otherIp = GetClientIpAddress(c);
 
@@ -175,7 +186,7 @@ namespace Game.Server.Packets.Client
                         string otherUser = c.Player.PlayerCharacter?.NickName ?? c.Player.PlayerCharacter?.UserName ?? "Bilinmiyor";
                         GameServer.log.Warn($"IP KISITLAMASI: {clientIp} IP adresi şuanda '{otherUser}' tarafından kullanılıyor. Giriş denemesi engellendi.");
 
-                        currentClient?.Out?.SendMessage(eMessageType.ALERT,"Bu IP adresinden zaten giriş yapılmış. Her IP adresi sadece bir hesapla giriş yapabilir.");
+                        _ = (currentClient?.Out?.SendMessage(eMessageType.ALERT, "Bu IP adresinden zaten giriş yapılmış. Her IP adresi sadece bir hesapla giriş yapabilir."));
                         Thread.Sleep(2000); // Mesajın gönderilmesi için kısa bir bekleme
                         currentClient?.Disconnect();
                         return true;
@@ -310,8 +321,8 @@ namespace Game.Server.Packets.Client
 
         private bool IsRateLimitedOrLockedOut(string username, GameClient client)
         {
-            var attemptInfo = _loginAttempts.GetOrAdd(username, _ => new LoginAttemptInfo());
-            var now = DateTime.UtcNow;
+            LoginAttemptInfo attemptInfo = _loginAttempts.GetOrAdd(username, _ => new LoginAttemptInfo());
+            DateTime now = DateTime.UtcNow;
 
             lock (attemptInfo)
             {
@@ -357,18 +368,13 @@ namespace Game.Server.Packets.Client
                     try
                     {
                         // 2. Kullanıcı lock'u aldıkktan sonra tekrar IP kontrolü (Race Condition güvenliği)
-                        if (IsIpRestricted(clientIp, client))
-                        {
-                            return 0;
-                        }
-
-                        return ExecuteLogin(client, username, password, version, clientIp);
+                        return IsIpRestricted(clientIp, client) ? 0 : ExecuteLogin(client, username, password, version, clientIp);
                     }
                     finally
                     {
                         if (!_pendingLogins.Values.Any(v => v == username))
                         {
-                            _userLocks.TryRemove(username, out _);
+                            _ = _userLocks.TryRemove(username, out _);
                         }
                     }
                 }
@@ -390,7 +396,7 @@ namespace Game.Server.Packets.Client
             bool isFirstLogin = false;
             bool timeoutOccurred = false;
 
-            var loginTask = System.Threading.Tasks.Task.Run(() =>
+            Task<PlayerInfo> loginTask = System.Threading.Tasks.Task.Run(() =>
             {
                 try
                 {
@@ -501,7 +507,7 @@ namespace Game.Server.Packets.Client
 
                 // Başarılı giriş logu ve temizlik
                 ResetFailedAttempts(username);
-                _pendingLogins.TryRemove(playerInfo.ID, out _);
+                _ = _pendingLogins.TryRemove(playerInfo.ID, out _);
 
                 GameServer.log.Info($"Player {username} (ID: {playerInfo.ID}) logged in successfully from IP: {clientIp}");
 
@@ -518,7 +524,7 @@ namespace Game.Server.Packets.Client
                 }
                 catch { }
 
-                _pendingLogins.TryRemove(playerInfo.ID, out _);
+                _ = _pendingLogins.TryRemove(playerInfo.ID, out _);
                 HandleError(client, "UserLoginHandler.ServerError");
                 return 0;
             }
@@ -526,7 +532,7 @@ namespace Game.Server.Packets.Client
 
         private void RecordFailedAttempt(string username)
         {
-            var attemptInfo = _loginAttempts.GetOrAdd(username, _ => new LoginAttemptInfo());
+            LoginAttemptInfo attemptInfo = _loginAttempts.GetOrAdd(username, _ => new LoginAttemptInfo());
 
             lock (attemptInfo)
             {
@@ -543,7 +549,7 @@ namespace Game.Server.Packets.Client
 
         private void ResetFailedAttempts(string username)
         {
-            _loginAttempts.TryRemove(username, out _);
+            _ = _loginAttempts.TryRemove(username, out _);
         }
 
         private void HandleError(GameClient client, string translationKey)

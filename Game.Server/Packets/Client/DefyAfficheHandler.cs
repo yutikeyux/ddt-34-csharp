@@ -1,4 +1,3 @@
-using Bussiness;
 using Game.Base.Packets;
 using Game.Server.Managers;
 using System;
@@ -20,7 +19,7 @@ namespace Game.Server.Packets.Client
             {
                 // Kalan süreyi hesaplayıp oyuncuya bilgi veriyoruz.
                 int remainingMinutes = 5 - (int)minutesPassed;
-                client.Out.SendMessage(eMessageType.ChatERROR, $"Bu özelliği tekrar kullanmak için {remainingMinutes} dakika beklemelisiniz!");
+                _ = client.Out.SendMessage(eMessageType.ChatERROR, $"Bu özelliği tekrar kullanmak için {remainingMinutes} dakika beklemelisiniz!");
 
                 // İşlemi burada kesiyoruz, para kontrolüne bile girmiyor.
                 return 0;
@@ -36,7 +35,7 @@ namespace Game.Server.Packets.Client
             if (client.Player.MoneyDirect(needMoney, true, false, true))
             {
                 // Ödeme başarılıysa mesajı gönder
-                GSPacketIn gSPacketIn = new GSPacketIn(123);
+                GSPacketIn gSPacketIn = new(123);
                 gSPacketIn.WriteString(str);
                 GameServer.Instance.LoginServer.SendPacket(gSPacketIn);
 

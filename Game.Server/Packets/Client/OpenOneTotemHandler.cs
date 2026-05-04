@@ -1,9 +1,6 @@
-﻿using System;
-using Game.Base.Packets;
-using Game.Server.GameObjects;
-using Bussiness;
+﻿using Bussiness;
 using Bussiness.Managers;
-using Game.Server.Managers;
+using Game.Base.Packets;
 using SqlDataProvider.Data;
 
 namespace Game.Server.Packets.Client
@@ -16,14 +13,14 @@ namespace Game.Server.Packets.Client
             // Seviye kontrolü
             if (client.Player.PlayerCharacter.Grade < 20)
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("OpenOneTotemHandler.Msg1"));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("OpenOneTotemHandler.Msg1"));
                 return 0;
             }
 
             // Çanta kilidi kontrolü
-            if ((client.Player.PlayerCharacter.HasBagPassword && client.Player.PlayerCharacter.IsLocked))
+            if (client.Player.PlayerCharacter.HasBagPassword && client.Player.PlayerCharacter.IsLocked)
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("Bag.Locked"));
                 return 1;
             }
 
@@ -34,16 +31,16 @@ namespace Game.Server.Packets.Client
             }
             if (id > TotemMgr.MaxTotem())
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("OpenOneTotemHandler.Maxlevel"));
-                client.Player.Out.SendPlayerRefreshTotem(client.Player.PlayerCharacter);
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("OpenOneTotemHandler.Maxlevel"));
+                _ = client.Player.Out.SendPlayerRefreshTotem(client.Player.PlayerCharacter);
                 return 1;
             }
 
             TotemInfo info = TotemMgr.FindTotemInfo(id);
             if (info == null)
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("OpenOneTotemHandler.ErrorData"));
-                client.Player.Out.SendPlayerRefreshTotem(client.Player.PlayerCharacter);
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("OpenOneTotemHandler.ErrorData"));
+                _ = client.Player.Out.SendPlayerRefreshTotem(client.Player.PlayerCharacter);
                 return 1;
             }
 
@@ -60,9 +57,9 @@ namespace Game.Server.Packets.Client
 
                 if (client.Player.MoneyDirect(needMoney, IsAntiMult: true, false, true))
                 {
-                    client.Player.AddTotem(id);
-                    client.Player.RemovemyHonor(needHonor);
-                    client.Player.Out.SendPlayerRefreshTotem(client.Player.PlayerCharacter);
+                    _ = client.Player.AddTotem(id);
+                    _ = client.Player.RemovemyHonor(needHonor);
+                    _ = client.Player.Out.SendPlayerRefreshTotem(client.Player.PlayerCharacter);
                     client.Player.EquipBag.UpdatePlayerProperties();
 
                     //client.Player.AddExpVip(needMoney);
@@ -71,12 +68,12 @@ namespace Game.Server.Packets.Client
                 else
                 {
                     // Para çekilemediyse (Limit dolduysa veya bakiye yetersizse)
-                    client.Out.SendMessage(eMessageType.Normal, "Günlük kupon limitinizi aşmış olabilirsiniz veya bakiyeniz yetersiz.");
+                    _ = client.Out.SendMessage(eMessageType.Normal, "Günlük kupon limitinizi aşmış olabilirsiniz veya bakiyeniz yetersiz.");
                 }
             }
             else
             {
-                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("OpenOneTotemHandler.Msg2"));
+                _ = client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("OpenOneTotemHandler.Msg2"));
             }
 
             return 0;

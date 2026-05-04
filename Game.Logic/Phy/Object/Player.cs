@@ -4,8 +4,6 @@ using Game.Logic.Actions;
 using Game.Logic.CardEffect.Effects;
 using Game.Logic.Effects;
 using Game.Logic.Game.Logic;
-using Game.Logic.PetEffects;
-using Game.Logic.PetEffects.ContinueElement;
 using Game.Logic.PetEffects.Element.Actives;
 using Game.Logic.PetEffects.Element.Passives;
 using Game.Logic.Phy.Maths;
@@ -25,9 +23,6 @@ namespace Game.Logic.Phy.Object
         public int CanTakeOut;
 
         private static readonly int CARRY_TEMPLATE_ID = 10016;
-
-        private int deputyWeaponResCount;
-
         public bool FinishTakeCard;
 
         public int GainGP;
@@ -36,7 +31,7 @@ namespace Game.Logic.Phy.Object
 
         public bool HasPaymentTakeCard;
 
-        private Dictionary<int, int> ItemFightBag;
+        private readonly Dictionary<int, int> ItemFightBag;
 
         public bool LockDirection;
 
@@ -45,53 +40,21 @@ namespace Game.Logic.Phy.Object
         private int m_ballCount;
 
         private bool m_canGetProp;
-
-        private BallInfo m_currentBall;
-
-        private int m_changeSpecialball;
-
-        private ItemInfo m_DeputyWeapon;
-
-        private int m_energy;
-
-        private int m_flyCoolDown;
-
         private ItemInfo m_Healstone;
-
-        private bool m_isActive;
-
         private int m_loadingProcess;
 
         private int m_mainBallId;
 
         private int m_MultiBallId;
-
-        private int m_oldx;
-
         public bool AttackInformation;
 
         public bool DefenceInformation;
-
-        private int m_killedPunishmentOffer;
-
-        private int m_powerRatio;
-
         public int MaxPsychic = 999;
-
-        private int m_oldy;
-
-        private IGamePlayer m_player;
-
-        private int m_prop;
-
         private int m_shootCount;
 
         private int m_spBallId;
 
-        private ArrayList m_tempBoxes;
-
-        private ItemInfo m_weapon;
-
+        private readonly ArrayList m_tempBoxes;
         public bool Ready;
 
         public Point TargetPoint;
@@ -116,27 +79,22 @@ namespace Game.Logic.Phy.Object
 
         public bool IsShadown = true;
 
-        private readonly List<int> AllowedItems = new List<int>
-        {
+        private readonly List<int> AllowedItems =
+        [
             10009,
             10010,
             10011,
             10012,
             10018,
             10021
-        };
+        ];
 
-        private Random rand;
+        private readonly Random rand;
+        private readonly PetFightPropertyInfo petFightPropertyInfo;
 
-        private UsersPetInfo m_pet;
+        private readonly BufferInfo m_bufferPoint;
 
-        private Dictionary<int, PetSkillInfo> _petSkillCd;
-
-        private PetFightPropertyInfo petFightPropertyInfo;
-
-        private BufferInfo m_bufferPoint;
-
-        public int MOVE_SPEED;
+        public new int MOVE_SPEED;
 
         private double speedMultiplier;
 
@@ -144,27 +102,9 @@ namespace Game.Logic.Phy.Object
 
         private int m_useitemCount;
 
-        private bool m_isaddturnequip;
+        public bool IsAddTurnEquip { get; set; }
 
-        public bool IsAddTurnEquip
-        {
-            get
-            {
-                return m_isaddturnequip;
-            }
-            set
-            {
-                m_isaddturnequip = value;
-            }
-        }
-
-        private PlayerConfig m_playerConfig;
-
-        public PlayerConfig Config
-        {
-            get { return m_playerConfig; }
-            set { m_playerConfig = value; }
-        }
+        public new PlayerConfig Config { get; set; }
 
 
         public void OnPlayerSkip()
@@ -172,52 +112,24 @@ namespace Game.Logic.Phy.Object
             PlayerSkip?.Invoke(this);
         }
 
-        public Dictionary<int, PetSkillInfo> PetSkillCD
-        {
-            get { return _petSkillCd; }
-        }
+        public Dictionary<int, PetSkillInfo> PetSkillCD { get; }
 
-        public int PowerRatio
-        {
-            get
-            {
-                return m_powerRatio;
-            }
-            set
-            {
-                m_powerRatio = value;
-            }
-        }
+        public int PowerRatio { get; set; }
 
         public double SpeedMult
         {
-            get
-            {
-                return speedMultiplier;
-            }
-            set
-            {
-                speedMultiplier = value / (double)base.STEP_X;
-            }
+            get => speedMultiplier; set => speedMultiplier = value / STEP_X;
         }
 
-        public int StepX => (int)((double)base.STEP_X * speedMultiplier);
+        public int StepX => (int)(STEP_X * speedMultiplier);
 
-        public int StepY => (int)((double)base.STEP_Y * speedMultiplier);
-        private int m_currentDelay;
+        public int StepY => (int)(STEP_Y * speedMultiplier);
 
-        public int CurrentDelay
-        {
-            get { return m_currentDelay; }
-            set { m_currentDelay = value; }
-        }
+        public int CurrentDelay { get; set; }
 
         public int BallCount
         {
-            get
-            {
-                return m_ballCount;
-            }
+            get => m_ballCount;
             set
             {
                 if (m_ballCount != value)
@@ -229,10 +141,7 @@ namespace Game.Logic.Phy.Object
 
         public bool CanGetProp
         {
-            get
-            {
-                return m_canGetProp;
-            }
+            get => m_canGetProp;
             set
             {
                 if (m_canGetProp != value)
@@ -242,58 +151,25 @@ namespace Game.Logic.Phy.Object
             }
         }
 
-        public BallInfo CurrentBall => m_currentBall;
+        public BallInfo CurrentBall { get; private set; }
 
-        public int ChangeSpecialBall
-        {
-            get
-            {
-                return m_changeSpecialball;
-            }
-            set
-            {
-                m_changeSpecialball = value;
-            }
-        }
+        public int ChangeSpecialBall { get; set; }
 
-        public ItemInfo DeputyWeapon
-        {
-            get
-            {
-                return m_DeputyWeapon;
-            }
-            set
-            {
-                m_DeputyWeapon = value;
-            }
-        }
+        public ItemInfo DeputyWeapon { get; set; }
 
-        public int deputyWeaponCount => deputyWeaponResCount;
+        public int deputyWeaponCount { get; private set; }
 
-        public int Energy
-        {
-            get
-            {
-                return m_energy;
-            }
-            set
-            {
-                m_energy = value;
-            }
-        }
+        public int Energy { get; set; }
 
-        public int flyCount => m_flyCoolDown;
+        public int flyCount { get; private set; }
 
-        public bool IsActive => m_isActive;
+        public bool IsActive { get; private set; }
 
-        public bool IsSpecialSkill => m_currentBall.ID == m_spBallId;
+        public bool IsSpecialSkill => CurrentBall.ID == m_spBallId;
 
         public int LoadingProcess
         {
-            get
-            {
-                return m_loadingProcess;
-            }
+            get => m_loadingProcess;
             set
             {
                 if (m_loadingProcess != value)
@@ -307,62 +183,19 @@ namespace Game.Logic.Phy.Object
             }
         }
 
-        public int KilledPunishmentOffer
-        {
-            get
-            {
-                return m_killedPunishmentOffer;
-            }
-            set
-            {
-                m_killedPunishmentOffer = value;
-            }
-        }
+        public int KilledPunishmentOffer { get; set; }
 
-        public int OldX
-        {
-            get
-            {
-                return m_oldx;
-            }
-            set
-            {
-                m_oldx = value;
-            }
-        }
+        public int OldX { get; set; }
 
-        public int OldY
-        {
-            get
-            {
-                return m_oldy;
-            }
-            set
-            {
-                m_oldy = value;
-            }
-        }
+        public int OldY { get; set; }
 
-        public IGamePlayer PlayerDetail => m_player;
+        public IGamePlayer PlayerDetail { get; }
 
-        public int Prop
-        {
-            get
-            {
-                return m_prop;
-            }
-            set
-            {
-                m_prop = value;
-            }
-        }
+        public int Prop { get; set; }
 
         public new int ShootCount
         {
-            get
-            {
-                return m_shootCount;
-            }
+            get => m_shootCount;
             set
             {
                 if (m_shootCount != value)
@@ -372,18 +205,13 @@ namespace Game.Logic.Phy.Object
                 }
             }
         }
-        private int m_isBombOrIgnoreArmor;
 
-        public int IsBombOrIgnoreAemor
-        {
-            get { return m_isBombOrIgnoreArmor; }
-            set { m_isBombOrIgnoreArmor = value; }
-        }
+        public int IsBombOrIgnoreAemor { get; set; }
 
 
-        public ItemInfo Weapon => m_weapon;
+        public ItemInfo Weapon { get; private set; }
 
-        public UsersPetInfo Pet => m_pet;
+        public UsersPetInfo Pet { get; }
 
         public event PlayerEventHandle AfterPlayerShooted;
 
@@ -425,9 +253,9 @@ namespace Game.Logic.Phy.Object
             : base(id, game, team, "", "", maxBlood, 0, 1)
         {
             m_rect = new Rectangle(-15, -20, 30, 30);
-            _petSkillCd = new Dictionary<int, PetSkillInfo>();
-            m_player = player;
-            m_player.GamePlayerId = id;
+            PetSkillCD = [];
+            PlayerDetail = player;
+            PlayerDetail.GamePlayerId = id;
             m_canGetProp = true;
             Grade = player.PlayerCharacter.Grade;
             TotalAllHurt = 0;
@@ -439,26 +267,19 @@ namespace Game.Logic.Phy.Object
             TotalAllCure = 0;
             m_loadingProcess = 0;
             ChangeSpecialBall = 0;
-            m_prop = 0;
-            if (base.AutoBoot)
-            {
-                base.VaneOpen = true;
-            }
-            else
-            {
-                base.VaneOpen = player.PlayerCharacter.Grade >= 9;
-            }
+            Prop = 0;
+            base.VaneOpen = base.AutoBoot || player.PlayerCharacter.Grade >= 9;
 
-            m_weapon = m_player.MainWeapon;
-            m_DeputyWeapon = m_player.SecondWeapon;
-            m_Healstone = m_player.Healstone;
+            Weapon = PlayerDetail.MainWeapon;
+            DeputyWeapon = PlayerDetail.SecondWeapon;
+            m_Healstone = PlayerDetail.Healstone;
 
-            m_pet = player.Pet;
+            Pet = player.Pet;
 
             if (game != null)
             {
                 InitFightBuffer(player.FightBuffs);
-                if (m_pet != null)
+                if (Pet != null)
                 {
                     //PetMP = 10;
                     base.isPet = true;
@@ -466,64 +287,64 @@ namespace Game.Logic.Phy.Object
                     InitPetSkillEffect();
                     petFightPropertyInfo = PetMgr.FindFightProperty(player.PlayerCharacter.evolutionGrade);
                 }
-                m_tempBoxes = new ArrayList();
-                m_flyCoolDown = 2;
+                m_tempBoxes = [];
+                flyCount = 2;
                 speedMultiplier = 1.0;
                 MOVE_SPEED = 2;
-                ItemFightBag = new Dictionary<int, int>();
+                ItemFightBag = [];
 
 
-                m_player.GameId = id;
-                m_isActive = true;
+                PlayerDetail.GameId = id;
+                IsActive = true;
 
 
 
                 base.BlockTurn = false;
-                deputyWeaponResCount = ((m_DeputyWeapon == null) ? 1 : (m_DeputyWeapon.StrengthenLevel + 1));
-                if (m_weapon != null)
+                deputyWeaponCount = (DeputyWeapon == null) ? 1 : (DeputyWeapon.StrengthenLevel + 1);
+                if (Weapon != null)
                 {
-                    BallConfigInfo ball = BallConfigMgr.FindBall(m_weapon.TemplateID);
-                    if (m_weapon.IsValidGoldItem())
+                    BallConfigInfo ball = BallConfigMgr.FindBall(Weapon.TemplateID);
+                    if (Weapon.IsValidGoldItem())
                     {
-                        ball = BallConfigMgr.FindBall(m_weapon.GoldEquip.TemplateID);
+                        ball = BallConfigMgr.FindBall(Weapon.GoldEquip.TemplateID);
                     }
                     m_mainBallId = ball.Common;
                     m_spBallId = ball.Special;
                     m_AddWoundBallId = ball.CommonAddWound;
                     m_MultiBallId = ball.CommonMultiBall;
                 }
-                InitBuffer(m_player.EquipEffect);
-                m_energy = (m_player.PlayerCharacter.AgiAddPlus + m_player.PlayerCharacter.Agility) / 30 + 240;
+                InitBuffer(PlayerDetail.EquipEffect);
+                Energy = ((PlayerDetail.PlayerCharacter.AgiAddPlus + PlayerDetail.PlayerCharacter.Agility) / 30) + 240;
                 m_useitemCount = 0;
-                m_maxBlood = m_player.PlayerCharacter.hp;
+                m_maxBlood = PlayerDetail.PlayerCharacter.hp;
                 if (base.FightBuffers.ConsortionAddMaxBlood > 0)
                 {
                     m_maxBlood += m_maxBlood * base.FightBuffers.ConsortionAddMaxBlood / 100;
                 }
-                m_maxBlood += m_player.PlayerCharacter.HpAddPlus + base.FightBuffers.WorldBossHP + base.FightBuffers.WorldBossHP_MoneyBuff + base.PetEffects.MaxBlood;
+                m_maxBlood += PlayerDetail.PlayerCharacter.HpAddPlus + base.FightBuffers.WorldBossHP + base.FightBuffers.WorldBossHP_MoneyBuff + base.PetEffects.MaxBlood;
                 CanFly = true;
-                m_powerRatio = 100;
+                PowerRatio = 100;
                 if (game != null && !game.IsSpecialPVE())
                 {
                     BufferInfo fightBuffByType = GetFightBuffByType(BuffType.Agility);
-                    if (fightBuffByType != null && m_player.UsePayBuff(BuffType.Agility))
+                    if (fightBuffByType != null && PlayerDetail.UsePayBuff(BuffType.Agility))
                     {
                         m_bufferPoint = fightBuffByType;
                     }
                 }
-                propsBloqueados = new List<int>();
-                m_isBombOrIgnoreArmor = 0;
-                m_playerConfig = new PlayerConfig();
-                m_isaddturnequip = false;
+                propsBloqueados = [];
+                IsBombOrIgnoreAemor = 0;
+                Config = new PlayerConfig();
+                IsAddTurnEquip = false;
             }
-            m_currentDelay = 0;
+            CurrentDelay = 0;
         }
 
         public int GetPetBaseAtt()
         {
             try
             {
-                string[] skillArray = m_pet.SkillEquip.Split('|');
+                string[] skillArray = Pet.SkillEquip.Split('|');
                 for (int i = 0; i < skillArray.Length; i++)
                 {
                     int skillID = Convert.ToInt32(skillArray[i].Split(',')[0]);
@@ -547,32 +368,24 @@ namespace Game.Logic.Phy.Object
 
         public bool CanUseItem(ItemTemplateInfo item)
         {
-            if (m_currentBall.IsSpecial() && !AllowedItems.Contains(item.TemplateID))
+            if (CurrentBall.IsSpecial() && !AllowedItems.Contains(item.TemplateID))
             {
                 return false;
             }
-            if (m_energy < item.Property4)
+            if (Energy < item.Property4)
             {
                 return false;
             }
             if (!base.IsAttacking)
             {
-                if (!base.IsLiving && base.Team == m_game.CurrentLiving.Team)
-                {
-                    return IsActive;
-                }
-                return false;
+                return !base.IsLiving && base.Team == m_game.CurrentLiving.Team && IsActive;
             }
-            if (propsBloqueados.Contains(item.TemplateID))
-            {
-                return false;
-            }
-            return true;
+            return !propsBloqueados.Contains(item.TemplateID);
         }
 
         public bool CanUseItem(ItemTemplateInfo item, int place)
         {
-            if (m_currentBall.IsSpecial() && !AllowedItems.Contains(item.TemplateID))
+            if (CurrentBall.IsSpecial() && !AllowedItems.Contains(item.TemplateID))
             {
                 return false;
             }
@@ -584,17 +397,13 @@ namespace Game.Logic.Phy.Object
             {
                 return true;
             }
-            if (m_energy < item.Property4)
+            if (Energy < item.Property4)
             {
                 return false;
             }
             if (!base.IsAttacking)
             {
-                if (!base.IsLiving && base.Team == m_game.CurrentLiving.Team)
-                {
-                    return IsActive;
-                }
-                return false;
+                return !base.IsLiving && base.Team == m_game.CurrentLiving.Team && IsActive;
             }
             return true;
         }
@@ -678,7 +487,7 @@ namespace Game.Logic.Phy.Object
 
         public void DeadLink()
         {
-            m_isActive = false;
+            IsActive = false;
             if (base.IsLiving)
             {
                 Die();
@@ -702,82 +511,82 @@ namespace Game.Logic.Phy.Object
                 switch (itemTemplate.Property3)
                 {
                     case 1:
-                        new AddAttackEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new AddAttackEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 2:
-                        new AddDefenceEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new AddDefenceEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 3:
-                        new AddAgilityEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new AddAgilityEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 4:
-                        new AddLuckyEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new AddLuckyEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 5:
-                        new AddDamageEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new AddDamageEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 6:
-                        new ReduceDamageEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new ReduceDamageEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 7:
-                        new AddBloodEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new AddBloodEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 8:
-                        new FatalEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new FatalEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 9:
-                        new IceFronzeEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new IceFronzeEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 10:
-                        new NoHoleEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new NoHoleEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 11:
-                        new AtomBombEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new AtomBombEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 12:
-                        new ArmorPiercerEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new ArmorPiercerEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 13:
-                        new AvoidDamageEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new AvoidDamageEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 14:
-                        new MakeCriticalEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new MakeCriticalEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 15:
-                        new AssimilateDamageEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new AssimilateDamageEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 16:
-                        new AssimilateBloodEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new AssimilateBloodEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 17:
-                        new SealEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new SealEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 18:
-                        new AddTurnEquipEffect(itemTemplate.Property4, itemTemplate.Property5, itemTemplate.TemplateID).Start(this);
+                        _ = new AddTurnEquipEffect(itemTemplate.Property4, itemTemplate.Property5, itemTemplate.TemplateID).Start(this);
                         break;
                     case 19:
-                        new AddDanderEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new AddDanderEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 20:
-                        new ReflexDamageEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new ReflexDamageEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 21:
-                        new ReduceStrengthEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new ReduceStrengthEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 22:
-                        new ContinueReduceBloodEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new ContinueReduceBloodEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 23:
-                        new LockDirectionEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new LockDirectionEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 24:
-                        new AddBombEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new AddBombEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 25:
-                        new ContinueReduceDamageEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new ContinueReduceDamageEquipEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                     case 26:
-                        new RecoverBloodEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
+                        _ = new RecoverBloodEffect(itemTemplate.Property4, itemTemplate.Property5).Start(this);
                         break;
                 }
             }
@@ -785,686 +594,690 @@ namespace Game.Logic.Phy.Object
 
         public void InitPetSkillEffect()
         {
-            string[] listSkills = m_pet.SkillEquip.Split('|');
-            PetSkillInfo skillInfo = null;
+            string[] listSkills = Pet.SkillEquip.Split('|');
             foreach (string skill in listSkills)
             {
                 int skillId = int.Parse(skill.Split(',')[0]);
-                skillInfo = PetMgr.FindPetSkill(skillId);
+                PetSkillInfo skillInfo = PetMgr.FindPetSkill(skillId);
                 if (skillInfo == null)
+                {
                     continue;
+                }
+
                 string[] elementIDs = skillInfo.ElementIDs.Split(',');
                 int coldDown = skillInfo.ColdDown;
                 int probability = skillInfo.Probability;
                 int delay = skillInfo.Delay;
                 int gameType = skillInfo.GameType;
-                if (!_petSkillCd.ContainsKey(skillId))
+                if (!PetSkillCD.ContainsKey(skillId))
                 {
-                    _petSkillCd.Add(skillId, skillInfo);
+                    PetSkillCD.Add(skillId, skillInfo);
                 }
 
                 //Console.WriteLine(string.Format("InitPetSkillEffect, skillInfo.ElementIDs: {0}", skillInfo.ElementIDs));
                 foreach (string element in elementIDs)
                 {
                     if (string.IsNullOrEmpty(element))
+                    {
                         continue;
+                    }
 
                     switch (element)
                     {
                         #region Skill Chung
                         case "1017"://Di chuyển không thể. Duy trì 2 TURN
-                            new AE1017(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1017(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1021"://miễn kháng. Duy trì 2 TURN
-                            new AE1021(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1021(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1038"://hiệu ứng dẫn đường, duy trì 1 turn.
-                            new AE1038(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1038(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1082"://Luôn miễn kháng
-                            new AE1082(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1082(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1138":// 100% xác suất bạo kích
-                            new AE1138(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1138(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1325"://Thú cưng sau khi kết thúc mỗi turn có 100% xác suất tấn công địch, gây 15% sát thương.
-                            new PE1325(coldDown, probability, gameType, skillId, delay, "1110").Start(this);
+                            _ = new PE1325(coldDown, probability, gameType, skillId, delay, "1110").Start(this);
                             break;
                         case "1326"://Thú cưng sau khi kết thúc mỗi turn có 100% xác suất tấn công địch, gây 25% sát thương.
-                            new PE1326(coldDown, probability, gameType, skillId, delay, "1110").Start(this);
+                            _ = new PE1326(coldDown, probability, gameType, skillId, delay, "1110").Start(this);
                             break;
                         case "1327"://Thú cưng sau khi kết thúc mỗi turn có 100% xác suất tấn công địch, gây 36% sát thương.
-                            new PE1327(coldDown, probability, gameType, skillId, delay, "1110").Start(this);
+                            _ = new PE1327(coldDown, probability, gameType, skillId, delay, "1110").Start(this);
                             break;
                         #endregion
                         #region Gà Con
                         case "1328"://Bắn 1 Đạn Theo Dõi, gây 100% sát thương cơ bản.
-                            new AE1328(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1328(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1329"://Bắn 1 Đạn Theo Dõi, gây 130% sát thương cơ bản.
-                            new AE1329(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1329(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1330"://Bắn 1 Đạn Theo Dõi, gây 155% sát thương cơ bản.
-                            new AE1330(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1330(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1331"://Nhận hiệu quả phòng thủ +15%, duy trì 2 turn.
-                            new AE1331(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1331(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1332"://Nhận hiệu quả phòng thủ +20%, duy trì 2 turn.
-                            new AE1332(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1332(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1333"://Nhận hiệu quả phòng thủ +30%, duy trì 2 turn.
-                            new AE1333(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1333(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1334"://tấn công -20%,  duy trì 2 turn.
-                            new AE1334(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1334(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1336"://Nhận thêm 250 điểm hộ giáp, khi giải trừ sẽ mất hiệu quả cộng thêm, tối đa cộng dồn 3 lần.
-                            new AE1336(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1336(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1337"://Nhận thêm 365 điểm hộ giáp, khi giải trừ sẽ mất hiệu quả cộng thêm, tối đa cộng dồn 3 lần.
-                            new AE1337(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1337(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1338"://Hiệu quả giải trừ.
                             //new AE1339(coldDown, probability, gameType, skillId, delay, "1339").Start(this);
-                            new AE1339(coldDown, probability, gameType, skillId, delay, "1338").Start(this);
+                            _ = new AE1339(coldDown, probability, gameType, skillId, delay, "1338").Start(this);
                             break;
                         case "1340"://Mỗi lần bắn gây sát thương bằng 2% HP hiện tại của bản thân
-                            new PE1340(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1340(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1341"://Mỗi lần bắn gây sát thương bằng 3% HP hiện tại của bản thân
-                            new PE1341(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1341(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1342"://Tăng 30% sát thương. Hiệu quả mất khi di chuyển.
-                            new AE1342(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1342(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1343"://Sát thương +45%. Hiệu quả mất khi di chuyển.
-                            new AE1343(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1343(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1344": //may mắn +10%. Hiệu quả mất khi di chuyển.
-                            new AE1344(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1344(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1346"://giảm 30% hộ giáp. Hiệu quả mất khi di chuyển.
-                            new AE1346(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1346(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1347"://hộ giáp -25%. Hiệu quả mất khi di chuyển.
-                            new AE1347(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1347(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1345": //may mắn +15%. Hiệu quả mất khi di chuyển.
-                            new AE1345(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1345(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1348"://Sau khi di chuyển sẽ giải trừ hiệu quả pháo đài V3
-                            new AE1349(coldDown, probability, gameType, skillId, delay, "1349").Start(this);
-                            new AE1350(coldDown, probability, gameType, skillId, delay, "1350").Start(this);
+                            _ = new AE1349(coldDown, probability, gameType, skillId, delay, "1349").Start(this);
+                            _ = new AE1350(coldDown, probability, gameType, skillId, delay, "1350").Start(this);
                             break;
                         case "1355"://Mỗi lần bị tấn công trúng chính xác, nhận 40 sát thương thêm, tối đa cộng dồn 4 lần, sau khi turn bản thân kết thúc, giảm 2 lần hiệu quả thêm.
-                            new PE1355(coldDown, probability, gameType, skillId, delay, "1355").Start(this);
+                            _ = new PE1355(coldDown, probability, gameType, skillId, delay, "1355").Start(this);
                             break;
                         case "1357"://Mỗi lần bị tấn công trúng chính xác, nhận 55 sát thương thêm, tối đa cộng dồn 6 lần, sau khi turn bản thân kết thúc, giảm 2 lần hiệu quả thêm.
-                            new PE1357(coldDown, probability, gameType, skillId, delay, "1357").Start(this);
+                            _ = new PE1357(coldDown, probability, gameType, skillId, delay, "1357").Start(this);
                             break;
                         #endregion
                         #region Kiến
                         case "1032"://Mỗi lần bị tấn công giảm thêm 5% sát thương, duy trì 1 turn.
-                            new AE1445(coldDown, probability, gameType, skillId, delay, "1032").Start(this);
+                            _ = new AE1445(coldDown, probability, gameType, skillId, delay, "1032").Start(this);
                             break;
                         case "1033"://Mỗi lần bị tấn công giảm thêm 5% sát thương, duy trì 1 turn.
-                            new AE1445(coldDown, probability, gameType, skillId, delay, "1033").Start(this);
+                            _ = new AE1445(coldDown, probability, gameType, skillId, delay, "1033").Start(this);
                             break;
                         case "1034"://Mỗi lần bị tấn công giảm thêm 10% sát thương, duy trì 1 turn.
-                            new AE1446(coldDown, probability, gameType, skillId, delay, "1034").Start(this);
+                            _ = new AE1446(coldDown, probability, gameType, skillId, delay, "1034").Start(this);
                             break;
                         case "1039":// gây 150% sát thương cơ bản
-                            new AE1039(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1039(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1067"://mỗi lần bị tấn công phản đòn bằng 30% tổng sát thương, duy trì 2 turn. Chỉ hiệu quả khi chiến đấu..
-                            new AE1067(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1067(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1068"://mỗi lần bị tấn công phản đòn bằng 50% tổng sát thương, duy trì 2 turn. Chỉ hiệu quả khi chiến đấu.
-                            new AE1068(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1068(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1117"://Hoàn toàn không chịu sát thương kéo dài 1 hiệp,chỉ khi đối chiến vối người mới có hiệu lực
-                            new AE1117(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1117(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1133":// gây 120% sát thương cơ bản
-                            new AE1133(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1133(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1134":// gây 180% sát thương cơ bản
-                            new AE1134(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1134(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1136"://Bản thân thêm vỏ phản xạ, duy trì 2 turn. Chỉ hiệu quả khi chiến đấu.
-                            new AE1136(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1136(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1137"://duy trì phản kích.
-                            new PE1137(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1137(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1439"://Ném 1 Kiến Lửa, bản thân tăng 100 hộ giáp, duy trì 2 turn.
-                            new AE1439(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1439(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1440"://Ném 1 Kiến Lửa, bản thân tăng 300 hộ giáp, duy trì 2 turn.
-                            new AE1440(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1440(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1441"://Ném 1 Kiến Lửa, bản thân tăng 500 hộ giáp, duy trì 2 turn.
-                            new AE1441(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1441(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1442"://Nhận được 500 điểm giảm thương.
-                            new AE1442(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1442(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1443"://Nhận được 500 +10% điểm giảm thương.
-                            new AE1443(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1443(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1444"://Nhận được 500 +20% điểm giảm thương.
-                            new AE1444(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1444(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1457"://Mỗi lần bị tấn công tăng 1 điểm ma pháp.
-                            new PE1457(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1457(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1449"://Tăng 6% hộ giáp.
-                            new PE1449(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1449(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1450"://Tăng 10% hộ giáp.
-                            new PE1450(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1450(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1451"://Tăng 6% phòng thủ.
-                            new PE1451(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1451(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1452"://Tăng 10% phòng thủ.
-                            new PE1452(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1452(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1455"://Hoàn toàn không chịu sát thương, hồi phục 5% HP, duy trì 1 turn. Chỉ hiệu quả khi chiến đấu.
-                            new AE1455(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1455(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1456"://Hoàn toàn không chịu sát thương, hồi phục 15% HP, duy trì 1 turn. Chỉ hiệu quả khi chiến đấu.
-                            new AE1456(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1456(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1459"://Mỗi lần bị tấn công có 20% xác suất phản đòn bằng 3% HP hiện tại..
-                            new PE1459(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1459(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1460"://Mỗi lần bị tấn công có 20% xác suất phản đòn bằng 5% HP hiện tại..
-                            new PE1460(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1460(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         #endregion
                         #region Đấu Sĩ
                         case "1022"://Bắn bất kỳ loại đạn nào trong TURN cũng sẽ tăng 100 hộ giáp cho đồng đội, duy trì 2 TURN.
-                            new AE1022(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1022(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1023"://Bắn bất kỳ loại đạn nào trong TURN cũng sẽ tăng 300 hộ giáp cho đồng đội, duy trì 2 TURN.
-                            new AE1023(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1023(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1024"://Bắn bất kỳ loại đạn nào trong TURN cũng sẽ tăng 100 sát thương cho đồng đội, duy trì 2 TURN.
-                            new AE1024(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1024(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1025"://Bắn bất kỳ loại đạn nào trong TURN cũng sẽ tăng 300 sát thương cho đồng đội, duy trì 2 TURN. 
-                            new AE1025(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1025(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1040"://tăng 100đ may mắn cho bản thân, duy trì 2 turn.
-                            new AE1040(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1040(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1041"://tăng 300đ may mắn cho bản thân, duy trì 2 turn.
-                            new AE1041(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1041(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1042"://tăng 500đ may mắn cho bản thân, duy trì 2 turn.
-                            new AE1042(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1042(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1056"://Hồi phục 1500 HP cho tất cả đồng đội trên toàn bản đồ. 
-                            new AE1056(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1056(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1057"://Hồi phục 3000 HP cho tất cả đồng đội trên toàn bản đồ.
-                            new AE1057(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1057(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1074"://Tăng 300 điểm hiệu quả cho các vũ khí phụ loại thiên sứ ban phúc.
-                            new PE1074(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1074(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1075"://Tăng 600 điểm hiệu quả cho các vũ khí phụ loại thiên sứ ban phúc.
-                            new PE1075(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1075(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1078"://Sử dụng vũ khí phụ loại khiên sẽ lập tức hồi phục 500 HP.
-                            new PE1078(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1078(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1079"://Sử dụng vũ khí phụ loại khiên sẽ lập tức hồi phục 1000 HP.
-                            new PE1079(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1079(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1092"://Tăng 100 công kích cho tất cả chiến hữu. Duy trì 3 TURN.
-                            new AE1092(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1092(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1093"://Tăng 300 công kích cho tất cả chiến hữu. Duy trì 3 TURN.
-                            new AE1093(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1093(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1094"://Tăng 100 phòng ngự cho tất cả chiến hữu. Duy trì 3 TURN.
-                            new AE1094(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1094(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1095"://Tăng 300 phòng ngự cho tất cả chiến hữu. Duy trì 3 TURN.
-                            new AE1095(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1095(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1096"://Tăng 100 nhanh nhẹn cho tất cả chiến hữu. Duy trì 3 TURN.
-                            new AE1096(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1096(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1097"://Tăng 300 nhanh nhẹn cho tất cả chiến hữu. Duy trì 3 TURN.
-                            new AE1097(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1097(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1098"://Tăng 100 may mắn cho tất cả chiến hữu. Duy trì 3 TURN.
-                            new AE1098(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1098(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1099"://Tăng 300 may mắn cho tất cả chiến hữu. Duy trì 3 TURN.
-                            new AE1099(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1099(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1100"://Tăng 1000 HP tối đa cho tất cả chiến hữu. Duy trì 3 TURN.
-                            new AE1100(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1100(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1101"://Tăng 2000 HP tối đa cho tất cả chiến hữu. Duy trì 3 TURN.
-                            new AE1101(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1101(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1107"://TURN đầu tiên sẽ nhận được 50 ma pháp.
-                            new PE1107(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1107(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1109"://Giải trừ 50 điểm phép thuật
-                            new PE1110(coldDown, probability, gameType, skillId, delay, "1110").Start(this);
+                            _ = new PE1110(coldDown, probability, gameType, skillId, delay, "1110").Start(this);
                             break;
                         case "1122"://10% sat thương công kích
-                            new PE1122(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1122(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1123"://20% sat thương công kích
-                            new PE1123(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1123(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1124"://30% sat thương công kích
-                            new PE1124(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1124(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         #endregion
                         #region Rồng Cổ Đại
                         case "1139"://40% sat thương công kích
-                            new PE1139(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1139(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1149"://50% sat thương công kích
-                            new PE1149(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1149(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1150"://mục tiêu bị đánh trúng mỗi turn mất 1% HP, duy trì 3 turn. (Chỉ có hiệu quả khi chiến đấu)
-                            new AE1150(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1150(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1151"://mục tiêu bị đánh trúng mỗi turn mất 2% HP, duy trì 3 turn. (Chỉ có hiệu quả khi chiến đấu)
-                            new AE1151(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1151(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1152"://mục tiêu bị đánh trúng mỗi turn mất 3% HP, duy trì 3 turn. (Chỉ có hiệu quả khi chiến đấu)
-                            new AE1152(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1152(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1153"://Sát thương cơ bản +15%, duy trì 3 turn.
-                            new AE1153(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1153(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1154"://Sát thương cơ bản +25%, duy trì 3 turn.
-                            new AE1154(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1154(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1155"://hộ giáp giảm 500 điểm, duy trì 3 turn.
-                            new AE1155(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1155(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1156"://hộ giáp giảm 650 điểm, duy trì 3 turn.
-                            new AE1156(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1156(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1161"://Chân Long Tại Thiên, gây cho tất cả địch 3000 sát thương. (Chỉ có hiệu quả khi chiến đấu).
-                            new AE1161(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1161(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1162"://Chân Long Tại Thiên, gây cho tất cả địch 5000 sát thương. (Chỉ có hiệu quả khi chiến đấu).
-                            new AE1162(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1162(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1163"://Tấn công tăng 150.
-                            new PE1163(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1163(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1164"://Tấn công tăng 300..
-                            new PE1164(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1164(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1165"://sát thương tăng 100.
-                            new PE1165(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1165(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1166"://sát thương tăng 200.
-                            new PE1166(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1166(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1170"://Mỗi lần tới lượt địch tấn công, địch sẽ chịu bỏng Ấn Rồng Lửa! Mất 1000 HP, chỉ có hiệu quả khi chiến đấu. Duy trì 3 turn.
-                            new AE1170(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1170(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1171"://Mỗi lần tới lượt địch tấn công, địch sẽ chịu bỏng Ấn Rồng Lửa! Mất 2000 HP chỉ có hiệu quả khi chiến đấu. Duy trì 3 turn.
-                            new AE1171(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1171(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1172"://Mỗi lần bị tấn công, có xác suất 50% thức tỉnh Hồn Rồng hồi phục 2% HP. Duy trì 3 turn.
-                            new AE1172(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1172(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1173"://Mỗi lần bị tấn công, có xác suất 50% thức tỉnh Hồn Rồng hồi phục 4% HP. Duy trì 3 turn.
-                            new AE1173(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1173(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1174"://Rồng Bảo Vệ Lv1. Duy trì 3 turn.
-                            new AE1174(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1174(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1175"://Rồng Bảo Vệ Lv2. Duy trì 3 turn.
-                            new AE1175(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1175(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1176"://Mỗi lần tới lượt địch tấn công, địch sẽ chịu bỏng Ấn Rồng Lửa! Mất 2% HP hiện tại, chỉ có hiệu quả khi chiến đấu. Duy trì 3 turn.
-                            new AE1176(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1176(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1177"://Mỗi lần tới lượt địch tấn công, địch sẽ chịu bỏng Ấn Rồng Lửa! Mất 4% HP hiện tại, chỉ có hiệu quả khi chiến đấu. Duy trì 3 turn.
-                            new AE1177(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1177(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1322"://Khi chịu sát thương, mỗi mất 3500 HP nhận 1 điểm ma pháp.
-                            new PE1322(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1322(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1323"://Chân Long Tại Thiên, diệt nhanh địch đang có HP dưới 5%. (Chỉ có hiệu quả khi chiến đấu)
-                            new AE1323(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1323(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1324"://Chân Long Tại Thiên, diệt nhanh địch đang có HP dưới 10%. (Chỉ có hiệu quả khi chiến đấu)
-                            new AE1324(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1324(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         #endregion
                         #region Mầm Xanh
                         case "1358"://Ném 1 hạt giống, bản thân mỗi turn hồi phục 2% HP, duy trì 2 turn.
-                            new AE1358(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1358(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1359"://Ném 1 hạt giống, bản thân mỗi turn hồi phục 2% HP, duy trì 2 turn.
-                            new AE1359(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1359(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1360"://Ném 1 hạt giống, bản thân mỗi turn hồi phục 2% HP, duy trì 2 turn.
-                            new AE1360(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1360(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1361"://Bản thân và đơn vị xung quanh mỗi turn hồi phục 2% +800 HP, duy trì 3 turn
-                            new AE1361(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1361(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1362"://Bản thân và đơn vị xung quanh mỗi turn hồi phục 3% +1000 HP, duy trì 3 turn
-                            new AE1362(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1362(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1363"://Bản thân và đơn vị xung quanh mỗi turn hồi phục 3% +1500 HP, duy trì 4 turn
-                            new AE1363(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1363(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1364"://Đồng đội xung quanh hồi phục ngay 8% HP
-                            new AE1364(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1364(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1365"://Đồng đội xung quanh hồi phục ngay 10% HP
-                            new AE1365(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1365(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1366"://Đồng đội xung quanh mỗi turn hồi phục 3% HP, duy trì 3 turn.
-                            new AE1366(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1366(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1367"://Đồng đội xung quanh mỗi turn hồi phục 4% HP, duy trì 4 turn.
-                            new AE1367(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1367(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1368"://Thêm Khiên Phòng Hộ cho tất cả đồng đội, mỗi lần bị bắn trúng hồi phục 0.3% HP.
-                            new PE1368(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1368(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1369"://Thêm Khiên Phòng Hộ cho tất cả đồng đội, mỗi lần bị bắn trúng hồi phục 0.4% HP, nếu HP thấp hơn 20%, hiệu quả hồi phục x2.
-                            new PE1369(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1369(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1372"://Khi bắn vũ khí phụ loại thiên sứ ban phúc, kèm hiệu quả hồi phục bản thân 3% HP.
-                            new PE1372(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1372(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1373"://Khi bắn vũ khí phụ loại thiên sứ ban phúc, kèm hiệu quả hồi phục bản thân 6% HP.
-                            new PE1373(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1373(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1374"://Bắn 1 Hạt Bay, khi hạt giống nổ hồi phục HP đồng đội xung quanh, giảm HP địch, hạt giống mỗi giây tăng 3% HP..
-                            new AE1374(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1374(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1375"://Bắn 1 Hạt Bay, khi hạt giống nổ hồi phục HP đồng đội xung quanh, giảm HP địch, hạt giống mỗi giây tăng 6% HP..
-                            new AE1375(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1375(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1376"://Khi đồng đội bắt đầu turn nếu được kỹ năng Mầm Xanh duy trì hiệu quả hồi phục, bản thân sẽ tăng 1 điểm ma pháp.
-                            new PE1376(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1376(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         #endregion
                         #region Phụng Hoàng Băng
                         case "1178"://tăng 100đ tấn công cho bản thân, duy trì 2 turn.
-                            new AE1178(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1178(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1179"://tăng 300đ tấn công cho bản thân, duy trì 2 turn.
-                            new AE1179(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1179(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1180"://tăng 500đ tấn công cho bản thân, duy trì 2 turn.
-                            new AE1180(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1180(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1181"://Tăng 100 điểm hộ giáp cho tất cả đồng đội, duy trì 2 turn.Không cộng dồn để dùng.
-                            new AE1181(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1181(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1182"://Tăng 200 điểm hộ giáp cho tất cả đồng đội, duy trì 2 turn.Không cộng dồn để dùng.
-                            new AE1182(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1182(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1183"://Tăng 300 điểm hộ giáp cho tất cả đồng đội, duy trì 2 turn.Không cộng dồn để dùng.
-                            new AE1183(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1183(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1184"://tăng 150 điểm sát thương, di chuyển sẽ hủy. Khi HP không đủ, dùng kỹ năng này sẽ tử vong.
-                            new AE1184(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1184(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1185"://tăng 300 điểm sát thương, di chuyển sẽ hủy. Khi HP không đủ, dùng kỹ năng này sẽ tử vong.
-                            new AE1185(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1185(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1186"://Mỗi turn giảm 500 HP, di chuyển sẽ hủy. Khi HP không đủ, dùng kỹ năng này sẽ tử vong.
-                            new AE1186(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1186(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1187"://Mỗi turn giảm 800 HP, di chuyển sẽ hủy. Khi HP không đủ, dùng kỹ năng này sẽ tử vong.
-                            new AE1187(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1187(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1188"://Xóa hiệu ứng Địa Ngục Băng Giá
-                            new AE1189(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1189(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1190"://Tăng nhanh nhẹn 300 điểm.
-                            new PE1190(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1190(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1191"://Tăng nhanh nhẹn 500 điểm.
-                            new PE1191(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1191(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1192"://Tăng 100 điểm tấn công cho toàn bộ đồng đội.
-                            new PE1192(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1192(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1193"://Tăng 300 điểm tấn công cho toàn bộ đồng đội.
-                            new PE1193(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1193(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1194"://Tăng 200 điểm tấn công, duy trì 1 turn.
-                            new AE1194(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1194(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1195"://Tăng 300 điểm tấn công, duy trì 1 turn.
-                            new AE1195(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1195(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1196"://100 sát thương, duy trì 1 turn.
-                            new AE1196(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1196(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1197"://150 sát thương, duy trì 1 turn.
-                            new AE1197(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1197(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1198"://Tăng 30% crit, duy trì 1 turn.
-                            new AE1198(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1198(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1199"://Tăng 50% crit, duy trì 1 turn.
-                            new AE1199(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1199(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1200"://Khi đến lượt thi triển, tăng 2 điểm ma pháp cho toàn bộ thú cưng cùng phe.
-                            new PE1200(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1200(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1224"://Mỗi turn giảm 500 HP.
-                            new AE1224(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1224(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1225"://Mỗi turn giảm 800 HP.
-                            new AE1225(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1225(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         #endregion
                         #region Ma Xà
                         case "1201"://Bắn ra nọc độc, mục tiêu trúng phải giảm 100 sát thương, duy trì 3 turn.
-                            new AE1201(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1201(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1202"://Bắn ra nọc độc, mục tiêu trúng phải giảm 200 sát thương, duy trì 3 turn.
-                            new AE1202(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1202(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1203"://Bắn ra nọc độc, mục tiêu trúng phải giảm 300 sát thương, duy trì 3 turn.
-                            new AE1203(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1203(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1204"://Giảm 300 tấn công toàn bộ phe địch, duy trì 2 turn. Kỹ năng chỉ hiệu quả trong chiến đấu.
-                            new AE1204(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1204(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1205"://Giảm 500 tấn công toàn bộ phe địch, duy trì 2 turn. Kỹ năng chỉ hiệu quả trong chiến đấu.
-                            new AE1205(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1205(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1206"://Giảm 300 phòng thủ toàn bộ phe địch, duy trì 2 turn. Kỹ năng chỉ hiệu quả trong chiến đấu.
-                            new AE1206(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1206(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1207"://Giảm 500 phòng thủ toàn bộ phe địch, duy trì 2 turn. Kỹ năng chỉ hiệu quả trong chiến đấu.
-                            new AE1207(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1207(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1208"://Giảm 10 điểm ma pháp của tất cả thú cưng bên địch. Kỹ năng chỉ hiệu quả trong chiến đấu.
-                            new AE1208(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1208(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1209"://Giảm 30 điểm ma pháp của tất cả thú cưng bên địch. Kỹ năng chỉ hiệu quả trong chiến đấu.
-                            new AE1209(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1209(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1210"://Mỗi turn giảm 500 HP. Duy trì 3 turn.
-                            new AE1210(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1210(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1211"://Mỗi turn giảm 1000 HP. Duy trì 3 turn.
-                            new AE1211(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1211(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1212"://tăng 20% bạo kích. Duy trì 3 turn.
-                            new AE1212(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1212(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1213"://tăng 50% bạo kích. Duy trì 3 turn.
-                            new AE1213(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1213(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1214"://Tăng 100 hộ giáp
-                            new PE1214(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1214(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1215"://Tăng 200 hộ giáp
-                            new PE1215(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1215(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1216"://Tăng 1500 HP tối đa.
-                            new PE1216(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1216(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1217"://Tăng 3000 HP tối đa.
-                            new PE1217(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1217(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1218":
                         case "1219":
                             //empty skill element.
                             break;
                         case "1220"://Giảm 100 hộ giáp tất cả phe địch, duy trì 2 turn.
-                            new AE1220(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1220(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1221"://Giảm 200 hộ giáp tất cả phe địch, duy trì 2 turn.
-                            new AE1221(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1221(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1222"://Không thể di chuyển, duy trì 2 turn.
-                            new AE1222(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1222(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1223"://Mỗi lần bị tấn công nhận được 2 điểm ma pháp.
-                            new PE1223(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1223(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1226"://Mỗi turn giảm 500 HP.
-                            new AE1226(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1226(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1227"://Mỗi turn giảm 1000 HP.
-                            new AE1227(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1227(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         #endregion
                         #region Tôn Ngộ Không
                         case "1036":// gây 120% sát thương cơ bản
-                            new AE1036(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1036(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1418"://gây 150% sát thương cơ bản
-                            new AE1418(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1418(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1419"://gây 180% sát thương cơ bản
-                            new AE1419(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1419(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1421":// 20% xác suất bạo kích, 2 turn
-                            new AE1421(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1421(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1422"://5% Tăng Sát Thương
-                            new PE1422(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1422(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1423"://10% Giảm Hộ Giáp
-                            new PE1423(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1423(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1424"://10% Tăng Ma Công
-                            new PE1424(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1424(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1425"://15% Giảm Ma Kháng
-                            new PE1425(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1425(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1426"://Tất cả phe địch không thể hành động 1 turn. (Chỉ có hiệu quả khi chiến đấu)
-                            new AE1426(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1426(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1427"://ma pháp -10 điểm. (Chỉ có hiệu quả khi chiến đấu)
-                            new AE1427(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1427(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1428"://Giảm 10% sát thương phải chịu
-                            new PE1428(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1428(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1429"://Giảm 20% sát thương phải chịu
-                            new PE1429(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1429(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1430"://có 20% xác suất miễn bị bạo kích.
-                            new PE1430(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1430(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1431"://có 30% xác suất miễn bị bạo kích.
-                            new PE1431(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1431(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1432"://Đánh dấu tất cả người chơi phe địch ẩn thân, duy trì 2 turn (chỉ có hiệu quả khi chiến đấu)
-                            new AE1432(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1432(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1433"://khiến địch chịu thêm 20% sát thương, duy trì 2 turn (Chỉ có hiệu quả khi chiến đấu)
-                            new AE1433(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1433(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1435"://Mỗi lần chịu đòn trí mạng hồi phục 5% HP, mỗi trận tối đa kích hoạt 3 lần. (Chỉ có hiệu quả khi chiến đấu)
-                            new PE1435(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1435(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1436"://Vung Gậy Như Ý, gây cho địch ngẫu nhiên trong toàn màn hình 5 lần 100% sát thương phạm vi.
-                            new AE1436(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1436(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "2436"://Vung Gậy Như Ý, gây cho địch ngẫu nhiên trong toàn màn hình 5 lần 60% sát thương phạm vi.
-                            new AE1436(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1436(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "2438"://Mỗi lần dùng đạo cụ chiến đấu +1 ma pháp, mỗi turn tối đa +5 ma pháp.
-                            new PE2438(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE2438(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         #endregion
                         #region Kungfu Đại Sư
                         case "1542": //Mỗi turn sau khi bắn, pet sẽ có sác xuất 100% tấn công kẻ địch, tạo 30% sát thương
-                            new PE1542(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1542(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1543": //Khi kết thúc turn, pet sẽ có sác xuất 100% tấn công kẻ địch, tạo 40% sát thương
-                            new PE1543(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1543(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1544": //Khi kết thúc turn, pet sẽ có sác xuất 100% tấn công kẻ địch, tạo 50% sát thương
-                            new PE1544(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new PE1544(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1551": //Bạo Kích 100%
-                            new AE1551(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1551(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1548": //Tăng Sát Thương 150%
-                            new AE1548(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1548(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1549": //Tăng Sát Thương 180%
-                            new AE1549(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1549(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1545": //Ném 1 trứng bay, bắn trúng sẽ giảm 30% sát thương của mục tiêu
-                            new AE1545(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1545(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1546": //Ném 1 trứng bay, bắn trúng sẽ giảm 30% sát thương của mục tiêu
-                            new AE1546(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1546(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1547": //Ném 1 trứng bay, bắn trúng sẽ giảm 30% sát thương của mục tiêu
-                            new AE1547(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1547(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1552": //Sát thương bạo kích phải chịu -40%
-                            new AE1552(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1552(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1553": //Sát thương bạo kích phải chịu -60%
-                            new AE1553(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1553(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1554": //Sát thương phải chịu -20%
-                            new AE1554(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1554(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1555": //Sát thương phải chịu -20%
-                            new AE1555(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1555(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1556": //Thần Báo, nộ khí giảm 50, thể lực trong turn có Thần Báo giảm còn 120
-                            new AE1556(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1556(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1557": //Tăng 70% tốc độ tấn công
-                            new AE1557(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1557(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1560": //Di chuyển đến vị trí ngẫu nhiên giữa bản thân và kẻ địch, các vị trí khác sẽ xuất hiện phân thân
-                            new AE1560(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1560(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         case "1562": //Tất cả viên đạn bắn ra đều có hiệu quả Trói Buộc
-                            new AE1562(coldDown, probability, gameType, skillId, delay, element).Start(this);
+                            _ = new AE1562(coldDown, probability, gameType, skillId, delay, element).Start(this);
                             break;
                         #endregion
                         #region Kungfu Đại Hiệp
@@ -1473,7 +1286,7 @@ namespace Game.Logic.Phy.Object
                         #endregion
                         default:
                             Console.WriteLine(string.Format("Not Found element: {0}, Pet name: {1}", element,
-                                m_pet.Name));
+                                Pet.Name));
                             break;
                     }
                 }
@@ -1616,13 +1429,12 @@ namespace Game.Logic.Phy.Object
                 indexVal = 3;
             }
             Dictionary<int, List<CardGroupInfo>> groups = CardBuffMgr.GetAllCard();
-            List<CardBuffInfo> buffs = new List<CardBuffInfo>();
-            int counter = 0;
+            List<CardBuffInfo> buffs = [];
             CardBuffInfo finalBuff = null;
             string msg = string.Empty;
             foreach (int key in groups.Keys)
             {
-                counter = 0;
+                int counter = 0;
                 foreach (CardGroupInfo card2 in groups[key])
                 {
                     foreach (int id in cards)
@@ -1658,7 +1470,7 @@ namespace Game.Logic.Phy.Object
             switch (finalBuff.CardID)
             {
                 case 1:
-                    new AntCaveEffect(indexVal, finalBuff).Start(this);
+                    _ = new AntCaveEffect(indexVal, finalBuff).Start(this);
                     break;
                 case 2:
                     if (finalBuff.Condition >= 4 && buffs != null)
@@ -1667,17 +1479,17 @@ namespace Game.Logic.Phy.Object
                         {
                             if (buff.Condition >= 4)
                             {
-                                new GuluKingdom4Effect(indexVal, buff).Start(this);
+                                _ = new GuluKingdom4Effect(indexVal, buff).Start(this);
                             }
                             if (buff.Condition >= 2)
                             {
-                                new GuluKingdom2Effect(indexVal, buff).Start(this);
+                                _ = new GuluKingdom2Effect(indexVal, buff).Start(this);
                             }
                         }
                     }
                     if (finalBuff.Condition >= 2)
                     {
-                        new GuluKingdom2Effect(indexVal, finalBuff).Start(this);
+                        _ = new GuluKingdom2Effect(indexVal, finalBuff).Start(this);
                     }
                     break;
                 case 3:
@@ -1687,17 +1499,17 @@ namespace Game.Logic.Phy.Object
                         {
                             if (buff2.Condition >= 5)
                             {
-                                new EvilTribe5Effect(indexVal, buff2).Start(this);
+                                _ = new EvilTribe5Effect(indexVal, buff2).Start(this);
                             }
                             if (buff2.Condition >= 3)
                             {
-                                new EvilTribe3Effect(indexVal, buff2).Start(this);
+                                _ = new EvilTribe3Effect(indexVal, buff2).Start(this);
                             }
                         }
                     }
                     if (finalBuff.Condition >= 3)
                     {
-                        new EvilTribe3Effect(indexVal, finalBuff).Start(this);
+                        _ = new EvilTribe3Effect(indexVal, finalBuff).Start(this);
                     }
                     break;
                 case 4:
@@ -1707,17 +1519,17 @@ namespace Game.Logic.Phy.Object
                         {
                             if (buff3.Condition >= 4)
                             {
-                                new ShadowDevil4Effect(indexVal, buff3).Start(this);
+                                _ = new ShadowDevil4Effect(indexVal, buff3).Start(this);
                             }
                             if (buff3.Condition >= 2)
                             {
-                                new ShadowDevil2Effect(indexVal, buff3).Start(this);
+                                _ = new ShadowDevil2Effect(indexVal, buff3).Start(this);
                             }
                         }
                     }
                     if (finalBuff.Condition >= 2)
                     {
-                        new ShadowDevil2Effect(indexVal, finalBuff).Start(this);
+                        _ = new ShadowDevil2Effect(indexVal, finalBuff).Start(this);
                     }
                     break;
                 case 5:
@@ -1727,17 +1539,17 @@ namespace Game.Logic.Phy.Object
                         {
                             if (buff4.Condition >= 4)
                             {
-                                new FourArtifacts4Effect(indexVal, buff4).Start(this);
+                                _ = new FourArtifacts4Effect(indexVal, buff4).Start(this);
                             }
                             if (buff4.Condition >= 2)
                             {
-                                new FourArtifacts2Effect(indexVal, buff4).Start(this);
+                                _ = new FourArtifacts2Effect(indexVal, buff4).Start(this);
                             }
                         }
                     }
                     if (finalBuff.Condition >= 2)
                     {
-                        new FourArtifacts2Effect(indexVal, finalBuff).Start(this);
+                        _ = new FourArtifacts2Effect(indexVal, finalBuff).Start(this);
                     }
                     break;
                 case 6:
@@ -1747,15 +1559,15 @@ namespace Game.Logic.Phy.Object
                         {
                             if (buff7.Condition >= 5)
                             {
-                                new Goblin5Effect(indexVal, buff7).Start(this);
+                                _ = new Goblin5Effect(indexVal, buff7).Start(this);
                             }
                             if (buff7.Condition >= 4)
                             {
-                                new Goblin4Effect(indexVal, buff7).Start(this);
+                                _ = new Goblin4Effect(indexVal, buff7).Start(this);
                             }
                             if (buff7.Condition >= 2)
                             {
-                                new Goblin2Effect(indexVal, buff7).Start(this);
+                                _ = new Goblin2Effect(indexVal, buff7).Start(this);
                             }
                         }
                     }
@@ -1765,17 +1577,17 @@ namespace Game.Logic.Phy.Object
                         {
                             if (buff6.Condition >= 4)
                             {
-                                new Goblin4Effect(indexVal, buff6).Start(this);
+                                _ = new Goblin4Effect(indexVal, buff6).Start(this);
                             }
                             if (buff6.Condition >= 2)
                             {
-                                new Goblin2Effect(indexVal, buff6).Start(this);
+                                _ = new Goblin2Effect(indexVal, buff6).Start(this);
                             }
                         }
                     }
                     if (finalBuff.Condition >= 2)
                     {
-                        new Goblin2Effect(indexVal, finalBuff).Start(this);
+                        _ = new Goblin2Effect(indexVal, finalBuff).Start(this);
                     }
                     break;
                 case 7:
@@ -1785,17 +1597,17 @@ namespace Game.Logic.Phy.Object
                         {
                             if (buff8.Condition >= 4)
                             {
-                                new RunRunChicken4Effect(indexVal, buff8).Start(this);
+                                _ = new RunRunChicken4Effect(indexVal, buff8).Start(this);
                             }
                             if (buff8.Condition >= 2)
                             {
-                                new RunRunChicken2Effect(indexVal, buff8).Start(this);
+                                _ = new RunRunChicken2Effect(indexVal, buff8).Start(this);
                             }
                         }
                     }
                     if (finalBuff.Condition >= 2)
                     {
-                        new RunRunChicken2Effect(indexVal, finalBuff).Start(this);
+                        _ = new RunRunChicken2Effect(indexVal, finalBuff).Start(this);
                     }
                     break;
                 case 8:
@@ -1805,15 +1617,15 @@ namespace Game.Logic.Phy.Object
                         {
                             if (buff10.Condition >= 5)
                             {
-                                new GuluSportsMeeting5Effect(indexVal, buff10).Start(this);
+                                _ = new GuluSportsMeeting5Effect(indexVal, buff10).Start(this);
                             }
                             if (buff10.Condition >= 4)
                             {
-                                new GuluSportsMeeting4Effect(indexVal, buff10).Start(this);
+                                _ = new GuluSportsMeeting4Effect(indexVal, buff10).Start(this);
                             }
                             if (buff10.Condition >= 2)
                             {
-                                new GuluSportsMeeting2Effect(indexVal, buff10).Start(this);
+                                _ = new GuluSportsMeeting2Effect(indexVal, buff10).Start(this);
                             }
                         }
                     }
@@ -1823,17 +1635,17 @@ namespace Game.Logic.Phy.Object
                         {
                             if (buff9.Condition >= 4)
                             {
-                                new GuluSportsMeeting4Effect(indexVal, buff9).Start(this);
+                                _ = new GuluSportsMeeting4Effect(indexVal, buff9).Start(this);
                             }
                             if (buff9.Condition >= 2)
                             {
-                                new GuluSportsMeeting2Effect(indexVal, buff9).Start(this);
+                                _ = new GuluSportsMeeting2Effect(indexVal, buff9).Start(this);
                             }
                         }
                     }
                     if (finalBuff.Condition >= 2)
                     {
-                        new GuluSportsMeeting2Effect(indexVal, finalBuff).Start(this);
+                        _ = new GuluSportsMeeting2Effect(indexVal, finalBuff).Start(this);
                     }
                     break;
                 case 9:
@@ -1843,17 +1655,17 @@ namespace Game.Logic.Phy.Object
                         {
                             if (buff11.Condition >= 5)
                             {
-                                new FiveGodSoldier5Effect(indexVal, buff11).Start(this);
+                                _ = new FiveGodSoldier5Effect(indexVal, buff11).Start(this);
                             }
                             if (buff11.Condition >= 2)
                             {
-                                new FiveGodSoldier2Effect(indexVal, buff11).Start(this);
+                                _ = new FiveGodSoldier2Effect(indexVal, buff11).Start(this);
                             }
                         }
                     }
                     if (finalBuff.Condition >= 2)
                     {
-                        new FiveGodSoldier2Effect(indexVal, finalBuff).Start(this);
+                        _ = new FiveGodSoldier2Effect(indexVal, finalBuff).Start(this);
                     }
                     break;
                 case 10:
@@ -1863,17 +1675,17 @@ namespace Game.Logic.Phy.Object
                         {
                             if (buff12.Condition >= 5)
                             {
-                                new TimeVortex5Effect(indexVal, buff12).Start(this);
+                                _ = new TimeVortex5Effect(indexVal, buff12).Start(this);
                             }
                             if (buff12.Condition >= 3)
                             {
-                                new TimeVortex3Effect(indexVal, buff12).Start(this);
+                                _ = new TimeVortex3Effect(indexVal, buff12).Start(this);
                             }
                         }
                     }
                     if (finalBuff.Condition >= 3)
                     {
-                        new TimeVortex3Effect(indexVal, finalBuff).Start(this);
+                        _ = new TimeVortex3Effect(indexVal, finalBuff).Start(this);
                     }
                     break;
                 case 11:
@@ -1883,37 +1695,37 @@ namespace Game.Logic.Phy.Object
                         {
                             if (buff13.Condition >= 5)
                             {
-                                new WarriorsArena5Effect(indexVal, buff13).Start(this);
+                                _ = new WarriorsArena5Effect(indexVal, buff13).Start(this);
                             }
                             if (buff13.Condition >= 3)
                             {
-                                new WarriorsArena3Effect(indexVal, buff13).Start(this);
+                                _ = new WarriorsArena3Effect(indexVal, buff13).Start(this);
                             }
                         }
                     }
                     if (finalBuff.Condition >= 3)
                     {
-                        new WarriorsArena3Effect(indexVal, finalBuff).Start(this);
+                        _ = new WarriorsArena3Effect(indexVal, finalBuff).Start(this);
                     }
                     break;
                 case 12:
-                    new PioneerEffect(indexVal, finalBuff).Start(this);
+                    _ = new PioneerEffect(indexVal, finalBuff).Start(this);
                     break;
                 case 13:
-                    new WeaponMasterEffect(indexVal, finalBuff).Start(this);
+                    _ = new WeaponMasterEffect(indexVal, finalBuff).Start(this);
                     break;
                 case 14:
-                    new DivineEffect(indexVal, finalBuff).Start(this);
+                    _ = new DivineEffect(indexVal, finalBuff).Start(this);
                     break;
                 case 15:
-                    new LuckyEffect(indexVal, finalBuff).Start(this);
+                    _ = new LuckyEffect(indexVal, finalBuff).Start(this);
                     break;
             }
             if (!string.IsNullOrEmpty(msg))
             {
                 if (base.Game is PVEGame)
                 {
-                    m_player.SendMessage(msg);
+                    PlayerDetail.SendMessage(msg);
                 }
                 else
                 {
@@ -1925,27 +1737,18 @@ namespace Game.Logic.Phy.Object
 
         public bool IsCure()
         {
-            switch (Weapon.TemplateID)
+            return Weapon.TemplateID switch
             {
-                case 17000:
-                case 17001:
-                case 17002:
-                case 17005:
-                case 17007:
-                case 17010:
-                case 17100:
-                case 17102:
-                    return true;
-                default:
-                    return false;
-            }
+                17000 or 17001 or 17002 or 17005 or 17007 or 17010 or 17100 or 17102 => true,
+                _ => false,
+            };
         }
 
         public void CalculatePlayerOffer(Player player)
         {
             if (m_game.RoomType == eRoomType.Match && (m_game.GameType == eGameType.Guild || m_game.GameType == eGameType.Free) && !player.IsLiving)
             {
-                int robOffer = ((base.Game.GameType == eGameType.Guild) ? 10 : ((PlayerDetail.PlayerCharacter.ConsortiaID == 0 || player.PlayerDetail.PlayerCharacter.ConsortiaID == 0) ? 1 : 3));
+                int robOffer = (base.Game.GameType == eGameType.Guild) ? 10 : ((PlayerDetail.PlayerCharacter.ConsortiaID == 0 || player.PlayerDetail.PlayerCharacter.ConsortiaID == 0) ? 1 : 3);
                 if (robOffer > player.PlayerDetail.PlayerCharacter.Offer)
                 {
                     robOffer = player.PlayerDetail.PlayerCharacter.Offer;
@@ -1964,7 +1767,7 @@ namespace Game.Logic.Phy.Object
             base.OnAfterKillingLiving(target, damageAmount, criticalAmount);
             if (target is Player)
             {
-                m_player.OnKillingLiving(m_game, 1, target.Id, target.IsLiving, damageAmount + criticalAmount);
+                PlayerDetail.OnKillingLiving(m_game, 1, target.Id, target.IsLiving, damageAmount + criticalAmount);
                 CalculatePlayerOffer(target as Player);
                 return;
             }
@@ -1977,112 +1780,73 @@ namespace Game.Logic.Phy.Object
             {
                 id = (target as SimpleNpc).NpcInfo.ID;
             }
-            m_player.OnKillingLiving(m_game, 2, id, target.IsLiving, damageAmount + criticalAmount);
+            PlayerDetail.OnKillingLiving(m_game, 2, id, target.IsLiving, damageAmount + criticalAmount);
         }
 
         protected void OnAfterPlayerShoot()
         {
             m_useitemCount = 9999;
-            if (this.AfterPlayerShooted != null)
-            {
-                this.AfterPlayerShooted(this);
-            }
+            AfterPlayerShooted?.Invoke(this);
         }
 
         protected void OnBeforePlayerShoot()
         {
-            if (this.BeforePlayerShoot != null)
-            {
-                this.BeforePlayerShoot(this);
-            }
+            BeforePlayerShoot?.Invoke(this);
         }
 
         protected void OnCollidedByObject()
         {
-            if (this.CollidByObject != null)
-            {
-                this.CollidByObject(this);
-            }
+            CollidByObject?.Invoke(this);
         }
 
         protected void OnLoadingCompleted()
         {
-            if (this.LoadingCompleted != null)
-            {
-                this.LoadingCompleted(this);
-            }
+            LoadingCompleted?.Invoke(this);
         }
 
         public void OnPlayerBuffSkillPet()
         {
-            if (this.PlayerBuffSkillPet != null)
-            {
-                this.PlayerBuffSkillPet(this);
-            }
+            PlayerBuffSkillPet?.Invoke(this);
         }
 
         public void OnPlayerClearBuffSkillPet()
         {
-            if (this.PlayerClearBuffSkillPet != null)
-            {
-                this.PlayerClearBuffSkillPet(this);
-            }
+            PlayerClearBuffSkillPet?.Invoke(this);
         }
 
         public void OnPlayerCure()
         {
-            if (this.PlayerCure != null)
-            {
-                this.PlayerCure(this);
-            }
+            PlayerCure?.Invoke(this);
         }
 
         public void OnPlayerGuard()
         {
-            if (this.PlayerGuard != null)
-            {
-                this.PlayerGuard(this);
-            }
+            PlayerGuard?.Invoke(this);
         }
 
         public void OnPlayerShootCure()
         {
-            if (this.PlayerShootCure != null)
-            {
-                this.PlayerShootCure(this);
-            }
+            PlayerShootCure?.Invoke(this);
         }
 
         protected void OnPlayerMoving()
         {
-            if (this.PlayerBeginMoving != null)
-            {
-                this.PlayerBeginMoving(this);
-            }
+            PlayerBeginMoving?.Invoke(this);
         }
 
         public void OnPlayerShoot()
         {
-            if (this.PlayerShoot != null)
-            {
-                this.PlayerShoot(this);
-            }
+            PlayerShoot?.Invoke(this);
         }
 
         protected void OnPlayerCompleteShoot()
         {
-            if (this.PlayerCompleteShoot != null)
-            {
-                this.PlayerCompleteShoot(this);
-            }
+            PlayerCompleteShoot?.Invoke(this);
         }
 
         public void OnPlayerAnyShellThrow()
         {
-            if (this.PlayerAnyShellThrow != null)
-            {
-                this.PlayerAnyShellThrow(this);
-            }
+            PlayerAnyShellThrow?.Invoke(this);
         }
 
         public event PlayerEventHandle PlayerAfterBuffSkillPet;
@@ -2094,20 +1858,17 @@ namespace Game.Logic.Phy.Object
 
         public void OnPlayerUseSecondWeapon(int type)
         {
-            if (this.PlayerUseSecondWeapon != null)
-            {
-                this.PlayerUseSecondWeapon(this, type);
-            }
+            PlayerUseSecondWeapon?.Invoke(this, type);
         }
 
         public void OnPlayerBeforeReset()
         {
-            this.PlayerBeforeReset?.Invoke(this);
+            PlayerBeforeReset?.Invoke(this);
         }
 
         public void OnPlayerAfterReset()
         {
-            this.PlayerAfterReset?.Invoke(this);
+            PlayerAfterReset?.Invoke(this);
         }
 
         public void OpenBox(int boxId)
@@ -2129,28 +1890,28 @@ namespace Game.Logic.Phy.Object
             switch (item.TemplateID)
             {
                 case -1100:
-                    m_player.AddGiftToken(item.Count);
+                    _ = PlayerDetail.AddGiftToken(item.Count);
                     break;
                 case -800:
-                    m_player.AddHonor(item.Count);
+                    _ = PlayerDetail.AddHonor(item.Count);
                     break;
                 case -200:
-                    m_player.AddMoney(item.Count, igroneAll: false);
-                    m_player.LogAddMoney(AddMoneyType.Box, AddMoneyType.Box_Open, m_player.PlayerCharacter.ID, item.Count, m_player.PlayerCharacter.Money);
+                    _ = PlayerDetail.AddMoney(item.Count, igroneAll: false);
+                    PlayerDetail.LogAddMoney(AddMoneyType.Box, AddMoneyType.Box_Open, PlayerDetail.PlayerCharacter.ID, item.Count, PlayerDetail.PlayerCharacter.Money);
                     break;
                 case -100:
-                    m_player.AddGold(item.Count);
+                    _ = PlayerDetail.AddGold(item.Count);
                     break;
                 default:
                     if (item.Template.CategoryID == 10)
                     {
-                        if (!m_player.AddTemplate(item, eBageType.FightBag, item.Count, eGameView.RouletteTypeGet))
+                        if (!PlayerDetail.AddTemplate(item, eBageType.FightBag, item.Count, eGameView.RouletteTypeGet))
                         {
                         }
                     }
                     else
                     {
-                        m_player.AddTemplate(item, eBageType.TempBag, item.Count, eGameView.dungeonTypeGet);
+                        _ = PlayerDetail.AddTemplate(item, eBageType.TempBag, item.Count, eGameView.dungeonTypeGet);
                     }
                     break;
             }
@@ -2159,7 +1920,7 @@ namespace Game.Logic.Phy.Object
 
         public override void PickBox(Box box)
         {
-            m_tempBoxes.Add(box);
+            _ = m_tempBoxes.Add(box);
             base.PickBox(box);
         }
 
@@ -2170,11 +1931,11 @@ namespace Game.Logic.Phy.Object
             {
                 TotalHitTargetCount++;
             }
-            m_energy = (int)Agility / 30 + 240;
+            Energy = ((int)Agility / 30) + 240;
             //m_useitemCount = 0;
             if (base.FightBuffers.ConsortionAddEnergy > 0)
             {
-                m_energy += base.FightBuffers.ConsortionAddEnergy;
+                Energy += base.FightBuffers.ConsortionAddEnergy;
             }
             base.PetEffects.CurrentUseSkill = 0;
             base.PetEffects.PetDelay = 0;
@@ -2188,11 +1949,11 @@ namespace Game.Logic.Phy.Object
             EffectTrigger = false;
             PetEffectTrigger = false;
             PetEffects.DisibleActiveSkill = false;
-            m_flyCoolDown--;
+            flyCount--;
             SetCurrentWeapon(PlayerDetail.MainWeapon);
-            if (m_currentBall.ID != m_mainBallId)
+            if (CurrentBall.ID != m_mainBallId)
             {
-                m_currentBall = BallMgr.FindBall(m_mainBallId);
+                CurrentBall = BallMgr.FindBall(m_mainBallId);
             }
             if (!base.IsLiving)
             {
@@ -2204,7 +1965,7 @@ namespace Game.Logic.Phy.Object
                 base.SpeedMultX(3);
             }
             CanFly = true;
-            m_currentDelay = 0;
+            CurrentDelay = 0;
             base.PrepareNewTurn();
         }
 
@@ -2213,17 +1974,17 @@ namespace Game.Logic.Phy.Object
             base.PrepareSelfTurn();
             m_useitemCount = 0;
             DefaultDelay = m_delay;
-            m_flyCoolDown--;
+            flyCount--;
             m_game.SendRoundOneEnd(this);
-            if (m_pet == null)
+            if (Pet == null)
             {
                 return;
             }
-            foreach (int skillId in _petSkillCd.Keys)
+            foreach (int skillId in PetSkillCD.Keys)
             {
-                if (_petSkillCd[skillId].Turn > 0)
+                if (PetSkillCD[skillId].Turn > 0)
                 {
-                    _petSkillCd[skillId].Turn--;
+                    PetSkillCD[skillId].Turn--;
                 }
             }
         }
@@ -2231,7 +1992,7 @@ namespace Game.Logic.Phy.Object
         public void PrepareShoot(byte speedTime)
         {
             int turnWaitTime = m_game.GetTurnWaitTime();
-            int num2 = ((speedTime > turnWaitTime) ? turnWaitTime : speedTime);
+            int num2 = (speedTime > turnWaitTime) ? turnWaitTime : speedTime;
             //AddDelay(num2 * 20);
             AddDelay(50);
             TotalShootCount++;
@@ -2239,78 +2000,64 @@ namespace Game.Logic.Phy.Object
 
         public bool ReduceEnergy(int value)
         {
-            if (value > m_energy)
+            if (value > Energy)
             {
-                value = m_energy;
+                value = Energy;
             }
-            m_energy -= value;
+            Energy -= value;
             return true;
         }
 
         public void ResetSkillCd()
         {
-            if (m_pet == null)
+            if (Pet == null)
             {
                 return;
             }
-            string[] listSkills = m_pet.SkillEquip.Split('|');
+            string[] listSkills = Pet.SkillEquip.Split('|');
             string[] array = listSkills;
             foreach (string skill in array)
             {
                 int skillId = int.Parse(skill.Split(',')[0]);
-                if (_petSkillCd.ContainsKey(skillId))
+                if (PetSkillCD.ContainsKey(skillId))
                 {
-                    _petSkillCd[skillId].Turn = _petSkillCd[skillId].ColdDown;
+                    PetSkillCD[skillId].Turn = PetSkillCD[skillId].ColdDown;
                 }
             }
         }
 
         public override void Reset()
         {
-            if (m_game.RoomType == eRoomType.Dungeon)
-            {
-                m_game.Cards = new int[21];
-            }
-            else
-            {
-                m_game.Cards = new int[9];
-            }
+            m_game.Cards = m_game.RoomType == eRoomType.Dungeon ? (new int[21]) : (new int[9]);
             base.EffectList.StopAllEffect();
             base.CardEffectList.StopAllEffect();
             //base.Dander = 0;
             //base.PetMP = 0;
-            Dander = (m_game.RoomType == eRoomType.ConsortiaBattle && m_player.PlayerCharacter.ActivePowFirstGame) ? 200 : 0;
+            Dander = (m_game.RoomType == eRoomType.ConsortiaBattle && PlayerDetail.PlayerCharacter.ActivePowFirstGame) ? 200 : 0;
             base.PetMP = 10;
             base.psychic = 00;
             base.IsLiving = true;
             FinishTakeCard = false;
-            if (base.AutoBoot)
-            {
-                base.VaneOpen = true;
-            }
-            else
-            {
-                base.VaneOpen = m_player.PlayerCharacter.Grade >= 9;
-            }
-            InitFightBuffer(m_player.FightBuffs);
+            base.VaneOpen = base.AutoBoot || PlayerDetail.PlayerCharacter.Grade >= 9;
+            InitFightBuffer(PlayerDetail.FightBuffs);
             InitCardBuffer(PlayerDetail.CardBuff);
-            m_Healstone = m_player.Healstone;
-            m_changeSpecialball = 0;
-            m_DeputyWeapon = m_player.SecondWeapon;
-            m_weapon = m_player.MainWeapon;
-            BallConfigInfo info = BallConfigMgr.FindBall(m_weapon.TemplateID);
+            m_Healstone = PlayerDetail.Healstone;
+            ChangeSpecialBall = 0;
+            DeputyWeapon = PlayerDetail.SecondWeapon;
+            Weapon = PlayerDetail.MainWeapon;
+            BallConfigInfo info = BallConfigMgr.FindBall(Weapon.TemplateID);
             m_mainBallId = info.Common;
             m_spBallId = info.Special;
             m_AddWoundBallId = info.CommonAddWound;
             m_MultiBallId = info.CommonMultiBall;
-            BaseDamage = m_player.GetBaseAttack();
-            BaseGuard = m_player.GetBaseDefence();
-            Attack = m_player.PlayerCharacter.Attack;
-            Defence = m_player.PlayerCharacter.Defence;
-            Agility = m_player.PlayerCharacter.Agility;
-            Lucky = m_player.PlayerCharacter.Luck;
-            m_maxBlood = m_player.PlayerCharacter.hp;
-            BaseDamage += m_player.PlayerCharacter.DameAddPlus;
+            BaseDamage = PlayerDetail.GetBaseAttack();
+            BaseGuard = PlayerDetail.GetBaseDefence();
+            Attack = PlayerDetail.PlayerCharacter.Attack;
+            Defence = PlayerDetail.PlayerCharacter.Defence;
+            Agility = PlayerDetail.PlayerCharacter.Agility;
+            Lucky = PlayerDetail.PlayerCharacter.Luck;
+            m_maxBlood = PlayerDetail.PlayerCharacter.hp;
+            BaseDamage += PlayerDetail.PlayerCharacter.DameAddPlus;
             OnPlayerBeforeReset();
             if (base.FightBuffers.ConsortionAddDamage > 0)
             {
@@ -2319,29 +2066,29 @@ namespace Game.Logic.Phy.Object
             //AddPlus from Consortia
             if (m_game.RoomType == eRoomType.ConsortiaBattle)
             {
-                Attack += Attack / 100 * m_player.PlayerCharacter.AttPlusGuildBattle;
-                Agility += Agility / 100 * m_player.PlayerCharacter.AgiPlusGuildBattle;
+                Attack += Attack / 100 * PlayerDetail.PlayerCharacter.AttPlusGuildBattle;
+                Agility += Agility / 100 * PlayerDetail.PlayerCharacter.AgiPlusGuildBattle;
             }
-            BaseGuard += m_player.PlayerCharacter.GuardAddPlus;
-            Attack += m_player.PlayerCharacter.AttackAddPlus;
-            Defence += m_player.PlayerCharacter.DefendAddPlus;
-            Agility += m_player.PlayerCharacter.AgiAddPlus;
-            Lucky += m_player.PlayerCharacter.LuckAddPlus;
-            Attack += m_player.PlayerCharacter.StrengthEnchance;
-            Defence += m_player.PlayerCharacter.StrengthEnchance;
-            Agility += m_player.PlayerCharacter.StrengthEnchance;
-            Lucky += m_player.PlayerCharacter.StrengthEnchance;
+            BaseGuard += PlayerDetail.PlayerCharacter.GuardAddPlus;
+            Attack += PlayerDetail.PlayerCharacter.AttackAddPlus;
+            Defence += PlayerDetail.PlayerCharacter.DefendAddPlus;
+            Agility += PlayerDetail.PlayerCharacter.AgiAddPlus;
+            Lucky += PlayerDetail.PlayerCharacter.LuckAddPlus;
+            Attack += PlayerDetail.PlayerCharacter.StrengthEnchance;
+            Defence += PlayerDetail.PlayerCharacter.StrengthEnchance;
+            Agility += PlayerDetail.PlayerCharacter.StrengthEnchance;
+            Lucky += PlayerDetail.PlayerCharacter.StrengthEnchance;
             if (base.FightBuffers.ConsortionAddMaxBlood > 0)
             {
                 m_maxBlood += m_maxBlood * base.FightBuffers.ConsortionAddMaxBlood / 100;
             }
-            m_maxBlood += m_player.PlayerCharacter.HpAddPlus + base.PetEffects.MaxBlood + FightBuffers.WorldBossHP;
+            m_maxBlood += PlayerDetail.PlayerCharacter.HpAddPlus + base.PetEffects.MaxBlood + FightBuffers.WorldBossHP;
             if (m_bufferPoint != null)
             {
-                Attack += Attack / 100.0 * (double)m_bufferPoint.Value;
-                Defence += Defence / 100.0 * (double)m_bufferPoint.Value;
-                Agility += Agility / 100.0 * (double)m_bufferPoint.Value;
-                Lucky += Lucky / 100.0 * (double)m_bufferPoint.Value;
+                Attack += Attack / 100.0 * m_bufferPoint.Value;
+                Defence += Defence / 100.0 * m_bufferPoint.Value;
+                Agility += Agility / 100.0 * m_bufferPoint.Value;
+                Lucky += Lucky / 100.0 * m_bufferPoint.Value;
             }
             if (base.FightBuffers.ConsortionAddProperty > 0)
             {
@@ -2350,11 +2097,11 @@ namespace Game.Logic.Phy.Object
                 Agility += base.FightBuffers.ConsortionAddProperty;
                 Lucky += base.FightBuffers.ConsortionAddProperty;
             }
-            m_energy = (int)Agility / 30 + 240;
+            Energy = ((int)Agility / 30) + 240;
             m_useitemCount = 0;
             if (base.FightBuffers.ConsortionAddEnergy > 0)
             {
-                m_energy += base.FightBuffers.ConsortionAddEnergy;
+                Energy += base.FightBuffers.ConsortionAddEnergy;
             }
             if (petFightPropertyInfo != null)
             {
@@ -2365,7 +2112,7 @@ namespace Game.Logic.Phy.Object
                 m_maxBlood += petFightPropertyInfo.Blood;
             }
             m_maxBlood += PetEffects == null ? 0 : PetEffects.AddMaxBloodValue;
-            m_currentBall = BallMgr.FindBall(m_mainBallId);
+            CurrentBall = BallMgr.FindBall(m_mainBallId);
             m_shootCount = 1;
             m_ballCount = 1;
             CurrentIsHitTarget = false;
@@ -2379,26 +2126,19 @@ namespace Game.Logic.Phy.Object
             GainGP = 0;
             GainOffer = 0;
             Ready = false;
-            PlayerDetail.ClearTempBag();
+            _ = PlayerDetail.ClearTempBag();
             LoadingProcess = 0;
             base.PetEffects.CritRate = 0;
-            m_killedPunishmentOffer = 0;
-            m_prop = 0;
-            InitBuffer(m_player.EquipEffect);
+            KilledPunishmentOffer = 0;
+            Prop = 0;
+            InitBuffer(PlayerDetail.EquipEffect);
             CanFly = true;
-            if (m_DeputyWeapon != null)
-            {
-                deputyWeaponResCount = m_DeputyWeapon.StrengthenLevel + 1;
-            }
-            else
-            {
-                deputyWeaponResCount = 1;
-            }
+            deputyWeaponCount = DeputyWeapon != null ? DeputyWeapon.StrengthenLevel + 1 : 1;
             ResetSkillCd();
             OnPlayerAfterReset();
-            m_powerRatio = 100;
-            m_isBombOrIgnoreArmor = 0;
-            m_playerConfig = new PlayerConfig();
+            PowerRatio = 100;
+            IsBombOrIgnoreAemor = 0;
+            Config = new PlayerConfig();
             base.Reset();
         }
 
@@ -2418,11 +2158,11 @@ namespace Game.Logic.Phy.Object
 
         public void SetBall(int ballId, bool special)
         {
-            if (ballId != m_currentBall.ID)
+            if (ballId != CurrentBall.ID)
             {
                 if (BallMgr.FindBall(ballId) != null)
                 {
-                    m_currentBall = BallMgr.FindBall(ballId);
+                    CurrentBall = BallMgr.FindBall(ballId);
                 }
                 m_game.SendGameUpdateBall(this, special);
             }
@@ -2430,11 +2170,11 @@ namespace Game.Logic.Phy.Object
 
         public void SetCurrentWeapon(ItemInfo item)
         {
-            m_weapon = item;
-            BallConfigInfo info = BallConfigMgr.FindBall(m_weapon.TemplateID);
-            if (m_weapon.isGold)
+            Weapon = item;
+            BallConfigInfo info = BallConfigMgr.FindBall(Weapon.TemplateID);
+            if (Weapon.isGold)
             {
-                info = BallConfigMgr.FindBall(m_weapon.GoldEquip.TemplateID);
+                info = BallConfigMgr.FindBall(Weapon.GoldEquip.TemplateID);
             }
             if (ChangeSpecialBall > 0)
             {
@@ -2458,7 +2198,7 @@ namespace Game.Logic.Phy.Object
             m_y = y;
             if (base.IsLiving && !LimitEnergy)
             {
-                m_energy -= Math.Abs(m_x - x);
+                Energy -= Math.Abs(m_x - x);
                 if (value > 0)
                 {
                     OnPlayerMoving();
@@ -2485,7 +2225,7 @@ namespace Game.Logic.Phy.Object
         {
             if (m_game.FreeFatal && PlayerDetail.PlayerCharacter.Grade <= 9)
             {
-                new FatalEffect(0, 15112004).Start(this);
+                _ = new FatalEffect(0, 15112004).Start(this);
             }
             if (m_shootCount == 1)
             {
@@ -2495,8 +2235,8 @@ namespace Game.Logic.Phy.Object
             {
                 EffectTrigger = false;
                 OnPlayerShoot();
-                int iD = m_currentBall.ID;
-                if (m_ballCount == 1 && !IsSpecialSkill && m_isBombOrIgnoreArmor == 0)
+                int iD = CurrentBall.ID;
+                if (m_ballCount == 1 && !IsSpecialSkill && IsBombOrIgnoreAemor == 0)
                 {
                     if (Prop == 20002)
                     {
@@ -2515,13 +2255,13 @@ namespace Game.Logic.Phy.Object
                     base.SpecialSkillDelay = 2000;
                 }
                 int tmpID = iD;
-                if (m_isBombOrIgnoreArmor > 0)
+                if (IsBombOrIgnoreAemor > 0)
                 {
-                    if (m_isBombOrIgnoreArmor == 1)
+                    if (IsBombOrIgnoreAemor == 1)
                     {
                         IgnoreArmor = true; //zırh delici
                     }
-                    else if (m_isBombOrIgnoreArmor == 2)
+                    else if (IsBombOrIgnoreAemor == 2)
                     {
                         iD = 4;
                     }
@@ -2539,28 +2279,27 @@ namespace Game.Logic.Phy.Object
                     {
                         m_game.AddAction(new FightAchievementAction(this, eFightAchievementType.SuperMansNuclearExplosion, base.Direction, 1200));
                     }
-                    if (m_isBombOrIgnoreArmor > 0)
+                    if (IsBombOrIgnoreAemor > 0)
                     {
-                        if (m_isBombOrIgnoreArmor == 1)//xuyên
+                        if (IsBombOrIgnoreAemor == 1)//xuyên
                         {
                             IgnoreArmor = false;
                         }
-                        else if (m_isBombOrIgnoreArmor == 2)//hạt nhân
+                        else if (IsBombOrIgnoreAemor == 2)//hạt nhân
                         {
-                            iD = tmpID;
                         }
-                        m_isBombOrIgnoreArmor = 0;
+                        IsBombOrIgnoreAemor = 0;
                     }
                     //
                     m_shootCount--;
                     if (m_shootCount <= 0 || !base.IsLiving)
                     {
-                        m_currentDelay += m_currentBall.Delay + (m_weapon.isGold ? m_weapon.GoldEquip.Property8 : m_weapon.Template.Property8);
+                        CurrentDelay += CurrentBall.Delay + (Weapon.isGold ? Weapon.GoldEquip.Property8 : Weapon.Template.Property8);
                         StopAttacking();
                         //AddDelay(m_currentBall.Delay + (m_weapon.isGold ? m_weapon.GoldEquip.Property8 : m_weapon.Template.Property8));
                         AddDander(20);
                         AddPetMP(10);
-                        m_prop = 0;
+                        Prop = 0;
                         if (CanGetProp)
                         {
                             int gold = 0;
@@ -2590,14 +2329,14 @@ namespace Game.Logic.Phy.Object
                                     }
                                     else
                                     {
-                                        PlayerDetail.AddTemplate(info, eBageType.TempBag, info.Count, eGameView.dungeonTypeGet);
+                                        _ = PlayerDetail.AddTemplate(info, eBageType.TempBag, info.Count, eGameView.dungeonTypeGet);
                                     }
                                 }
-                                PlayerDetail.AddGold(gold);
-                                PlayerDetail.AddMoney(money, igroneAll: false);
+                                _ = PlayerDetail.AddGold(gold);
+                                _ = PlayerDetail.AddMoney(money, igroneAll: false);
                                 PlayerDetail.LogAddMoney(AddMoneyType.Game, AddMoneyType.Game_Shoot, PlayerDetail.PlayerCharacter.ID, money, PlayerDetail.PlayerCharacter.Money);
-                                PlayerDetail.AddGiftToken(giftToken);
-                                PlayerDetail.AddHonor(honor);
+                                _ = PlayerDetail.AddGiftToken(giftToken);
+                                _ = PlayerDetail.AddHonor(honor);
                             }
                         }
                         OnPlayerCompleteShoot();
@@ -2615,11 +2354,11 @@ namespace Game.Logic.Phy.Object
             if (base.IsAttacking)
             {
                 base.Game.SendSkipNext(this);
-                m_prop = 0;
+                Prop = 0;
                 //AddDelay(25);
-                AddDelay(m_currentDelay / 100 * 70);
+                AddDelay(CurrentDelay / 100 * 70);
                 //AddDelay(-200);
-                m_currentDelay = 0;
+                CurrentDelay = 0;
                 AddDander(40);
                 AddPetMP(10);
                 OnPlayerSkip();
@@ -2632,17 +2371,17 @@ namespace Game.Logic.Phy.Object
             //Console.WriteLine("PetUseKill skillID:{0}, type:{1}", skillId, type);
             if (CanUseSkill(skillId) && PetSkillCD.ContainsKey(skillId) && !PetEffects.DisibleActiveSkill)
             {
-                PetSkillInfo skillInfo = _petSkillCd[skillId];
+                PetSkillInfo skillInfo = PetSkillCD[skillId];
                 if (skillInfo.NewBallID != -1 && m_useitemCount > 0)
                 {
-                    m_player.SendMessage("Aksesuar kullandığınız için bu skill basılamaz.");
+                    PlayerDetail.SendMessage("Aksesuar kullandığınız için bu skill basılamaz.");
                     return;
                 }
                 if (PetMP > 0 && PetMP >= skillInfo.CostMP)
                 {
                     if (GetSealStatePet())
                     {
-                        m_player.SendMessage(LanguageMgr.GetTranslation("Player.Msg1a"));
+                        PlayerDetail.SendMessage(LanguageMgr.GetTranslation("Player.Msg1a"));
                     }
                     else
                     {
@@ -2666,7 +2405,7 @@ namespace Game.Logic.Phy.Object
                 }
                 else
                 {
-                    m_player.SendMessage(LanguageMgr.GetTranslation("Player.Msg1"));
+                    PlayerDetail.SendMessage(LanguageMgr.GetTranslation("Player.Msg1"));
                 }
             }
         }
@@ -2677,9 +2416,9 @@ namespace Game.Logic.Phy.Object
             {
                 return false;
             }
-            if (m_pet != null)
+            if (Pet != null)
             {
-                string[] array = m_pet.SkillEquip.Split('|');
+                string[] array = Pet.SkillEquip.Split('|');
                 for (int i = 0; i < array.Length; i++)
                 {
                     if (int.Parse(array[i].Split(',')[0]) == Id)
@@ -2697,28 +2436,28 @@ namespace Game.Logic.Phy.Object
             {
                 return;
             }
-            if (m_Healstone != null && m_blood < m_maxBlood && !base.Game.IsSpecialPVE() && m_player.RemoveHealstone())
+            if (m_Healstone != null && m_blood < m_maxBlood && !base.Game.IsSpecialPVE() && PlayerDetail.RemoveHealstone())
             {
                 int property2 = m_Healstone.Template.Property2;
                 BufferInfo fightBuffByType = GetFightBuffByType(BuffType.ReHealth);
-                if (fightBuffByType != null && m_player.UsePayBuff(BuffType.ReHealth))
+                if (fightBuffByType != null && PlayerDetail.UsePayBuff(BuffType.ReHealth))
                 {
                     property2 *= fightBuffByType.Value;
                 }
-                AddBlood(property2);
+                _ = AddBlood(property2);
             }
             //AddDelay(GetTurnDelay());
-            m_currentDelay += GetTurnDelay();
+            CurrentDelay += GetTurnDelay();
             base.StartAttacking();
         }
         public override void StopAttacking()
         {
-            AddDelay(m_currentDelay);
+            AddDelay(CurrentDelay);
             base.StopAttacking();
         }
         public BufferInfo GetFightBuffByType(BuffType buff)
         {
-            foreach (BufferInfo fightBuff in m_player.FightBuffs)
+            foreach (BufferInfo fightBuff in PlayerDetail.FightBuffs)
             {
                 if (fightBuff.Type == (int)buff)
                 {
@@ -2741,10 +2480,10 @@ namespace Game.Logic.Phy.Object
         {
             if (!TargetPoint.IsEmpty)
             {
-                Point point = new Point(TargetPoint.X - X, TargetPoint.Y - Y);
+                Point point = new(TargetPoint.X - X, TargetPoint.Y - Y);
                 if (point.Length() > 160.0)
                 {
-                    point.Normalize(160);
+                    _ = point.Normalize(160);
                 }
                 m_game.AddAction(new GhostMoveAction(this, new Point(X + point.X, Y + point.Y)));
             }
@@ -2801,13 +2540,13 @@ namespace Game.Logic.Phy.Object
 
         public void StartSpeedMult(int x, int y, int delay)
         {
-            Point point = new Point(x - X, y - Y);
+            Point point = new(x - X, y - Y);
             m_game.AddAction(new PlayerSpeedMultAction(this, new Point(X + point.X, Y + point.Y), delay));
         }
 
         public void StartSpeedMult(int x, int y)
         {
-            this.StartSpeedMult(x, y, 3000);
+            StartSpeedMult(x, y, 3000);
         }
 
 
@@ -2876,10 +2615,10 @@ namespace Game.Logic.Phy.Object
                 if (!base.Game.IsSpecialPVE() && base.Blood < base.MaxBlood / 100 * 30)
                 {
                     BufferInfo fightBuffByType = GetFightBuffByType(BuffType.Save_Life);
-                    if (fightBuffByType != null && m_player.UsePayBuff(BuffType.Save_Life))
+                    if (fightBuffByType != null && PlayerDetail.UsePayBuff(BuffType.Save_Life))
                     {
                         int num = base.MaxBlood / 100 * fightBuffByType.Value;
-                        AddBlood(num);
+                        _ = AddBlood(num);
                         m_game.method_53(this, LanguageMgr.GetTranslation("Oyuncu " + PlayerDetail.PlayerCharacter.NickName + " Kurtarma Samanını kullandı ve " + num + " canını yeniledi!"));
                     }
                 }
@@ -2904,9 +2643,9 @@ namespace Game.Logic.Phy.Object
             m_useitemCount += 1;
             if (CanUseItem(item))
             {
-                m_energy -= item.Property4;
+                Energy -= item.Property4;
                 //m_delay += item.Property5;
-                m_currentDelay += item.Property5;
+                CurrentDelay += item.Property5;
                 m_game.SendPlayerUseProp(this, -2, -2, item.TemplateID, this);
                 SpellMgr.ExecuteSpell(m_game, m_game.CurrentLiving as Player, item);
                 return true;
@@ -2922,8 +2661,8 @@ namespace Game.Logic.Phy.Object
             }
             if (base.IsLiving)
             {
-                ReduceEnergy(item.Property4);
-                m_currentDelay += item.Property5;
+                _ = ReduceEnergy(item.Property4);
+                CurrentDelay += item.Property5;
                 //AddDelay(item.Property5);
             }
             else if (place == -1)
@@ -2946,11 +2685,11 @@ namespace Game.Logic.Phy.Object
         public void UseSecondWeapon()
         {
             m_useitemCount += 1;
-            if (!CanUseItem(m_DeputyWeapon.Template))
+            if (!CanUseItem(DeputyWeapon.Template))
             {
                 return;
             }
-            if (m_DeputyWeapon.Template.Property3 == 31)
+            if (DeputyWeapon.Template.Property3 == 31)
             {
                 bool isArrmor = false;
                 if (new List<int>
@@ -2958,29 +2697,29 @@ namespace Game.Logic.Phy.Object
                     17006,
                     17012,
                     17013
-                }.Contains(m_DeputyWeapon.TemplateID))
+                }.Contains(DeputyWeapon.TemplateID))
                 {
                     isArrmor = true;
                 }
-                new AddGuardEquipEffect((int)getHertAddition(m_DeputyWeapon), 1, isArrmor).Start(this);
+                _ = new AddGuardEquipEffect((int)getHertAddition(DeputyWeapon), 1, isArrmor).Start(this);
                 OnPlayerGuard();
             }
             else
             {
-                SetCurrentWeapon(m_DeputyWeapon);
+                SetCurrentWeapon(DeputyWeapon);
                 OnPlayerCure();
             }
             ShootCount = 1;
-            m_energy -= m_DeputyWeapon.Template.Property4;
+            Energy -= DeputyWeapon.Template.Property4;
             //m_delay += m_DeputyWeapon.Template.Property5;
-            m_currentDelay += m_DeputyWeapon.Template.Property5;
-            m_game.SendPlayerUseProp(this, -2, -2, m_DeputyWeapon.Template.TemplateID);
-            if (deputyWeaponResCount > 0)
+            CurrentDelay += DeputyWeapon.Template.Property5;
+            m_game.SendPlayerUseProp(this, -2, -2, DeputyWeapon.Template.TemplateID);
+            if (deputyWeaponCount > 0)
             {
-                deputyWeaponResCount--;
-                m_game.SendUseDeputyWeapon(this, deputyWeaponResCount);
+                deputyWeaponCount--;
+                m_game.SendUseDeputyWeapon(this, deputyWeaponCount);
             }
-            OnPlayerUseSecondWeapon(m_DeputyWeapon.Template.Property3);
+            OnPlayerUseSecondWeapon(DeputyWeapon.Template.Property3);
         }
 
         public void UseSpecialSkill()
@@ -2991,7 +2730,7 @@ namespace Game.Logic.Phy.Object
                 if (base.Dander >= 200)
                 {
                     SetBall(m_spBallId, special: true);
-                    m_ballCount = m_currentBall.Amount;
+                    m_ballCount = CurrentBall.Amount;
                     SetDander(0);
                 }
             }
@@ -3006,16 +2745,12 @@ namespace Game.Logic.Phy.Object
 
         public bool canMoveDirection(int dir)
         {
-            return !m_map.IsOutMap(X + (15 + MOVE_SPEED) * dir, Y);
+            return !m_map.IsOutMap(X + ((15 + MOVE_SPEED) * dir), Y);
         }
 
         public Point getNextWalkPoint(int dir)
         {
-            if (canMoveDirection(dir))
-            {
-                return m_map.FindNextWalkPoint(X, Y, dir, StepX, StepY);
-            }
-            return Point.Empty;
+            return canMoveDirection(dir) ? m_map.FindNextWalkPoint(X, Y, dir, StepX, StepY) : Point.Empty;
         }
 
         public Point FindYLineNotEmptyPointDown(int tx, int ty)
@@ -3026,17 +2761,14 @@ namespace Game.Logic.Phy.Object
 
         public void OnBeforeBomb(int delay)
         {
-            if (this.BeforeBomb != null)
-            {
-                this.BeforeBomb(this);
-            }
+            BeforeBomb?.Invoke(this);
         }
 
         public void SkipAttack()
         {
             m_useitemCount = 9999;
             Game.SendSkipNext(this);
-            m_prop = 0;
+            Prop = 0;
             AddDelay(10);
             base.Skip(1000);
         }
@@ -3046,11 +2778,11 @@ namespace Game.Logic.Phy.Object
             m_game.SendMarkMeHideInfo(this, Id, isMark);
         }
 
-        private List<int> propsBloqueados;
+        private readonly List<int> propsBloqueados;
 
         public void unlockProp(int templateid)
         {
-            propsBloqueados.Remove(templateid);
+            _ = propsBloqueados.Remove(templateid);
         }
 
         public void lockProp(int templateid)
@@ -3072,28 +2804,28 @@ namespace Game.Logic.Phy.Object
         }
         public Point StartFalling(bool direct)
         {
-            return this.StartFalling(direct, 0, Living.MOVE_SPEED * 10);
+            return StartFalling(direct, 0, Living.MOVE_SPEED * 10);
         }
         public virtual Point StartFalling(bool direct, int delay, int speed)
         {
             // 1. Düşülecek noktayı bul
-            Point p = this.m_map.FindYLineNotEmptyPointDown(this.X, this.Y);
+            Point p = m_map.FindYLineNotEmptyPointDown(X, Y);
 
             // Eğer yer bulunamazsa (boşluksa), haritanın en altına bir nokta ata
             if (p == Point.Empty)
             {
-                p = new Point(this.X, this.m_game.Map.Bound.Height + 1);
+                p = new Point(X, m_game.Map.Bound.Height + 1);
             }
 
             // Oyuncu zaten o noktadaysa işlem yapma
-            if (p.Y == this.Y)
+            if (p.Y == Y)
             {
                 return Point.Empty;
             }
 
             // 2. ÖNEMLİ DÜZELTME: Hedef nokta harita dışındaysa (boşluğa düşüyorsa)
             // animasyonlu geçişi beklemeden direkt ölümü tetikle.
-            bool isOutMap = this.m_map.IsOutMap(p.X, p.Y);
+            bool isOutMap = m_map.IsOutMap(p.X, p.Y);
 
             if (direct || isOutMap)
             {
@@ -3108,7 +2840,7 @@ namespace Game.Logic.Phy.Object
             else
             {
                 // Normal düşüş animasyonu (harita içi geçerli zeminler için)
-                this.m_game.AddAction(new LivingFallingAction(this, p.X, p.Y, speed, null, delay, 0, null));
+                m_game.AddAction(new LivingFallingAction(this, p.X, p.Y, speed, null, delay, 0, null));
             }
 
             return p;
