@@ -52,19 +52,11 @@ namespace SqlDataProvider.Data
         private bool _isGold;
 
         private bool _isJudage;
-
-        private bool _isLogs;
-
-        private bool _isTips;
-
         private bool _isUsed;
 
         private int _itemID;
 
         private int _luckCompose;
-
-        private int _place;
-
         private DateTime _removeDate;
 
         private int _removeType;
@@ -72,21 +64,11 @@ namespace SqlDataProvider.Data
         private string _skin;
 
         private int _strengthenLevel;
-
-        private int _strengthenExp;
-
-        private int _strengthenTimes;
-
-        private ItemTemplateInfo _template;
-
         private int _templateId;
 
         private int _userID;
 
         private int _validDate;
-
-        private int _Blood;
-
         private string _latentEnergyCurStr;
 
         private string _latentEnergyNewStr;
@@ -97,7 +79,7 @@ namespace SqlDataProvider.Data
         {
             get
             {
-                int agility = _template.Agility;
+                int agility = Template.Agility;
                 if (IsGold && GoldEquip != null)
                 {
                     agility = GoldEquip.Agility;
@@ -108,10 +90,7 @@ namespace SqlDataProvider.Data
 
         public int AgilityCompose
         {
-            get
-            {
-                return _agilityCompose;
-            }
+            get => _agilityCompose;
             set
             {
                 _agilityCompose = value;
@@ -123,7 +102,7 @@ namespace SqlDataProvider.Data
         {
             get
             {
-                int attack = _template.Attack;
+                int attack = Template.Attack;
                 if (IsGold && GoldEquip != null)
                 {
                     attack = GoldEquip.Attack;
@@ -134,10 +113,7 @@ namespace SqlDataProvider.Data
 
         public int AttackCompose
         {
-            get
-            {
-                return _attackCompose;
-            }
+            get => _attackCompose;
             set
             {
                 _attackCompose = value;
@@ -147,10 +123,7 @@ namespace SqlDataProvider.Data
 
         public int BagType
         {
-            get
-            {
-                return _bagType;
-            }
+            get => _bagType;
             set
             {
                 _bagType = value;
@@ -160,10 +133,7 @@ namespace SqlDataProvider.Data
 
         public DateTime BeginDate
         {
-            get
-            {
-                return _beginDate;
-            }
+            get => _beginDate;
             set
             {
                 _beginDate = value;
@@ -173,10 +143,7 @@ namespace SqlDataProvider.Data
 
         public string Color
         {
-            get
-            {
-                return _color;
-            }
+            get => _color;
             set
             {
                 _color = value;
@@ -186,10 +153,7 @@ namespace SqlDataProvider.Data
 
         public int Count
         {
-            get
-            {
-                return _count;
-            }
+            get => _count;
             set
             {
                 _count = value;
@@ -201,7 +165,7 @@ namespace SqlDataProvider.Data
         {
             get
             {
-                int defence = _template.Defence;
+                int defence = Template.Defence;
                 if (IsGold && GoldEquip != null)
                 {
                     defence = GoldEquip.Defence;
@@ -212,10 +176,7 @@ namespace SqlDataProvider.Data
 
         public int DefendCompose
         {
-            get
-            {
-                return _defendCompose;
-            }
+            get => _defendCompose;
             set
             {
                 _defendCompose = value;
@@ -223,14 +184,11 @@ namespace SqlDataProvider.Data
             }
         }
 
-        public int GetBagType => (int)_template.BagType;
+        public int GetBagType => (int)Template.BagType;
 
         public DateTime goldBeginTime
         {
-            get
-            {
-                return _goldBeginTime;
-            }
+            get => _goldBeginTime;
             set
             {
                 _goldBeginTime = value;
@@ -240,13 +198,7 @@ namespace SqlDataProvider.Data
 
         public ItemTemplateInfo GoldEquip
         {
-            get
-            {
-                if (_goldEquip == null)
-                    return _template;
-
-                return _goldEquip;
-            }
+            get => _goldEquip == null ? Template : _goldEquip;
             set
             {
                 _goldEquip = value;
@@ -256,10 +208,7 @@ namespace SqlDataProvider.Data
 
         public int goldValidDate
         {
-            get
-            {
-                return _goldValidDate;
-            }
+            get => _goldValidDate;
             set
             {
                 _goldValidDate = value;
@@ -269,10 +218,7 @@ namespace SqlDataProvider.Data
 
         public int Hole1
         {
-            get
-            {
-                return _hole1;
-            }
+            get => _hole1;
             set
             {
                 _hole1 = value;
@@ -282,10 +228,7 @@ namespace SqlDataProvider.Data
 
         public int Hole2
         {
-            get
-            {
-                return _hole2;
-            }
+            get => _hole2;
             set
             {
                 _hole2 = value;
@@ -295,10 +238,7 @@ namespace SqlDataProvider.Data
 
         public int Hole3
         {
-            get
-            {
-                return _hole3;
-            }
+            get => _hole3;
             set
             {
                 _hole3 = value;
@@ -308,10 +248,7 @@ namespace SqlDataProvider.Data
 
         public int Hole4
         {
-            get
-            {
-                return _hole4;
-            }
+            get => _hole4;
             set
             {
                 _hole4 = value;
@@ -321,10 +258,7 @@ namespace SqlDataProvider.Data
 
         public int Hole5
         {
-            get
-            {
-                return _hole5;
-            }
+            get => _hole5;
             set
             {
                 _hole5 = value;
@@ -334,10 +268,7 @@ namespace SqlDataProvider.Data
 
         public int Hole5Exp
         {
-            get
-            {
-                return _hole5Exp;
-            }
+            get => _hole5Exp;
             set
             {
                 _hole5Exp = value;
@@ -347,10 +278,7 @@ namespace SqlDataProvider.Data
 
         public int Hole5Level
         {
-            get
-            {
-                return _hole5Level;
-            }
+            get => _hole5Level;
             set
             {
                 _hole5Level = value;
@@ -360,10 +288,7 @@ namespace SqlDataProvider.Data
 
         public int Hole6
         {
-            get
-            {
-                return _hole6;
-            }
+            get => _hole6;
             set
             {
                 _hole6 = value;
@@ -373,23 +298,17 @@ namespace SqlDataProvider.Data
 
         public int Blood
         {
-            get
-            {
-                return _Blood;
-            }
+            get;
             set
             {
-                _Blood = value;
+                field = value;
                 _isDirty = true;
             }
         }
 
         public int Hole6Exp
         {
-            get
-            {
-                return _hole6Exp;
-            }
+            get => _hole6Exp;
             set
             {
                 _hole6Exp = value;
@@ -399,10 +318,7 @@ namespace SqlDataProvider.Data
 
         public int Hole6Level
         {
-            get
-            {
-                return _hole6Level;
-            }
+            get => _hole6Level;
             set
             {
                 _hole6Level = value;
@@ -412,10 +328,7 @@ namespace SqlDataProvider.Data
 
         public bool IsBinds
         {
-            get
-            {
-                return _isBinds;
-            }
+            get => _isBinds;
             set
             {
                 _isBinds = value;
@@ -425,10 +338,7 @@ namespace SqlDataProvider.Data
 
         public bool IsExist
         {
-            get
-            {
-                return _isExist;
-            }
+            get => _isExist;
             set
             {
                 _isExist = value;
@@ -440,10 +350,7 @@ namespace SqlDataProvider.Data
 
         public bool IsJudge
         {
-            get
-            {
-                return _isJudage;
-            }
+            get => _isJudage;
             set
             {
                 _isJudage = value;
@@ -451,36 +358,13 @@ namespace SqlDataProvider.Data
             }
         }
 
-        public bool IsLogs
-        {
-            get
-            {
-                return _isLogs;
-            }
-            set
-            {
-                _isLogs = value;
-            }
-        }
+        public bool IsLogs { get; set; }
 
-        public bool IsTips
-        {
-            get
-            {
-                return _isTips;
-            }
-            set
-            {
-                _isTips = value;
-            }
-        }
+        public bool IsTips { get; set; }
 
         public bool IsUsed
         {
-            get
-            {
-                return _isUsed;
-            }
+            get => _isUsed;
             set
             {
                 if (_isUsed != value)
@@ -493,10 +377,7 @@ namespace SqlDataProvider.Data
 
         public int ItemID
         {
-            get
-            {
-                return _itemID;
-            }
+            get => _itemID;
             set
             {
                 _itemID = value;
@@ -508,7 +389,7 @@ namespace SqlDataProvider.Data
         {
             get
             {
-                int luck = _template.Luck;
+                int luck = Template.Luck;
                 if (IsGold && GoldEquip != null)
                 {
                     luck = GoldEquip.Luck;
@@ -519,10 +400,7 @@ namespace SqlDataProvider.Data
 
         public int LuckCompose
         {
-            get
-            {
-                return _luckCompose;
-            }
+            get => _luckCompose;
             set
             {
                 _luckCompose = value;
@@ -530,49 +408,22 @@ namespace SqlDataProvider.Data
             }
         }
 
-        public string Pic
-        {
-            get
-            {
-                if (IsGold && GoldEquip != null)
-                {
-                    return GoldEquip.Pic;
-                }
-                return _template.Pic;
-            }
-        }
+        public string Pic => IsGold && GoldEquip != null ? GoldEquip.Pic : Template.Pic;
 
         public int Place
         {
-            get
+            get; set
             {
-                return _place;
-            }
-            set
-            {
-                _place = value;
+                field = value;
                 _isDirty = true;
             }
         }
 
-        public int RefineryLevel
-        {
-            get
-            {
-                if (IsGold && GoldEquip != null)
-                {
-                    return GoldEquip.RefineryLevel;
-                }
-                return _template.RefineryLevel;
-            }
-        }
+        public int RefineryLevel => IsGold && GoldEquip != null ? GoldEquip.RefineryLevel : Template.RefineryLevel;
 
         public DateTime RemoveDate
         {
-            get
-            {
-                return _removeDate;
-            }
+            get => _removeDate;
             set
             {
                 _removeDate = value;
@@ -582,10 +433,7 @@ namespace SqlDataProvider.Data
 
         public int RemoveType
         {
-            get
-            {
-                return _removeType;
-            }
+            get => _removeType;
             set
             {
                 _removeType = value;
@@ -596,10 +444,7 @@ namespace SqlDataProvider.Data
 
         public string Skin
         {
-            get
-            {
-                return _skin;
-            }
+            get => _skin;
             set
             {
                 _skin = value;
@@ -609,10 +454,7 @@ namespace SqlDataProvider.Data
 
         public int StrengthenLevel
         {
-            get
-            {
-                return _strengthenLevel;
-            }
+            get => _strengthenLevel;
             set
             {
                 _strengthenLevel = value;
@@ -622,42 +464,27 @@ namespace SqlDataProvider.Data
 
         public int StrengthenExp
         {
-            get
+            get; set
             {
-                return _strengthenExp;
-            }
-            set
-            {
-                _strengthenExp = value;
+                field = value;
                 _isDirty = true;
             }
         }
 
         public int StrengthenTimes
         {
-            get
+            get; set
             {
-                return _strengthenTimes;
-            }
-            set
-            {
-                _strengthenTimes = value;
+                field = value;
                 _isDirty = true;
             }
         }
 
-        public ItemTemplateInfo Template => _template;
+        public ItemTemplateInfo Template { get; private set; }
 
         public int TemplateID
         {
-            get
-            {
-                if (IsGold && GoldEquip != null)
-                {
-                    return GoldEquip.TemplateID;
-                }
-                return _templateId;
-            }
+            get => IsGold && GoldEquip != null ? GoldEquip.TemplateID : _templateId;
             set
             {
                 _templateId = value;
@@ -667,10 +494,7 @@ namespace SqlDataProvider.Data
 
         public int UserID
         {
-            get
-            {
-                return _userID;
-            }
+            get => _userID;
             set
             {
                 _userID = value;
@@ -680,65 +504,53 @@ namespace SqlDataProvider.Data
 
         public int ValidDate
         {
-            get
-            {
-                return _validDate;
-            }
+            get => _validDate;
             set
             {
-                _validDate = ((value > 999) ? 365 : value);
+                _validDate = (value > 999) ? 365 : value;
                 _isDirty = true;
             }
         }
 
         public string latentEnergyCurStr
         {
-            get
-            {
-                return this._latentEnergyCurStr;
-            }
+            get => _latentEnergyCurStr;
             set
             {
-                this._latentEnergyCurStr = value;
-                this._isDirty = true;
+                _latentEnergyCurStr = value;
+                _isDirty = true;
             }
         }
         public string latentEnergyNewStr
         {
-            get
-            {
-                return this._latentEnergyNewStr;
-            }
+            get => _latentEnergyNewStr;
             set
             {
-                this._latentEnergyNewStr = value;
-                this._isDirty = true;
+                _latentEnergyNewStr = value;
+                _isDirty = true;
             }
         }
         public DateTime latentEnergyEndTime
         {
-            get
-            {
-                return this._latentEnergyEndTime;
-            }
+            get => _latentEnergyEndTime;
             set
             {
-                this._latentEnergyEndTime = value;
-                this._isDirty = true;
+                _latentEnergyEndTime = value;
+                _isDirty = true;
             }
         }
 
         private int _curExp;
         public int curExp
         {
-            get { return _curExp; }
+            get => _curExp;
             set { _curExp = value; _isDirty = true; }
         }
 
         private bool _cellLocked;
         public bool cellLocked
         {
-            get { return _cellLocked; }
+            get => _cellLocked;
             set { _cellLocked = value; _isDirty = true; }
         }
 
@@ -747,18 +559,14 @@ namespace SqlDataProvider.Data
 
         public ItemInfo(ItemTemplateInfo temp)
         {
-            _template = temp;
+            Template = temp;
         }
 
         public bool CanEquip()
         {
-            if (_template.CategoryID >= 10)
+            if (Template.CategoryID >= 10)
             {
-                if (_template.CategoryID >= 13)
-                {
-                    return _template.CategoryID <= 16;
-                }
-                return false;
+                return Template.CategoryID is >= 13 and <= 16;
             }
             return true;
         }
@@ -781,7 +589,7 @@ namespace SqlDataProvider.Data
 
         public ItemInfo Clone()
         {
-            return new ItemInfo(_template)
+            return new ItemInfo(Template)
             {
                 _userID = _userID,
                 _validDate = _validDate,
@@ -832,7 +640,7 @@ namespace SqlDataProvider.Data
             {
                 return null;
             }
-            ItemInfo info = new ItemInfo(goods)
+            ItemInfo info = new(goods)
             {
                 GoldEquip = item.GoldEquip,
                 AgilityCompose = item.AgilityCompose,
@@ -852,7 +660,7 @@ namespace SqlDataProvider.Data
                 StrengthenLevel = item.StrengthenLevel,
                 TemplateID = goods.TemplateID,
                 ValidDate = item.ValidDate,
-                _template = goods,
+                Template = goods,
                 Count = item.Count,
                 _removeDate = item._removeDate,
                 _removeType = item._removeType,
@@ -919,54 +727,52 @@ namespace SqlDataProvider.Data
 
         public static ItemInfo CreateFromTemplate(ItemTemplateInfo goods, int count, int type)
         {
-            if (goods == null)
-            {
-                return null;
-            }
-            return new ItemInfo(goods)
-            {
-                AgilityCompose = 0,
-                AttackCompose = 0,
-                BeginDate = DateTime.Now,
-                Color = "",
-                Skin = "",
-                DefendCompose = 0,
-                IsUsed = false,
-                IsDirty = false,
-                IsExist = true,
-                IsJudge = true,
-                LuckCompose = 0,
-                StrengthenLevel = 0,
-                TemplateID = goods.TemplateID,
-                ValidDate = 0,
-                Count = count,
-                IsBinds = (goods.BindType == 1),
-                _removeDate = DateTime.Now,
-                _removeType = type,
-                Hole1 = -1,
-                Hole2 = -1,
-                Hole3 = -1,
-                Hole4 = -1,
-                Hole5 = -1,
-                Hole6 = -1,
-                Hole5Exp = 0,
-                Hole5Level = 0,
-                Hole6Exp = 0,
-                Hole6Level = 0,
-                goldValidDate = 0,
-                goldBeginTime = DateTime.Now,
-                Blood = 0,
-                latentEnergyCurStr = "0,0,0,0",
-                latentEnergyNewStr = "0,0,0,0",
-                latentEnergyEndTime = DateTime.Now,
-                curExp = 0,
-                cellLocked = false
-            };
+            return goods == null
+                ? null
+                : new ItemInfo(goods)
+                {
+                    AgilityCompose = 0,
+                    AttackCompose = 0,
+                    BeginDate = DateTime.Now,
+                    Color = "",
+                    Skin = "",
+                    DefendCompose = 0,
+                    IsUsed = false,
+                    IsDirty = false,
+                    IsExist = true,
+                    IsJudge = true,
+                    LuckCompose = 0,
+                    StrengthenLevel = 0,
+                    TemplateID = goods.TemplateID,
+                    ValidDate = 0,
+                    Count = count,
+                    IsBinds = goods.BindType == 1,
+                    _removeDate = DateTime.Now,
+                    _removeType = type,
+                    Hole1 = -1,
+                    Hole2 = -1,
+                    Hole3 = -1,
+                    Hole4 = -1,
+                    Hole5 = -1,
+                    Hole6 = -1,
+                    Hole5Exp = 0,
+                    Hole5Level = 0,
+                    Hole6Exp = 0,
+                    Hole6Level = 0,
+                    goldValidDate = 0,
+                    goldBeginTime = DateTime.Now,
+                    Blood = 0,
+                    latentEnergyCurStr = "0,0,0,0",
+                    latentEnergyNewStr = "0,0,0,0",
+                    latentEnergyEndTime = DateTime.Now,
+                    curExp = 0,
+                    cellLocked = false
+                };
         }
 
         public int eqType()
         {
-            return _template.CategoryID switch
+            return Template.CategoryID switch
             {
                 51 => 1,
                 52 => 2,
@@ -980,19 +786,15 @@ namespace SqlDataProvider.Data
             {
                 case -200:
                     specialInfo.Money += info.Count;
-                    info = null;
                     break;
                 case -300:
                     specialInfo.GiftToken += info.Count;
-                    info = null;
                     break;
                 case 11107:
                     specialInfo.GP += info.Count;
-                    info = null;
                     break;
                 case -100:
                     specialInfo.Gold += info.Count;
-                    info = null;
                     break;
             }
         }
@@ -1029,16 +831,12 @@ namespace SqlDataProvider.Data
 
         public string GetBagName()
         {
-            switch (_template.CategoryID)
+            return Template.CategoryID switch
             {
-                case 10:
-                case 11:
-                    return "Game.Server.GameObjects.Prop";
-                case 12:
-                    return "Game.Server.GameObjects.Task";
-                default:
-                    return "Game.Server.GameObjects.Equip";
-            }
+                10 or 11 => "Game.Server.GameObjects.Prop",
+                12 => "Game.Server.GameObjects.Task",
+                _ => "Game.Server.GameObjects.Equip",
+            };
         }
 
         public static void GetItemPrice(int Prices, int Values, decimal beat, ref int gold, ref int money, ref int offer, ref int gifttoken, ref int petScore, ref int Score, ref int dmgScore, ref int iTemplateID, ref int iCount)
@@ -1048,25 +846,25 @@ namespace SqlDataProvider.Data
             switch (Prices)
             {
                 case -4:
-                    gifttoken += (int)((decimal)Values * beat);
+                    gifttoken += (int)(Values * beat);
                     return;
                 case -3:
-                    offer += (int)((decimal)Values * beat);
+                    offer += (int)(Values * beat);
                     return;
                 case -2:
-                    gold += (int)((decimal)Values * beat);
+                    gold += (int)(Values * beat);
                     return;
                 case -1:
-                    money += (int)((decimal)Values * beat);
+                    money += (int)(Values * beat);
                     return;
                 case -8:
-                    petScore += (int)((decimal)Values * beat);
+                    petScore += (int)(Values * beat);
                     return;
                 case -6:
-                    Score += (int)((decimal)Values * beat);
+                    Score += (int)(Values * beat);
                     return;
                 case -9:
-                    dmgScore += (int)((decimal)Values * beat);
+                    dmgScore += (int)(Values * beat);
                     return;
             }
             if (Prices > 0)
@@ -1087,57 +885,36 @@ namespace SqlDataProvider.Data
                 return ValidDate;
             }
             int num = DateTime.Compare(_beginDate.AddDays(_validDate), DateTime.Now);
-            if (num >= 0)
-            {
-                return num;
-            }
-            return 0;
+            return num >= 0 ? num : 0;
         }
 
         public bool IsBead()
         {
-            if (_template.Property1 == 31)
-            {
-                return _template.CategoryID == 11;
-            }
-            return false;
+            return Template.Property1 == 31 && Template.CategoryID == 11;
         }
 
         public bool IsCard()
         {
-            int categoryID = _template.CategoryID;
+            int categoryID = Template.CategoryID;
             if (categoryID != 11)
             {
                 return categoryID == 18;
             }
-            if (_template.TemplateID != 112108)
-            {
-                return _template.TemplateID == 112150;
-            }
-            return true;
+            return Template.TemplateID is 112108 or 112150;
         }
 
         public bool isDress()
         {
-            switch (_template.CategoryID)
+            return Template.CategoryID switch
             {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 13:
-                case 15:
-                    return true;
-                default:
-                    return false;
-            }
+                1 or 2 or 3 or 4 or 5 or 6 or 13 or 15 => true,
+                _ => false,
+            };
         }
 
         public bool isDrill(int holelv)
         {
-            return _template.TemplateID switch
+            return Template.TemplateID switch
             {
                 11026 => holelv == 2,
                 11027 => holelv == 3,
@@ -1150,28 +927,24 @@ namespace SqlDataProvider.Data
 
         public bool IsEquipPet()
         {
-            if (_template == null)
+            if (Template == null)
             {
                 return false;
             }
-            if (_template.CategoryID == 50 || _template.CategoryID == 51 || _template.CategoryID == 52)
-            {
-                return true;
-            }
-            return false;
+            return Template.CategoryID is 50 or 51 or 52;
         }
 
         public bool isGemStone()
         {
-            return _template.TemplateID == 100100;
+            return Template.TemplateID == 100100;
         }
 
         public bool IsProp()
         {
-            int categoryID = _template.CategoryID;
+            int categoryID = Template.CategoryID;
             if (categoryID <= 18)
             {
-                if (categoryID != 11 && categoryID != 18)
+                if (categoryID is not 11 and not 18)
                 {
                     return false;
                 }
@@ -1196,25 +969,17 @@ namespace SqlDataProvider.Data
 
         public bool isTexp()
         {
-            return _template.CategoryID == 20;
+            return Template.CategoryID == 20;
         }
 
         public bool IsValidGoldItem()
         {
-            if (_goldValidDate > 0)
-            {
-                return DateTime.Compare(_goldBeginTime.AddDays(_goldValidDate), DateTime.Now) > 0;
-            }
-            return false;
+            return _goldValidDate > 0 && DateTime.Compare(_goldBeginTime.AddDays(_goldValidDate), DateTime.Now) > 0;
         }
 
         public bool IsValidItem()
         {
-            if (_validDate != 0 && _isUsed)
-            {
-                return DateTime.Compare(_beginDate.AddDays(_validDate), DateTime.Now) > 0;
-            }
-            return true;
+            return _validDate == 0 || !_isUsed || DateTime.Compare(_beginDate.AddDays(_validDate), DateTime.Now) > 0;
         }
 
         public static void OpenHole(ref ItemInfo item)
@@ -1273,7 +1038,7 @@ namespace SqlDataProvider.Data
         {
             int iTemplateID = 0;
             int iCount = 0;
-            List<int> list = new List<int>();
+            List<int> list = [];
             if (type == 1)
             {
                 GetItemPrice(shop.APrice1, shop.AValue1, shop.Beat, ref gold, ref money, ref offer, ref gifttoken, ref petScore, ref Score, ref dmgScore, ref iTemplateID, ref iCount);
@@ -1342,22 +1107,18 @@ namespace SqlDataProvider.Data
 
         public int GetBagTypee()
         {
-            switch (_template.CategoryID)
+            return Template.CategoryID switch
             {
-                case 10:
-                case 11:
-                    return 1;
-                case 12:
-                    return 2;
-                default:
-                    return 0;
-            }
+                10 or 11 => 1,
+                12 => 2,
+                _ => 0,
+            };
         }
 
         public void ResetLatentEnergy()
         {
-            this._latentEnergyCurStr = "0,0,0,0,0,0,0";
-            this._latentEnergyNewStr = "0,0,0,0,0,0,0";
+            _latentEnergyCurStr = "0,0,0,0,0,0,0";
+            _latentEnergyNewStr = "0,0,0,0,0,0,0";
         }
 
         public bool IsValidLatentEnergy()
@@ -1367,45 +1128,26 @@ namespace SqlDataProvider.Data
 
         public bool CanLatentEnergy()
         {
-            int categoryID = this.Template.CategoryID;
-            switch (categoryID)
+            int categoryID = Template.CategoryID;
+            return categoryID switch
             {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                case 13:
-                case 14:
-                case 15:
-                case 16:
-                case 17:
-                case 40:
-                    return true;
-                default:
-                    return false;
-            }
+                1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9 or 13 or 14 or 15 or 16 or 17 or 40 => true,
+                _ => false,
+            };
         }
 
         public bool IsBring()
         {
-            if (_template == null)
+            if (Template == null)
+            {
                 return false;
-            switch (_template.CategoryID)
-            {
-                case 8:
-                case 9:
-                    return true;
             }
-            if (_template.TemplateID == 12252)
+
+            return Template.CategoryID switch
             {
-                return true;
-            }
-            return false;
+                8 or 9 => true,
+                _ => Template.TemplateID == 12252,
+            };
         }
 
         public bool GoldValidDate()
@@ -1425,6 +1167,6 @@ namespace SqlDataProvider.Data
         }
 
 
-        public string Name => this.Template.CategoryID == 11 && this.Template.Property1 == 31 ? this.Template.Data : this.Template.Name;
+        public string Name => Template.CategoryID == 11 && Template.Property1 == 31 ? Template.Data : Template.Name;
     }
 }

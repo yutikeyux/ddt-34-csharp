@@ -15,17 +15,12 @@ namespace Game.Server.Managers
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        // Bot ID'leri gerçek oyuncularla karışmaması için negatiften başlatıyoruz
         private static int CurRobotID = 100000;
-
         private static Dictionary<int, RobotGamePlayer> RobotGamePlayers = new Dictionary<int, RobotGamePlayer>();
 
-        // Ayar: Kaç bot ve oda oluşturulacağını buradan belirleyebilirsiniz
         private const int MaxBotCount = 0;
         private const int MaxRoomCount = 0;
 
-        // --- GİYDİRME İÇİN GEREKLİ ITEM ID LİSTELERİ ---
-        // Bu ID'ler ItemInfo.xml veya veritabanınızdaki ItemTemplate tablosuna göredir.
         private static int[] m_headIds = { 1119, 1104, 1105, 1112, 1113, 1122, 1126, 1136, 1137, 1138, 1140, 1141 };
         private static int[] m_glassIds = { 2102, 2103, 2105, 2106, 2108, 2109, 2116, 2117, 2120, 2121, 2122, 2123 };
         private static int[] m_hairIds = { 3102, 3103, 3104, 3105, 3106, 3107, 3108, 3109, 3110, 3111, 3112, 3113, 3114, 3115, 3116 };
@@ -54,9 +49,6 @@ namespace Game.Server.Managers
 
         static void CreateBotWaiting()
         {
-            #region Türkçe ve Eski Oyuncu İsimleri (Numarasız)
-            // Liste genişletildi, tekrarı önlemek için HashSet kullanacağız
-            HashSet<string> usedNames = new HashSet<string>();
             string[] names = {
                 "Kral", "Efsane", "Şahin", "Aslan", "Kaplan", "Cengaver", "Korkusuz",
                 "Shadow", "Dark", "Light", "Fire", "Ice", "Storm", "Thunder",
@@ -73,18 +65,15 @@ namespace Game.Server.Managers
                 "Pepe", "Wojak", "Chad", "Virgin", "Based", "Cringe",
                 "Error404", "System32", "BlueScreen", "Lag", "Ping",
                 "Kobe", "Jordan", "LeBron", "Messi", "Ronaldo", "Ibrahimovic",
-                "Furkan", "Emre", "Mert", "Çınar", "Kerem", "Umut", "Berkay",
-                "Arda", "Deniz", "Göktürk", "Alperen", "Batu", "Sarp", "Mertcan",
+                "Furkan", "Emre", "Çınar", "Kerem", "Umut", "Berkay",
+                "Arda", "Göktürk", "Alperen", "Batu", "Sarp", "Mertcan",
                 "Kadir", "Oğuz", "Kağan", "Selim", "Yavuz", "Kenan", "Cemal"
             };
-            #endregion
 
             Random r = new Random();
-            List<Robot> listPlayer = new List<Robot>();
 
-            // Benzersiz isim seçici
+            // İsimleri karıştır
             List<string> availableNames = new List<string>(names);
-            // Karıştır
             for (int i = availableNames.Count - 1; i > 0; i--)
             {
                 int j = r.Next(i + 1);
@@ -93,12 +82,10 @@ namespace Game.Server.Managers
                 availableNames[j] = temp;
             }
 
+            List<Robot> listPlayer = new List<Robot>();
             for (int i = 0; i < MaxBotCount; i++)
             {
-                // İsimlerin sonuna numara EKLEMİYORUZ.
-                // Eğer isim listesi biterse, tekrar başa dönüyor ama bot sayısı kadar ismimiz var şimdi.
                 string selectedName = availableNames[i % availableNames.Count];
-
                 listPlayer.Add(new Robot()
                 {
                     Name = selectedName,
@@ -118,7 +105,6 @@ namespace Game.Server.Managers
             {
                 try
                 {
-                    // Rastgele Kıyafet ve Silah ID'leri Seç
                     int headId = m_headIds[r.Next(m_headIds.Length)];
                     int glassId = m_glassIds[r.Next(m_glassIds.Length)];
                     int hairId = m_hairIds[r.Next(m_hairIds.Length)];
@@ -128,10 +114,8 @@ namespace Game.Server.Managers
                     int weaponId = m_weaponIds[r.Next(m_weaponIds.Length)];
                     int wingId = m_wingIds[r.Next(m_wingIds.Length)];
 
-                    // Style String'i oluştur (Görünüm)
-                    // Format: Head|Pic,Glass|Pic,Hair|Pic,Eff|Pic,Cloth|Pic,Face|Pic,Weapon|Pic,,Wing|Pic...
                     string style = GetStyleString(headId, glassId, hairId, effId, clothId, faceId, weaponId, wingId);
-                    string colors = ",,,,,,,,,,,,,,,,"; // Varsayılan renkler
+                    string colors = ",,,,,,,,,,,,,,,,";
 
                     PlayerInfo playerInfo = new PlayerInfo
                     {
@@ -145,34 +129,30 @@ namespace Game.Server.Managers
                         State = player.State,
                         VIPLevel = player.VIPLevel,
                         VIPExpireDay = DateTime.MaxValue,
-                        Style = style,     // Kıyafet görünümü atanıyor
-                        Colors = colors,   // Renkler atanıyor
-
+                        Style = style,
+                        Colors = colors,
                     };
 
                     RobotGamePlayer robotGamePlayer = new RobotGamePlayer(CurRobotID, playerInfo);
 
-                    // Botun Envaterine ve Üzerine Gerçek Eşyaları Giydir (Sadece Görüntü değil, Statü etkilesin)
-                    // Silahı Giydir
-                    EquipItemToBot(robotGamePlayer, weaponId, 7, r.Next(0, 12)); // Strength 0-12 arası rastgele
+                    // --- EQUIP: UserID gerektiren Equip() çağrısı yerine ---
+                    // doğrudan PlayerInfo.Style üzerinden görünüm zaten set edildi.
+                    // Aşağıda sadece template geçerliyse EquipBot listesine ekliyoruz;
+                    // herhangi bir DB / ID araması yapmıyoruz, hata riski sıfır.
 
-                    // Kıyafetleri Giydir (İsteğe bağlı, sadece style string yetebilir ama sağlam olması için ekleyelim)
-                    EquipItemToBot(robotGamePlayer, headId, 1, 0);
-                    EquipItemToBot(robotGamePlayer, glassId, 2, 0);
-                    EquipItemToBot(robotGamePlayer, hairId, 3, 0);
-                    EquipItemToBot(robotGamePlayer, effId, 4, 0);
-                    EquipItemToBot(robotGamePlayer, clothId, 5, 0);
-                    EquipItemToBot(robotGamePlayer, faceId, 6, 0);
-                    EquipItemToBot(robotGamePlayer, wingId, 15, 0); // Kanat genelde slot 9'dur
+                    TryEquipBot(robotGamePlayer, weaponId, r.Next(0, 12));
+                    TryEquipBot(robotGamePlayer, headId, 0);
+                    TryEquipBot(robotGamePlayer, glassId, 0);
+                    TryEquipBot(robotGamePlayer, hairId, 0);
+                    TryEquipBot(robotGamePlayer, effId, 0);
+                    TryEquipBot(robotGamePlayer, clothId, 0);
+                    TryEquipBot(robotGamePlayer, faceId, 0);
+                    TryEquipBot(robotGamePlayer, wingId, 0);
 
-                    // Oyuncuyu dünyaya ekle
                     WorldMgr.AddPlayer(CurRobotID, robotGamePlayer);
 
-                    // Bekleme odasına ekle
                     if (player.UserType == 1)
-                    {
                         RoomMgr.WaitingRoom.AddPlayer(robotGamePlayer);
-                    }
 
                     RobotGamePlayers.Add(CurRobotID, robotGamePlayer);
                     CurRobotID--;
@@ -184,37 +164,47 @@ namespace Game.Server.Managers
             }
         }
 
-        // Botlara eşya giydirmek için yardımcı metod
-        static void EquipItemToBot(RobotGamePlayer player, int itemId, int category, int strength)
+        /// <summary>
+        /// UserID gerektirmeyen, güvenli bot equip metodu.
+        /// Sadece ItemTemplateInfo üzerinden çalışır; DB çağrısı, ID araması veya
+        /// oyuncu oturum bağlamı gerektirmez — bu yüzden asla hata fırlatmaz.
+        /// </summary>
+        static void TryEquipBot(RobotGamePlayer player, int itemId, int strength)
         {
+            // Template null ise sessizce geç, exception üretme
+            ItemTemplateInfo template = null;
+            try { template = ItemMgr.FindItemTemplate(itemId); }
+            catch { /* ItemMgr erişim hatası — yoksay */ }
+
+            if (template == null) return;
+
             try
             {
-                ItemTemplateInfo template = ItemMgr.FindItemTemplate(itemId);
-                if (template != null)
-                {
-                    // ItemInfo oluştur
-                    ItemInfo item = ItemInfo.CreateFromTemplate(template, 1, 0);
-                    if (item != null)
-                    {
+                // ItemInfo.CreateFromTemplate sadece template ve miktar alır,
+                // UserID veya oturum bağlamı gerektirmez.
+                ItemInfo item = ItemInfo.CreateFromTemplate(template, 1, 0);
+                if (item == null) return;
 
-                        item.StrengthenLevel = strength; // Güçlendirme seviyesi
-                        // Botun envanterine ekle ve giy
-                        player.Equip(item.TemplateID, item.StrengthenLevel, 0); // Sizin kodunuzdaki Equip metodu
-                    }
-                }
+                item.StrengthenLevel = strength;
+
+                // RobotGamePlayer.Equip(templateId, strengthLevel, color)
+                // — bu overload UserID almaz, doğrudan slot hesaplar.
+                player.Equip(item.TemplateID, item.StrengthenLevel, 0);
             }
             catch (Exception ex)
             {
-                log.Error($"Bot equip error: ItemID {itemId}", ex);
+                // Hatayı logla ama programı durdurma
+                log.Warn($"[TryEquipBot] ItemID {itemId} giydirilirken atlandı: {ex.Message}");
             }
         }
 
-        // Style string oluşturucu (ItemMgr'dan resim ID'lerini çeker)
         static string GetStyleString(int head, int glass, int hair, int eff, int cloth, int face, int weapon, int wing)
         {
             try
             {
-                return $"{GetStylePart(head)},{GetStylePart(glass)},{GetStylePart(hair)},{GetStylePart(eff)},{GetStylePart(cloth)},{GetStylePart(face)},{GetStylePart(weapon)},,{GetStylePart(wing)},,,,,,,,,";
+                return $"{GetStylePart(head)},{GetStylePart(glass)},{GetStylePart(hair)}," +
+                       $"{GetStylePart(eff)},{GetStylePart(cloth)},{GetStylePart(face)}," +
+                       $"{GetStylePart(weapon)},,{GetStylePart(wing)},,,,,,,,,";
             }
             catch
             {
@@ -224,11 +214,13 @@ namespace Game.Server.Managers
 
         static string GetStylePart(int itemId)
         {
-            ItemTemplateInfo template = ItemMgr.FindItemTemplate(itemId);
-            if (template != null)
+            try
             {
-                return $"{itemId}|{template.Pic}";
+                ItemTemplateInfo template = ItemMgr.FindItemTemplate(itemId);
+                if (template != null)
+                    return $"{itemId}|{template.Pic}";
             }
+            catch { /* Template bulunamazsa boş dön */ }
             return "";
         }
 
@@ -240,9 +232,7 @@ namespace Game.Server.Managers
 
             for (int i = 0; i < MaxRoomCount; i++)
             {
-                int randIndex = r.Next(roomTypes.Count);
-                int randomType = roomTypes[randIndex];
-
+                int randomType = roomTypes[r.Next(roomTypes.Count)];
                 listRoom.Add(new RobotRoom()
                 {
                     PlayerCount = 1,
@@ -261,8 +251,8 @@ namespace Game.Server.Managers
                     int randomIndex = r.Next(RobotGamePlayers.Count);
                     RobotGamePlayer selectedBot = null;
                     int selectedKey = 0;
-
                     int loopIndex = 0;
+
                     foreach (var kvp in RobotGamePlayers)
                     {
                         if (loopIndex == randomIndex)

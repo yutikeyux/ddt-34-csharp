@@ -12,21 +12,13 @@ namespace Game.Server.WorldBoss.Handle
     {
         public int CommandHandler(GamePlayer Player, GSPacketIn packet)
         {
-            //var needMoney = 0;// RoomMgr.WorldBossRoom.AddInjureBuffMoney;
-            //var damevalue = 0;// RoomMgr.WorldBossRoom.AddInjureValue;
-            int needMoney = RoomMgr.WorldBossRoom.addInjureBuffMoney;
             int damevalue = RoomMgr.WorldBossRoom.addInjureValue;
-            if (Player.MoneyDirect(needMoney, IsAntiMult: false, false, true))
+
+            AbstractBuffer buffer = BufferList.CreatePayBuffer((int)BuffType.WorldBossAttrack_MoneyBuff, damevalue, 1);
+            if (buffer != null)
             {
-                if (Player.MoneyDirect(needMoney, IsAntiMult: true, false, false))
-                {
-                    AbstractBuffer buffer = BufferList.CreatePayBuffer((int)BuffType.WorldBossAttrack_MoneyBuff, damevalue, 1);
-                    if (buffer != null)
-                    {
-                        buffer.Start(Player);
-                        Player.SendMessage("Otomatik Buff Satın alma başarılı!"); //türkçeleştirildi not: yuti
-                    }
-                }
+                buffer.Start(Player);
+                Player.SendMessage("Buff başarıyla uygulandı!");
             }
 
             return 0;

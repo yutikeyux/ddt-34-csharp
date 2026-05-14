@@ -19,64 +19,38 @@ namespace Game.Logic.Phy.Object
     public class Player : TurnedLiving
     {
         public int BossCardCount;
-
         public int CanTakeOut;
-
         private static readonly int CARRY_TEMPLATE_ID = 10016;
         public bool FinishTakeCard;
-
         public int GainGP;
-
         public int GainOffer;
-
         public bool HasPaymentTakeCard;
-
         private readonly Dictionary<int, int> ItemFightBag;
-
         public bool LockDirection;
-
         private int m_AddWoundBallId;
-
         private int m_ballCount;
-
         private bool m_canGetProp;
         private ItemInfo m_Healstone;
         private int m_loadingProcess;
-
         private int m_mainBallId;
-
         private int m_MultiBallId;
         public bool AttackInformation;
-
         public bool DefenceInformation;
         public int MaxPsychic = 999;
         private int m_shootCount;
-
         private int m_spBallId;
-
         private readonly ArrayList m_tempBoxes;
         public bool Ready;
-
         public Point TargetPoint;
-
         public int TotalAllCure;
-
         public int TotalAllExperience;
-
         public int TotalAllHitTargetCount;
-
         public int TotalAllHurt;
-
         public int TotalAllKill;
-
         public int TotalAllScore;
-
         public int TotalAllShootCount;
-
         public bool LimitEnergy;
-
         public bool CanFly = true;
-
         public bool IsShadown = true;
 
         private readonly List<int> AllowedItems =
@@ -88,45 +62,28 @@ namespace Game.Logic.Phy.Object
             10018,
             10021
         ];
-
         private readonly Random rand;
         private readonly PetFightPropertyInfo petFightPropertyInfo;
-
         private readonly BufferInfo m_bufferPoint;
-
         public new int MOVE_SPEED;
-
         private double speedMultiplier;
-
         public event PlayerEventHandle PlayerSkip;
-
         private int m_useitemCount;
-
         public bool IsAddTurnEquip { get; set; }
-
         public new PlayerConfig Config { get; set; }
-
-
         public void OnPlayerSkip()
         {
             PlayerSkip?.Invoke(this);
         }
-
         public Dictionary<int, PetSkillInfo> PetSkillCD { get; }
-
         public int PowerRatio { get; set; }
-
         public double SpeedMult
         {
             get => speedMultiplier; set => speedMultiplier = value / STEP_X;
         }
-
         public int StepX => (int)(STEP_X * speedMultiplier);
-
         public int StepY => (int)(STEP_Y * speedMultiplier);
-
         public int CurrentDelay { get; set; }
-
         public int BallCount
         {
             get => m_ballCount;
@@ -138,7 +95,6 @@ namespace Game.Logic.Phy.Object
                 }
             }
         }
-
         public bool CanGetProp
         {
             get => m_canGetProp;
@@ -150,23 +106,14 @@ namespace Game.Logic.Phy.Object
                 }
             }
         }
-
         public BallInfo CurrentBall { get; private set; }
-
         public int ChangeSpecialBall { get; set; }
-
         public ItemInfo DeputyWeapon { get; set; }
-
         public int deputyWeaponCount { get; private set; }
-
         public int Energy { get; set; }
-
         public int flyCount { get; private set; }
-
         public bool IsActive { get; private set; }
-
         public bool IsSpecialSkill => CurrentBall.ID == m_spBallId;
-
         public int LoadingProcess
         {
             get => m_loadingProcess;
@@ -182,7 +129,6 @@ namespace Game.Logic.Phy.Object
                 }
             }
         }
-
         public int KilledPunishmentOffer { get; set; }
 
         public int OldX { get; set; }
@@ -376,11 +322,9 @@ namespace Game.Logic.Phy.Object
             {
                 return false;
             }
-            if (!base.IsAttacking)
-            {
-                return !base.IsLiving && base.Team == m_game.CurrentLiving.Team && IsActive;
-            }
-            return !propsBloqueados.Contains(item.TemplateID);
+            return !base.IsAttacking
+                ? !base.IsLiving && base.Team == m_game.CurrentLiving.Team && IsActive
+                : !propsBloqueados.Contains(item.TemplateID);
         }
 
         public bool CanUseItem(ItemTemplateInfo item, int place)
@@ -401,11 +345,7 @@ namespace Game.Logic.Phy.Object
             {
                 return false;
             }
-            if (!base.IsAttacking)
-            {
-                return !base.IsLiving && base.Team == m_game.CurrentLiving.Team && IsActive;
-            }
-            return true;
+            return IsAttacking || !base.IsLiving && base.Team == m_game.CurrentLiving.Team && IsActive;
         }
 
         public void capnhatstate(string loai1, string loai2)
@@ -1735,6 +1675,7 @@ namespace Game.Logic.Phy.Object
 
         }
 
+        #region gereksiz
         public bool IsCure()
         {
             return Weapon.TemplateID switch
@@ -1743,7 +1684,7 @@ namespace Game.Logic.Phy.Object
                 _ => false,
             };
         }
-
+        #endregion
         public void CalculatePlayerOffer(Player player)
         {
             if (m_game.RoomType == eRoomType.Match && (m_game.GameType == eGameType.Guild || m_game.GameType == eGameType.Free) && !player.IsLiving)
@@ -1992,7 +1933,7 @@ namespace Game.Logic.Phy.Object
         public void PrepareShoot(byte speedTime)
         {
             int turnWaitTime = m_game.GetTurnWaitTime();
-            int num2 = (speedTime > turnWaitTime) ? turnWaitTime : speedTime;
+            _ = (speedTime > turnWaitTime) ? turnWaitTime : speedTime;
             //AddDelay(num2 * 20);
             AddDelay(50);
             TotalShootCount++;

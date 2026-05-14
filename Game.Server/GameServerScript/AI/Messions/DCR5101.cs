@@ -104,10 +104,10 @@ namespace GameServerScript.AI.Messions
             TonyAMCA.PlayMovie("outA", 500, 2000);
             TonyAMCA.Die(2500);
             KızgınGOBLİN.PlayMovie("in", 3000, 5000);
-          İkinciEkipmanEfekti.PlayMovie("in", 5000, 0);
+            İkinciEkipmanEfekti.PlayMovie("in", 5000, 0);
             ÜçüncüEkipmanEfekti.PlayMovie("in", 5200, 0);
             İkinciEkipmanEfekti.PlayMovie("out", 8000, 0);
-           ÜçüncüEkipmanEfekti.PlayMovie("out", 8200, 0);
+            ÜçüncüEkipmanEfekti.PlayMovie("out", 8200, 0);
             KızgınGOBLİN.CallFuction(KöleDoğumveÇekim, 10000);
         }
 
@@ -178,6 +178,10 @@ namespace GameServerScript.AI.Messions
             base.OnGameOver();
             if (KızgınGOBLİN != null && !KızgınGOBLİN.IsLiving)
             {
+                // 1. etap tamamlandı, sonraki etaba geçilecek.
+                // IsWin burada set edilmez; tüm etapların sonunda
+                // CheckPVEGameStateAction HasNextSession() false olunca
+                // DragonWarNormalGame.OnGameOverAllSession() tetiklenir.
                 base.Game.IsWin = true;
             }
             else

@@ -56,7 +56,7 @@ namespace Game.Server.Packets.Client
                 GameServer.Instance.LoginServer.SendPacket(gSPacketIn);
 
                 // Diğer Login Serverlara gönder
-                foreach (LoginServerConnector item in GameServer.Instance.OtherLoginServer)
+                foreach (var item in GameServer.Instance.OtherLoginServer)
                 {
                     if (item.IsConnected)
                     {

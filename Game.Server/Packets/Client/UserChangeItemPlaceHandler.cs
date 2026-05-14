@@ -126,6 +126,7 @@ namespace Game.Server.Packets.Client
                     if (toBagType == eBageType.EquipBag && toPlace < bag.BeginSlot)
                     {
                         item.IsBinds = true;
+                        
                     }
 
                     ItemInfo itemTo = bag.GetItemAt(toPlace);

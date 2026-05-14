@@ -548,7 +548,7 @@ namespace Game.Logic
             {
                 return false;
             }
-            if (Misssions.ContainsKey(1 + SessionId) && (m_info.ID == 5 || m_info.ID == 14))
+            if (Misssions.ContainsKey(1 + SessionId) && m_info.ID == 14)
             {
                 return true;
             }

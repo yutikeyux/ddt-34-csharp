@@ -5,7 +5,6 @@ using Game.Base;
 using Game.Base.Packets;
 using Game.Logic;
 using Game.Server.Managers;
-using Game.Server.Packets;
 using Game.Server.Rooms;
 using log4net;
 using SqlDataProvider.Data;
@@ -23,9 +22,9 @@ namespace Game.Server
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string m_loginKey;
+        private readonly string m_loginKey;
 
-        private int m_serverId;
+        private readonly int m_serverId;
 
         public LoginServerConnector(string ip, int port, int serverid, string name, byte[] readBuffer, byte[] sendBuffer)
             : base(ip, port, autoReconnect: true, readBuffer, sendBuffer)
@@ -196,18 +195,18 @@ namespace Game.Server
                 {
                     if (gamePlayer.Login())
                     {
-                        SendUserOnline(num, gamePlayer.PlayerCharacter.ConsortiaID);
+                        _ = SendUserOnline(num, gamePlayer.PlayerCharacter.ConsortiaID);
                         WorldMgr.OnPlayerOnline(num, gamePlayer.PlayerCharacter.ConsortiaID);
                     }
                     else
                     {
                         gamePlayer.Client.Disconnect();
-                        SendUserOffline(num, 0);
+                        _ = SendUserOffline(num, 0);
                     }
                 }
                 else
                 {
-                    SendUserOffline(num, 0);
+                    _ = SendUserOffline(num, 0);
                 }
             }
             catch (Exception exception)
@@ -224,7 +223,7 @@ namespace Game.Server
             GamePlayer[] array = allPlayers;
             foreach (GamePlayer gamePlayer in array)
             {
-                gamePlayer.Out.SendAASControl(flag, gamePlayer.IsAASInfo, gamePlayer.IsMinor);
+                _ = gamePlayer.Out.SendAASControl(flag, gamePlayer.IsAASInfo, gamePlayer.IsMinor);
             }
         }
 
@@ -246,16 +245,16 @@ namespace Game.Server
             GamePlayer[] array = allPlayers;
             foreach (GamePlayer gamePlayer in array)
             {
-                gamePlayer.Out.SendAASControl(flag, gamePlayer.IsAASInfo, gamePlayer.IsMinor);
+                _ = gamePlayer.Out.SendAASControl(flag, gamePlayer.IsAASInfo, gamePlayer.IsMinor);
             }
         }
 
         public void HandleConsortiaSkillUpGrade(GSPacketIn packet)
         {
             int num = packet.ReadInt();
-            string text = packet.ReadString();
+            _ = packet.ReadString();
             int skillLevel = packet.ReadInt();
-            ConsortiaMgr.ConsortiaSkillUpGrade(num, skillLevel);
+            _ = ConsortiaMgr.ConsortiaSkillUpGrade(num, skillLevel);
             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
             GamePlayer[] array = allPlayers;
             foreach (GamePlayer gamePlayer in array)
@@ -273,7 +272,7 @@ namespace Game.Server
             int num = packet.ReadInt();
             int num2 = packet.ReadInt();
             int state = packet.ReadInt();
-            ConsortiaMgr.UpdateConsortiaAlly(num, num2, state);
+            _ = ConsortiaMgr.UpdateConsortiaAlly(num, num2, state);
             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
             GamePlayer[] array = allPlayers;
             foreach (GamePlayer gamePlayer in array)
@@ -324,7 +323,7 @@ namespace Game.Server
 
         public void HandleConsortiaBossInfo(GSPacketIn pkg)
         {
-            ConsortiaInfo consortiaInfo = new ConsortiaInfo
+            ConsortiaInfo consortiaInfo = new()
             {
                 ConsortiaID = pkg.ReadInt(),
                 ChairmanID = pkg.ReadInt(),
@@ -341,12 +340,12 @@ namespace Game.Server
                 MaxBlood = pkg.ReadLong(),
                 TotalAllMemberDame = pkg.ReadLong(),
                 IsBossDie = pkg.ReadBoolean(),
-                RankList = new Dictionary<string, RankingPersonInfo>()
+                RankList = []
             };
             int num = pkg.ReadInt();
             for (int i = 0; i < num; i++)
             {
-                RankingPersonInfo rankingPersonInfo = new RankingPersonInfo
+                RankingPersonInfo rankingPersonInfo = new()
                 {
                     Name = pkg.ReadString(),
                     ID = pkg.ReadInt(),
@@ -400,8 +399,8 @@ namespace Game.Server
         public void HandleConsortiaCreate(GSPacketIn packet)
         {
             int consortiaID = packet.ReadInt();
-            packet.ReadInt();
-            ConsortiaMgr.AddConsortia(consortiaID);
+            _ = packet.ReadInt();
+            _ = ConsortiaMgr.AddConsortia(consortiaID);
         }
 
         //public void HandleConsortiaDelete(GSPacketIn packet)
@@ -427,10 +426,12 @@ namespace Game.Server
             foreach (GamePlayer p in players)
             {
                 if (p.PlayerCharacter.ConsortiaID != consortiaID)
+                {
                     continue;
+                }
 
                 p.ClearConsortia(isclear: true);
-                p.AddRobRiches(-p.PlayerCharacter.RichesRob);
+                _ = p.AddRobRiches(-p.PlayerCharacter.RichesRob);
 
                 p.Out.SendTCP(packet);
             }
@@ -442,7 +443,7 @@ namespace Game.Server
             int num = packet.ReadByte();
             int num2 = packet.ReadInt();
             int num3 = packet.ReadInt();
-            packet.ReadString();
+            _ = packet.ReadString();
             int num4 = packet.ReadInt();
             string dutyName = packet.ReadString();
             int right = packet.ReadInt();
@@ -470,7 +471,7 @@ namespace Game.Server
         public void HandleConsortiaFight(GSPacketIn packet)
         {
             int num = packet.ReadInt();
-            packet.ReadInt();
+            _ = packet.ReadInt();
             string message = packet.ReadString();
             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
             GamePlayer[] array = allPlayers;
@@ -478,7 +479,7 @@ namespace Game.Server
             {
                 if (gamePlayer.PlayerCharacter.ConsortiaID == num)
                 {
-                    gamePlayer.Out.SendMessage(eMessageType.ChatNormal, message);
+                    _ = gamePlayer.Out.SendMessage(eMessageType.ChatNormal, message);
                 }
             }
         }
@@ -546,9 +547,9 @@ namespace Game.Server
         public void HandleConsortiaShopUpGrade(GSPacketIn packet)
         {
             int num = packet.ReadInt();
-            packet.ReadString();
+            _ = packet.ReadString();
             int shopLevel = packet.ReadInt();
-            ConsortiaMgr.ConsortiaShopUpGrade(num, shopLevel);
+            _ = ConsortiaMgr.ConsortiaShopUpGrade(num, shopLevel);
             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
             GamePlayer[] array = allPlayers;
             foreach (GamePlayer gamePlayer in array)
@@ -564,9 +565,9 @@ namespace Game.Server
         public void HandleConsortiaSmithUpGrade(GSPacketIn packet)
         {
             int num = packet.ReadInt();
-            packet.ReadString();
+            _ = packet.ReadString();
             int smithLevel = packet.ReadInt();
-            ConsortiaMgr.ConsortiaSmithUpGrade(num, smithLevel);
+            _ = ConsortiaMgr.ConsortiaSmithUpGrade(num, smithLevel);
             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
             GamePlayer[] array = allPlayers;
             foreach (GamePlayer gamePlayer in array)
@@ -582,9 +583,9 @@ namespace Game.Server
         public void HandleConsortiaStoreUpGrade(GSPacketIn packet)
         {
             int num = packet.ReadInt();
-            packet.ReadString();
+            _ = packet.ReadString();
             int storeLevel = packet.ReadInt();
-            ConsortiaMgr.ConsortiaStoreUpGrade(num, storeLevel);
+            _ = ConsortiaMgr.ConsortiaStoreUpGrade(num, storeLevel);
             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
             GamePlayer[] array = allPlayers;
             foreach (GamePlayer gamePlayer in array)
@@ -600,9 +601,9 @@ namespace Game.Server
         public void HandleConsortiaUpGrade(GSPacketIn packet)
         {
             int num = packet.ReadInt();
-            packet.ReadString();
+            _ = packet.ReadString();
             int consortiaLevel = packet.ReadInt();
-            ConsortiaMgr.ConsortiaUpGrade(num, consortiaLevel);
+            _ = ConsortiaMgr.ConsortiaUpGrade(num, consortiaLevel);
             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
             GamePlayer[] array = allPlayers;
             foreach (GamePlayer gamePlayer in array)
@@ -636,7 +637,7 @@ namespace Game.Server
 
         public void HandleConsortiaUserInvite(GSPacketIn packet)
         {
-            packet.ReadInt();
+            _ = packet.ReadInt();
             int num = packet.ReadInt();
             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
             GamePlayer[] array = allPlayers;
@@ -652,34 +653,34 @@ namespace Game.Server
 
         public void HandleConsortiaUserPass(GSPacketIn packet)
         {
-            packet.ReadInt();
-            packet.ReadBoolean();
+            _ = packet.ReadInt();
+            _ = packet.ReadBoolean();
             int num = packet.ReadInt();
             string consortiaName = packet.ReadString();
             int num2 = packet.ReadInt();
-            packet.ReadString();
-            packet.ReadInt();
-            packet.ReadString();
-            packet.ReadInt();
+            _ = packet.ReadString();
+            _ = packet.ReadInt();
+            _ = packet.ReadString();
+            _ = packet.ReadInt();
             string dutyName = packet.ReadString();
-            packet.ReadInt();
-            packet.ReadInt();
-            packet.ReadInt();
-            packet.ReadDateTime();
-            packet.ReadInt();
+            _ = packet.ReadInt();
+            _ = packet.ReadInt();
+            _ = packet.ReadInt();
+            _ = packet.ReadDateTime();
+            _ = packet.ReadInt();
             int dutyLevel = packet.ReadInt();
-            packet.ReadInt();
-            packet.ReadBoolean();
+            _ = packet.ReadInt();
+            _ = packet.ReadBoolean();
             int right = packet.ReadInt();
-            packet.ReadInt();
-            packet.ReadInt();
-            packet.ReadInt();
+            _ = packet.ReadInt();
+            _ = packet.ReadInt();
+            _ = packet.ReadInt();
             int consortiaRepute = packet.ReadInt();
-            packet.ReadString();
-            packet.ReadInt();
-            packet.ReadInt();
-            packet.ReadString();
-            packet.ReadInt();
+            _ = packet.ReadString();
+            _ = packet.ReadInt();
+            _ = packet.ReadInt();
+            _ = packet.ReadString();
+            _ = packet.ReadInt();
             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
             GamePlayer[] array = allPlayers;
             foreach (GamePlayer gamePlayer in array)
@@ -714,10 +715,10 @@ namespace Game.Server
 
         protected void HandleChatConsortia(GSPacketIn packet)
         {
-            packet.ReadByte();
-            packet.ReadBoolean();
-            packet.ReadString();
-            packet.ReadString();
+            _ = packet.ReadByte();
+            _ = packet.ReadBoolean();
+            _ = packet.ReadString();
+            _ = packet.ReadString();
             int num = packet.ReadInt();
             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
             GamePlayer[] array = allPlayers;
@@ -732,7 +733,7 @@ namespace Game.Server
 
         protected void HandleChatPersonal(GSPacketIn packet)
         {
-            int num = packet.ReadInt();
+            _ = packet.ReadInt();
             string text = packet.ReadString();
             string text2 = packet.ReadString();
             string msg = packet.ReadString();
@@ -746,7 +747,7 @@ namespace Game.Server
             }
             if (clientByPlayerNickName != null && !clientByPlayerNickName.IsBlackFriend(playerID))
             {
-                num = clientByPlayerNickName.PlayerCharacter.ID;
+                int num = clientByPlayerNickName.PlayerCharacter.ID;
                 clientByPlayerNickName.SendPrivateChat(num, text, text2, msg, isAutoReply);
             }
         }
@@ -789,7 +790,7 @@ namespace Game.Server
                 }
                 else
                 {
-                    SendUserOffline(num, 0);
+                    _ = SendUserOffline(num, 0);
                 }
             }
             catch (Exception exception)
@@ -800,14 +801,14 @@ namespace Game.Server
 
         public void HandleMacroDrop(GSPacketIn pkg)
         {
-            Dictionary<int, MacroDropInfo> dictionary = new Dictionary<int, MacroDropInfo>();
+            Dictionary<int, MacroDropInfo> dictionary = [];
             int num = pkg.ReadInt();
             for (int i = 0; i < num; i++)
             {
                 int key = pkg.ReadInt();
                 int dropCount = pkg.ReadInt();
                 int maxDropCount = pkg.ReadInt();
-                MacroDropInfo value = new MacroDropInfo(dropCount, maxDropCount);
+                MacroDropInfo value = new(dropCount, maxDropCount);
                 dictionary.Add(key, value);
             }
             MacroDropMgr.UpdateDropInfo(dictionary);
@@ -832,7 +833,7 @@ namespace Game.Server
 
         public void HandleRate(GSPacketIn packet)
         {
-            RateMgr.ReLoad();
+            _ = RateMgr.ReLoad();
         }
 
         public void HandleReload(GSPacketIn packet)
@@ -916,11 +917,11 @@ namespace Game.Server
 
         protected void HandleRSAKey(GSPacketIn packet)
         {
-            RSAParameters rSAParameters = default(RSAParameters);
+            RSAParameters rSAParameters = default;
             rSAParameters.Modulus = packet.ReadBytes(128);
             rSAParameters.Exponent = packet.ReadBytes();
             RSAParameters parameters = rSAParameters;
-            RSACryptoServiceProvider rSACryptoServiceProvider = new RSACryptoServiceProvider();
+            RSACryptoServiceProvider rSACryptoServiceProvider = new();
             rSACryptoServiceProvider.ImportParameters(parameters);
             SendRSALogin(rSACryptoServiceProvider, m_loginKey);
             SendListenIPPort(IPAddress.Parse(GameServer.Instance.Configuration.Ip), GameServer.Instance.Configuration.Port);
@@ -937,7 +938,7 @@ namespace Game.Server
             {
                 int playerId = packet.ReadInt();
                 string text = packet.ReadString();
-                WorldMgr.GetPlayerById(playerId)?.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("LoginServerConnector.HandleSysMess.Msg1", text));
+                _ = (WorldMgr.GetPlayerById(playerId)?.Out.SendMessage(eMessageType.ChatERROR, LanguageMgr.GetTranslation("LoginServerConnector.HandleSysMess.Msg1", text)));
             }
         }
 
@@ -957,7 +958,7 @@ namespace Game.Server
             {
                 playerById.LoadMarryProp();
                 playerById.LoadMarryMessage();
-                playerById.QuestInventory.ClearMarryQuest();
+                _ = playerById.QuestInventory.ClearMarryQuest();
             }
         }
 
@@ -1002,30 +1003,30 @@ namespace Game.Server
 
         public override void OnRecvPacket(GSPacketIn pkg)
         {
-            ThreadPool.QueueUserWorkItem(AsynProcessPacket, pkg);
+            _ = ThreadPool.QueueUserWorkItem(AsynProcessPacket, pkg);
         }
 
         public void SendAllowUserLogin(int playerid)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(3);
+            GSPacketIn gSPacketIn = new(3);
             gSPacketIn.WriteInt(playerid);
             SendTCP(gSPacketIn);
         }
 
         public void SendConsortiaAlly(int consortiaID1, int consortiaID2, int state)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(128);
+            GSPacketIn gSPacketIn = new(128);
             gSPacketIn.WriteByte(7);
             gSPacketIn.WriteInt(consortiaID1);
             gSPacketIn.WriteInt(consortiaID2);
             gSPacketIn.WriteInt(state);
             SendTCP(gSPacketIn);
-            ConsortiaMgr.UpdateConsortiaAlly(consortiaID1, consortiaID2, state);
+            _ = ConsortiaMgr.UpdateConsortiaAlly(consortiaID1, consortiaID2, state);
         }
 
         public void SendConsortiaBanChat(int playerid, string playerName, int handleID, string handleName, bool isBan)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(128);
+            GSPacketIn gSPacketIn = new(128);
             gSPacketIn.WriteByte(5);
             gSPacketIn.WriteBoolean(isBan);
             gSPacketIn.WriteInt(playerid);
@@ -1037,7 +1038,7 @@ namespace Game.Server
 
         public void SendConsortiaCreate(int consortiaID, int offer, string consotiaName)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(130);
+            GSPacketIn gSPacketIn = new(130);
             gSPacketIn.WriteInt(consortiaID);
             gSPacketIn.WriteInt(offer);
             gSPacketIn.WriteString(consotiaName);
@@ -1046,7 +1047,7 @@ namespace Game.Server
 
         public void SendConsortiaDelete(int consortiaID)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(128);
+            GSPacketIn gSPacketIn = new(128);
             gSPacketIn.WriteByte(2);
             gSPacketIn.WriteInt(consortiaID);
             SendTCP(gSPacketIn);
@@ -1059,7 +1060,7 @@ namespace Game.Server
 
         public void SendConsortiaDuty(ConsortiaDutyInfo info, int updateType, int consortiaID, int playerID, string playerName, int handleID, string handleName)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(128);
+            GSPacketIn gSPacketIn = new(128);
             gSPacketIn.WriteByte(8);
             gSPacketIn.WriteByte((byte)updateType);
             gSPacketIn.WriteInt(consortiaID);
@@ -1075,7 +1076,7 @@ namespace Game.Server
 
         public void SendConsortiaFight(int consortiaID, int riches, string msg)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(158);
+            GSPacketIn gSPacketIn = new(158);
             gSPacketIn.WriteInt(consortiaID);
             gSPacketIn.WriteInt(riches);
             gSPacketIn.WriteString(msg);
@@ -1084,7 +1085,7 @@ namespace Game.Server
 
         public void SendConsortiaInvite(int ID, int playerid, string playerName, int inviteID, string intviteName, string consortiaName, int consortiaID)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(128);
+            GSPacketIn gSPacketIn = new(128);
             gSPacketIn.WriteByte(4);
             gSPacketIn.WriteInt(ID);
             gSPacketIn.WriteInt(playerid);
@@ -1098,7 +1099,7 @@ namespace Game.Server
 
         public void SendConsortiaKillUpGrade(ConsortiaInfo info)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(128);
+            GSPacketIn gSPacketIn = new(128);
             gSPacketIn.WriteByte(13);
             gSPacketIn.WriteInt(info.ConsortiaID);
             gSPacketIn.WriteString(info.ConsortiaName);
@@ -1108,7 +1109,7 @@ namespace Game.Server
 
         public void SendConsortiaOffer(int consortiaID, int offer, int riches)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(156);
+            GSPacketIn gSPacketIn = new(156);
             gSPacketIn.WriteInt(consortiaID);
             gSPacketIn.WriteInt(offer);
             gSPacketIn.WriteInt(riches);
@@ -1117,7 +1118,7 @@ namespace Game.Server
 
         public void SendConsortiaRichesOffer(int consortiaID, int playerID, string playerName, int riches)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(128);
+            GSPacketIn gSPacketIn = new(128);
             gSPacketIn.WriteByte(9);
             gSPacketIn.WriteInt(consortiaID);
             gSPacketIn.WriteInt(playerID);
@@ -1128,7 +1129,7 @@ namespace Game.Server
 
         public void SendConsortiaShopUpGrade(ConsortiaInfo info)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(128);
+            GSPacketIn gSPacketIn = new(128);
             gSPacketIn.WriteByte(10);
             gSPacketIn.WriteInt(info.ConsortiaID);
             gSPacketIn.WriteString(info.ConsortiaName);
@@ -1138,7 +1139,7 @@ namespace Game.Server
 
         public void SendConsortiaSmithUpGrade(ConsortiaInfo info)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(128);
+            GSPacketIn gSPacketIn = new(128);
             gSPacketIn.WriteByte(11);
             gSPacketIn.WriteInt(info.ConsortiaID);
             gSPacketIn.WriteString(info.ConsortiaName);
@@ -1148,7 +1149,7 @@ namespace Game.Server
 
         public void SendConsortiaStoreUpGrade(ConsortiaInfo info)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(128);
+            GSPacketIn gSPacketIn = new(128);
             gSPacketIn.WriteByte(12);
             gSPacketIn.WriteInt(info.ConsortiaID);
             gSPacketIn.WriteString(info.ConsortiaName);
@@ -1158,7 +1159,7 @@ namespace Game.Server
 
         public void SendConsortiaUpGrade(ConsortiaInfo info)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(128);
+            GSPacketIn gSPacketIn = new(128);
             gSPacketIn.WriteByte(6);
             gSPacketIn.WriteInt(info.ConsortiaID);
             gSPacketIn.WriteString(info.ConsortiaName);
@@ -1168,7 +1169,7 @@ namespace Game.Server
 
         public void SendConsortiaUserDelete(int playerid, int consortiaID, bool isKick, string nickName, string kickName)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(128);
+            GSPacketIn gSPacketIn = new(128);
             gSPacketIn.WriteByte(3);
             gSPacketIn.WriteInt(playerid);
             gSPacketIn.WriteInt(consortiaID);
@@ -1180,7 +1181,7 @@ namespace Game.Server
 
         public void SendConsortiaUserPass(int playerid, string playerName, ConsortiaUserInfo info, bool isInvite, int consortiaRepute)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(128, playerid);
+            GSPacketIn gSPacketIn = new(128, playerid);
             gSPacketIn.WriteByte(1);
             gSPacketIn.WriteInt(info.ID);
             gSPacketIn.WriteBoolean(isInvite);
@@ -1215,7 +1216,7 @@ namespace Game.Server
 
         public void SendListenIPPort(IPAddress ip, int port)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(240);
+            GSPacketIn gSPacketIn = new(240);
             gSPacketIn.Write(ip.GetAddressBytes());
             gSPacketIn.WriteInt(port);
             SendTCP(gSPacketIn);
@@ -1223,21 +1224,21 @@ namespace Game.Server
 
         public void SendMailResponse(int playerid)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(117);
+            GSPacketIn gSPacketIn = new(117);
             gSPacketIn.WriteInt(playerid);
             SendTCP(gSPacketIn);
         }
 
         public void SendMarryRoomDisposeToPlayer(int roomId)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(241);
+            GSPacketIn gSPacketIn = new(241);
             gSPacketIn.WriteInt(roomId);
             SendTCP(gSPacketIn);
         }
 
         public void SendMarryRoomInfoToPlayer(int playerId, bool state, MarryRoomInfo info)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(14);
+            GSPacketIn gSPacketIn = new(14);
             gSPacketIn.WriteInt(playerId);
             gSPacketIn.WriteBoolean(state);
             if (state)
@@ -1263,22 +1264,22 @@ namespace Game.Server
         public void SendPingCenter()
         {
             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
-            int val = ((allPlayers != null) ? allPlayers.Length : 0);
-            GSPacketIn gSPacketIn = new GSPacketIn(12);
+            int val = (allPlayers != null) ? allPlayers.Length : 0;
+            GSPacketIn gSPacketIn = new(12);
             gSPacketIn.WriteInt(val);
             SendTCP(gSPacketIn);
         }
 
         public void SendRSALogin(RSACryptoServiceProvider rsa, string key)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(1);
+            GSPacketIn gSPacketIn = new(1);
             gSPacketIn.Write(rsa.Encrypt(Encoding.UTF8.GetBytes(key), fOAEP: false));
             SendTCP(gSPacketIn);
         }
 
         public void SendShutdown(bool isStoping)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(15);
+            GSPacketIn gSPacketIn = new(15);
             gSPacketIn.WriteInt(m_serverId);
             gSPacketIn.WriteBoolean(isStoping);
             SendTCP(gSPacketIn);
@@ -1288,7 +1289,7 @@ namespace Game.Server
         {
             if (!ConsortiaBossMgr.AddConsortia(consortia.ConsortiaID, consortia))
             {
-                ConsortiaBossMgr.UpdateConsortia(consortia);
+                _ = ConsortiaBossMgr.UpdateConsortia(consortia);
             }
             GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
             GamePlayer[] array = allPlayers;
@@ -1318,14 +1319,14 @@ namespace Game.Server
 
         public void SendUpdatePlayerMarriedStates(int playerId)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(13);
+            GSPacketIn gSPacketIn = new(13);
             gSPacketIn.WriteInt(playerId);
             SendTCP(gSPacketIn);
         }
 
         public GSPacketIn SendUserOffline(int playerid, int consortiaID)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(4);
+            GSPacketIn gSPacketIn = new(4);
             gSPacketIn.WriteInt(1);
             gSPacketIn.WriteInt(playerid);
             gSPacketIn.WriteInt(consortiaID);
@@ -1335,7 +1336,7 @@ namespace Game.Server
 
         public GSPacketIn SendUserOnline(Dictionary<int, int> users)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(5);
+            GSPacketIn gSPacketIn = new(5);
             gSPacketIn.WriteInt(users.Count);
             foreach (KeyValuePair<int, int> user in users)
             {
@@ -1348,7 +1349,7 @@ namespace Game.Server
 
         public GSPacketIn SendUserOnline(int playerid, int consortiaID)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(5);
+            GSPacketIn gSPacketIn = new(5);
             gSPacketIn.WriteInt(1);
             gSPacketIn.WriteInt(playerid);
             gSPacketIn.WriteInt(consortiaID);
@@ -1358,7 +1359,7 @@ namespace Game.Server
 
         public void SendEliteChampionBattleStatus(int userId, bool isReady)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(910);
+            GSPacketIn gSPacketIn = new(910);
             gSPacketIn.WriteInt(userId);
             gSPacketIn.WriteBoolean(isReady);
             SendTCP(gSPacketIn);
@@ -1366,7 +1367,7 @@ namespace Game.Server
 
         public void SendEliteScoreUpdate(int playerId, string NickName, int type, int score)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(905);
+            GSPacketIn gSPacketIn = new(905);
             gSPacketIn.WriteInt(playerId);
             gSPacketIn.WriteString(NickName);
             gSPacketIn.WriteInt(type);
@@ -1376,7 +1377,7 @@ namespace Game.Server
 
         public void SendEliteChampionRoundUpdate(EliteGameRoundInfo round)
         {
-            GSPacketIn gSPacketIn = new GSPacketIn(908);
+            GSPacketIn gSPacketIn = new(908);
             gSPacketIn.WriteInt(round.RoundID);
             gSPacketIn.WriteInt(round.RoundType);
             gSPacketIn.WriteInt(round.PlayerWin.UserID);
@@ -1457,14 +1458,14 @@ namespace Game.Server
                 }
                 else
                 {
-                    pkg.ReadInt();
+                    _ = pkg.ReadInt();
                 }
             }
         }
 
         public GSPacketIn SendLuckStarRewardRecord(int PlayerID, string nickName, int TemplateID, int Count, int isVip)
         {
-            GSPacketIn pkg = new GSPacketIn((byte)eChatServerPacket.EVENT_RANKING);
+            GSPacketIn pkg = new((byte)eChatServerPacket.EVENT_RANKING);
             pkg.WriteByte((byte)eEventPacket.LUCKSTAR_REWARD_RECORD);
             pkg.WriteInt(PlayerID);
             pkg.WriteString(nickName);

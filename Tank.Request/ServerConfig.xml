@@ -37,7 +37,7 @@
   <Item Name="SpaPriRoomContinueTime" Value="30" />
   <Item Name="SpaPubRoomLoginPay" Value="10000,200" />
   <Item Name="TestActive" Value="False" />
-  <Item Name="VIPExpForEachLv" Value="1|8000|30000|100000|250000|600000|1500000|4000000|10000000|25000000" />
+  <Item Name="VIPExpForEachLv" Value="1|80|300|1000|2500|6000|15000|40000|100000|250000" />
   <Item Name="VirtualName" Value="Gümüş Muhafız,Gece Gözcüsü,Çelik Yaver,Sis Yolcusu,Karanlık Tüccar,Ruh Rehberi,Zirve Nöbetçisi,Bozkır İzci,Sonsuz Seyyah,Hayalet Tacir" />
   <Item Name="TimeForLeague" Value="19:30|21:30" />
   <Item Name="GoldTimes" Value="00:00|23:59" />

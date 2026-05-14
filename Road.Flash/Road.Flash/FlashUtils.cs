@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SqlDataProvider.Data;
+using System;
 using System.Xml.Linq;
-using SqlDataProvider.Data;
 
 namespace Road.Flash
 {
@@ -90,15 +90,15 @@ namespace Road.Flash
 
         public static XElement CreateServerInfo(int id, string name, string ip, int port, int state, int mustLevel, int lowestLevel, int online)
         {
-            return new XElement("Item", 
-                new XAttribute("ID", id), 
+            return new XElement("Item",
+                new XAttribute("ID", id),
                 new XAttribute("Name", name),
                 new XAttribute("IP", ip),
                 new XAttribute("Port", port),
-                new XAttribute("State", state), 
-                new XAttribute("MustLevel", mustLevel), 
-                new XAttribute("LowestLevel", lowestLevel), 
-                new XAttribute("Online", online), 
+                new XAttribute("State", state),
+                new XAttribute("MustLevel", mustLevel),
+                new XAttribute("LowestLevel", lowestLevel),
+                new XAttribute("Online", online),
                 new XAttribute("Remark", ""));
         }
 
@@ -132,32 +132,32 @@ namespace Road.Flash
 
         public static XElement CreateMapInfo(MapInfo m)
         {
-            return new XElement("Item", new XAttribute("ID", m.ID), new XAttribute("Name", (m.Name == null) ? "" : m.Name), new XAttribute("Description", (m.Description == null) ? "" : m.Description), new XAttribute("ForegroundWidth", m.ForegroundWidth), new XAttribute("ForegroundHeight", m.ForegroundHeight), new XAttribute("BackroundWidht", m.BackroundWidht), new XAttribute("BackroundHeight", m.BackroundHeight), new XAttribute("DeadWidth", m.DeadWidth), new XAttribute("DeadHeight", m.DeadHeight), new XAttribute("Weight", m.Weight), new XAttribute("DragIndex", m.DragIndex), new XAttribute("ForePic", (m.ForePic == null) ? "" : m.ForePic), new XAttribute("BackPic", (m.BackPic == null) ? "" : m.BackPic), new XAttribute("DeadPic", (m.DeadPic == null) ? "" : m.DeadPic), new XAttribute("Pic", (m.Pic == null) ? "" : m.Pic), new XAttribute("BackMusic", (m.BackMusic == null) ? "" : m.BackMusic), new XAttribute("Remark", (m.Remark == null) ? "" : m.Remark), new XAttribute("Type", m.Type));
+            return new XElement("Item", new XAttribute("ID", m.ID), new XAttribute("Name", m.Name ?? ""), new XAttribute("Description", m.Description ?? ""), new XAttribute("ForegroundWidth", m.ForegroundWidth), new XAttribute("ForegroundHeight", m.ForegroundHeight), new XAttribute("BackroundWidht", m.BackroundWidht), new XAttribute("BackroundHeight", m.BackroundHeight), new XAttribute("DeadWidth", m.DeadWidth), new XAttribute("DeadHeight", m.DeadHeight), new XAttribute("Weight", m.Weight), new XAttribute("DragIndex", m.DragIndex), new XAttribute("ForePic", m.ForePic ?? ""), new XAttribute("BackPic", m.BackPic ?? ""), new XAttribute("DeadPic", m.DeadPic ?? ""), new XAttribute("Pic", m.Pic ?? ""), new XAttribute("BackMusic", m.BackMusic ?? ""), new XAttribute("Remark", m.Remark ?? ""), new XAttribute("Type", m.Type));
         }
 
         public static XElement CreatePveInfo(PveInfo m)
         {
             return
-                new XElement("Item", 
+                new XElement("Item",
                 new XAttribute("ID", m.ID),
-                new XAttribute("Name", (m.Name == null) ? "" : m.Name),
+                new XAttribute("Name", m.Name ?? ""),
                 new XAttribute("Type", m.Type),
                 new XAttribute("LevelLimits", m.LevelLimits),
-                new XAttribute("SimpleTemplateIds", (m.SimpleTemplateIds == null) ? "" : m.SimpleTemplateIds),
-                new XAttribute("NormalTemplateIds", (m.NormalTemplateIds == null) ? "" : m.NormalTemplateIds),
-                new XAttribute("HardTemplateIds", (m.HardTemplateIds == null) ? "" : m.HardTemplateIds),
-                new XAttribute("TerrorTemplateIds", (m.TerrorTemplateIds == null) ? "" : m.TerrorTemplateIds),
-                new XAttribute("Pic", (m.Pic == null) ? "" : m.Pic),
-                new XAttribute("Description", (m.Description == null) ? "" : m.Description),
+                new XAttribute("SimpleTemplateIds", m.SimpleTemplateIds ?? ""),
+                new XAttribute("NormalTemplateIds", m.NormalTemplateIds ?? ""),
+                new XAttribute("HardTemplateIds", m.HardTemplateIds ?? ""),
+                new XAttribute("TerrorTemplateIds", m.TerrorTemplateIds ?? ""),
+                new XAttribute("Pic", m.Pic ?? ""),
+                new XAttribute("Description", m.Description ?? ""),
                 new XAttribute("Ordering", m.Ordering),
-                new XAttribute("AdviceTips", (m.AdviceTips == null) ? "" : m.AdviceTips),
-                new XAttribute("BossFightNeedMoney", m.BossFightNeedMoney == null ? "" : m.BossFightNeedMoney));
+                new XAttribute("AdviceTips", m.AdviceTips ?? ""),
+                new XAttribute("BossFightNeedMoney", m.BossFightNeedMoney ?? ""));
         }
 
         public static XElement CreateStrengthenInfo(StrengthenInfo info)
         {
-            return new XElement("Item", 
-                new XAttribute("StrengthenLevel", info.StrengthenLevel), 
+            return new XElement("Item",
+                new XAttribute("StrengthenLevel", info.StrengthenLevel),
                 new XAttribute("Rock", info.Rock),
                 new XAttribute("Rock1", info.Rock1),
                 new XAttribute("Rock2", info.Rock2),
@@ -168,12 +168,12 @@ namespace Road.Flash
 
         public static XElement CreateItemInfo(ItemTemplateInfo info)
         {
-            return new XElement("Item", new XAttribute("AddTime", info.AddTime), new XAttribute("Agility", info.Agility), new XAttribute("Attack", info.Attack), new XAttribute("CanCompose", info.CanCompose), new XAttribute("CanDelete", info.CanDelete), new XAttribute("CanDrop", info.CanDrop), new XAttribute("CanEquip", info.CanEquip), new XAttribute("CanStrengthen", info.CanStrengthen), new XAttribute("CanUse", info.CanUse), new XAttribute("CategoryID", info.CategoryID), new XAttribute("Colors", info.Colors), new XAttribute("Defence", info.Defence), new XAttribute("Description", (info.Description == null) ? "" : info.Description), new XAttribute("Level", info.Level), new XAttribute("Luck", info.Luck), new XAttribute("MaxCount", info.MaxCount), new XAttribute("Name", (info.Name == null) ? "" : info.Name), new XAttribute("NeedLevel", info.NeedLevel), new XAttribute("NeedSex", info.NeedSex), new XAttribute("Pic", (info.Pic == null) ? "" : info.Pic), new XAttribute("Data", (info.Data == null) ? "" : info.Data), new XAttribute("Property1", info.Property1), new XAttribute("Property2", info.Property2), new XAttribute("Property3", info.Property3), new XAttribute("Property4", info.Property4), new XAttribute("Property5", info.Property5), new XAttribute("Property6", info.Property6), new XAttribute("Property7", info.Property7), new XAttribute("Property8", info.Property8), new XAttribute("Quality", info.Quality), new XAttribute("Script", (info.Script == null) ? "" : info.Script), new XAttribute("BindType", info.BindType), new XAttribute("FusionType", info.FusionType), new XAttribute("FusionRate", info.FusionRate), new XAttribute("FusionNeedRate", info.FusionNeedRate), new XAttribute("TemplateID", info.TemplateID), new XAttribute("RefineryLevel", info.RefineryLevel), new XAttribute("Hole", info.Hole), new XAttribute("ReclaimValue", info.ReclaimValue), new XAttribute("ReclaimType", info.ReclaimType), new XAttribute("CanRecycle", info.CanRecycle), new XAttribute("SuitId", info.SuitId), new XAttribute("FineSuitType", info.FineSuitType));
+            return new XElement("Item", new XAttribute("AddTime", info.AddTime), new XAttribute("Agility", info.Agility), new XAttribute("Attack", info.Attack), new XAttribute("CanCompose", info.CanCompose), new XAttribute("CanDelete", info.CanDelete), new XAttribute("CanDrop", info.CanDrop), new XAttribute("CanEquip", info.CanEquip), new XAttribute("CanStrengthen", info.CanStrengthen), new XAttribute("CanUse", info.CanUse), new XAttribute("CategoryID", info.CategoryID), new XAttribute("Colors", info.Colors), new XAttribute("Defence", info.Defence), new XAttribute("Description", info.Description ?? ""), new XAttribute("Level", info.Level), new XAttribute("Luck", info.Luck), new XAttribute("MaxCount", info.MaxCount), new XAttribute("Name", info.Name ?? ""), new XAttribute("NeedLevel", info.NeedLevel), new XAttribute("NeedSex", info.NeedSex), new XAttribute("Pic", info.Pic ?? ""), new XAttribute("Data", info.Data ?? ""), new XAttribute("Property1", info.Property1), new XAttribute("Property2", info.Property2), new XAttribute("Property3", info.Property3), new XAttribute("Property4", info.Property4), new XAttribute("Property5", info.Property5), new XAttribute("Property6", info.Property6), new XAttribute("Property7", info.Property7), new XAttribute("Property8", info.Property8), new XAttribute("Quality", info.Quality), new XAttribute("Script", info.Script ?? ""), new XAttribute("BindType", info.BindType), new XAttribute("FusionType", info.FusionType), new XAttribute("FusionRate", info.FusionRate), new XAttribute("FusionNeedRate", info.FusionNeedRate), new XAttribute("TemplateID", info.TemplateID), new XAttribute("RefineryLevel", info.RefineryLevel), new XAttribute("Hole", info.Hole), new XAttribute("ReclaimValue", info.ReclaimValue), new XAttribute("ReclaimType", info.ReclaimType), new XAttribute("CanRecycle", info.CanRecycle), new XAttribute("SuitId", info.SuitId), new XAttribute("FineSuitType", info.FineSuitType));
         }
 
         public static XElement CreateGoodsInfo(ItemInfo info)
         {
-            return new XElement("Item", new XAttribute("AgilityCompose", info.AgilityCompose), new XAttribute("AttackCompose", info.AttackCompose), new XAttribute("BeginDate", info.BeginDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("Color", (info.Color == null) ? "" : info.Color), new XAttribute("Skin", (info.Skin == null) ? "" : info.Skin), new XAttribute("Count", info.Count), new XAttribute("DefendCompose", info.DefendCompose), new XAttribute("IsBinds", info.IsBinds), new XAttribute("IsUsed", info.IsUsed), new XAttribute("IsJudge", info.IsJudge), new XAttribute("ItemID", info.ItemID), new XAttribute("LuckCompose", info.LuckCompose), new XAttribute("Place", info.Place), new XAttribute("StrengthenLevel", info.StrengthenLevel), new XAttribute("TemplateID", info.TemplateID), new XAttribute("UserID", info.UserID), new XAttribute("BagType", info.BagType), new XAttribute("ValidDate", info.ValidDate), new XAttribute("Hole1", info.Hole1), new XAttribute("Hole2", info.Hole2), new XAttribute("Hole3", info.Hole3), new XAttribute("Hole4", info.Hole4), new XAttribute("Hole5", info.Hole5), new XAttribute("Hole6", info.Hole6));
+            return new XElement("Item", new XAttribute("AgilityCompose", info.AgilityCompose), new XAttribute("AttackCompose", info.AttackCompose), new XAttribute("BeginDate", info.BeginDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("Color", info.Color ?? ""), new XAttribute("Skin", info.Skin ?? ""), new XAttribute("Count", info.Count), new XAttribute("DefendCompose", info.DefendCompose), new XAttribute("IsBinds", info.IsBinds), new XAttribute("IsUsed", info.IsUsed), new XAttribute("IsJudge", info.IsJudge), new XAttribute("ItemID", info.ItemID), new XAttribute("LuckCompose", info.LuckCompose), new XAttribute("Place", info.Place), new XAttribute("StrengthenLevel", info.StrengthenLevel), new XAttribute("TemplateID", info.TemplateID), new XAttribute("UserID", info.UserID), new XAttribute("BagType", info.BagType), new XAttribute("ValidDate", info.ValidDate), new XAttribute("Hole1", info.Hole1), new XAttribute("Hole2", info.Hole2), new XAttribute("Hole3", info.Hole3), new XAttribute("Hole4", info.Hole4), new XAttribute("Hole5", info.Hole5), new XAttribute("Hole6", info.Hole6));
         }
 
         public static XElement CreateShopInfo(ShopItemInfo shop)
@@ -198,7 +198,7 @@ namespace Road.Flash
 
         public static XElement CreateBallInfo(BallInfo b)
         {
-            return new XElement("Item", new XAttribute("ID", b.ID), new XAttribute("Power", b.Power), new XAttribute("Radii", b.Radii), new XAttribute("FlyingPartical", (b.FlyingPartical == null) ? "" : b.FlyingPartical), new XAttribute("BombPartical", (b.BombPartical == null) ? "" : b.BombPartical), new XAttribute("Crater", (b.Crater == null) ? "" : b.Crater), new XAttribute("AttackResponse", b.AttackResponse), new XAttribute("IsSpin", b.IsSpin), new XAttribute("SpinV", b.SpinV), new XAttribute("SpinVA", b.SpinVA), new XAttribute("Amount", b.Amount), new XAttribute("Wind", b.Wind), new XAttribute("DragIndex", b.DragIndex), new XAttribute("Weight", b.Weight), new XAttribute("Shake", b.Shake), new XAttribute("ShootSound", (b.ShootSound == null) ? "" : b.ShootSound), new XAttribute("BombSound", (b.BombSound == null) ? "" : b.BombSound), new XAttribute("ActionType", b.ActionType), new XAttribute("Mass", b.Mass));
+            return new XElement("Item", new XAttribute("ID", b.ID), new XAttribute("Power", b.Power), new XAttribute("Radii", b.Radii), new XAttribute("FlyingPartical", b.FlyingPartical ?? ""), new XAttribute("BombPartical", b.BombPartical ?? ""), new XAttribute("Crater", b.Crater ?? ""), new XAttribute("AttackResponse", b.AttackResponse), new XAttribute("IsSpin", b.IsSpin), new XAttribute("SpinV", b.SpinV), new XAttribute("SpinVA", b.SpinVA), new XAttribute("Amount", b.Amount), new XAttribute("Wind", b.Wind), new XAttribute("DragIndex", b.DragIndex), new XAttribute("Weight", b.Weight), new XAttribute("Shake", b.Shake), new XAttribute("ShootSound", b.ShootSound ?? ""), new XAttribute("BombSound", b.BombSound ?? ""), new XAttribute("ActionType", b.ActionType), new XAttribute("Mass", b.Mass));
         }
 
         public static XElement CreateBallConfigInfo(BallConfigInfo b)
@@ -213,25 +213,25 @@ namespace Road.Flash
 
         public static XElement CreateCategoryInfo(CategoryInfo info)
         {
-            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("Name", (info.Name == null) ? "" : info.Name), new XAttribute("Place", info.Place), new XAttribute("Remark", (info.Remark == null) ? "" : info.Remark));
+            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("Name", info.Name ?? ""), new XAttribute("Place", info.Place), new XAttribute("Remark", info.Remark ?? ""));
         }
 
         public static XElement CreateUserLoginList(PlayerInfo info)
         {
-            return new XElement("Item", new XAttribute("ID", info.ID), 
-                new XAttribute("UserName", (info.UserName == null) ? "" : info.UserName), 
-                new XAttribute("NickName", (info.NickName == null) ? "" : info.NickName), 
-                new XAttribute("Grade", info.Grade), 
-                new XAttribute("Repute", info.Repute), 
-                new XAttribute("Sex", info.Sex), 
+            return new XElement("Item", new XAttribute("ID", info.ID),
+                new XAttribute("UserName", info.UserName ?? ""),
+                new XAttribute("NickName", info.NickName ?? ""),
+                new XAttribute("Grade", info.Grade),
+                new XAttribute("Repute", info.Repute),
+                new XAttribute("Sex", info.Sex),
                 new XAttribute("WinCount", info.Win),
                 new XAttribute("TotalCount", info.Total),
-                new XAttribute("ConsortiaName", info.ConsortiaName), 
-                new XAttribute("Rename", info.Rename), 
-                new XAttribute("IsVIP", info.typeVIP > 0), 
+                new XAttribute("ConsortiaName", info.ConsortiaName),
+                new XAttribute("Rename", info.Rename),
+                new XAttribute("IsVIP", info.typeVIP > 0),
                 new XAttribute("VIPLevel", info.VIPLevel),
-                new XAttribute("ConsortiaRename", info.ConsortiaRename ? (info.NickName == info.ChairmanName) : info.ConsortiaRename), 
-                new XAttribute("EscapeCount", info.Escape), 
+                new XAttribute("ConsortiaRename", info.ConsortiaRename ? (info.NickName == info.ChairmanName) : info.ConsortiaRename),
+                new XAttribute("EscapeCount", info.Escape),
                 new XAttribute("IsFirst", info.IsFirst),
                 new XAttribute("LastDate", DateTime.Now.AddDays(-1.0)));
         }
@@ -267,9 +267,9 @@ namespace Road.Flash
             object[] objArray = new object[17]
             {
             new XAttribute("ActiveID", info.ActiveID),
-            new XAttribute("Description", (info.Description == null) ? "" : info.Description),
-            new XAttribute("Content", (info.Content == null) ? "" : info.Content),
-            new XAttribute("AwardContent", (info.AwardContent == null) ? "" : info.AwardContent),
+            new XAttribute("Description", info.Description ?? ""),
+            new XAttribute("Content", info.Content ?? ""),
+            new XAttribute("AwardContent", info.AwardContent ?? ""),
             new XAttribute("HasKey", info.HasKey),
             null,
             null,
@@ -286,14 +286,14 @@ namespace Road.Flash
             };
             int index1 = 5;
             XName name2 = "EndDate";
-            string str1 = ((!info.EndDate.HasValue) ? "" : info.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss"));
-            XAttribute xattribute1 = (XAttribute)(objArray[index1] = new XAttribute(name2, str1));
+            string str1 = (!info.EndDate.HasValue) ? "" : info.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
+            _ = (XAttribute)(objArray[index1] = new XAttribute(name2, str1));
             objArray[6] = new XAttribute("IsOnly", info.IsOnly);
             int index2 = 7;
             XName name3 = "StartDate";
-            string str2 = (string.IsNullOrEmpty(info.StartDate.ToString()) ? "" : info.StartDate.ToString("yyyy-MM-dd HH:mm:ss"));
-            XAttribute xattribute2 = (XAttribute)(objArray[index2] = new XAttribute(name3, str2));
-            objArray[8] = new XAttribute("Title", (info.Title == null) ? "" : info.Title);
+            string str2 = string.IsNullOrEmpty(info.StartDate.ToString()) ? "" : info.StartDate.ToString("yyyy-MM-dd HH:mm:ss");
+            _ = (XAttribute)(objArray[index2] = new XAttribute(name3, str2));
+            objArray[8] = new XAttribute("Title", info.Title ?? "");
             objArray[9] = new XAttribute("Type", info.Type);
             objArray[10] = new XAttribute("ActiveType", "0");
             objArray[11] = new XAttribute("IsAdvance", false);
@@ -301,7 +301,7 @@ namespace Road.Flash
             objArray[13] = new XAttribute("GoodsExchangeNum", "");
             objArray[14] = new XAttribute("limitType", "");
             objArray[15] = new XAttribute("limitValue", "");
-            objArray[16] = new XAttribute("ActionTimeContent", (info.ActionTimeContent == null) ? "" : info.ActionTimeContent);
+            objArray[16] = new XAttribute("ActionTimeContent", info.ActionTimeContent ?? "");
             return new XElement(name, objArray);
         }
 
@@ -316,7 +316,7 @@ namespace Road.Flash
                  , new XAttribute("EndDate", info.EndDate.ToString("yyyy-MM-dd HH:mm:ss"))
                  , new XAttribute("EndTime", info.EndTime.ToString("yyyy-MM-dd HH:mm:ss"))
                  , new XAttribute("IsContinued", info.IsContinued)
-                 , new XAttribute("ActiveInfo", info.ActiveInfo == null ? "" : info.ActiveInfo));
+                 , new XAttribute("ActiveInfo", info.ActiveInfo ?? ""));
         }
 
         public static XElement CreateActiveConditionInfo(SubActiveConditionInfo info)
@@ -328,53 +328,53 @@ namespace Road.Flash
                 , new XAttribute("Type", info.Type)
                 , new XAttribute("Value", info.Value)
                 , new XAttribute("AwardType", info.AwardType)
-                , new XAttribute("AwardValue", info.AwardValue == null ? "" : info.AwardValue)
+                , new XAttribute("AwardValue", info.AwardValue ?? "")
                 , new XAttribute("IsValid", info.IsValid));
         }
 
         public static XElement CreateAuctionInfo(AuctionInfo info)
         {
-            return new XElement("Item", new XAttribute("AuctionID", info.AuctionID), new XAttribute("AuctioneerID", info.AuctioneerID), new XAttribute("AuctioneerName", (info.AuctioneerName == null) ? "" : info.AuctioneerName), new XAttribute("BeginDate", info.BeginDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("BuyerID", info.BuyerID), new XAttribute("BuyerName", (info.BuyerName == null) ? "" : info.BuyerName), new XAttribute("ItemID", info.ItemID), new XAttribute("Mouthful", info.Mouthful), new XAttribute("PayType", info.PayType), new XAttribute("Price", info.Price), new XAttribute("Rise", info.Rise), new XAttribute("ValidDate", info.ValidDate));
+            return new XElement("Item", new XAttribute("AuctionID", info.AuctionID), new XAttribute("AuctioneerID", info.AuctioneerID), new XAttribute("AuctioneerName", info.AuctioneerName ?? ""), new XAttribute("BeginDate", info.BeginDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("BuyerID", info.BuyerID), new XAttribute("BuyerName", info.BuyerName ?? ""), new XAttribute("ItemID", info.ItemID), new XAttribute("Mouthful", info.Mouthful), new XAttribute("PayType", info.PayType), new XAttribute("Price", info.Price), new XAttribute("Rise", info.Rise), new XAttribute("ValidDate", info.ValidDate));
         }
 
         public static XElement CreateConsortiaInfo(ConsortiaInfo info)
         {
-            return new XElement("Item", new XAttribute("ConsortiaID", info.ConsortiaID), new XAttribute("BuildDate", info.BuildDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("CelebCount", info.CelebCount), new XAttribute("ChairmanID", info.ChairmanID), new XAttribute("ChairmanName", (info.ChairmanName == null) ? "" : info.ChairmanName), new XAttribute("ChairmanTypeVIP", 0), new XAttribute("ChairmanVIPLevel", 0), new XAttribute("ConsortiaName", (info.ConsortiaName == null) ? "" : info.ConsortiaName), new XAttribute("CreatorID", info.CreatorID), new XAttribute("CreatorName", (info.CreatorName == null) ? "" : info.CreatorName), new XAttribute("Description", (info.Description == null) ? "" : info.Description), new XAttribute("Honor", info.Honor), new XAttribute("IP", info.IP), new XAttribute("Level", info.Level), new XAttribute("MaxCount", info.MaxCount), new XAttribute("Placard", (info.Placard == null) ? "" : info.Placard), new XAttribute("Repute", info.Repute), new XAttribute("Count", info.Count), new XAttribute("Riches", info.Riches), new XAttribute("FightPower", info.FightPower), new XAttribute("DeductDate", info.DeductDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("AddDayHonor", info.AddDayHonor), new XAttribute("AddDayRiches", info.AddDayRiches), new XAttribute("AddWeekHonor", info.AddWeekHonor), new XAttribute("AddWeekRiches", info.AddWeekRiches), new XAttribute("LastDayRiches", info.LastDayRiches), new XAttribute("OpenApply", info.OpenApply), new XAttribute("StoreLevel", info.StoreLevel), new XAttribute("SmithLevel", info.SmithLevel), new XAttribute("ShopLevel", info.ShopLevel), new XAttribute("BufferLevel", info.SkillLevel), new XAttribute("ConsortiaGiftGp", 0), new XAttribute("ConsortiaAddDayGiftGp", 0), new XAttribute("ConsortiaAddWeekGiftGp", 0), new XAttribute("Port", info.Port), new XAttribute("IsVoting", false), new XAttribute("VoteRemainDay", 3), new XAttribute("CharmGP", 0), new XAttribute("BadgeBuyTime", info.BadgeBuyTime), new XAttribute("BadgeID", info.BadgeID), new XAttribute("ValidDate", info.ValidDate));
+            return new XElement("Item", new XAttribute("ConsortiaID", info.ConsortiaID), new XAttribute("BuildDate", info.BuildDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("CelebCount", info.CelebCount), new XAttribute("ChairmanID", info.ChairmanID), new XAttribute("ChairmanName", info.ChairmanName ?? ""), new XAttribute("ChairmanTypeVIP", 0), new XAttribute("ChairmanVIPLevel", 0), new XAttribute("ConsortiaName", info.ConsortiaName ?? ""), new XAttribute("CreatorID", info.CreatorID), new XAttribute("CreatorName", info.CreatorName ?? ""), new XAttribute("Description", info.Description ?? ""), new XAttribute("Honor", info.Honor), new XAttribute("IP", info.IP), new XAttribute("Level", info.Level), new XAttribute("MaxCount", info.MaxCount), new XAttribute("Placard", info.Placard ?? ""), new XAttribute("Repute", info.Repute), new XAttribute("Count", info.Count), new XAttribute("Riches", info.Riches), new XAttribute("FightPower", info.FightPower), new XAttribute("DeductDate", info.DeductDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("AddDayHonor", info.AddDayHonor), new XAttribute("AddDayRiches", info.AddDayRiches), new XAttribute("AddWeekHonor", info.AddWeekHonor), new XAttribute("AddWeekRiches", info.AddWeekRiches), new XAttribute("LastDayRiches", info.LastDayRiches), new XAttribute("OpenApply", info.OpenApply), new XAttribute("StoreLevel", info.StoreLevel), new XAttribute("SmithLevel", info.SmithLevel), new XAttribute("ShopLevel", info.ShopLevel), new XAttribute("BufferLevel", info.SkillLevel), new XAttribute("ConsortiaGiftGp", 0), new XAttribute("ConsortiaAddDayGiftGp", 0), new XAttribute("ConsortiaAddWeekGiftGp", 0), new XAttribute("Port", info.Port), new XAttribute("IsVoting", false), new XAttribute("VoteRemainDay", 3), new XAttribute("CharmGP", 0), new XAttribute("BadgeBuyTime", info.BadgeBuyTime), new XAttribute("BadgeID", info.BadgeID), new XAttribute("ValidDate", info.ValidDate));
         }
 
         public static XElement CreateConsortiaApplyUserInfo(ConsortiaApplyUserInfo info)
         {
-            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("ApplyDate", info.ApplyDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("ConsortiaID", info.ConsortiaID), new XAttribute("ConsortiaName", (info.ConsortiaName == null) ? "" : info.ConsortiaName), new XAttribute("Remark", info.Remark), new XAttribute("UserID", info.UserID), new XAttribute("UserName", (info.UserName == null) ? "" : info.UserName), new XAttribute("UserLevel", info.UserLevel), new XAttribute("Win", info.Win), new XAttribute("Total", info.Total), new XAttribute("Repute", info.Repute));
+            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("ApplyDate", info.ApplyDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("ConsortiaID", info.ConsortiaID), new XAttribute("ConsortiaName", info.ConsortiaName ?? ""), new XAttribute("Remark", info.Remark), new XAttribute("UserID", info.UserID), new XAttribute("UserName", info.UserName ?? ""), new XAttribute("UserLevel", info.UserLevel), new XAttribute("Win", info.Win), new XAttribute("Total", info.Total), new XAttribute("Repute", info.Repute));
         }
 
         public static XElement CreateConsortiaInviteUserInfo(ConsortiaInviteUserInfo info)
         {
-            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("CelebCount", info.CelebCount), new XAttribute("ChairmanName", (info.ChairmanName == null) ? "" : info.ChairmanName), new XAttribute("ConsortiaID", info.ConsortiaID), new XAttribute("ConsortiaName", (info.ConsortiaName == null) ? "" : info.ConsortiaName), new XAttribute("Count", info.Count), new XAttribute("Honor", info.Honor), new XAttribute("InviteDate", info.InviteDate), new XAttribute("InviteID", info.InviteID), new XAttribute("InviteName", (info.InviteName == null) ? "" : info.InviteName), new XAttribute("Remark", (info.Remark == null) ? "" : info.Remark), new XAttribute("Repute", info.Repute), new XAttribute("UserID", info.UserID), new XAttribute("UserName", (info.UserName == null) ? "" : info.UserName));
+            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("CelebCount", info.CelebCount), new XAttribute("ChairmanName", info.ChairmanName ?? ""), new XAttribute("ConsortiaID", info.ConsortiaID), new XAttribute("ConsortiaName", info.ConsortiaName ?? ""), new XAttribute("Count", info.Count), new XAttribute("Honor", info.Honor), new XAttribute("InviteDate", info.InviteDate), new XAttribute("InviteID", info.InviteID), new XAttribute("InviteName", info.InviteName ?? ""), new XAttribute("Remark", info.Remark ?? ""), new XAttribute("Repute", info.Repute), new XAttribute("UserID", info.UserID), new XAttribute("UserName", info.UserName ?? ""));
         }
 
         public static XElement CreateConsortiaUserInfo(ConsortiaUserInfo info)
         {
-            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("ConsortiaID", info.ConsortiaID), new XAttribute("DutyID", info.DutyID), new XAttribute("DutyName", (info.DutyName == null) ? "" : info.DutyName), new XAttribute("GP", info.GP), new XAttribute("Level", info.Level), new XAttribute("Grade", info.Grade), new XAttribute("Right", info.Right), new XAttribute("DutyLevel", info.Level), new XAttribute("Offer", info.Offer), new XAttribute("RatifierID", info.RatifierID), new XAttribute("RatifierName", (info.RatifierName == null) ? "" : info.RatifierName), new XAttribute("Remark", (info.Remark == null) ? "" : info.Remark), new XAttribute("Repute", info.Repute), new XAttribute("State", (info.State == 1) ? 1 : 0), new XAttribute("UserID", info.UserID), new XAttribute("Hide", info.Hide), new XAttribute("Colors", (info.Colors == null) ? "" : info.Colors), new XAttribute("Skin", (info.Skin == null) ? "" : info.Skin), new XAttribute("Style", info.Style), new XAttribute("LastDate", info.LastDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("Sex", info.Sex), new XAttribute("IsBanChat", info.IsBanChat), new XAttribute("WinCount", info.Win), new XAttribute("TotalCount", info.Total), new XAttribute("EscapeCount", info.Escape), new XAttribute("RichesOffer", info.RichesOffer), new XAttribute("RichesRob", info.RichesRob), new XAttribute("Nimbus", info.Nimbus), new XAttribute("LoginName", (info.LoginName == null) ? "" : info.LoginName), new XAttribute("UserName", (info.UserName == null) ? "" : info.UserName), new XAttribute("FightPower", info.FightPower), new XAttribute("Rank", info.honor), new XAttribute("AchievementPoint", info.AchievementPoint), new XAttribute("IsDiplomatism", true), new XAttribute("IsDownGrade", true), new XAttribute("IsEditorPlacard", true), new XAttribute("IsEditorDescription", true), new XAttribute("IsExpel", true), new XAttribute("IsEditorUser", true), new XAttribute("IsInvite", false), new XAttribute("IsManageDuty", true), new XAttribute("IsUpGrade", false), new XAttribute("typeVIP", info.typeVIP), new XAttribute("VIPLevel", info.VIPLevel), new XAttribute("IsRatify", true), new XAttribute("IsChat", true), new XAttribute("TotalRichesOffer", info.UseOffer));
+            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("ConsortiaID", info.ConsortiaID), new XAttribute("DutyID", info.DutyID), new XAttribute("DutyName", info.DutyName ?? ""), new XAttribute("GP", info.GP), new XAttribute("Level", info.Level), new XAttribute("Grade", info.Grade), new XAttribute("Right", info.Right), new XAttribute("DutyLevel", info.Level), new XAttribute("Offer", info.Offer), new XAttribute("RatifierID", info.RatifierID), new XAttribute("RatifierName", info.RatifierName ?? ""), new XAttribute("Remark", info.Remark ?? ""), new XAttribute("Repute", info.Repute), new XAttribute("State", (info.State == 1) ? 1 : 0), new XAttribute("UserID", info.UserID), new XAttribute("Hide", info.Hide), new XAttribute("Colors", info.Colors ?? ""), new XAttribute("Skin", info.Skin ?? ""), new XAttribute("Style", info.Style), new XAttribute("LastDate", info.LastDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("Sex", info.Sex), new XAttribute("IsBanChat", info.IsBanChat), new XAttribute("WinCount", info.Win), new XAttribute("TotalCount", info.Total), new XAttribute("EscapeCount", info.Escape), new XAttribute("RichesOffer", info.RichesOffer), new XAttribute("RichesRob", info.RichesRob), new XAttribute("Nimbus", info.Nimbus), new XAttribute("LoginName", info.LoginName ?? ""), new XAttribute("UserName", info.UserName ?? ""), new XAttribute("FightPower", info.FightPower), new XAttribute("Rank", info.honor), new XAttribute("AchievementPoint", info.AchievementPoint), new XAttribute("IsDiplomatism", true), new XAttribute("IsDownGrade", true), new XAttribute("IsEditorPlacard", true), new XAttribute("IsEditorDescription", true), new XAttribute("IsExpel", true), new XAttribute("IsEditorUser", true), new XAttribute("IsInvite", false), new XAttribute("IsManageDuty", true), new XAttribute("IsUpGrade", false), new XAttribute("typeVIP", info.typeVIP), new XAttribute("VIPLevel", info.VIPLevel), new XAttribute("IsRatify", true), new XAttribute("IsChat", true), new XAttribute("TotalRichesOffer", info.UseOffer));
         }
 
         public static XElement CreateConsortiaIMInfo(ConsortiaUserInfo info)
         {
-            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("ConsortiaID", info.ConsortiaID), new XAttribute("DutyID", info.DutyID), new XAttribute("DutyName", (info.DutyName == null) ? "" : info.DutyName), new XAttribute("GP", info.GP), new XAttribute("Grade", info.Grade), new XAttribute("Level", info.Level), new XAttribute("Offer", info.Offer), new XAttribute("Remark", (info.Remark == null) ? "" : info.Remark), new XAttribute("Repute", info.Repute), new XAttribute("State", (info.State == 1) ? 1 : 0), new XAttribute("UserID", info.UserID), new XAttribute("Hide", info.Hide), new XAttribute("Colors", (info.Colors == null) ? "" : info.Colors), new XAttribute("Skin", (info.Skin == null) ? "" : info.Skin), new XAttribute("Style", info.Style), new XAttribute("LastDate", info.LastDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("Sex", info.Sex), new XAttribute("LoginName", info.LoginName), new XAttribute("NickName", (info.UserName == null) ? "" : info.UserName));
+            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("ConsortiaID", info.ConsortiaID), new XAttribute("DutyID", info.DutyID), new XAttribute("DutyName", info.DutyName ?? ""), new XAttribute("GP", info.GP), new XAttribute("Grade", info.Grade), new XAttribute("Level", info.Level), new XAttribute("Offer", info.Offer), new XAttribute("Remark", info.Remark ?? ""), new XAttribute("Repute", info.Repute), new XAttribute("State", (info.State == 1) ? 1 : 0), new XAttribute("UserID", info.UserID), new XAttribute("Hide", info.Hide), new XAttribute("Colors", info.Colors ?? ""), new XAttribute("Skin", info.Skin ?? ""), new XAttribute("Style", info.Style), new XAttribute("LastDate", info.LastDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("Sex", info.Sex), new XAttribute("LoginName", info.LoginName), new XAttribute("NickName", info.UserName ?? ""));
         }
 
         public static XElement CreateConsortiaDutyInfo(ConsortiaDutyInfo info)
         {
-            return new XElement("Item", new XAttribute("DutyID", info.DutyID), new XAttribute("ConsortiaID", info.ConsortiaID), new XAttribute("DutyName", (info.DutyName == null) ? "" : info.DutyName), new XAttribute("Right", info.Right), new XAttribute("Level", info.Level));
+            return new XElement("Item", new XAttribute("DutyID", info.DutyID), new XAttribute("ConsortiaID", info.ConsortiaID), new XAttribute("DutyName", info.DutyName ?? ""), new XAttribute("Right", info.Right), new XAttribute("Level", info.Level));
         }
 
         public static XElement CreateConsortiaApplyAllyInfo(ConsortiaApplyAllyInfo info)
         {
-            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("CelebCount", info.CelebCount), new XAttribute("ChairmanName", (info.ChairmanName == null) ? "" : info.ChairmanName), new XAttribute("ConsortiaID", info.Consortia1ID), new XAttribute("ConsortiaName", (info.ConsortiaName == null) ? "" : info.ConsortiaName), new XAttribute("Count", info.Count), new XAttribute("Date", info.Date.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("Honor", info.Honor), new XAttribute("Remark", (info.Remark == null) ? "" : info.Remark), new XAttribute("Level", info.Level), new XAttribute("Description", (info.Description == null) ? "" : info.Description), new XAttribute("Repute", info.Repute));
+            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("CelebCount", info.CelebCount), new XAttribute("ChairmanName", info.ChairmanName ?? ""), new XAttribute("ConsortiaID", info.Consortia1ID), new XAttribute("ConsortiaName", info.ConsortiaName ?? ""), new XAttribute("Count", info.Count), new XAttribute("Date", info.Date.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("Honor", info.Honor), new XAttribute("Remark", info.Remark ?? ""), new XAttribute("Level", info.Level), new XAttribute("Description", info.Description ?? ""), new XAttribute("Repute", info.Repute));
         }
 
         public static XElement CreateConsortiaAllyInfo(ConsortiaAllyInfo info)
         {
-            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("ChairmanName", (info.ChairmanName1 == null) ? "" : info.ChairmanName1), new XAttribute("ConsortiaID", info.Consortia1ID), new XAttribute("ConsortiaName", (info.ConsortiaName1 == null) ? "" : info.ConsortiaName1), new XAttribute("Count", info.Count1), new XAttribute("Honor", info.Honor1), new XAttribute("State", info.State), new XAttribute("Date", info.Date.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("Level", info.Level1), new XAttribute("IsApply", info.IsApply), new XAttribute("Description", info.Description1), new XAttribute("Riches", info.Riches1), new XAttribute("Repute", info.Repute1));
+            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("ChairmanName", info.ChairmanName1 ?? ""), new XAttribute("ConsortiaID", info.Consortia1ID), new XAttribute("ConsortiaName", info.ConsortiaName1 ?? ""), new XAttribute("Count", info.Count1), new XAttribute("Honor", info.Honor1), new XAttribute("State", info.State), new XAttribute("Date", info.Date.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("Level", info.Level1), new XAttribute("IsApply", info.IsApply), new XAttribute("Description", info.Description1), new XAttribute("Riches", info.Riches1), new XAttribute("Repute", info.Repute1));
         }
 
         public static XElement CreateConsortiaEventInfo(ConsortiaEventInfo info)
@@ -389,28 +389,28 @@ namespace Road.Flash
 
         public static XElement CreateEliteMatchPlayersList(PlayerInfo info, int rank)
         {
-            return new XElement("Item", new XAttribute("PlayerID", info.ID), new XAttribute("PlayerName", (info.NickName == null) ? "" : info.NickName), new XAttribute("PlayerScore", info.EliteScore), new XAttribute("PlayerRank", rank));
+            return new XElement("Item", new XAttribute("PlayerID", info.ID), new XAttribute("PlayerName", info.NickName ?? ""), new XAttribute("PlayerScore", info.EliteScore), new XAttribute("PlayerRank", rank));
         }
 
         public static XElement CreateCelebInfo(PlayerInfo info)
         {
-            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("UserName", (info.UserName == null) ? "" : info.UserName), new XAttribute("NickName", (info.NickName == null) ? "" : info.NickName), new XAttribute("typeVIP", info.typeVIP), new XAttribute("VIPLevel", info.VIPLevel), new XAttribute("Grade", info.Grade), new XAttribute("Colors", (info.Colors == null) ? "" : info.Colors), new XAttribute("Skin", (info.Skin == null) ? "" : info.Skin), new XAttribute("Sex", info.Sex), new XAttribute("Style", (info.Style == null) ? "" : info.Style), new XAttribute("ConsortiaName", (info.ConsortiaName == null) ? "" : info.ConsortiaName), new XAttribute("Hide", info.Hide), new XAttribute("Offer", info.Offer), new XAttribute("ReputeOffer", info.ReputeOffer), new XAttribute("ConsortiaHonor", info.ConsortiaHonor), new XAttribute("ConsortiaLevel", info.ConsortiaLevel), new XAttribute("StoreLevel", info.StoreLevel), new XAttribute("ShopLevel", info.ShopLevel), new XAttribute("SmithLevel", info.SmithLevel), new XAttribute("ConsortiaRepute", info.ConsortiaRepute), new XAttribute("WinCount", info.Win), new XAttribute("TotalCount", info.Total), new XAttribute("EscapeCount", info.Escape), new XAttribute("Repute", info.Repute), new XAttribute("AddDayGP", info.AddDayGP), new XAttribute("AddDayOffer", info.AddDayOffer), new XAttribute("AddWeekGP", info.AddWeekGP), new XAttribute("AddWeekOffer", info.AddWeekOffer), new XAttribute("ConsortiaRiches", info.ConsortiaRiches), new XAttribute("Nimbus", info.Nimbus), new XAttribute("GP", info.GP), new XAttribute("FightPower", info.FightPower), new XAttribute("AchievementPoint", info.AchievementPoint), new XAttribute("Rank", ""), new XAttribute("AddDayAchievementPoint", 0), new XAttribute("AddWeekAchievementPoint", 0), new XAttribute("GiftGp", 0), new XAttribute("GiftLevel", 1), new XAttribute("AddDayGiftGp", 0), new XAttribute("AddWeekGiftGp", 0), new XAttribute("ApprenticeshipState", 0), new XAttribute("AddWeekLeagueScore", info.AddWeekLeagueScore));
+            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("UserName", info.UserName ?? ""), new XAttribute("NickName", info.NickName ?? ""), new XAttribute("typeVIP", info.typeVIP), new XAttribute("VIPLevel", info.VIPLevel), new XAttribute("Grade", info.Grade), new XAttribute("Colors", info.Colors ?? ""), new XAttribute("Skin", info.Skin ?? ""), new XAttribute("Sex", info.Sex), new XAttribute("Style", info.Style ?? ""), new XAttribute("ConsortiaName", info.ConsortiaName ?? ""), new XAttribute("Hide", info.Hide), new XAttribute("Offer", info.Offer), new XAttribute("ReputeOffer", info.ReputeOffer), new XAttribute("ConsortiaHonor", info.ConsortiaHonor), new XAttribute("ConsortiaLevel", info.ConsortiaLevel), new XAttribute("StoreLevel", info.StoreLevel), new XAttribute("ShopLevel", info.ShopLevel), new XAttribute("SmithLevel", info.SmithLevel), new XAttribute("ConsortiaRepute", info.ConsortiaRepute), new XAttribute("WinCount", info.Win), new XAttribute("TotalCount", info.Total), new XAttribute("EscapeCount", info.Escape), new XAttribute("Repute", info.Repute), new XAttribute("AddDayGP", info.AddDayGP), new XAttribute("AddDayOffer", info.AddDayOffer), new XAttribute("AddWeekGP", info.AddWeekGP), new XAttribute("AddWeekOffer", info.AddWeekOffer), new XAttribute("ConsortiaRiches", info.ConsortiaRiches), new XAttribute("Nimbus", info.Nimbus), new XAttribute("GP", info.GP), new XAttribute("FightPower", info.FightPower), new XAttribute("AchievementPoint", info.AchievementPoint), new XAttribute("Rank", ""), new XAttribute("AddDayAchievementPoint", 0), new XAttribute("AddWeekAchievementPoint", 0), new XAttribute("GiftGp", 0), new XAttribute("GiftLevel", 1), new XAttribute("AddDayGiftGp", 0), new XAttribute("AddWeekGiftGp", 0), new XAttribute("ApprenticeshipState", 0), new XAttribute("AddWeekLeagueScore", info.AddWeekLeagueScore));
         }
 
         public static XElement CreateBestEquipInfo(BestEquipInfo info)
         {
-            return new XElement("Item", new XAttribute("Date", info.Date.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("GP", info.GP), new XAttribute("Grade", info.Grade), new XAttribute("ItemName", (info.ItemName == null) ? "" : info.ItemName), new XAttribute("NickName", (info.NickName == null) ? "" : info.NickName), new XAttribute("Sex", info.Sex), new XAttribute("Strengthenlevel", info.Strengthenlevel), new XAttribute("Type", (info.UserName == null) ? "" : info.UserName));
+            return new XElement("Item", new XAttribute("Date", info.Date.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("GP", info.GP), new XAttribute("Grade", info.Grade), new XAttribute("ItemName", info.ItemName ?? ""), new XAttribute("NickName", info.NickName ?? ""), new XAttribute("Sex", info.Sex), new XAttribute("Strengthenlevel", info.Strengthenlevel), new XAttribute("Type", info.UserName ?? ""));
         }
 
         public static XElement CreateMailInfo(MailInfo info, string nodeName)
         {
-            DateTime.Now.Subtract(info.SendTime);
-            return new XElement(nodeName, new XAttribute("ID", info.ID), new XAttribute("Title", info.Title), new XAttribute("Content", info.Content), new XAttribute("Sender", info.Sender), new XAttribute("Receiver", info.Receiver), new XAttribute("SendTime", info.SendTime.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("ValidDate", info.ValidDate), new XAttribute("Gold", info.Gold), new XAttribute("Money", info.Money), new XAttribute("Annex1ID", (info.Annex1 == null) ? "" : info.Annex1), new XAttribute("Annex2ID", (info.Annex2 == null) ? "" : info.Annex2), new XAttribute("Annex3ID", (info.Annex3 == null) ? "" : info.Annex3), new XAttribute("Annex4ID", (info.Annex4 == null) ? "" : info.Annex4), new XAttribute("Annex5ID", (info.Annex5 == null) ? "" : info.Annex5), new XAttribute("Annex1Name", (info.Annex1Name == null) ? "" : info.Annex1Name), new XAttribute("Annex2Name", (info.Annex2Name == null) ? "" : info.Annex2Name), new XAttribute("Annex3Name", (info.Annex3Name == null) ? "" : info.Annex3Name), new XAttribute("Annex4Name", (info.Annex4Name == null) ? "" : info.Annex4Name), new XAttribute("Annex5Name", (info.Annex5Name == null) ? "" : info.Annex5Name), new XAttribute("AnnexRemark", (info.AnnexRemark == null) ? "" : info.AnnexRemark), new XAttribute("Type", info.Type), new XAttribute("IsRead", info.IsRead));
+            _ = DateTime.Now.Subtract(info.SendTime);
+            return new XElement(nodeName, new XAttribute("ID", info.ID), new XAttribute("Title", info.Title), new XAttribute("Content", info.Content), new XAttribute("Sender", info.Sender), new XAttribute("Receiver", info.Receiver), new XAttribute("SendTime", info.SendTime.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("ValidDate", info.ValidDate), new XAttribute("Gold", info.Gold), new XAttribute("Money", info.Money), new XAttribute("Annex1ID", info.Annex1 ?? ""), new XAttribute("Annex2ID", info.Annex2 ?? ""), new XAttribute("Annex3ID", info.Annex3 ?? ""), new XAttribute("Annex4ID", info.Annex4 ?? ""), new XAttribute("Annex5ID", info.Annex5 ?? ""), new XAttribute("Annex1Name", info.Annex1Name ?? ""), new XAttribute("Annex2Name", info.Annex2Name ?? ""), new XAttribute("Annex3Name", info.Annex3Name ?? ""), new XAttribute("Annex4Name", info.Annex4Name ?? ""), new XAttribute("Annex5Name", info.Annex5Name ?? ""), new XAttribute("AnnexRemark", info.AnnexRemark ?? ""), new XAttribute("Type", info.Type), new XAttribute("IsRead", info.IsRead));
         }
 
         public static XElement CreateBuffInfo(BufferInfo info)
         {
-            return new XElement("Item", new XAttribute("BeginDate", info.BeginDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("Data", (info.Data == null) ? "" : info.Data), new XAttribute("IsExist", info.IsExist), new XAttribute("Type", info.Type), new XAttribute("UserID", info.UserID), new XAttribute("ValidDate", info.ValidDate), new XAttribute("Value", info.Value));
+            return new XElement("Item", new XAttribute("BeginDate", info.BeginDate.ToString("yyyy-MM-dd HH:mm:ss")), new XAttribute("Data", info.Data ?? ""), new XAttribute("IsExist", info.IsExist), new XAttribute("Type", info.Type), new XAttribute("UserID", info.UserID), new XAttribute("ValidDate", info.ValidDate), new XAttribute("Value", info.Value));
         }
 
         public static XElement CreateMarryInfo(MarryInfo info)
@@ -430,7 +430,7 @@ namespace Road.Flash
 
         public static XElement CreateActiveInfo(DailyAwardInfo info)
         {
-            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("Count", info.Count), new XAttribute("CountRemark", (info.CountRemark == null) ? "" : info.CountRemark), new XAttribute("IsBinds", info.IsBinds), new XAttribute("Remark", (info.Remark == null) ? "" : info.Remark), new XAttribute("Sex", info.Sex), new XAttribute("TemplateID", info.TemplateID), new XAttribute("Type", info.Type), new XAttribute("ValidDate", info.ValidDate), new XAttribute("GetWay", info.GetWay), new XAttribute("AwardDays", info.AwardDays));
+            return new XElement("Item", new XAttribute("ID", info.ID), new XAttribute("Count", info.Count), new XAttribute("CountRemark", info.CountRemark ?? ""), new XAttribute("IsBinds", info.IsBinds), new XAttribute("Remark", info.Remark ?? ""), new XAttribute("Sex", info.Sex), new XAttribute("TemplateID", info.TemplateID), new XAttribute("Type", info.Type), new XAttribute("ValidDate", info.ValidDate), new XAttribute("GetWay", info.GetWay), new XAttribute("AwardDays", info.AwardDays));
         }
 
         public static XElement CreateConsortiaEquipControlInfo(ConsortiaEquipControlInfo info)

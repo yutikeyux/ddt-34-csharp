@@ -493,8 +493,8 @@ namespace Game.Server
                 lock (RoomMgr.WorldBossRoom)
                 {
                     GamePlayer[] players = WorldMgr.GetAllPlayers();
-                    DateTime startTime = Convert.ToDateTime("15:00:00");
-                    DateTime stopTime = Convert.ToDateTime("16:00:00");
+                    DateTime startTime = Convert.ToDateTime("00:01:00");
+                    DateTime stopTime = Convert.ToDateTime("23:59:00");
                     DateTime closeTime = stopTime.AddMinutes(1.0);
                     int npcID = 1243;
                     int configblood = NPCInfoMgr.GetNpcInfoById(npcID).Blood;
