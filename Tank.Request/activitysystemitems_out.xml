@@ -1,4 +1,4 @@
-<Result value="true" message="Başarılı!">
+<Result value="true" message="Success!">
   <Item ActivityType="8" Quality="1" TemplateID="17004" ValidDate="7" Count="1" IsBind="true" StrengthLevel="0" AttackCompose="0" DefendCompose="0" AgilityCompose="0" LuckCompose="0" />
   <Item ActivityType="8" Quality="1" TemplateID="8214" ValidDate="7" Count="1" IsBind="true" StrengthLevel="0" AttackCompose="0" DefendCompose="0" AgilityCompose="0" LuckCompose="0" />
   <Item ActivityType="8" Quality="1" TemplateID="7047" ValidDate="7" Count="1" IsBind="true" StrengthLevel="0" AttackCompose="0" DefendCompose="0" AgilityCompose="0" LuckCompose="0" />

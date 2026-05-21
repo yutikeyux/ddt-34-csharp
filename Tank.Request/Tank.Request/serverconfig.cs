@@ -19,7 +19,7 @@ namespace Tank.Request
 		public static string build(HttpContext context)
 		{
 			bool flag = false;
-			string str = "Fail!";
+			string str = "Başarısız!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -53,7 +53,7 @@ namespace Tank.Request
 			}
 			else
 			{
-				context.Response.Write("IP is not valid!");
+				context.Response.Write("Erişim yetkisi reddedildi!");
 			}
 		}
 

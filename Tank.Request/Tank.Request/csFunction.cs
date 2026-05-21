@@ -98,12 +98,12 @@ namespace Tank.Request
 						}
 					}
 				}
-				result2 = "Build:" + file + ",Success!";
+				result2 = "İşlem:" + file + "Başarılı!";
 			}
 			catch (Exception ex)
 			{
-				csFunction.log.Error("CreateCompressXml " + file + " is fail!", ex);
-				result2 = "Build:" + file + ",Fail!";
+				csFunction.log.Error("CreateCompressXml " + file + " is Başarısız!", ex);
+				result2 = "İşlem:" + file + ",Başarısız!";
 			}
 			return result2;
 		}
@@ -118,7 +118,7 @@ namespace Tank.Request
 		public static string BuildCelebConsortia(string file, int order, string fileNotCompress)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			int total = 0;
 			try
@@ -155,7 +155,7 @@ namespace Tank.Request
 			}
 			catch (Exception ex)
 			{
-				csFunction.log.Error(file + " is fail!", ex);
+				csFunction.log.Error(file + " is Başarısız!", ex);
 			}
 			result.Add(new XAttribute("total", total));
 			result.Add(new XAttribute("value", value));
@@ -179,7 +179,7 @@ namespace Tank.Request
 		public static string BuildEliteMatchPlayerList(string file)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -221,7 +221,7 @@ namespace Tank.Request
 			}
 			catch (Exception ex)
 			{
-				csFunction.log.Error(file + " is fail!", ex);
+				csFunction.log.Error(file + " is Başarısız!", ex);
 			}
 			result.Add(new XAttribute("value", value));
 			result.Add(new XAttribute("message", message));
@@ -234,7 +234,7 @@ namespace Tank.Request
 		public static string BuildCelebUsers(string file, int order, string fileNotCompress)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -261,7 +261,7 @@ namespace Tank.Request
 			}
 			catch (Exception ex)
 			{
-				csFunction.log.Error(file + " is fail!", ex);
+				csFunction.log.Error(file + " is Başarısız!", ex);
 			}
 			result.Add(new XAttribute("value", value));
 			result.Add(new XAttribute("message", message));
@@ -278,7 +278,7 @@ namespace Tank.Request
 		public static string BuildCelebConsortiaFightPower(string file, string fileNotCompress)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			int total = 0;
 			try
@@ -311,7 +311,7 @@ namespace Tank.Request
 			}
 			catch (Exception ex)
 			{
-				csFunction.log.Error(file + " is fail!", ex);
+				csFunction.log.Error(file + " is Başarısız!", ex);
 			}
 			result.Add(new XAttribute("total", total));
 			result.Add(new XAttribute("value", value));

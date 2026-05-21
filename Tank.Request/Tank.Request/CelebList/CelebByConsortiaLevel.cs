@@ -24,7 +24,7 @@ namespace Tank.Request.CelebList
 			string result;
 			if (flag)
 			{
-				result = "CelebByConsortiaLevel Fail!";
+				result = "CelebByConsortiaLevel Başarısız!";
 			}
 			else
 			{

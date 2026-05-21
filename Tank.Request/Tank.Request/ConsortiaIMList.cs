@@ -19,7 +19,7 @@ namespace Tank.Request
 		public void ProcessRequest(HttpContext context)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			int total = 0;
 			XElement result = new XElement("Result");
 			try

@@ -25,7 +25,7 @@ namespace Tank.Request
 			}
 			else
 			{
-				context.Response.Write("IP is not valid!");
+				context.Response.Write("Erişim yetkisi reddedildi!");
 			}
 		}
 
@@ -33,7 +33,7 @@ namespace Tank.Request
 		public static string build(HttpContext context)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			int t = 0;
 			try
@@ -52,7 +52,7 @@ namespace Tank.Request
 			}
 			catch (Exception ex)
 			{
-				newtitle.log.Error("Load Active is fail!", ex);
+				newtitle.log.Error("Load Active is Başarısız!", ex);
 			}
 			result.Add(new XAttribute("total", t));
 			result.Add(new XAttribute("value", value));

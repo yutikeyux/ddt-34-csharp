@@ -38,7 +38,7 @@ namespace Tank.Request
             }
             else
             {
-                context.Response.Write("IP is not valid!");
+                context.Response.Write("Erişim yetkisi reddedildi!");
             }
         }
 
@@ -50,7 +50,7 @@ namespace Tank.Request
         public static string Build(HttpContext context)
         {
             XElement resultElement = new XElement("Result");
-            string statusMessage = "Fail!";
+            string statusMessage = "Başarısız!";
             string isSuccess = "false";
 
             try

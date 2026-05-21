@@ -25,7 +25,7 @@ namespace Tank.Request
 		public static string build(HttpContext context)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			try
 			{

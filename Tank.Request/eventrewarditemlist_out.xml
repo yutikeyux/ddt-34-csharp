@@ -1,4 +1,4 @@
-<Result value="true" message="Başarılı!">
+<Result value="true" message="Success!">
   <ActivityType value="1">
     <Items SubActivityType="1" Condition="10">
       <Item TemplateId="7003" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="1" />

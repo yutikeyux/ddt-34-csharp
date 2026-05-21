@@ -19,7 +19,7 @@ namespace Tank.Request
 		{
 			context.Response.ContentType = "text/plain";
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			int total = 0;
 			try

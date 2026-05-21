@@ -25,7 +25,7 @@ namespace Tank.Request
 		public static string build(HttpContext context)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -42,7 +42,7 @@ namespace Tank.Request
 			}
 			catch (Exception ex)
 			{
-				CardUpdateCondition.log.Error("Load CardUpdateCondition is fail!", ex);
+				CardUpdateCondition.log.Error("Load CardUpdateCondition is Başarısız!", ex);
 			}
 			result.Add(new XAttribute("value", value));
 			result.Add(new XAttribute("message", message));

@@ -63,7 +63,7 @@ namespace Tank.Request
             catch (Exception ex)
             {
                 // Hata oluşursa logla
-                CardUpdateInfo.log.Error("Load CardUpdateInfo is fail!", ex);
+                CardUpdateInfo.log.Error("Load CardUpdateInfo is Başarısız!", ex);
             }
 
             // XML'e genel durum bilgilerini (value ve message) ekle

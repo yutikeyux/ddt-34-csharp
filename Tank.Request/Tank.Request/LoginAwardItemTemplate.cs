@@ -22,7 +22,7 @@ namespace Tank.Request
 			}
 			else
 			{
-				context.Response.Write("IP is not valid!");
+				context.Response.Write("Erişim yetkisi reddedildi!");
 			}
 		}
 
@@ -40,7 +40,7 @@ namespace Tank.Request
 		public static string build(HttpContext context)
 		{
 			bool value = false;
-			string message = "Fail!";
+			string message = "Başarısız!";
 			XElement result = new XElement("Result");
 			try
 			{
@@ -57,7 +57,7 @@ namespace Tank.Request
 			}
 			catch (Exception ex)
 			{
-				LoginAwardItemTemplate.log.Error("Load loginawarditemtemplate is fail!", ex);
+				LoginAwardItemTemplate.log.Error("Load loginawarditemtemplate is Başarısız!", ex);
 			}
 			result.Add(new XAttribute("value", value));
 			result.Add(new XAttribute("message", message));

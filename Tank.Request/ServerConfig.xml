@@ -1,4 +1,4 @@
-<Result value="true" message="Başarılı!">
+<Result value="true" message="Success!">
   <Item Name="BeginAuction" Value="20" />
   <Item Name="BigExp" Value="11906|99" />
   <Item Name="BoxAppearCondition" Value="4" />

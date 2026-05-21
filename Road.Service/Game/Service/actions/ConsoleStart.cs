@@ -17,677 +17,589 @@ using SqlDataProvider.Data;
 
 namespace Game.Service.actions
 {
-	// Token: 0x02000007 RID: 7
-	public class ConsoleStart : IAction
-	{
-		// Token: 0x17000006 RID: 6
-		// (get) Token: 0x06000020 RID: 32 RVA: 0x000033C4 File Offset: 0x000015C4
-		public string Name
-		{
-			get
-			{
-				return "--start";
-			}
-		}
+    public class ConsoleStart : IAction
+    {
+        // ── IAction Özellikleri ───────────────────────────────────────────────────────
 
-		// Token: 0x17000007 RID: 7
-		// (get) Token: 0x06000021 RID: 33 RVA: 0x000033DC File Offset: 0x000015DC
-		public string Syntax
-		{
-			get
-			{
-				return "--start [-config=./config/serverconfig.xml]";
-			}
-		}
+        public string Name => "--start";
+        public string Syntax => "--start [-config=./config/serverconfig.xml]";
+        public string Description => "Starts the DOL server in console mode";
 
-		// Token: 0x17000008 RID: 8
-		// (get) Token: 0x06000022 RID: 34 RVA: 0x000033F4 File Offset: 0x000015F4
-		public string Description
-		{
-			get
-			{
-				return "Starts the DOL server in console mode";
-			}
-		}
+        // ── Win32 İçe Aktarımları ─────────────────────────────────────────────────────
 
-		// Token: 0x06000023 RID: 35
-		[DllImport("kernel32.dll", SetLastError = true)]
-		private static extern IntPtr GetStdHandle(int nStdHandle);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern IntPtr GetStdHandle(int nStdHandle);
 
-		// Token: 0x06000024 RID: 36
-		[DllImport("kernel32.dll")]
-		private static extern bool ReadConsoleW(IntPtr hConsoleInput, [Out] byte[] lpBuffer, uint nNumberOfCharsToRead, out uint lpNumberOfCharsRead, IntPtr lpReserved);
+        [DllImport("kernel32.dll")]
+        private static extern bool ReadConsoleW(
+            IntPtr hConsoleInput,
+            [Out] byte[] lpBuffer,
+            uint nNumberOfCharsToRead,
+            out uint lpNumberOfCharsRead,
+            IntPtr lpReserved);
 
-		// Token: 0x17000009 RID: 9
-		// (get) Token: 0x06000025 RID: 37 RVA: 0x0000340B File Offset: 0x0000160B
-		// (set) Token: 0x06000026 RID: 38 RVA: 0x00003412 File Offset: 0x00001612
-		public static int _count2 { get; set; }
+        [DllImport("kernel32.dll", CallingConvention = CallingConvention.StdCall)]
+        private static extern int SetConsoleCtrlHandler(ConsoleCtrlDelegate handlerRoutine, bool add);
 
-		// Token: 0x1700000A RID: 10
-		// (get) Token: 0x06000027 RID: 39 RVA: 0x0000341A File Offset: 0x0000161A
-		// (set) Token: 0x06000028 RID: 40 RVA: 0x00003421 File Offset: 0x00001621
-		public static System.Threading.Timer _timer2 { get; set; }
+        // ── Statik Alanlar ────────────────────────────────────────────────────────────
 
-		// Token: 0x06000029 RID: 41 RVA: 0x0000342C File Offset: 0x0000162C
-		private static void onlinesayac(object state)
-		{
-			ConsoleStart._count2--;
-			Console.WriteLine(string.Format("Komut verildi. {0} dakika sonra mesaj gönderilecek !", ConsoleStart._count2));
-			GameClient[] allClients = GameServer.Instance.GetAllClients();
-			int num = (allClients != null) ? allClients.Length : 0;
-			foreach (GameClient gameClient in allClients)
-			{
-			}
-			bool flag = ConsoleStart._count2 == 0;
-			if (flag)
-			{
-				WorldMgr.GetAllPlayers();
-				GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
-				for (int j = 0; j < allPlayers.Length; j++)
-				{
-					allPlayers[j].SendMessage(string.Format("Sistem : Şuanda oyunda {0} kişi online !. |TrBombom 2027|", num));
-				}
-				Console.WriteLine("Online sayısı gönderildi");
-				ConsoleStart._count2 = 1;
-			}
-		}
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		// Token: 0x0600002A RID: 42 RVA: 0x000034F4 File Offset: 0x000016F4
-		public static IntPtr GetWin32InputHandle()
-		{
-			return ConsoleStart.GetStdHandle(-10);
-		}
+        private static System.Threading.Timer _timer;
+        private static int _count;
 
-		// Token: 0x0600002B RID: 43 RVA: 0x0000350D File Offset: 0x0000170D
-		public static void NewForm()
-		{
-			Application.Run(new ServerManagementForm());
-		}
+        // Online sayaç timer'ı — property yerine düz field (property gereği yok)
+        private static System.Threading.Timer _timer2;
+        private static int _count2;
 
-		// Token: 0x0600002C RID: 44 RVA: 0x0000351C File Offset: 0x0000171C
-		public void OnAction(Hashtable parameters)
-		{
-			bool flag = true;
-			Console.Title = "TrBombom Main Service";
-			Console.ForegroundColor = ConsoleColor.Green;
-			GameServer.CreateInstance(this.config = new GameServerConfig());
-			Console.ForegroundColor = ConsoleColor.Cyan;
-			Console.WriteLine("Road Başlatılıyor");
-			GameServer.Instance.Start();
-			Console.ForegroundColor = ConsoleColor.Cyan;
-			GameServer.KeepRunning = true;
-			FusionCombined.ListCombinedFusion();
-			bool flag2 = !flag;
-			if (flag2)
-			{
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine("Server Başarısız!!");
-			}
-			else
-			{
-				Console.WriteLine("Server Online!");
-			}
-			ConsoleClient client = new ConsoleClient();
-			new Thread(new ThreadStart(ConsoleStart.NewForm)).Start();
-			while (GameServer.KeepRunning)
-			{
-				bool flag3 = flag;
-				if (flag3)
-				{
-					try
-					{
-						ConsoleStart.handler = new ConsoleStart.ConsoleCtrlDelegate(ConsoleStart.ConsoleCtrHandler);
-						ConsoleStart.SetConsoleCtrlHandler(ConsoleStart.handler, true);
-						Console.Write("=> ");
-						string text = Console.ReadLine();
-						string text2 = text.Split(new char[]
-						{
-							' '
-						})[0];
-						bool flag4 = text2 != null;
-						if (flag4)
-						{
-							bool flag5 = !(text2 == "admin");
-							if (flag5)
-							{
-								bool flag6 = text2 == "reset";
-								if (flag6)
-								{
-									Console.Clear();
-									continue;
-								}
-							}
-							else
-							{
-								Console.Clear();
-								Console.ForegroundColor = ConsoleColor.Cyan;
-								Console.WriteLine("Yönetim Konsolu.");
-								Console.WriteLine("Lütfen numara seçin ;");
-								Console.WriteLine("1.  Mesaj Gönder.");
-								Console.WriteLine("2.  Nick e Ban At.");
-								Console.WriteLine("3.  Kullanıcı Adına Ban At.");
-								Console.WriteLine("4.  Oyunu 1 Dakika Sonra Kapat (!).");
-								Console.WriteLine("5.  Oyunu Hemen Kapat (!).");
-								Console.WriteLine("6.  Oyun Online Durumu Ve Ram Kullanımı.");
-								Console.WriteLine("7.  Nick e Kick At.");
-								Console.WriteLine("8.  Oyuncu Ban Kaldırma.");
-								Console.WriteLine("9.  Oyun İçine Online Oyuncu Sayısını Otomatik Gönder.");
-								Console.WriteLine("10. Oyun Veritabanı Değişiklerini Kaydet.");
-								Console.WriteLine("11. Online (Kupon) Etkinliği.");
-								Console.WriteLine("12. Online (Onur Özü) Etkinliği.");
-								Console.WriteLine("13. Online (Kart Ruhu) Etkinliği.");
-								Console.WriteLine("14. Online (Exp GP) Etkinliği.");
-								Console.WriteLine("15. Online (İtem) Etkinliği.");
-								Console.WriteLine("16. Özel Mesaj Gönderme.");
-								Console.WriteLine("17. Özel (Road) Sistemini Aç.");
-								Console.Write("Seçiminizi Girin : ");
-								string text3 = Console.ReadLine();
-								string a = text3;
-								bool flag7 = a == "1";
-								if (flag7)
-								{
-									Console.Clear();
-									Console.Write("Mesajınızı Giriniz : ");
-									string str = Console.ReadLine();
-									GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
-									for (int i = 0; i < allPlayers.Length; i++)
-									{
-										allPlayers[i].SendMessage("Yönetim : " + str);
-									}
-									Console.WriteLine("Mesaj gönderildi.");
-									continue;
-								}
-								bool flag8 = !(a == "2");
-								if (flag8)
-								{
-									bool flag9 = !(a == "3");
-									if (flag9)
-									{
-										bool flag10 = a == "4";
-										if (flag10)
-										{
-											foreach (GamePlayer gamePlayer in WorldMgr.GetAllPlayers())
-											{
-												gamePlayer.SendMessage("Admin Tarafından Oyundan Atıldınız.!");
-												gamePlayer.Disconnect();
-											}
-											GameServer.KeepRunning = false;
-											Console.WriteLine("Oyun Kontrollu Bir Şekilde Kapanmıştır.!");
-											continue;
-										}
-										bool flag11 = a == "5";
-										if (flag11)
-										{
-											GameServer.KeepRunning = false;
-											continue;
-										}
-										bool flag12 = a == "17";
-										if (flag12)
-										{
-											new Thread(new ThreadStart(ConsoleStart.NewForm)).Start();
-										}
-										string a2 = text3;
-										bool flag13 = a2 == "16";
-										if (flag13)
-										{
-											Console.Clear();
-											Console.Write("Mesajınızı Giriniz : ");
-											string str2 = Console.ReadLine();
-											GamePlayer[] allPlayers3 = WorldMgr.GetAllPlayers();
-											for (int k = 0; k < allPlayers3.Length; k++)
-											{
-												allPlayers3[k].Out.SendMessage(eMessageType.ALERT, "[YÖNETİM]: " + str2);
-											}
-											Console.WriteLine("Mesaj gönderildi.");
-											continue;
-										}
-										bool flag14 = a2 == "6";
-										if (flag14)
-										{
-											GameClient[] allClients = GameServer.Instance.GetAllClients();
-											int num = (allClients != null) ? allClients.Length : 0;
-											GamePlayer[] allPlayers4 = WorldMgr.GetAllPlayers();
-											bool flag15 = allPlayers4 != null;
-											if (flag15)
-											{
-												int num2 = allPlayers4.Length;
-											}
-											List<BaseRoom> allUsingRoom = RoomMgr.GetAllUsingRoom();
-											int num3 = 0;
-											int num4 = 0;
-											foreach (BaseRoom baseRoom in allUsingRoom)
-											{
-												bool flag16 = !baseRoom.IsEmpty;
-												if (flag16)
-												{
-													num3++;
-													bool isPlaying = baseRoom.IsPlaying;
-													if (isPlaying)
-													{
-														num4++;
-													}
-												}
-											}
-											double num5 = (double)GC.GetTotalMemory(false);
-											Console.WriteLine(string.Format("Online Oyuncu : {0}", num));
-											Console.WriteLine(string.Format("Savaştaki oyuncu : {0} odada , {1} kişi savaşta", num3, num4));
-											Console.WriteLine(string.Format("Oyun ram kullanimi:{0} MB", num5 / 1024.0 / 1024.0));
-											continue;
-										}
-										bool flag17 = a2 == "7";
-										if (flag17)
-										{
-											Console.Clear();
-											Console.WriteLine("Dc yiyecek oyuncunun nicki : ");
-											string text4 = Console.ReadLine();
-											Console.WriteLine("Dc Sebebini gir : ");
-											string text5 = Console.ReadLine();
-											using (ManageBussiness manageBussiness = new ManageBussiness())
-											{
-												manageBussiness.KitoffUserByNickName(text4, " ");
-											}
-											GamePlayer[] allPlayers5 = WorldMgr.GetAllPlayers();
-											for (int l = 0; l < allPlayers5.Length; l++)
-											{
-												allPlayers5[l].SendMessage(string.Concat(new string[]
-												{
-													"Oyuncu [",
-													text4,
-													"] Oyunculara rahatsızlığından dolayı kick yemiştir. Kick sebebi :  (",
-													text5,
-													")"
-												}));
-											}
-											continue;
-										}
-										bool flag18 = a2 == "8";
-										if (flag18)
-										{
-											Console.Clear();
-											Console.WriteLine("Banı Açılacak Oyuncunun Nick'i : ");
-											string text6 = Console.ReadLine();
-											DateTime date = new DateTime(2050, 7, 2);
-											using (ManageBussiness manageBussiness2 = new ManageBussiness())
-											{
-												manageBussiness2.ForbidPlayerByNickName(text6, date, true);
-											}
-											foreach (GamePlayer gamePlayer2 in WorldMgr.GetAllPlayers())
-											{
-												string msg = "Oyuncumuz <" + text6 + "> banı sonra ermiştir. ";
-												gamePlayer2.SendMessage(msg);
-											}
-											Console.WriteLine("Oyuncu " + text6 + " banı açıldı");
-										}
-										string a3 = text3;
-										bool flag19 = a3 == "9";
-										if (flag19)
-										{
-											ConsoleStart._count2 = 31;
-											ConsoleStart._timer2 = new System.Threading.Timer(new TimerCallback(ConsoleStart.onlinesayac), null, 0, 60000);
-											continue;
-										}
-										bool flag20 = a3 == "11";
-										if (flag20)
-										{
-											Console.Write("Gönderilecek kupon miktarı : ");
-											int num6 = int.Parse(Console.ReadLine());
-											foreach (GamePlayer gamePlayer3 in WorldMgr.GetAllPlayers())
-											{
-												gamePlayer3.AddMoney(num6);
-												gamePlayer3.SendMessage("Tebrikler ! Bütün online oyunculara " + num6.ToString() + " kupon gönderildi. Online etkinliği sona ermiştir...");
-											}
-											Console.WriteLine("Kupon gönderme başarılı (Gönderilen {0})", num6);
-											continue;
-										}
-										bool flag21 = a3 == "12";
-										if (flag21)
-										{
-											Console.Write("Gönderilecek onur miktarı : ");
-											int num7 = int.Parse(Console.ReadLine());
-											foreach (GamePlayer gamePlayer4 in WorldMgr.GetAllPlayers())
-											{
-												gamePlayer4.AddHonor(num7);
-												gamePlayer4.SendMessage("Tebrikler ! Bütün online oyunculara " + num7.ToString() + " onur gönderildi. Online etkinliği sona ermiştir...");
-											}
-											Console.WriteLine("Onur gönderme başarılı (Gönderilen {0})", num7);
-											continue;
-										}
-										bool flag22 = a3 == "13";
-										if (flag22)
-										{
-											Console.Write("Gönderilecek Kart Ruhu miktarı : ");
-											int num9 = int.Parse(Console.ReadLine());
-											GamePlayer[] allPlayers9 = WorldMgr.GetAllPlayers();
-											for (int num10 = 0; num10 < allPlayers9.Length; num10++)
-											{
-												allPlayers9[num10].SendMessage("Tebrikler ! Bütün online oyunculara " + num9.ToString() + " Kart Ruhu gönderildi. Online etkinliği sona ermiştir...");
-											}
-											Console.WriteLine("Kart Ruhu gönderme başarılı (Gönderilen {0})", num9);
-											continue;
-										}
-										bool flag23 = !(a3 == "14");
-										if (flag23)
-										{
-											bool flag24 = a3 == "15";
-											if (flag24)
-											{
-												Console.Write("Başlık:");
-												string title = Console.ReadLine();
-												Console.Write("İçerik:");
-												string content = Console.ReadLine();
-												Console.Write("İtem İD:");
-												int templateID = int.Parse(Console.ReadLine());
-												Console.Write("Adet:");
-												int count = int.Parse(Console.ReadLine());
-												Console.Write("Gün:");
-												int validDate = int.Parse(Console.ReadLine());
-												Console.Write("Altın:");
-												int gold = int.Parse(Console.ReadLine());
-												Console.Write("Kupon:");
-												int money = int.Parse(Console.ReadLine());
-												Console.Write("Level:");
-												int strengthenLevel = int.Parse(Console.ReadLine());
-												Console.Write("Atak:");
-												int attackCompose = int.Parse(Console.ReadLine());
-												Console.Write("Defans:");
-												int defendCompose = int.Parse(Console.ReadLine());
-												Console.Write("Çeviklik:");
-												int agilityCompose = int.Parse(Console.ReadLine());
-												Console.Write("Şans:");
-												int luckCompose = int.Parse(Console.ReadLine());
-												Console.Write("Baglı (True-False):");
-												bool isBinds = bool.Parse(Console.ReadLine());
-												foreach (GamePlayer gamePlayer5 in WorldMgr.GetAllPlayers())
-												{
-													PlayerInfo playerInfo = new PlayerInfo();
-													playerInfo = gamePlayer5.PlayerCharacter;
-													new PlayerBussiness().SendMailAndItem(title, content, playerInfo.ID, templateID, count, validDate, gold, money, strengthenLevel, attackCompose, defendCompose, agilityCompose, luckCompose, isBinds);
-													string msg2 = "[ Online Oyuncu Etkinliği Sistemi ] Hediye Ödüller Gönderilmiştir.";
-													gamePlayer5.SendMessage(msg2);
-													using (ManageBussiness manageBussiness3 = new ManageBussiness())
-													{
-														string msg3 = "Sistem Yöneticisi : Hediye Ödüller Gönderilmiştir.";
-														manageBussiness3.SystemNotice(msg3);
-													}
-												}
-											}
-											bool flag25 = text3 == "10";
-											if (flag25)
-											{
-												bool flag26 = BallMgr.ReLoad();
-												if (flag26)
-												{
-													Console.WriteLine("Ball info Güncelleniyor !");
-												}
-												Console.WriteLine("Ball info Güncellendi !");
-												bool flag27 = MapMgr.ReLoadMap();
-												if (flag27)
-												{
-													Console.WriteLine("Map info Güncelleniyor !");
-												}
-												Console.WriteLine("Map info Güncellendi !");
-												bool flag28 = MapMgr.ReLoadMapServer();
-												if (flag28)
-												{
-													Console.WriteLine("mapserver info Güncelleniyor !");
-												}
-												Console.WriteLine("mapserver Güncellendi !");
-												bool flag29 = PropItemMgr.Reload();
-												if (flag29)
-												{
-													Console.WriteLine("prop info Güncelleniyor !");
-												}
-												Console.WriteLine("prop info Güncellendi !");
-												bool flag30 = ItemMgr.ReLoad();
-												if (flag30)
-												{
-													Console.WriteLine("item info Güncelleniyor !");
-												}
-												Console.WriteLine("item info Güncellendi !");
-												bool flag31 = ShopMgr.ReLoad();
-												if (flag31)
-												{
-													Console.WriteLine("shop info Güncelleniyor !");
-												}
-												Console.WriteLine("shop info Güncellendi !");
-												bool flag32 = QuestMgr.ReLoad();
-												if (flag32)
-												{
-													Console.WriteLine("quest info Güncelleniyor !");
-												}
-												Console.WriteLine("quest info Güncellendi !");
-												bool flag33 = FusionMgr.ReLoad();
-												if (flag33)
-												{
-													Console.WriteLine("fusion info Güncelleniyor !");
-												}
-												Console.WriteLine("fusion info Güncellendi !");
-												bool flag34 = ConsortiaMgr.ReLoad();
-												if (flag34)
-												{
-													Console.WriteLine("consortiaMgr info Güncelleniyor !");
-												}
-												Console.WriteLine("consortiaMgr info Güncellendi !");
-												bool flag35 = RateMgr.ReLoad();
-												if (flag35)
-												{
-													Console.WriteLine("Rate Rate Güncelleniyor !");
-												}
-												Console.WriteLine("Rate Rate Güncellendi !");
-												bool flag36 = NPCInfoMgr.ReLoad();
-												if (flag36)
-												{
-													Console.WriteLine("NPCInfo Güncelleniyor !");
-												}
-												Console.WriteLine("NPCInfo Güncellendi !");
-												bool flag37 = FightRateMgr.ReLoad();
-												if (flag37)
-												{
-													Console.WriteLine("FightRateMgr Güncelleniyor !");
-												}
-												Console.WriteLine("FightRateMgr Güncellendi !");
-												bool flag38 = AwardMgr.ReLoad();
-												if (flag38)
-												{
-													Console.WriteLine("dailyaward Güncelleniyor !");
-												}
-												Console.WriteLine("dailyaward Güncellendi !");
-												bool flag39 = LanguageMgr.Reload("");
-												if (flag39)
-												{
-													Console.WriteLine("language Güncelleniyor !");
-												}
-												Console.WriteLine("language Güncellendi !");
-											}
-											continue;
-										}
-										Console.Write("Gönderilecek EXP miktarı : ");
-										int num12 = int.Parse(Console.ReadLine());
-										foreach (GamePlayer gamePlayer6 in WorldMgr.GetAllPlayers())
-										{
-											gamePlayer6.AddGP(num12);
-											gamePlayer6.SendMessage("Tebrikler ! Bütün online oyunculara " + num12.ToString() + " EXP (GP) gönderildi. Online etkinliği sona ermiştir...");
-										}
-										Console.WriteLine("EXP (GP) gönderme başarılı (Gönderilen {0})", num12);
-										continue;
-									}
-									else
-									{
-										Console.Clear();
-										Console.WriteLine("Banlanacak kullanıcı adı: ");
-										string text7 = Console.ReadLine();
-										Console.WriteLine("Ban sebebi gir: ");
-										string text8 = Console.ReadLine();
-										Console.WriteLine("Ban açılış yılı gir: ");
-										int num14 = int.Parse(Console.ReadLine());
-										Console.WriteLine("Ban açılış ayı gir: ");
-										int num15 = int.Parse(Console.ReadLine());
-										Console.WriteLine("Ban açılış günü: ");
-										int num16 = int.Parse(Console.ReadLine());
-										DateTime date2 = new DateTime(num14, num15, num16);
-										using (ManageBussiness manageBussiness4 = new ManageBussiness())
-										{
-											manageBussiness4.ForbidPlayerByUserName(text7, date2, false, text8);
-										}
-										foreach (GamePlayer gamePlayer7 in WorldMgr.GetAllPlayers())
-										{
-											string msg4 = string.Format("<{0}> Kullanıcı adlı oyuncumuz oyun kurallarını çiğnediğinden oyundan uzaklaştırılmıştır. Ban sebebi : ({1}). Ban açılış tarihi: ({2}.{3}.{4})", new object[]
-											{
-												text7,
-												text8,
-												num14,
-												num15,
-												num16
-											});
-											gamePlayer7.SendMessage(msg4);
-										}
-										Console.WriteLine("Oyuncu banlandı !.");
-									}
-								}
-								else
-								{
-									Console.Clear();
-									Console.WriteLine("Banlanacak oyuncunun Nick'i : ");
-									string text9 = Console.ReadLine();
-									Console.WriteLine("Ban sebebi: ");
-									string text10 = Console.ReadLine();
-									Console.WriteLine("Ban açılış yılı gir: ");
-									int num18 = int.Parse(Console.ReadLine());
-									Console.WriteLine("Ban açılış ayı gir: ");
-									int num19 = int.Parse(Console.ReadLine());
-									Console.WriteLine("Ban açılış günü gir: ");
-									int num20 = int.Parse(Console.ReadLine());
-									DateTime date3 = new DateTime(num18, num19, num20);
-									using (ManageBussiness manageBussiness5 = new ManageBussiness())
-									{
-										manageBussiness5.ForbidPlayerByNickName(text9, date3, false, text10);
-									}
-									foreach (GamePlayer gamePlayer8 in WorldMgr.GetAllPlayers())
-									{
-										string msg5 = string.Format("Oyuncumuz <{0}> oyun kurallarına aykırı gelirken yakaladık ve BANLADIK. Sizde böyle olmak istemiyorsanız kurallara uyunuz. Ban sebebi : ({1}). Ban açılış tarihi: ({2}.{3}.{4})", new object[]
-										{
-											text9,
-											text10,
-											num18,
-											num19,
-											num20
-										});
-										gamePlayer8.SendMessage(msg5);
-									}
-									Console.WriteLine("Oyuncu " + text9 + " banlandı ve kicklendi.");
-								}
-							}
-						}
-						bool flag40 = text.Length > 0;
-						if (flag40)
-						{
-							bool flag41 = text[0] == '/';
-							if (flag41)
-							{
-								text = text.Remove(0, 1);
-								text = text.Insert(0, "&");
-							}
-							try
-							{
-								bool flag42 = !CommandMgr.HandleCommandNoPlvl(client, text);
-								if (flag42)
-								{
-									Console.WriteLine("Bilinmeyen komut: " + text);
-								}
-							}
-							catch (Exception ex)
-							{
-								Console.WriteLine(ex.ToString());
-							}
-						}
-					}
-					catch (Exception value)
-					{
-						Console.WriteLine(value);
-					}
-				}
-			}
-			bool flag43 = GameServer.Instance != null;
-			if (flag43)
-			{
-				GameServer.Instance.Stop();
-			}
-			LogManager.Shutdown();
-		}
+        private static ConsoleCtrlDelegate _handler;
 
-		// Token: 0x0600002D RID: 45 RVA: 0x000045FC File Offset: 0x000027FC
-		private static void ShutDownCallBack(object state)
-		{
-			ConsoleStart._count--;
-			Console.WriteLine(string.Format("Server will shutdown after {0} mins!", ConsoleStart._count));
-			foreach (GameClient gameClient in GameServer.Instance.GetAllClients())
-			{
-				bool flag = gameClient.Out != null;
-				if (flag)
-				{
-					gameClient.Out.SendMessage(eMessageType.GM_NOTICE, string.Format("{0}{1}{2}", LanguageMgr.GetTranslation("Game.Service.actions.ShutDown1", Array.Empty<object>()), ConsoleStart._count, LanguageMgr.GetTranslation("Game.Service.actions.ShutDown2", Array.Empty<object>())));
-				}
-			}
-			bool flag2 = ConsoleStart._count == 0;
-			if (flag2)
-			{
-				ConsoleStart._timer.Dispose();
-				ConsoleStart._timer = null;
-				GameServer.Instance.Stop();
-				Console.WriteLine("Server has stopped!");
-				GameServer.KeepRunning = false;
-				Environment.Exit(0);
-			}
-		}
+        // ── Yapılandırma ──────────────────────────────────────────────────────────────
 
-		// Token: 0x0600002E RID: 46
-		[DllImport("kernel32.dll", CallingConvention = CallingConvention.StdCall)]
-		private static extern int SetConsoleCtrlHandler(ConsoleStart.ConsoleCtrlDelegate HandlerRoutine, bool add);
+        private GameServerConfig _config;
 
-		// Token: 0x0600002F RID: 47 RVA: 0x000046E4 File Offset: 0x000028E4
-		private static int ConsoleCtrHandler(ConsoleStart.ConsoleEvent e)
-		{
-			ConsoleStart.SetConsoleCtrlHandler(ConsoleStart.handler, false);
-			bool flag = GameServer.Instance != null;
-			if (flag)
-			{
-				GameServer.Instance.Stop();
-			}
-			return 0;
-		}
+        // ── Yardımcı Metodlar ─────────────────────────────────────────────────────────
 
-		// Token: 0x0400000F RID: 15
-		private GameServerConfig config;
+        public static IntPtr GetWin32InputHandle()
+        {
+            return GetStdHandle(-10);
+        }
 
-		// Token: 0x04000010 RID: 16
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        public static void NewForm()
+        {
+            Application.Run(new ServerManagementForm());
+        }
 
-		// Token: 0x04000011 RID: 17
-		private static System.Threading.Timer _timer;
+        // ── Online Sayaç Timer Callback ───────────────────────────────────────────────
 
-		// Token: 0x04000012 RID: 18
-		private static int _count;
+        /// <summary>
+        /// Her dakika çalışır; sayaç sıfırlandığında online oyuncu sayısını
+        /// tüm oyunculara gönderir ve sayacı sıfırlar.
+        /// </summary>
+        private static void OnlineSayacCallback(object state)
+        {
+            _count2--;
+            Console.WriteLine(string.Format("Komut verildi. {0} dakika sonra mesaj gönderilecek!", _count2));
 
-		// Token: 0x04000013 RID: 19
-		private static ConsoleStart.ConsoleCtrlDelegate handler;
+            if (_count2 != 0)
+                return;
 
-		// Token: 0x02000010 RID: 16
-		// (Invoke) Token: 0x060000BF RID: 191
-		private delegate int ConsoleCtrlDelegate(ConsoleStart.ConsoleEvent ctrlType);
+            GameClient[] allClients = GameServer.Instance.GetAllClients();
+            int onlineCount = (allClients != null) ? allClients.Length : 0;
 
-		// Token: 0x02000011 RID: 17
-		private enum ConsoleEvent
-		{
-			// Token: 0x04000083 RID: 131
-			Ctrl_C,
-			// Token: 0x04000084 RID: 132
-			Ctrl_Break,
-			// Token: 0x04000085 RID: 133
-			Close,
-			// Token: 0x04000086 RID: 134
-			Logoff,
-			// Token: 0x04000087 RID: 135
-			Shutdown
-		}
-	}
+            GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
+            for (int i = 0; i < allPlayers.Length; i++)
+            {
+                allPlayers[i].SendMessage(string.Format(
+                    "Sistem : Şuanda oyunda {0} kişi online! |TrBombom 2027|", onlineCount));
+            }
+
+            Console.WriteLine("Online sayısı gönderildi.");
+            _count2 = 1;
+        }
+
+        // ── Kapatma Timer Callback ────────────────────────────────────────────────────
+
+        private static void ShutDownCallback(object state)
+        {
+            _count--;
+            Console.WriteLine(string.Format("Server will shutdown after {0} mins!", _count));
+
+            foreach (GameClient client in GameServer.Instance.GetAllClients())
+            {
+                if (client.Out != null)
+                {
+                    client.Out.SendMessage(eMessageType.GM_NOTICE, string.Format("{0}{1}{2}",
+                        LanguageMgr.GetTranslation("Game.Service.actions.ShutDown1", Array.Empty<object>()),
+                        _count,
+                        LanguageMgr.GetTranslation("Game.Service.actions.ShutDown2", Array.Empty<object>())));
+                }
+            }
+
+            if (_count != 0)
+                return;
+
+            _timer.Dispose();
+            _timer = null;
+            GameServer.Instance.Stop();
+            Console.WriteLine("Server has stopped!");
+            GameServer.KeepRunning = false;
+            Environment.Exit(0);
+        }
+
+        // ── Console Ctrl Handler ──────────────────────────────────────────────────────
+
+        private static int ConsoleCtrHandler(ConsoleEvent e)
+        {
+            SetConsoleCtrlHandler(_handler, false);
+            if (GameServer.Instance != null)
+                GameServer.Instance.Stop();
+            return 0;
+        }
+
+        // ── Ana Aksiyon ───────────────────────────────────────────────────────────────
+
+        public void OnAction(Hashtable parameters)
+        {
+            Console.Title = "TrBombom Main Service";
+            Console.ForegroundColor = ConsoleColor.Green;
+
+            GameServer.CreateInstance(_config = new GameServerConfig());
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Road Başlatılıyor...");
+            GameServer.Instance.Start();
+            GameServer.KeepRunning = true;
+
+            FusionCombined.ListCombinedFusion();
+
+            Console.WriteLine("Server Online!");
+
+            ConsoleClient consoleClient = new ConsoleClient();
+            new Thread(ConsoleStart.NewForm).Start();
+
+            // Ctrl+C / kapat sinyalini yakala
+            _handler = new ConsoleCtrlDelegate(ConsoleCtrHandler);
+            SetConsoleCtrlHandler(_handler, true);
+
+            // ── Ana Konsol Döngüsü ────────────────────────────────────────────────────
+            while (GameServer.KeepRunning)
+            {
+                try
+                {
+                    Console.Write("=> ");
+                    string input = Console.ReadLine();
+
+                    if (string.IsNullOrEmpty(input))
+                        continue;
+
+                    string cmd = input.Split(' ')[0];
+
+                    switch (cmd)
+                    {
+                        case "reset":
+                            Console.Clear();
+                            continue;
+
+                        case "admin":
+                            HandleAdminMenu(consoleClient, input);
+                            continue;
+                    }
+
+                    // /komut → &komut dönüşümü
+                    if (input[0] == '/')
+                        input = "&" + input.Substring(1);
+
+                    if (!CommandMgr.HandleCommandNoPlvl(consoleClient, input))
+                        Console.WriteLine("Bilinmeyen komut: " + input);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+
+            if (GameServer.Instance != null)
+                GameServer.Instance.Stop();
+
+            LogManager.Shutdown();
+        }
+
+        // ── Yönetim Menüsü ────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// "admin" komutu girildiğinde yönetim menüsünü gösterir ve seçimi işler.
+        /// OnAction'dan ayrı bir metoda taşındı: tek sorumluluk, daha kolay bakım.
+        /// </summary>
+        private static void HandleAdminMenu(ConsoleClient client, string originalInput)
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Yönetim Konsolu.");
+            Console.WriteLine("Lütfen numara seçin:");
+            Console.WriteLine(" 1.  Mesaj Gönder");
+            Console.WriteLine(" 2.  Nick'e Ban At");
+            Console.WriteLine(" 3.  Kullanıcı Adına Ban At");
+            Console.WriteLine(" 4.  Oyunu 1 Dakika Sonra Kapat (!)");
+            Console.WriteLine(" 5.  Oyunu Hemen Kapat (!)");
+            Console.WriteLine(" 6.  Online Durumu ve RAM Kullanımı");
+            Console.WriteLine(" 7.  Nick'e Kick At");
+            Console.WriteLine(" 8.  Oyuncu Ban Kaldırma");
+            Console.WriteLine(" 9.  Online Oyuncu Sayısını Otomatik Gönder");
+            Console.WriteLine("10.  Veritabanı Değişikliklerini Kaydet");
+            Console.WriteLine("11.  Online (Kupon) Etkinliği");
+            Console.WriteLine("12.  Online (Onur Özü) Etkinliği");
+            Console.WriteLine("13.  Online (Kart Ruhu) Etkinliği");
+            Console.WriteLine("14.  Online (Exp GP) Etkinliği");
+            Console.WriteLine("15.  Online (İtem) Etkinliği");
+            Console.WriteLine("16.  Özel Mesaj Gönder");
+            Console.WriteLine("17.  Özel (Road) Sistemini Aç");
+            Console.Write("Seçiminizi Girin: ");
+
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    SendBroadcastMessage();
+                    break;
+
+                case "2":
+                    BanByNick();
+                    break;
+
+                case "3":
+                    BanByUsername();
+                    break;
+
+                case "4":
+                    KickAndShutdown();
+                    break;
+
+                case "5":
+                    GameServer.KeepRunning = false;
+                    break;
+
+                case "6":
+                    ShowServerStatus();
+                    break;
+
+                case "7":
+                    KickPlayer();
+                    break;
+
+                case "8":
+                    UnbanPlayer();
+                    break;
+
+                case "9":
+                    StartOnlineSayac();
+                    break;
+
+                case "10":
+                    ReloadAllManagers();
+                    break;
+
+                case "11":
+                    SendKuponEvent();
+                    break;
+
+                case "12":
+                    SendOnurEvent();
+                    break;
+
+                case "13":
+                    SendKartRuhuEvent();
+                    break;
+
+                case "14":
+                    SendExpGpEvent();
+                    break;
+
+                case "15":
+                    SendItemEvent();
+                    break;
+
+                case "16":
+                    SendAlertMessage();
+                    break;
+
+                case "17":
+                    new Thread(ConsoleStart.NewForm).Start();
+                    break;
+
+                default:
+                    Console.WriteLine("Geçersiz seçim.");
+                    break;
+            }
+        }
+
+        // ── Yönetim Komut Metodları ───────────────────────────────────────────────────
+
+        private static void SendBroadcastMessage()
+        {
+            Console.Clear();
+            Console.Write("Mesajınızı Giriniz: ");
+            string msg = Console.ReadLine();
+            foreach (GamePlayer player in WorldMgr.GetAllPlayers())
+                player.SendMessage("Yönetim : " + msg);
+            Console.WriteLine("Mesaj gönderildi.");
+        }
+
+        private static void SendAlertMessage()
+        {
+            Console.Clear();
+            Console.Write("Mesajınızı Giriniz: ");
+            string msg = Console.ReadLine();
+            foreach (GamePlayer player in WorldMgr.GetAllPlayers())
+                player.Out.SendMessage(eMessageType.ALERT, "[YÖNETİM]: " + msg);
+            Console.WriteLine("Mesaj gönderildi.");
+        }
+
+        private static void BanByNick()
+        {
+            Console.Clear();
+            Console.WriteLine("Banlanacak oyuncunun Nick'i: ");
+            string nick = Console.ReadLine();
+            Console.WriteLine("Ban sebebi: ");
+            string reason = Console.ReadLine();
+            DateTime banEnd = ReadDateFromConsole();
+
+            using (ManageBussiness mb = new ManageBussiness())
+                mb.ForbidPlayerByNickName(nick, banEnd, false, reason);
+
+            string broadcastMsg = string.Format(
+                "Oyuncumuz <{0}> oyun kurallarına aykırı davranışı nedeniyle BANLANMIŞTIR. " +
+                "Ban sebebi: ({1}). Açılış: ({2:dd.MM.yyyy})", nick, reason, banEnd);
+
+            foreach (GamePlayer player in WorldMgr.GetAllPlayers())
+                player.SendMessage(broadcastMsg);
+
+            Console.WriteLine("Oyuncu " + nick + " banlandı ve kicklendi.");
+        }
+
+        private static void BanByUsername()
+        {
+            Console.Clear();
+            Console.WriteLine("Banlanacak kullanıcı adı: ");
+            string username = Console.ReadLine();
+            Console.WriteLine("Ban sebebi: ");
+            string reason = Console.ReadLine();
+            DateTime banEnd = ReadDateFromConsole();
+
+            using (ManageBussiness mb = new ManageBussiness())
+                mb.ForbidPlayerByUserName(username, banEnd, false, reason);
+
+            string broadcastMsg = string.Format(
+                "<{0}> kullanıcı adlı oyuncu kuralları çiğnediğinden uzaklaştırıldı. " +
+                "Ban sebebi: ({1}). Açılış: ({2:dd.MM.yyyy})", username, reason, banEnd);
+
+            foreach (GamePlayer player in WorldMgr.GetAllPlayers())
+                player.SendMessage(broadcastMsg);
+
+            Console.WriteLine("Oyuncu banlandı.");
+        }
+
+        private static void KickAndShutdown()
+        {
+            foreach (GamePlayer player in WorldMgr.GetAllPlayers())
+            {
+                player.SendMessage("Admin Tarafından Oyundan Atıldınız!");
+                player.Disconnect();
+            }
+            GameServer.KeepRunning = false;
+            Console.WriteLine("Oyun kontrollü bir şekilde kapandı.");
+        }
+
+        private static void ShowServerStatus()
+        {
+            GameClient[] clients = GameServer.Instance.GetAllClients();
+            int onlineCount = (clients != null) ? clients.Length : 0;
+
+            List<BaseRoom> rooms = RoomMgr.GetAllUsingRoom();
+            int usedRooms = 0;
+            int playingRooms = 0;
+
+            foreach (BaseRoom room in rooms)
+            {
+                if (!room.IsEmpty)
+                {
+                    usedRooms++;
+                    if (room.IsPlaying) playingRooms++;
+                }
+            }
+
+            double ramMB = (double)GC.GetTotalMemory(false) / 1024.0 / 1024.0;
+
+            Console.WriteLine(string.Format("Online oyuncu     : {0}", onlineCount));
+            Console.WriteLine(string.Format("Dolu oda / savaşta: {0} oda, {1} kişi", usedRooms, playingRooms));
+            Console.WriteLine(string.Format("RAM kullanımı     : {0:F2} MB", ramMB));
+        }
+
+        private static void KickPlayer()
+        {
+            Console.Clear();
+            Console.WriteLine("Kick yiyecek oyuncunun nick'i: ");
+            string nick = Console.ReadLine();
+            Console.WriteLine("Kick sebebi: ");
+            string reason = Console.ReadLine();
+
+            using (ManageBussiness mb = new ManageBussiness())
+                mb.KitoffUserByNickName(nick, " ");
+
+            string broadcastMsg = string.Format(
+                "Oyuncu [{0}] rahatsızlık verdiği için kicklenmiştir. Sebep: ({1})", nick, reason);
+
+            foreach (GamePlayer player in WorldMgr.GetAllPlayers())
+                player.SendMessage(broadcastMsg);
+        }
+
+        private static void UnbanPlayer()
+        {
+            Console.Clear();
+            Console.WriteLine("Banı açılacak oyuncunun Nick'i: ");
+            string nick = Console.ReadLine();
+            DateTime futureDate = new DateTime(2050, 7, 2);
+
+            using (ManageBussiness mb = new ManageBussiness())
+                mb.ForbidPlayerByNickName(nick, futureDate, true);
+
+            foreach (GamePlayer player in WorldMgr.GetAllPlayers())
+                player.SendMessage("Oyuncumuz <" + nick + "> banı sona ermiştir.");
+
+            Console.WriteLine("Oyuncu " + nick + " banı açıldı.");
+        }
+
+        private static void StartOnlineSayac()
+        {
+            _count2 = 31;
+            _timer2 = new System.Threading.Timer(OnlineSayacCallback, null, 0, 60000);
+        }
+
+        private static void SendKuponEvent()
+        {
+            Console.Write("Gönderilecek kupon miktarı: ");
+            int amount = int.Parse(Console.ReadLine());
+            foreach (GamePlayer player in WorldMgr.GetAllPlayers())
+            {
+                player.AddMoney(amount);
+                player.SendMessage(string.Format(
+                    "Tebrikler! Tüm online oyunculara {0} kupon gönderildi. Etkinlik sona erdi.", amount));
+            }
+            Console.WriteLine("Kupon gönderildi: " + amount);
+        }
+
+        private static void SendOnurEvent()
+        {
+            Console.Write("Gönderilecek onur miktarı: ");
+            int amount = int.Parse(Console.ReadLine());
+            foreach (GamePlayer player in WorldMgr.GetAllPlayers())
+            {
+                player.AddHonor(amount);
+                player.SendMessage(string.Format(
+                    "Tebrikler! Tüm online oyunculara {0} onur gönderildi. Etkinlik sona erdi.", amount));
+            }
+            Console.WriteLine("Onur gönderildi: " + amount);
+        }
+
+        private static void SendKartRuhuEvent()
+        {
+            Console.Write("Gönderilecek Kart Ruhu miktarı: ");
+            int amount = int.Parse(Console.ReadLine());
+            foreach (GamePlayer player in WorldMgr.GetAllPlayers())
+            {
+                player.SendMessage(string.Format(
+                    "Tebrikler! Tüm online oyunculara {0} Kart Ruhu gönderildi. Etkinlik sona erdi.", amount));
+            }
+            Console.WriteLine("Kart Ruhu gönderildi: " + amount);
+        }
+
+        private static void SendExpGpEvent()
+        {
+            Console.Write("Gönderilecek EXP (GP) miktarı: ");
+            int amount = int.Parse(Console.ReadLine());
+            foreach (GamePlayer player in WorldMgr.GetAllPlayers())
+            {
+                player.AddGP(amount);
+                player.SendMessage(string.Format(
+                    "Tebrikler! Tüm online oyunculara {0} EXP (GP) gönderildi. Etkinlik sona erdi.", amount));
+            }
+            Console.WriteLine("EXP (GP) gönderildi: " + amount);
+        }
+
+        private static void SendItemEvent()
+        {
+            Console.Write("Başlık: "); string title = Console.ReadLine();
+            Console.Write("İçerik: "); string content = Console.ReadLine();
+            Console.Write("İtem ID: "); int templateID = int.Parse(Console.ReadLine());
+            Console.Write("Adet: "); int count = int.Parse(Console.ReadLine());
+            Console.Write("Gün: "); int validDate = int.Parse(Console.ReadLine());
+            Console.Write("Altın: "); int gold = int.Parse(Console.ReadLine());
+            Console.Write("Kupon: "); int money = int.Parse(Console.ReadLine());
+            Console.Write("Level: "); int strengthenLvl = int.Parse(Console.ReadLine());
+            Console.Write("Atak: "); int attackCompose = int.Parse(Console.ReadLine());
+            Console.Write("Defans: "); int defendCompose = int.Parse(Console.ReadLine());
+            Console.Write("Çeviklik: "); int agilityCompose = int.Parse(Console.ReadLine());
+            Console.Write("Şans: "); int luckCompose = int.Parse(Console.ReadLine());
+            Console.Write("Bağlı (True/False): "); bool isBinds = bool.Parse(Console.ReadLine());
+
+            PlayerBussiness pb = new PlayerBussiness();
+
+            foreach (GamePlayer player in WorldMgr.GetAllPlayers())
+            {
+                pb.SendMailAndItem(title, content, player.PlayerCharacter.ID,
+                    templateID, count, validDate, gold, money,
+                    strengthenLvl, attackCompose, defendCompose, agilityCompose, luckCompose, isBinds);
+
+                player.SendMessage("[ Online Oyuncu Etkinliği ] Hediye ödüller gönderilmiştir.");
+
+                using (ManageBussiness mb = new ManageBussiness())
+                    mb.SystemNotice("Sistem Yöneticisi: Hediye ödüller gönderilmiştir.");
+            }
+        }
+
+        private static void ReloadAllManagers()
+        {
+            ReloadManager("Ball", () => BallMgr.ReLoad());
+            ReloadManager("Map", () => MapMgr.ReLoadMap());
+            ReloadManager("MapServer", () => MapMgr.ReLoadMapServer());
+            ReloadManager("PropItem", () => PropItemMgr.Reload());
+            ReloadManager("Item", () => ItemMgr.ReLoad());
+            ReloadManager("Shop", () => ShopMgr.ReLoad());
+            ReloadManager("Quest", () => QuestMgr.ReLoad());
+            ReloadManager("Fusion", () => FusionMgr.ReLoad());
+            ReloadManager("Consortia", () => ConsortiaMgr.ReLoad());
+            ReloadManager("Rate", () => RateMgr.ReLoad());
+            ReloadManager("NPCInfo", () => NPCInfoMgr.ReLoad());
+            ReloadManager("FightRate", () => FightRateMgr.ReLoad());
+            ReloadManager("DailyAward", () => AwardMgr.ReLoad());
+            ReloadManager("Language", () => LanguageMgr.Reload(""));
+        }
+
+        /// <summary>
+        /// Tek bir manager yeniden yükleme adımını gerçekleştirir ve sonucu loglar.
+        /// Tüm reload çağrılarının aynı try/catch + log kalıbını tekrar etmesini önler.
+        /// </summary>
+        private static void ReloadManager(string name, Func<bool> reloadFunc)
+        {
+            try
+            {
+                bool result = reloadFunc();
+                Console.WriteLine(string.Format("{0} {1}.", name, result ? "güncelleniyor" : "güncellendi"));
+                if (result)
+                    Console.WriteLine(name + " güncellendi.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(string.Format("[HATA] {0} güncellenemedi: {1}", name, ex.Message));
+            }
+        }
+
+        // ── Yardımcı: Konsoldan Tarih Okuma ──────────────────────────────────────────
+
+        /// <summary>
+        /// Kullanıcıdan yıl/ay/gün girerek DateTime oluşturur.
+        /// Tekrarlanan Console.ReadLine + int.Parse bloklarını ortadan kaldırır.
+        /// </summary>
+        private static DateTime ReadDateFromConsole()
+        {
+            Console.Write("Ban açılış yılı : "); int year = int.Parse(Console.ReadLine());
+            Console.Write("Ban açılış ayı  : "); int month = int.Parse(Console.ReadLine());
+            Console.Write("Ban açılış günü : "); int day = int.Parse(Console.ReadLine());
+            return new DateTime(year, month, day);
+        }
+
+        // ── Delegate / Enum ───────────────────────────────────────────────────────────
+
+        private delegate int ConsoleCtrlDelegate(ConsoleEvent ctrlType);
+
+        private enum ConsoleEvent
+        {
+            Ctrl_C = 0,
+            Ctrl_Break = 1,
+            Close = 2,
+            Logoff = 5,
+            Shutdown = 6
+        }
+    }
 }
