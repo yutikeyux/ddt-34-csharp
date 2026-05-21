@@ -1192,6 +1192,15 @@ namespace Game.Server.Rooms
                 case eHardLevel.Easy:
                     id = 11573;// Harika Zindan Bileti Template_ID si
                     break;
+                case eHardLevel.Normal:
+                    id = 11573;// Harika Zindan Bileti Template_ID si
+                    break;
+                    case eHardLevel.Hard:
+                    id = 11573;// Harika Zindan Bileti Template_ID si       
+                    break;
+                    case eHardLevel.Terror:
+                    id = 11573;// Harika Zindan Bileti Template_ID si
+                    break;
 
             }
             return id;

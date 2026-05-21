@@ -2318,6 +2318,11 @@ namespace Game.Logic.Phy.Object
                     PlayerDetail.SendMessage("Aksesuar kullandığınız için bu skill basılamaz.");
                     return;
                 }
+                if (skillInfo.NewBallID == -1 && IsSpecialSkill)
+                {
+                    PlayerDetail.SendMessage("Pow kullanırken bu skill basılamaz.");
+                    return;
+                }
                 if (PetMP > 0 && PetMP >= skillInfo.CostMP)
                 {
                     if (GetSealStatePet())

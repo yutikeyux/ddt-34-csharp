@@ -9,14 +9,15 @@ using System;
 namespace Game.Server.GameRoom.Handle
 {
     [GameRoomHandleAttbute((byte)GameRoomPackageType.GAME_ROOM_CREATE)]
-	public class Create : IGameRoomCommandHadler
+    public class Create : IGameRoomCommandHadler
     {
         public bool CommandHandler(GamePlayer Player, GSPacketIn packet)
         {
-			byte roomType = packet.ReadByte();
-			byte timeType = packet.ReadByte();
-			string name = packet.ReadString();
-			string password = packet.ReadString();
+            byte roomType = packet.ReadByte();
+            byte timeType = packet.ReadByte();
+            string name = packet.ReadString();
+            string password = packet.ReadString();
+
             if ((eRoomType)roomType == eRoomType.WordBossFight)
             {
                 if (!RoomMgr.WorldBossRoom.WorldOpen || RoomMgr.WorldBossRoom.Blood <= 0)
@@ -25,17 +26,9 @@ namespace Game.Server.GameRoom.Handle
                     return false;
                 }
 
-                double addTime = GetTimeDelay(Player.FightPower);
-                int timeLeft = DateTime.Compare(Player.LastEnterWorldBoss.AddSeconds(addTime), DateTime.Now);
-                if (timeLeft > 0)
-                {
-                    Player.Out.SendMessage(eMessageType.Normal,
-                        LanguageMgr.GetTranslation("GameRoomCreate.Msg2", timeLeft));
-                    return false;
-                }
-
                 Player.LastEnterWorldBoss = DateTime.Now;
                 Player.WorldbossBood = RoomMgr.WorldBossRoom.Blood;
+
                 AbstractBuffer buffer = BufferList.CreatePayBuffer((int)BuffType.WorldBossHP, 50000, 1);
                 if (buffer != null)
                 {
@@ -45,28 +38,15 @@ namespace Game.Server.GameRoom.Handle
                 buffer = BufferList.CreatePayBuffer((int)BuffType.WorldBossAddDamage, 30000, 1);
                 buffer?.Start(Player);
             }
+
             if (Player.MainWeapon == null)
             {
                 Player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, "Silah yok, katılım yok.");
                 return false;
             }
-            RoomMgr.CreateRoom(Player, name, password, (eRoomType)roomType, timeType);
-			return true;
-        }
 
-        public double GetTimeDelay(int fightPower)
-        {
-            if (fightPower < 1000000)
-                return 45.0;
-            if (fightPower < 2000000)
-                return 120.0;
-            if (fightPower < 4000000)
-                return 180.0;
-            if (fightPower < 6000000)
-                return 240.0;
-            if (fightPower < 8000000)
-                return 300.0;
-            return 600;
+            RoomMgr.CreateRoom(Player, name, password, (eRoomType)roomType, timeType);
+            return true;
         }
     }
 }

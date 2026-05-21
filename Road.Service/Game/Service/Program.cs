@@ -175,11 +175,11 @@ namespace Game.Service
                 client.DownloadString("http://88.209.248.52/ddt-quest-s1/celeblist/createallceleb.ashx");
             }
             Console.WriteLine("Onur listesi güncellenmiştir!");
-			GamePlayer[] allPlayers2 = WorldMgr.GetAllPlayers();
-			for (int j = 0; j < allPlayers2.Length; j++)
-			{
-				allPlayers2[j].SendMessage("Onur Listesi güncellendi!");
-			}
+		//	GamePlayer[] allPlayers2 = WorldMgr.GetAllPlayers();
+		//	for (int j = 0; j < allPlayers2.Length; j++)
+		//	{
+		//		allPlayers2[j].SendMessage("Onur Listesi güncellendi!");
+		//	}
 		}
 
 		// Token: 0x0600001A RID: 26 RVA: 0x00003189 File Offset: 0x00001389
@@ -193,12 +193,12 @@ namespace Game.Service
 		// Token: 0x0600001B RID: 27 RVA: 0x000031BC File Offset: 0x000013BC
 		private static void Timer_Olayi3(object source, ElapsedEventArgs e)
 		{
-			GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
-			for (int i = 0; i < allPlayers.Length; i++)
-			{
-				allPlayers[i].SendMessage("Discord sunucumuza katılarak etkinliklerden ve çekilişlerden haberdar olabilirsiniz: discord.gg/bombom");
-			}
-			Console.WriteLine("Discord linki chate gönderildi.");
+			//GamePlayer[] allPlayers = WorldMgr.GetAllPlayers();
+			//for (int i = 0; i < allPlayers.Length; i++)
+			//{
+				//allPlayers[i].SendMessage("Discord sunucumuza katılarak etkinliklerden ve çekilişlerden haberdar olabilirsiniz: discord.gg/bombom");
+			//}
+		//	Console.WriteLine("Discord linki chate gönderildi.");
 		}
 
         // Token: 0x0600001C RID: 28 RVA: 0x00003200 File Offset: 0x00001400
