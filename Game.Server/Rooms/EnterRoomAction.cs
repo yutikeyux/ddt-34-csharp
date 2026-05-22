@@ -5,171 +5,225 @@ using Game.Server.Packets;
 
 namespace Game.Server.Rooms
 {
+    /// <summary>
+    /// Oyuncunun mevcut bir odaya katılma isteğini işler.
+    /// roomId == -1 ise uygun rastgele oda aranır, aksi halde belirli odaya giriş denenir.
+    /// </summary>
     internal class EnterRoomAction : IAction
     {
-        private GamePlayer m_player;
-        private int m_roomId;
-        private string m_pwd;
-        private int m_type;
-        private int m_hallType;
-        private bool m_isInvite;
+        // -----------------------------------------------------------------------
+        // ALANLAR
+        // -----------------------------------------------------------------------
+
+        private readonly GamePlayer m_player;
+        private readonly int m_roomId;
+        private readonly string m_pwd;
+        private readonly int m_hallType;
+        private readonly bool m_isInvite;
+
+        // -----------------------------------------------------------------------
+        // YAPICI
+        // -----------------------------------------------------------------------
 
         public EnterRoomAction(
-          GamePlayer player,
-          int roomId,
-          string pwd,
-          int hallType,
-          bool isInvite)
+            GamePlayer player,
+            int roomId,
+            string pwd,
+            int hallType,
+            bool isInvite)
         {
-            this.m_player = player;
-            this.m_roomId = roomId;
-            this.m_pwd = pwd;
-            this.m_hallType = hallType;
-            this.m_isInvite = isInvite;
+            m_player = player;
+            m_roomId = roomId;
+            m_pwd = pwd;
+            m_hallType = hallType;
+            m_isInvite = isInvite;
         }
+
+        // -----------------------------------------------------------------------
+        // ÇALIŞMA MANTIĞI
+        // -----------------------------------------------------------------------
 
         public void Execute()
         {
-            bool flag = true;
-            if (!this.m_player.IsActive)
-                return;
-            if (this.m_player.MainWeapon == null)
+            // 1. Temel doğrulamalar
+            if (!m_player.IsActive) return;
+
+            if (m_player.MainWeapon == null)
             {
-                this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, "Silah kuşanman gerekli!"); //türkçeleştirildi not: yuti
-                this.m_player.Out.SendRoomLoginResult(false);
+                SendFail(LanguageMgr.GetTranslation("EnterRoomAction.NoWeapon"));
                 return;
             }
-            if (this.m_player.CurrentRoom != null)
-                this.m_player.CurrentRoom.RemovePlayerUnsafe(this.m_player);
+
+            // 2. Mevcut odadan çıkış
+            m_player.CurrentRoom?.RemovePlayerUnsafe(m_player);
+
+            // 3. Hedef odayı belirle
             BaseRoom[] rooms = RoomMgr.Rooms;
-            BaseRoom randomRoom;
-            if (this.m_roomId == -1)
+            BaseRoom target;
+
+            if (m_roomId == -1)
             {
-                randomRoom = this.FindRandomRoom(rooms);
-                if (randomRoom == null)
+                target = FindRandomRoom(rooms);
+                if (target == null)
                 {
-                    this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("EnterRoomAction.noroom"));
-                    this.m_player.Out.SendRoomLoginResult(false);
+                    SendFail(LanguageMgr.GetTranslation("EnterRoomAction.noroom"));
                     return;
                 }
             }
             else
             {
-                if (this.m_roomId > rooms.Length || this.m_roomId <= 0)
+                if (m_roomId <= 0 || m_roomId > rooms.Length)
                 {
-                    this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("EnterRoomAction.noexist"));
-                    this.m_player.Out.SendRoomLoginResult(false);
+                    SendFail(LanguageMgr.GetTranslation("EnterRoomAction.noexist"));
                     return;
                 }
-                randomRoom = rooms[this.m_roomId - 1];
+                target = rooms[m_roomId - 1];
             }
-            if (!randomRoom.IsUsing)
+
+            // 4. Oda aktif mi?
+            if (!target.IsUsing)
             {
-                this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("EnterRoomAction.noexist"));
-                this.m_player.Out.SendRoomLoginResult(false);
+                SendFail(LanguageMgr.GetTranslation("EnterRoomAction.noexist"));
                 return;
             }
-            else
+
+            // 5. Oyun devam ediyor mu?
+            if (target.IsPlaying)
             {
-                if (randomRoom.IsPlaying)
+                bool canJoinMidGame = m_isInvite
+                    && target.Game is PVEGame pve
+                    && pve.GameState == eGameState.SessionPrepared;
+
+                if (!canJoinMidGame)
                 {
-                    if (randomRoom.Game is PVEGame)
-                    {
-                        if ((randomRoom.Game as PVEGame).GameState != eGameState.SessionPrepared || !this.m_isInvite)
-                        {
-                            this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("EnterRoomAction.start"));
-                            flag = false;
-                            this.m_player.Out.SendRoomLoginResult(false);
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("EnterRoomAction.start"));
-                        flag = false;
-                        this.m_player.Out.SendRoomLoginResult(false);
-                        return;
-                    }
-                }
-                if (flag)
-                {
-                    if (randomRoom.PlayerCount == randomRoom.PlacesCount)
-                    {
-                        //flag = false;
-                        //this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("EnterRoomAction.full"));
-                        if (randomRoom.CanAddViewPlayer())
-                        {
-                            RoomMgr.WaitingRoom.RemovePlayer(m_player);
-                            m_player.Out.SendRoomLoginResult(true);
-                            m_player.Out.SendRoomCreate(randomRoom);
-                            if (randomRoom.AddPlayerUnsafe(m_player))
-                            {
-                                randomRoom.Game?.AddPlayer(m_player);
-                                RoomMgr.WaitingRoom.SendUpdateCurrentRoom(randomRoom);
-                                m_player.Out.SendGameRoomSetupChange(randomRoom);
-                                randomRoom.UpdatePlayerState(m_player, 1, false);
-                            }
-                        }
-                        else
-                        {
-                            this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("Oda Dolu!")); //türkçeleştirildi not: yuti
-                            this.m_player.Out.SendRoomLoginResult(false);
-                            return;
-                        }
-                    }
-                    else if (!randomRoom.NeedPassword || randomRoom.Password == this.m_pwd)
-                    {
-                        if (randomRoom.Game == null || randomRoom.Game.CanAddPlayer())
-                        {
-                            if (randomRoom.RoomType == eRoomType.Dungeon && (eLevelLimits)randomRoom.LevelLimits > randomRoom.GetLevelLimit(this.m_player))
-                            {
-                                this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, LanguageMgr.GetTranslation("EnterRoomAction.level"));
-                                this.m_player.Out.SendRoomLoginResult(false);
-                                return;
-                            }
-                            RoomMgr.WaitingRoom.RemovePlayer(this.m_player);
-                            this.m_player.Out.SendRoomLoginResult(true);
-                            this.m_player.Out.SendRoomCreate(randomRoom);
-                            if (randomRoom.AddPlayerUnsafe(this.m_player) && randomRoom.Game != null)
-                                randomRoom.Game.AddPlayer((IGamePlayer)this.m_player);
-                            RoomMgr.WaitingRoom.SendUpdateRoom(randomRoom);
-                            this.m_player.Out.SendGameRoomSetupChange(randomRoom);
-                        }
-                        else
-                        {
-                            this.m_player.Out.SendRoomLoginResult(false);
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        this.m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, !randomRoom.NeedPassword || !string.IsNullOrEmpty(this.m_pwd) ? LanguageMgr.GetTranslation("EnterRoomAction.passworderror") : LanguageMgr.GetTranslation("EnterRoomAction.EnterPassword"));
-                        this.m_player.Out.SendRoomLoginResult(false);
-                        return;
-                    }
-                }
-                if (flag)
+                    SendFail(LanguageMgr.GetTranslation("EnterRoomAction.start"));
                     return;
-                int roomId = this.m_roomId;
+                }
+            }
+
+            // 6. Kapasite kontrolü
+            bool isFull = target.PlayerCount >= target.PlacesCount;
+
+            if (isFull)
+            {
+                if (target.CanAddViewPlayer())
+                {
+                    JoinAsViewer(target);
+                }
+                else
+                {
+                    SendFail(LanguageMgr.GetTranslation("EnterRoomAction.full"));
+                }
+                return;
+            }
+
+            // 7. Şifre kontrolü
+            if (target.NeedPassword && target.Password != m_pwd)
+            {
+                string msgKey = string.IsNullOrEmpty(m_pwd)
+                    ? "EnterRoomAction.EnterPassword"
+                    : "EnterRoomAction.passworderror";
+
+                SendFail(LanguageMgr.GetTranslation(msgKey));
+                return;
+            }
+
+            // 8. Oyun katılım kapasitesi
+            if (target.Game != null && !target.Game.CanAddPlayer())
+            {
+                SendFail(LanguageMgr.GetTranslation("EnterRoomAction.full"));
+                return;
+            }
+
+            // 9. Seviye limiti (yalnızca Dungeon)
+            if (target.RoomType == eRoomType.Dungeon &&
+                (eLevelLimits)target.LevelLimits > target.GetLevelLimit(m_player))
+            {
+                SendFail(LanguageMgr.GetTranslation("EnterRoomAction.level"));
+                return;
+            }
+
+            // 10. Normal oyuncu olarak katıl
+            JoinAsPlayer(target);
+        }
+
+        // -----------------------------------------------------------------------
+        // YARDIMCI METODlar
+        // -----------------------------------------------------------------------
+
+        /// <summary>Normal oyuncu olarak odaya katılır ve ilgili paketleri gönderir.</summary>
+        private void JoinAsPlayer(BaseRoom room)
+        {
+            RoomMgr.WaitingRoom.RemovePlayer(m_player);
+            m_player.Out.SendRoomLoginResult(true);
+            m_player.Out.SendRoomCreate(room);
+
+            if (room.AddPlayerUnsafe(m_player) && room.Game != null)
+                room.Game.AddPlayer((IGamePlayer)m_player);
+
+            RoomMgr.WaitingRoom.SendUpdateRoom(room);
+            m_player.Out.SendGameRoomSetupChange(room);
+        }
+
+        /// <summary>Dolu odaya seyirci olarak katılır ve ilgili paketleri gönderir.</summary>
+        private void JoinAsViewer(BaseRoom room)
+        {
+            RoomMgr.WaitingRoom.RemovePlayer(m_player);
+            m_player.Out.SendRoomLoginResult(true);
+            m_player.Out.SendRoomCreate(room);
+
+            if (room.AddPlayerUnsafe(m_player))
+            {
+                room.Game?.AddPlayer(m_player);
+                RoomMgr.WaitingRoom.SendUpdateCurrentRoom(room);
+                m_player.Out.SendGameRoomSetupChange(room);
+
+                // Seyirci durumu: 1 = izleyici, hazır değil
+                room.UpdatePlayerState(m_player, 1, sendToClient: false);
             }
         }
 
+        /// <summary>Oyuncuya hata mesajı gönderir ve giriş reddini bildirir.</summary>
+        private void SendFail(string message)
+        {
+            m_player.Out.SendMessage(eMessageType.BIGBUGLE_NOTICE, message);
+            m_player.Out.SendRoomLoginResult(false);
+        }
+
+        /// <summary>
+        /// Uygun rastgele oda arar.
+        /// Kurallar:
+        ///   - En az 1 oyuncu olmalı
+        ///   - Yeni oyuncu kabul etmeli
+        ///   - Şifresiz ve oyun başlamamış olmalı
+        ///   - Freshman odası olmamalı
+        ///   - Tip 10 (Dungeon eşleştirme): oyuncunun seviyesi oda limitini karşılamalı
+        ///   - Diğer tipler: oda tipi hallType ile eşleşmeli
+        /// </summary>
         private BaseRoom FindRandomRoom(BaseRoom[] rooms)
         {
-            for (int index = 0; index < rooms.Length; ++index)
+            for (int i = 0; i < rooms.Length; i++)
             {
-                if (rooms[index].PlayerCount > 0 && rooms[index].CanAddPlayer() && (!rooms[index].NeedPassword && !rooms[index].IsPlaying) && rooms[index].RoomType != eRoomType.Freshman)
+                BaseRoom room = rooms[i];
+
+                if (room.PlayerCount == 0) continue;
+                if (!room.CanAddPlayer()) continue;
+                if (room.NeedPassword) continue;
+                if (room.IsPlaying) continue;
+                if (room.RoomType == eRoomType.Freshman) continue;
+
+                if (m_hallType == 10)
                 {
-                    if (10 != this.m_type)
-                    {
-                        if (rooms[index].RoomType == (eRoomType)this.m_type)
-                            return rooms[index];
-                    }
-                    else if (rooms[index].RoomType == (eRoomType)this.m_type && (eLevelLimits)rooms[index].LevelLimits < rooms[index].GetLevelLimit(this.m_player))
-                        return rooms[index];
+                    if (room.RoomType != (eRoomType)m_hallType) continue;
+                    if ((eLevelLimits)room.LevelLimits >= room.GetLevelLimit(m_player)) continue;
+                    return room;
                 }
+
+                if (room.RoomType == (eRoomType)m_hallType)
+                    return room;
             }
-            return (BaseRoom)null;
+
+            return null;
         }
     }
 }

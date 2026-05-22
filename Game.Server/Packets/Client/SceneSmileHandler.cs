@@ -23,7 +23,7 @@ namespace Game.Server.Packets.Client
             }
             else
             {
-                RoomMgr.WaitingRoom.SendToALL(packet);
+                RoomMgr.WaitingRoom.SendToAll(packet);
             }
             return 1;
         }

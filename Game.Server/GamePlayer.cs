@@ -2856,8 +2856,8 @@ public class GamePlayer : IGamePlayer
             UserVIPInfo.State = 1;
             ClearStoreBag();
             ClearCaddyBag();
-            m_equipGhostList = JsonConvert.DeserializeObject<Dictionary<string, UserEquipGhostInfo>>(UserVIPInfo.GhostEquipList);
-            m_equipGhostList ??= [];
+            //m_equipGhostList = JsonConvert.DeserializeObject<Dictionary<string, UserEquipGhostInfo>>(UserVIPInfo.GhostEquipList);
+           // m_equipGhostList ??= [];
             PlayerCharacter.VIPNextLevelDaysNeeded = GetVIPNextLevelDaysNeeded(PlayerCharacter.VIPLevel, PlayerCharacter.VIPExp);
             if (UserVIPInfo.totemId > TotemMgr.MaxTotem())
             {

@@ -8,142 +8,184 @@ using System.Threading;
 
 namespace Game.Server.Managers
 {
-	public class ClothGroupTemplateInfoMgr
-	{
-		private static Dictionary<int, ClothGroupTemplateInfo> _clothGroup;
+    /// <summary>
+    /// Kıyafet grubu şablon verilerini yükler, önbellekte tutar ve sorgular.
+    /// Yeniden yükleme sırasında okuma/yazma kilidi ile thread-safe erişim sağlar.
+    /// </summary>
+    public static class ClothGroupTemplateInfoMgr
+    {
+        // -----------------------------------------------------------------------
+        // ALANLAR
+        // -----------------------------------------------------------------------
 
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private static ReaderWriterLock m_lock;
+        /// <summary>
+        /// Kıyafet grubu verisi: ItemID → ClothGroupTemplateInfo
+        /// Birden fazla kaydın aynı ItemID'yi paylaşabileceği durumlar için
+        /// GetClothGroup ve GetClothGroupWithID metodlarında Values üzerinden taranır.
+        /// </summary>
+        private static Dictionary<int, ClothGroupTemplateInfo> _clothGroup;
 
-		public static int CountClothGroupWithID(int ID)
-		{
-			int count;
-			lock (ClothGroupTemplateInfoMgr.m_lock)
-			{
-				count = ClothGroupTemplateInfoMgr.GetClothGroupWithID(ID).Count;
-			}
-			return count;
-		}
+        /// <summary>
+        /// Normal lock yerine ReaderWriterLockSlim kullanılıyor:
+        /// Çok sayıda okuma isteği birbirini bloklamaz; yalnızca yazma bloklar.
+        /// </summary>
+        private static readonly ReaderWriterLockSlim m_lock =
+            new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
-		public static ClothGroupTemplateInfo GetClothGroup(int ID, int TemplateID, int Sex)
-		{
-			ClothGroupTemplateInfo clothGroupTemplateInfo;
-			ClothGroupTemplateInfo result;
-			lock (ClothGroupTemplateInfoMgr.m_lock)
-			{
-				if (ClothGroupTemplateInfoMgr._clothGroup.Count > 0)
-				{
-					foreach (ClothGroupTemplateInfo current in ClothGroupTemplateInfoMgr._clothGroup.Values)
-					{
-						if (current.TemplateID == TemplateID && current.ID == ID && current.Sex == Sex)
-						{
-							clothGroupTemplateInfo = current;
-							result = clothGroupTemplateInfo;
-							return result;
-						}
-					}
-				}
-				clothGroupTemplateInfo = null;
-			}
-			result = clothGroupTemplateInfo;
-			return result;
-		}
+        // -----------------------------------------------------------------------
+        // BAŞLATMA / YENİDEN YÜKLEME
+        // -----------------------------------------------------------------------
 
-		public static List<ClothGroupTemplateInfo> GetClothGroupWithID(int ID)
-		{
-			List<ClothGroupTemplateInfo> result;
-			lock (ClothGroupTemplateInfoMgr.m_lock)
-			{
-				List<ClothGroupTemplateInfo> list = new List<ClothGroupTemplateInfo>();
-				if (ClothGroupTemplateInfoMgr._clothGroup.Count > 0)
-				{
-					foreach (ClothGroupTemplateInfo current in ClothGroupTemplateInfoMgr._clothGroup.Values)
-					{
-						if (current.ID == ID)
-						{
-							list.Add(current);
-						}
-					}
-				}
-				result = list;
-			}
-			return result;
-		}
+        /// <summary>
+        /// Veri tabanından kıyafet grubu verilerini yükler ve önbelleği başlatır.
+        /// </summary>
+        public static bool Init()
+        {
+            try
+            {
+                var clothGroup = new Dictionary<int, ClothGroupTemplateInfo>();
+                if (!LoadClothGroup(clothGroup)) return false;
 
-		public static bool Init()
-		{
-			bool result;
-			try
-			{
-				ClothGroupTemplateInfoMgr.m_lock = new ReaderWriterLock();
-				ClothGroupTemplateInfoMgr._clothGroup = new Dictionary<int, ClothGroupTemplateInfo>();
-				result = ClothGroupTemplateInfoMgr.LoadClothGroup(ClothGroupTemplateInfoMgr._clothGroup);
-			}
-			catch (Exception exception)
-			{
-				if (ClothGroupTemplateInfoMgr.log.IsErrorEnabled)
-				{
-					ClothGroupTemplateInfoMgr.log.Error("ClothGroupMgr", exception);
-				}
-				result = false;
-			}
-			return result;
-		}
+                m_lock.EnterWriteLock();
+                try
+                {
+                    _clothGroup = clothGroup;
+                }
+                finally
+                {
+                    m_lock.ExitWriteLock();
+                }
 
-		private static bool LoadClothGroup(Dictionary<int, ClothGroupTemplateInfo> clothGroup)
-		{
-			using (ProduceBussiness pb = new ProduceBussiness())
-			{
-				ClothGroupTemplateInfo[] allClothGroup = pb.GetAllClothGroup();
-				for (int i = 0; i < allClothGroup.Length; i++)
-				{
-					ClothGroupTemplateInfo clothGroupTemplateInfo = allClothGroup[i];
-					if (!clothGroup.ContainsKey(clothGroupTemplateInfo.ItemID))
-					{
-						clothGroup.Add(clothGroupTemplateInfo.ItemID, clothGroupTemplateInfo);
-					}
-				}
-			}
-			return true;
-		}
+                return true;
+            }
+            catch (Exception ex)
+            {
+                log.Error("ClothGroupMgr Init hatası:", ex);
+                return false;
+            }
+        }
 
-		public static bool ReLoad()
-		{
-			bool flag;
-			bool result;
-			try
-			{
-				Dictionary<int, ClothGroupTemplateInfo> clothGroup = new Dictionary<int, ClothGroupTemplateInfo>();
-				if (ClothGroupTemplateInfoMgr.LoadClothGroup(clothGroup))
-				{
-					ClothGroupTemplateInfoMgr.m_lock.AcquireWriterLock(-1);
-					try
-					{
-						ClothGroupTemplateInfoMgr._clothGroup = clothGroup;
-						flag = true;
-						result = flag;
-						return result;
-					}
-					catch
-					{
-					}
-					finally
-					{
-						ClothGroupTemplateInfoMgr.m_lock.ReleaseWriterLock();
-					}
-				}
-			}
-			catch (Exception exception)
-			{
-				if (ClothGroupTemplateInfoMgr.log.IsErrorEnabled)
-				{
-					ClothGroupTemplateInfoMgr.log.Error("ClothGroupMgr", exception);
-				}
-			}
-			flag = false;
-			result = flag;
-			return result;
-		}
-	}
+        /// <summary>
+        /// Önbelleği yeniden yükler. Yükleme başarısızsa mevcut veri korunur.
+        /// </summary>
+        public static bool ReLoad()
+        {
+            try
+            {
+                var clothGroup = new Dictionary<int, ClothGroupTemplateInfo>();
+                if (!LoadClothGroup(clothGroup)) return false;
+
+                m_lock.EnterWriteLock();
+                try
+                {
+                    _clothGroup = clothGroup;
+                }
+                finally
+                {
+                    m_lock.ExitWriteLock();
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                log.Error("ClothGroupMgr ReLoad hatası:", ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Veri tabanından tüm kayıtları çeker ve sözlüğe yükler.
+        /// Yinelenen ItemID'ler atlanır (ilk kayıt önceliklidir).
+        /// </summary>
+        private static bool LoadClothGroup(Dictionary<int, ClothGroupTemplateInfo> clothGroup)
+        {
+            using (var pb = new ProduceBussiness())
+            {
+                ClothGroupTemplateInfo[] all = pb.GetAllClothGroup();
+                foreach (ClothGroupTemplateInfo item in all)
+                {
+                    if (!clothGroup.ContainsKey(item.ItemID))
+                        clothGroup.Add(item.ItemID, item);
+                }
+            }
+            return true;
+        }
+
+        // -----------------------------------------------------------------------
+        // SORGULAMA METODları
+        // -----------------------------------------------------------------------
+
+        /// <summary>
+        /// Belirtilen ID'ye sahip kıyafet grubu kayıt sayısını döndürür.
+        /// </summary>
+        public static int CountClothGroupWithID(int id)
+        {
+            m_lock.EnterReadLock();
+            try
+            {
+                return GetClothGroupWithIDInternal(id).Count;
+            }
+            finally
+            {
+                m_lock.ExitReadLock();
+            }
+        }
+
+        /// <summary>
+        /// ID, TemplateID ve cinsiyet kriterlerine uyan ilk kaydı döndürür.
+        /// Bulunamazsa null döner.
+        /// </summary>
+        public static ClothGroupTemplateInfo GetClothGroup(int id, int templateId, int sex)
+        {
+            m_lock.EnterReadLock();
+            try
+            {
+                foreach (ClothGroupTemplateInfo item in _clothGroup.Values)
+                {
+                    if (item.ID == id && item.TemplateID == templateId && item.Sex == sex)
+                        return item;
+                }
+                return null;
+            }
+            finally
+            {
+                m_lock.ExitReadLock();
+            }
+        }
+
+        /// <summary>
+        /// Belirtilen ID'ye sahip tüm kıyafet grubu kayıtlarını döndürür.
+        /// </summary>
+        public static List<ClothGroupTemplateInfo> GetClothGroupWithID(int id)
+        {
+            m_lock.EnterReadLock();
+            try
+            {
+                return GetClothGroupWithIDInternal(id);
+            }
+            finally
+            {
+                m_lock.ExitReadLock();
+            }
+        }
+
+        /// <summary>
+        /// Kilit alınmış bağlamda kullanılmak üzere iç yardımcı metot.
+        /// Çağıran metodun kilit yönetiminden sorumlu olduğu varsayılır.
+        /// </summary>
+        private static List<ClothGroupTemplateInfo> GetClothGroupWithIDInternal(int id)
+        {
+            var result = new List<ClothGroupTemplateInfo>();
+            foreach (ClothGroupTemplateInfo item in _clothGroup.Values)
+            {
+                if (item.ID == id)
+                    result.Add(item);
+            }
+            return result;
+        }
+    }
 }

@@ -6,193 +6,249 @@ using System.Collections.Generic;
 
 namespace Game.Server.Rooms
 {
+    /// <summary>
+    /// Oyuncuların oda seçerken beklediği lobi alanını yönetir.
+    /// Oyuncuları takip eder ve oda listesi güncellemelerini dağıtır.
+    /// </summary>
     public class BaseWaitingRoom
     {
-        private Dictionary<int, GamePlayer> m_list;
+        // -----------------------------------------------------------------------
+        // ALANLAR
+        // -----------------------------------------------------------------------
+
+        /// <summary>Bekleme odasındaki oyuncular: PlayerId → GamePlayer</summary>
+        private readonly Dictionary<int, GamePlayer> m_list;
+
+        // -----------------------------------------------------------------------
+        // YAPICI
+        // -----------------------------------------------------------------------
 
         public BaseWaitingRoom()
         {
-			m_list = new Dictionary<int, GamePlayer>();
+            m_list = new Dictionary<int, GamePlayer>();
         }
 
+        // -----------------------------------------------------------------------
+        // OYUNCU YÖNETİMİ
+        // -----------------------------------------------------------------------
+
+        /// <summary>
+        /// Oyuncuyu bekleme odasına ekler.
+        /// Zaten kayıtlıysa tekrar eklenmez.
+        /// Başarılıysa diğer oyunculara bildirim paketi yayınlanır.
+        /// </summary>
         public bool AddPlayer(GamePlayer player)
         {
-			bool flag = false;
-			lock (m_list)
-			{
-				if (!m_list.ContainsKey(player.PlayerId))
-				{
-					m_list.Add(player.PlayerId, player);
-					flag = true;
-				}
-			}
-			if (flag)
-			{
-				GSPacketIn packet = player.Out.SendSceneAddPlayer(player);
-				SendToALL(packet, player);
-			}
-			return flag;
+            bool added = false;
+            lock (m_list)
+            {
+                if (!m_list.ContainsKey(player.PlayerId))
+                {
+                    m_list.Add(player.PlayerId, player);
+                    added = true;
+                }
+            }
+
+            if (added)
+            {
+                GSPacketIn packet = player.Out.SendSceneAddPlayer(player);
+                SendToAll(packet, player);
+            }
+
+            return added;
         }
 
+        /// <summary>
+        /// Oyuncuyu bekleme odasından çıkarır.
+        /// Başarılıysa diğer oyunculara bildirim paketi yayınlanır.
+        /// </summary>
         public bool RemovePlayer(GamePlayer player)
         {
-			bool flag = false;
-			lock (m_list)
-			{
-				flag = m_list.Remove(player.PlayerId);
-			}
-			if (flag)
-			{
-				GSPacketIn packet = player.Out.SendSceneRemovePlayer(player);
-				SendToALL(packet, player);
-			}
-			return true;
+            bool removed;
+            lock (m_list)
+            {
+                removed = m_list.Remove(player.PlayerId);
+            }
+
+            if (removed)
+            {
+                GSPacketIn packet = player.Out.SendSceneRemovePlayer(player);
+                SendToAll(packet, player);
+            }
+
+            // Not: Orijinal kod her zaman true döndürüyordu; gerçek sonucu döndürüyoruz.
+            return removed;
         }
 
+        // -----------------------------------------------------------------------
+        // SAHNE GÜNCELLEMELERİ
+        // -----------------------------------------------------------------------
+
+        /// <summary>
+        /// Yeni giren oyuncuyu diğerlerine, diğerlerini yeni oyuncuya tanıtır.
+        /// </summary>
         public void SendSceneUpdate(GamePlayer player)
         {
-			GSPacketIn packet = player.Out.SendSceneAddPlayer(player);
-			SendToALL(packet, player);
-			GamePlayer[] playersSafe = GetPlayersSafe();
-			GamePlayer[] array = playersSafe;
-			foreach (GamePlayer gamePlayer in array)
-			{
-				if (gamePlayer != player)
-				{
-					player.Out.SendSceneAddPlayer(gamePlayer);
-				}
-			}
+            // Yeni oyuncuyu lobideki herkese duyur
+            GSPacketIn packet = player.Out.SendSceneAddPlayer(player);
+            SendToAll(packet, player);
+
+            // Lobideki mevcut oyuncuları yeni oyuncuya gönder
+            GamePlayer[] current = GetPlayersSafe();
+            foreach (GamePlayer other in current)
+            {
+                if (other != player)
+                    player.Out.SendSceneAddPlayer(other);
+            }
         }
 
+        // -----------------------------------------------------------------------
+        // ODA LİSTESİ GÜNCELLEMELERİ
+        // -----------------------------------------------------------------------
+
+        /// <summary>
+        /// Tek bir oyuncuya, durumuna göre (Online → PvP, Away → PvE) oda listesini gönderir.
+        /// </summary>
         public void SendUpdateRoom(GamePlayer player)
         {
-			List<BaseRoom> list = new List<BaseRoom>();
-			if (player.PlayerState == ePlayerState.Away)
-			{
-				list.AddRange(RoomMgr.GetAllPveRooms());
-			}
-			else
-			{
-				list.AddRange(RoomMgr.GetAllMatchRooms());
-			}
-			player.Out.SendUpdateRoomList(list);
+            List<BaseRoom> rooms = (player.PlayerState == ePlayerState.Away)
+                ? RoomMgr.GetAllPveRooms()
+                : RoomMgr.GetAllMatchRooms();
+
+            player.Out.SendUpdateRoomList(rooms);
         }
 
-		public void SendUpdateRoom(BaseRoom room)
-		{
-			GamePlayer[] playersSafe = this.GetPlayersSafe();
-			List<BaseRoom> allRooms = RoomMgr.GetAllRooms();
-			List<GamePlayer> list = new List<GamePlayer>();
-			List<GamePlayer> list2 = new List<GamePlayer>();
-			List<BaseRoom> list3 = new List<BaseRoom>();
-			List<BaseRoom> list4 = new List<BaseRoom>();
-			GamePlayer[] array = playersSafe;
-			for (int i = 0; i < array.Length; i++)
-			{
-				GamePlayer gamePlayer = array[i];
-				if (gamePlayer.PlayerState == ePlayerState.Online)
-				{
-					list.Add(gamePlayer);
-				}
-				if (gamePlayer.PlayerState == ePlayerState.Away)
-				{
-					list2.Add(gamePlayer);
-				}
-			}
-			foreach (BaseRoom current in allRooms)
-			{
-				if (current.RoomType == eRoomType.Freedom || current.RoomType == eRoomType.Match)
-				{
-					list3.Add(current);
-				}
-				if (current.RoomType == eRoomType.Dungeon || current.RoomType == eRoomType.AcademyDungeon || current.RoomType == eRoomType.ActivityDungeon || current.RoomType == eRoomType.SpecialActivityDungeon)
-				{
-					list4.Add(current);
-				}
-			}
-			this.SendUpdateRoom(list, list3);
-			this.SendUpdateRoom(list2, list4);
-		}
-
-		public void SendUpdateRoom(List<GamePlayer> players, List<BaseRoom> rooms)
-		{
-			GSPacketIn gSPacketIn = null;
-			foreach (GamePlayer current in players)
-			{
-				if (gSPacketIn == null)
-				{
-					gSPacketIn = current.Out.SendUpdateRoomList(rooms);
-				}
-				else
-				{
-					current.Out.SendTCP(gSPacketIn);
-				}
-			}
-		}
-
-		public void SendUpdateWaitingRoom(BaseRoom room)
+        /// <summary>
+        /// Belirtilen oda değiştiğinde bekleme odasındaki tüm oyuncuların listesini günceller.
+        /// Online oyuncular PvP odalarını, Away oyuncular PvE odalarını görür.
+        /// </summary>
+        public void SendUpdateRoom(BaseRoom room)
         {
-			List<BaseRoom> list = new List<BaseRoom>();
-			list.AddRange(RoomMgr.GetAllRooms());
-			foreach (GamePlayer player in WorldMgr.GetAllPlayersNoGame())
-			{
-				player.Out.SendUpdateRoomList(list);
-			}
-		}
+            GamePlayer[] snapshot = GetPlayersSafe();
+            List<BaseRoom> allRooms = RoomMgr.GetAllRooms();
 
+            // Oyuncuları duruma göre ayır
+            var onlinePlayers = new List<GamePlayer>();
+            var awayPlayers = new List<GamePlayer>();
+
+            foreach (GamePlayer p in snapshot)
+            {
+                if (p.PlayerState == ePlayerState.Online)
+                    onlinePlayers.Add(p);
+                else if (p.PlayerState == ePlayerState.Away)
+                    awayPlayers.Add(p);
+            }
+
+            // Odaları tipine göre ayır
+            var pvpRooms = new List<BaseRoom>();
+            var pveRooms = new List<BaseRoom>();
+
+            foreach (BaseRoom r in allRooms)
+            {
+                if (r.RoomType == eRoomType.Freedom || r.RoomType == eRoomType.Match)
+                {
+                    pvpRooms.Add(r);
+                }
+                else if (r.RoomType == eRoomType.Dungeon ||
+                         r.RoomType == eRoomType.AcademyDungeon ||
+                         r.RoomType == eRoomType.ActivityDungeon ||
+                         r.RoomType == eRoomType.SpecialActivityDungeon)
+                {
+                    pveRooms.Add(r);
+                }
+            }
+
+            SendUpdateRoom(onlinePlayers, pvpRooms);
+            SendUpdateRoom(awayPlayers, pveRooms);
+        }
+
+        /// <summary>
+        /// Verilen oyuncu listesine aynı oda listesini verimli şekilde gönderir.
+        /// İlk oyuncu için paket oluşturulur; diğerleri aynı paketi alır (tekrar serileştirmeden).
+        /// </summary>
+        public void SendUpdateRoom(List<GamePlayer> players, List<BaseRoom> rooms)
+        {
+            GSPacketIn sharedPacket = null;
+
+            foreach (GamePlayer player in players)
+            {
+                if (sharedPacket == null)
+                    sharedPacket = player.Out.SendUpdateRoomList(rooms);
+                else
+                    player.Out.SendTCP(sharedPacket);
+            }
+        }
+
+        /// <summary>
+        /// Oyun dışındaki tüm oyunculara güncel oda listesini gönderir.
+        /// </summary>
+        public void SendUpdateWaitingRoom(BaseRoom room)
+        {
+            List<BaseRoom> allRooms = RoomMgr.GetAllRooms();
+            foreach (GamePlayer player in WorldMgr.GetAllPlayersNoGame())
+            {
+                player.Out.SendUpdateRoomList(allRooms);
+            }
+        }
+
+        /// <summary>
+        /// Belirli bir odanın içindeki oyunculara güncel oda listesini gönderir.
+        /// Paket yalnızca bir kez oluşturulur; diğer oyuncular aynı paketi alır.
+        /// </summary>
         public void SendUpdateCurrentRoom(BaseRoom room)
         {
-			if (room == null)
-			{
-				return;
-			}
-			List<BaseRoom> allRooms = RoomMgr.GetAllRooms(room);
-			GSPacketIn gSPacketIn = null;
-			foreach (GamePlayer player in room.GetPlayers())
-			{
-				if (gSPacketIn == null)
-				{
-					gSPacketIn = player.Out.SendUpdateRoomList(allRooms);
-				}
-				else
-				{
-					player.Out.SendTCP(gSPacketIn);
-				}
-			}
+            if (room == null) return;
+
+            List<BaseRoom> allRooms = RoomMgr.GetAllRooms(room);
+            List<GamePlayer> roomPlayers = room.GetPlayers();
+            GSPacketIn sharedPacket = null;
+
+            foreach (GamePlayer player in roomPlayers)
+            {
+                if (sharedPacket == null)
+                    sharedPacket = player.Out.SendUpdateRoomList(allRooms);
+                else
+                    player.Out.SendTCP(sharedPacket);
+            }
         }
 
-        public void SendToALL(GSPacketIn packet)
+        // -----------------------------------------------------------------------
+        // PAKET YAYINI
+        // -----------------------------------------------------------------------
+
+        /// <summary>Bekleme odasındaki tüm oyunculara paket gönderir.</summary>
+        public void SendToAll(GSPacketIn packet)
         {
-			SendToALL(packet, null);
+            SendToAll(packet, null);
         }
 
-        public void SendToALL(GSPacketIn packet, GamePlayer except)
+        /// <summary>Bekleme odasındaki tüm oyunculara paket gönderir; except oyuncusu atlanır.</summary>
+        public void SendToAll(GSPacketIn packet, GamePlayer except)
         {
-			GamePlayer[] array = null;
-			lock (m_list)
-			{
-				array = new GamePlayer[m_list.Count];
-				m_list.Values.CopyTo(array, 0);
-			}
-			GamePlayer[] array2 = array;
-			foreach (GamePlayer gamePlayer in array2)
-			{
-				if (gamePlayer != null && gamePlayer != except)
-				{
-					gamePlayer.Out.SendTCP(packet);
-				}
-			}
+            GamePlayer[] snapshot = GetPlayersSafe();
+            foreach (GamePlayer player in snapshot)
+            {
+                if (player != null && player != except)
+                    player.Out.SendTCP(packet);
+            }
         }
 
+        // -----------------------------------------------------------------------
+        // GÜVENLİ ANLIK GÖRÜNTÜ
+        // -----------------------------------------------------------------------
+
+        /// <summary>
+        /// Oyuncu listesinin kilit altında alınmış anlık kopyasını döndürür.
+        /// Döngü sırasında koleksiyonun değişmesini önler.
+        /// </summary>
         public GamePlayer[] GetPlayersSafe()
         {
-			GamePlayer[] array = null;
-			lock (m_list)
-			{
-				array = new GamePlayer[m_list.Count];
-				m_list.Values.CopyTo(array, 0);
-			}
-			return array;
+            lock (m_list)
+            {
+                var snapshot = new GamePlayer[m_list.Count];
+                m_list.Values.CopyTo(snapshot, 0);
+                return snapshot;
+            }
         }
     }
 }

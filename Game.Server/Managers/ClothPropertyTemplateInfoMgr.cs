@@ -8,135 +8,154 @@ using System.Threading;
 
 namespace Game.Server.Managers
 {
-	public class ClothPropertyTemplateInfoMgr
-	{
-		private static Dictionary<int, ClothPropertyTemplateInfo> _clothProperty;
+    /// <summary>
+    /// Kıyafet özelliği şablon verilerini yükler, önbellekte tutar ve sorgular.
+    /// Yeniden yükleme sırasında okuma/yazma kilidi ile thread-safe erişim sağlar.
+    /// </summary>
+    public static class ClothPropertyTemplateInfoMgr
+    {
+        // -----------------------------------------------------------------------
+        // ALANLAR
+        // -----------------------------------------------------------------------
 
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log =
+            LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private static ReaderWriterLock m_lock;
+        /// <summary>Kıyafet özelliği verisi: ID → ClothPropertyTemplateInfo</summary>
+        private static Dictionary<int, ClothPropertyTemplateInfo> _clothProperty;
 
-		public static ClothPropertyTemplateInfo GetClothPropertyWithID(int ID)
-		{
-			ClothPropertyTemplateInfo clothPropertyTemplateInfo;
-			ClothPropertyTemplateInfo result;
-			lock (ClothPropertyTemplateInfoMgr.m_lock)
-			{
-				if (ClothPropertyTemplateInfoMgr._clothProperty.Count > 0)
-				{
-					foreach (ClothPropertyTemplateInfo current in ClothPropertyTemplateInfoMgr._clothProperty.Values)
-					{
-						if (current.ID == ID)
-						{
-							clothPropertyTemplateInfo = current;
-							result = clothPropertyTemplateInfo;
-							return result;
-						}
-					}
-				}
-				clothPropertyTemplateInfo = null;
-			}
-			result = clothPropertyTemplateInfo;
-			return result;
-		}
+        /// <summary>
+        /// Eş zamanlı okumaya izin veren, yalnızca yazma işlemini bloke eden kilit.
+        /// </summary>
+        private static readonly ReaderWriterLockSlim m_lock =
+            new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
-		public static ClothPropertyTemplateInfo GetClothPropertyWithID(int ID, int Sex)
-		{
-			ClothPropertyTemplateInfo clothPropertyTemplateInfo;
-			ClothPropertyTemplateInfo result;
-			lock (ClothPropertyTemplateInfoMgr.m_lock)
-			{
-				if (ClothPropertyTemplateInfoMgr._clothProperty.Count > 0)
-				{
-					foreach (ClothPropertyTemplateInfo current in ClothPropertyTemplateInfoMgr._clothProperty.Values)
-					{
-						if (current.ID == ID && current.Sex == Sex)
-						{
-							clothPropertyTemplateInfo = current;
-							result = clothPropertyTemplateInfo;
-							return result;
-						}
-					}
-				}
-				clothPropertyTemplateInfo = null;
-			}
-			result = clothPropertyTemplateInfo;
-			return result;
-		}
+        // -----------------------------------------------------------------------
+        // BAŞLATMA / YENİDEN YÜKLEME
+        // -----------------------------------------------------------------------
 
-		public static bool Init()
-		{
-			bool result;
-			try
-			{
-				ClothPropertyTemplateInfoMgr.m_lock = new ReaderWriterLock();
-				ClothPropertyTemplateInfoMgr._clothProperty = new Dictionary<int, ClothPropertyTemplateInfo>();
-				result = ClothPropertyTemplateInfoMgr.LoadClothProperty(ClothPropertyTemplateInfoMgr._clothProperty);
-			}
-			catch (Exception exception)
-			{
-				if (ClothPropertyTemplateInfoMgr.log.IsErrorEnabled)
-				{
-					ClothPropertyTemplateInfoMgr.log.Error("ClothPropertyMgr", exception);
-				}
-				result = false;
-			}
-			return result;
-		}
+        /// <summary>
+        /// Veri tabanından kıyafet özelliği verilerini yükler ve önbelleği başlatır.
+        /// </summary>
+        public static bool Init()
+        {
+            try
+            {
+                var clothProperty = new Dictionary<int, ClothPropertyTemplateInfo>();
+                if (!LoadClothProperty(clothProperty)) return false;
 
-		private static bool LoadClothProperty(Dictionary<int, ClothPropertyTemplateInfo> clothProperty)
-		{
-			using (ProduceBussiness pb = new ProduceBussiness())
-			{
-				ClothPropertyTemplateInfo[] allClothProperty = pb.GetAllClothProperty();
-				for (int i = 0; i < allClothProperty.Length; i++)
-				{
-					ClothPropertyTemplateInfo clothPropertyTemplateInfo = allClothProperty[i];
-					if (!clothProperty.ContainsKey(clothPropertyTemplateInfo.ID))
-					{
-						clothProperty.Add(clothPropertyTemplateInfo.ID, clothPropertyTemplateInfo);
-					}
-				}
-			}
-			return true;
-		}
+                m_lock.EnterWriteLock();
+                try
+                {
+                    _clothProperty = clothProperty;
+                }
+                finally
+                {
+                    m_lock.ExitWriteLock();
+                }
 
-		public static bool ReLoad()
-		{
-			bool flag;
-			bool result;
-			try
-			{
-				Dictionary<int, ClothPropertyTemplateInfo> clothProperty = new Dictionary<int, ClothPropertyTemplateInfo>();
-				if (ClothPropertyTemplateInfoMgr.LoadClothProperty(clothProperty))
-				{
-					ClothPropertyTemplateInfoMgr.m_lock.AcquireWriterLock(-1);
-					try
-					{
-						ClothPropertyTemplateInfoMgr._clothProperty = clothProperty;
-						flag = true;
-						result = flag;
-						return result;
-					}
-					catch
-					{
-					}
-					finally
-					{
-						ClothPropertyTemplateInfoMgr.m_lock.ReleaseWriterLock();
-					}
-				}
-			}
-			catch (Exception exception)
-			{
-				if (ClothPropertyTemplateInfoMgr.log.IsErrorEnabled)
-				{
-					ClothPropertyTemplateInfoMgr.log.Error("ClothPropertyMgr", exception);
-				}
-			}
-			flag = false;
-			result = flag;
-			return result;
-		}
-	}
+                return true;
+            }
+            catch (Exception ex)
+            {
+                log.Error("ClothPropertyMgr Init hatası:", ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Önbelleği yeniden yükler. Yükleme başarısızsa mevcut veri korunur.
+        /// </summary>
+        public static bool ReLoad()
+        {
+            try
+            {
+                var clothProperty = new Dictionary<int, ClothPropertyTemplateInfo>();
+                if (!LoadClothProperty(clothProperty)) return false;
+
+                m_lock.EnterWriteLock();
+                try
+                {
+                    _clothProperty = clothProperty;
+                }
+                finally
+                {
+                    m_lock.ExitWriteLock();
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                log.Error("ClothPropertyMgr ReLoad hatası:", ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Veri tabanından tüm kayıtları çeker ve sözlüğe yükler.
+        /// Yinelenen ID'ler atlanır (ilk kayıt önceliklidir).
+        /// </summary>
+        private static bool LoadClothProperty(Dictionary<int, ClothPropertyTemplateInfo> clothProperty)
+        {
+            using (var pb = new ProduceBussiness())
+            {
+                ClothPropertyTemplateInfo[] all = pb.GetAllClothProperty();
+                foreach (ClothPropertyTemplateInfo item in all)
+                {
+                    if (!clothProperty.ContainsKey(item.ID))
+                        clothProperty.Add(item.ID, item);
+                }
+            }
+            return true;
+        }
+
+        // -----------------------------------------------------------------------
+        // SORGULAMA METODları
+        // -----------------------------------------------------------------------
+
+        /// <summary>
+        /// Yalnızca ID'ye göre eşleşen ilk kaydı döndürür.
+        /// Bulunamazsa null döner.
+        /// </summary>
+        public static ClothPropertyTemplateInfo GetClothPropertyWithID(int id)
+        {
+            m_lock.EnterReadLock();
+            try
+            {
+                foreach (ClothPropertyTemplateInfo item in _clothProperty.Values)
+                {
+                    if (item.ID == id)
+                        return item;
+                }
+                return null;
+            }
+            finally
+            {
+                m_lock.ExitReadLock();
+            }
+        }
+
+        /// <summary>
+        /// ID ve cinsiyet kriterlerine uyan ilk kaydı döndürür.
+        /// Bulunamazsa null döner.
+        /// </summary>
+        public static ClothPropertyTemplateInfo GetClothPropertyWithID(int id, int sex)
+        {
+            m_lock.EnterReadLock();
+            try
+            {
+                foreach (ClothPropertyTemplateInfo item in _clothProperty.Values)
+                {
+                    if (item.ID == id && item.Sex == sex)
+                        return item;
+                }
+                return null;
+            }
+            finally
+            {
+                m_lock.ExitReadLock();
+            }
+        }
+    }
 }

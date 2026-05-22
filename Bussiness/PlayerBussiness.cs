@@ -1,6 +1,5 @@
 ﻿using Bussiness.CenterService;
 using Bussiness.Managers;
-using Newtonsoft.Json;
 using SqlDataProvider.Data;
 using System;
 using System.Collections;
@@ -18,29 +17,33 @@ namespace Bussiness
             bool flag = false;
             try
             {
-                player = new PlayerInfo();
-                player.Agility = 0;
-                player.Attack = 0;
-                player.Colors = ",,,,,,";
-                player.Skin = "";
-                player.ConsortiaID = 0;
-                player.Defence = 0;
-                player.Gold = gold;//0;
-                player.GP = 1;
-                player.Grade = 1;
-                player.ID = 0;
-                player.Luck = 0;
-                player.Money = money;//0;
-                player.NickName = "";
-                player.Sex = sex;
-                player.State = 0;
-                player.Style = ",,,,,,";
-                player.Hide = 1111111111;
+                player = new PlayerInfo
+                {
+                    Agility = 0,
+                    Attack = 0,
+                    Colors = ",,,,,,",
+                    Skin = "",
+                    ConsortiaID = 0,
+                    Defence = 0,
+                    Gold = gold,//0;
+                    GP = 1,
+                    Grade = 1,
+                    ID = 0,
+                    Luck = 0,
+                    Money = money,//0;
+                    NickName = "",
+                    Sex = sex,
+                    State = 0,
+                    Style = ",,,,,,",
+                    Hide = 1111111111
+                };
                 SqlParameter[] sqlParameters = new SqlParameter[21];
-                sqlParameters[0] = new SqlParameter("@UserID", SqlDbType.Int);
-                sqlParameters[0].Direction = ParameterDirection.Output;
+                sqlParameters[0] = new SqlParameter("@UserID", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
                 sqlParameters[1] = new SqlParameter("@Attack", player.Attack);
-                sqlParameters[2] = new SqlParameter("@Colors", (player.Colors == null) ? "" : player.Colors);
+                sqlParameters[2] = new SqlParameter("@Colors", player.Colors ?? "");
                 sqlParameters[3] = new SqlParameter("@ConsortiaID", player.ConsortiaID);
                 sqlParameters[4] = new SqlParameter("@Defence", player.Defence);
                 sqlParameters[5] = new SqlParameter("@Gold", player.Gold);
@@ -48,7 +51,7 @@ namespace Bussiness
                 sqlParameters[7] = new SqlParameter("@Grade", player.Grade);
                 sqlParameters[8] = new SqlParameter("@Luck", player.Luck);
                 sqlParameters[9] = new SqlParameter("@Money", player.Money);
-                sqlParameters[10] = new SqlParameter("@Style", (player.Style == null) ? "" : player.Style);
+                sqlParameters[10] = new SqlParameter("@Style", player.Style ?? "");
                 sqlParameters[11] = new SqlParameter("@Agility", player.Agility);
                 sqlParameters[12] = new SqlParameter("@State", player.State);
                 sqlParameters[13] = new SqlParameter("@UserName", userName);
@@ -56,9 +59,11 @@ namespace Bussiness
                 sqlParameters[15] = new SqlParameter("@Sex", sex);
                 sqlParameters[16] = new SqlParameter("@Hide", player.Hide);
                 sqlParameters[17] = new SqlParameter("@ActiveIP", IP);
-                sqlParameters[18] = new SqlParameter("@Skin", (player.Skin == null) ? "" : player.Skin);
-                sqlParameters[19] = new SqlParameter("@Result", SqlDbType.Int);
-                sqlParameters[19].Direction = ParameterDirection.ReturnValue;
+                sqlParameters[18] = new SqlParameter("@Skin", player.Skin ?? "");
+                sqlParameters[19] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
                 sqlParameters[20] = new SqlParameter("@Site", site);
                 flag = db.RunProcedure("SP_Users_Active", sqlParameters);
                 player.ID = (int)sqlParameters[0].Value;
@@ -95,16 +100,16 @@ namespace Bussiness
 
         public GypsyItemDataInfo[] GetAllGypsyItemDataByID(int ID)
         {
-            List<GypsyItemDataInfo> list = new List<GypsyItemDataInfo>();
+            List<GypsyItemDataInfo> list = [];
             SqlDataReader ResultDataReader = null;
             try
             {
                 SqlParameter[] array = new SqlParameter[1]
                 {
-                    new SqlParameter("@ID", SqlDbType.Int, 4)
+                    new("@ID", SqlDbType.Int, 4)
                 };
                 array[0].Value = ID;
-                db.GetReader(ref ResultDataReader, "SP_Gypsy_Item_Data_All", array);
+                _ = db.GetReader(ref ResultDataReader, "SP_Gypsy_Item_Data_All", array);
                 while (ResultDataReader.Read())
                 {
                     list.Add(InitGypsyItemDataInfo(ResultDataReader));
@@ -114,7 +119,7 @@ namespace Bussiness
             {
                 if (BaseBussiness.log.IsErrorEnabled)
                 {
-                    BaseBussiness.log.Error((object)"InitGypsyItemDataInfo", ex);
+                    BaseBussiness.log.Error("InitGypsyItemDataInfo", ex);
                 }
             }
             finally
@@ -134,10 +139,10 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[]
                 {
-                    new SqlParameter("@UserID", UserID),
-                    new SqlParameter("@QuestID", QuestID)
+                    new("@UserID", UserID),
+                    new("@QuestID", QuestID)
                 };
-                result = this.db.RunProcedure("SP_Users_Quest_Delete", para);
+                result = db.RunProcedure("SP_Users_Quest_Delete", para);
             }
             catch (Exception e)
             {
@@ -156,7 +161,7 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[18]
                 {
-                    new SqlParameter("@AuctionID", info.AuctionID),
+                    new("@AuctionID", info.AuctionID),
                     null,
                     null,
                     null,
@@ -177,10 +182,10 @@ namespace Bussiness
                 };
                 sqlParameters[0].Direction = ParameterDirection.Output;
                 sqlParameters[1] = new SqlParameter("@AuctioneerID", info.AuctioneerID);
-                sqlParameters[2] = new SqlParameter("@AuctioneerName", (info.AuctioneerName == null) ? "" : info.AuctioneerName);
+                sqlParameters[2] = new SqlParameter("@AuctioneerName", info.AuctioneerName ?? "");
                 sqlParameters[3] = new SqlParameter("@BeginDate", info.BeginDate);
                 sqlParameters[4] = new SqlParameter("@BuyerID", info.BuyerID);
-                sqlParameters[5] = new SqlParameter("@BuyerName", (info.BuyerName == null) ? "" : info.BuyerName);
+                sqlParameters[5] = new SqlParameter("@BuyerName", info.BuyerName ?? "");
                 sqlParameters[6] = new SqlParameter("@IsExist", info.IsExist);
                 sqlParameters[7] = new SqlParameter("@ItemID", info.ItemID);
                 sqlParameters[8] = new SqlParameter("@Mouthful", info.Mouthful);
@@ -215,10 +220,10 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 para[0].Value = UserID;
-                this.db.GetReader(ref reader, "SP_GetSingle_DiceData", para);
+                _ = db.GetReader(ref reader, "SP_GetSingle_DiceData", para);
                 if (reader.Read()) // bu ibne alamıyo sqldeki değeri nie amk
                 {
                     return new DiceDataInfo
@@ -257,8 +262,10 @@ namespace Bussiness
             try
             {
                 SqlParameter[] para = new SqlParameter[10];
-                para[0] = new SqlParameter("@ID", info.ID);
-                para[0].Direction = ParameterDirection.Output;
+                para[0] = new SqlParameter("@ID", info.ID)
+                {
+                    Direction = ParameterDirection.Output
+                };
                 para[1] = new SqlParameter("@UserID", info.UserID);
                 para[2] = new SqlParameter("@LuckIntegral", info.LuckIntegral);
                 para[3] = new SqlParameter("@LuckIntegralLevel", info.LuckIntegralLevel);
@@ -267,10 +274,12 @@ namespace Bussiness
                 para[6] = new SqlParameter("@CurrentPosition", info.CurrentPosition);
                 para[7] = new SqlParameter("@UserFirstCell", info.UserFirstCell);
                 para[8] = new SqlParameter("@AwardArray", info.AwardArray);
-                para[9] = new SqlParameter("@Result", SqlDbType.Int);
-                para[9].Direction = ParameterDirection.ReturnValue;
-                this.db.RunProcedure("SP_DiceData_Add", para);
-                result = ((int)para[9].Value == 0);
+                para[9] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_DiceData_Add", para);
+                result = (int)para[9].Value == 0;
                 info.ID = (int)para[0].Value;
                 info.IsDirty = false;
             }
@@ -283,7 +292,7 @@ namespace Bussiness
             }
             return result;
         }
-        
+
         public bool UpdateDiceData(DiceDataInfo info)
         {
             bool flag = false;
@@ -291,20 +300,20 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[]
                 {
-                    new SqlParameter("@ID", info.ID),
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@LuckIntegral", info.LuckIntegral),
-                    new SqlParameter("@LuckIntegralLevel", info.LuckIntegralLevel),
-                    new SqlParameter("@Level", info.Level),
-                    new SqlParameter("@FreeCount", info.FreeCount),
-                    new SqlParameter("@CurrentPosition", info.CurrentPosition),
-                    new SqlParameter("@UserFirstCell", info.UserFirstCell),
-                    new SqlParameter("@AwardArray", info.AwardArray),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID", info.ID),
+                    new("@UserID", info.UserID),
+                    new("@LuckIntegral", info.LuckIntegral),
+                    new("@LuckIntegralLevel", info.LuckIntegralLevel),
+                    new("@Level", info.Level),
+                    new("@FreeCount", info.FreeCount),
+                    new("@CurrentPosition", info.CurrentPosition),
+                    new("@UserFirstCell", info.UserFirstCell),
+                    new("@AwardArray", info.AwardArray),
+                    new("@Result", SqlDbType.Int)
                 };
                 para[9].Direction = ParameterDirection.ReturnValue;
-                bool v = this.db.RunProcedure("SP_Update_DiceData", para);
-                flag = ((int)para[9].Value == 0);
+                bool v = db.RunProcedure("SP_Update_DiceData", para);
+                flag = (int)para[9].Value == 0;
             }
             catch (Exception exception)
             {
@@ -323,7 +332,7 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[19]
                 {
-                    new SqlParameter("@CardID", item.CardID),
+                    new("@CardID", item.CardID),
                     null,
                     null,
                     null,
@@ -361,9 +370,11 @@ namespace Bussiness
                 SqlParameters[16] = new SqlParameter("@DefenceReset", item.DefenceReset);
                 SqlParameters[17] = new SqlParameter("@AgilityReset", item.AgilityReset);
                 SqlParameters[18] = new SqlParameter("@LuckReset", item.LuckReset);
-                SqlParameters[13] = new SqlParameter("@Result", SqlDbType.Int);
-                SqlParameters[13].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UserCard_Add", SqlParameters);
+                SqlParameters[13] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_UserCard_Add", SqlParameters);
                 flag = (int)SqlParameters[13].Value == 0;
                 item.CardID = (int)SqlParameters[0].Value;
                 item.IsDirty = false;
@@ -388,20 +399,22 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[10]
                 {
-                    new SqlParameter("@ChargeID", chargeID),
-                    new SqlParameter("@UserName", userName),
-                    new SqlParameter("@Money", money),
-                    new SqlParameter("@Date", date.ToString("yyyy-MM-dd HH:mm:ss")),
-                    new SqlParameter("@PayWay", payWay),
-                    new SqlParameter("@NeedMoney", needMoney),
-                    new SqlParameter("@UserID", userID),
+                    new("@ChargeID", chargeID),
+                    new("@UserName", userName),
+                    new("@Money", money),
+                    new("@Date", date.ToString("yyyy-MM-dd HH:mm:ss")),
+                    new("@PayWay", payWay),
+                    new("@NeedMoney", needMoney),
+                    new("@UserID", userID),
                     null,
                     null,
                     null
                 };
                 sqlParameters[6].Direction = ParameterDirection.InputOutput;
-                sqlParameters[7] = new SqlParameter("@Result", SqlDbType.Int);
-                sqlParameters[7].Direction = ParameterDirection.ReturnValue;
+                sqlParameters[7] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
                 sqlParameters[8] = new SqlParameter("@IP", IP);
                 sqlParameters[9] = new SqlParameter("@NickName", nickName);
                 flag = db.RunProcedure("SP_Charge_Money_Add", sqlParameters);
@@ -429,20 +442,22 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[10]
                 {
-                    new SqlParameter("@ChargeID", chargeID),
-                    new SqlParameter("@UserName", userName),
-                    new SqlParameter("@Money", money),
-                    new SqlParameter("@Date", date.ToString("yyyy-MM-dd HH:mm:ss")),
-                    new SqlParameter("@PayWay", payWay),
-                    new SqlParameter("@NeedMoney", needMoney),
-                    new SqlParameter("@UserID", userID),
+                    new("@ChargeID", chargeID),
+                    new("@UserName", userName),
+                    new("@Money", money),
+                    new("@Date", date.ToString("yyyy-MM-dd HH:mm:ss")),
+                    new("@PayWay", payWay),
+                    new("@NeedMoney", needMoney),
+                    new("@UserID", userID),
                     null,
                     null,
                     null
                 };
                 sqlParameters[6].Direction = ParameterDirection.InputOutput;
-                sqlParameters[7] = new SqlParameter("@Result", SqlDbType.Int);
-                sqlParameters[7].Direction = ParameterDirection.ReturnValue;
+                sqlParameters[7] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
                 sqlParameters[8] = new SqlParameter("@IP", IP);
                 sqlParameters[9] = new SqlParameter("@SourceUserID", UserID);
                 flag = db.RunProcedure("SP_Charge_Money_UserId_Add", sqlParameters);
@@ -469,13 +484,13 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[7]
                 {
-                    new SqlParameter("@ID", info.ID),
-                    new SqlParameter("@AddDate", DateTime.Now),
-                    new SqlParameter("@FriendID", info.FriendID),
-                    new SqlParameter("@IsExist", true),
-                    new SqlParameter("@Remark", (info.Remark == null) ? "" : info.Remark),
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@Relation", info.Relation)
+                    new("@ID", info.ID),
+                    new("@AddDate", DateTime.Now),
+                    new("@FriendID", info.FriendID),
+                    new("@IsExist", true),
+                    new("@Remark", info.Remark ?? ""),
+                    new("@UserID", info.UserID),
+                    new("@Relation", info.Relation)
                 };
                 flag = db.RunProcedure("SP_Users_Friends_Add", sqlParameters);
                 return flag;
@@ -497,15 +512,17 @@ namespace Bussiness
             try
             {
                 SqlParameter[] para = new SqlParameter[41];
-                para[0] = new SqlParameter("@ItemID", item.ItemID);
-                para[0].Direction = ParameterDirection.Output;
+                para[0] = new SqlParameter("@ItemID", item.ItemID)
+                {
+                    Direction = ParameterDirection.Output
+                };
                 para[1] = new SqlParameter("@UserID", item.UserID);
                 para[2] = new SqlParameter("@TemplateID", item.Template.TemplateID);
                 para[3] = new SqlParameter("@Place", item.Place);
                 para[4] = new SqlParameter("@AgilityCompose", item.AgilityCompose);
                 para[5] = new SqlParameter("@AttackCompose", item.AttackCompose);
                 para[6] = new SqlParameter("@BeginDate", item.BeginDate);
-                para[7] = new SqlParameter("@Color", item.Color == null ? "" : item.Color);
+                para[7] = new SqlParameter("@Color", item.Color ?? "");
                 para[8] = new SqlParameter("@Count", item.Count);
                 para[9] = new SqlParameter("@DefendCompose", item.DefendCompose);
                 para[10] = new SqlParameter("@IsBinds", item.IsBinds);
@@ -515,7 +532,7 @@ namespace Bussiness
                 para[14] = new SqlParameter("@StrengthenLevel", item.StrengthenLevel);
                 para[15] = new SqlParameter("@ValidDate", item.ValidDate);
                 para[16] = new SqlParameter("@BagType", item.BagType);
-                para[17] = new SqlParameter("@Skin", item.Skin == null ? "" : item.Skin);
+                para[17] = new SqlParameter("@Skin", item.Skin ?? "");
                 para[18] = new SqlParameter("@IsUsed", item.IsUsed);
                 para[19] = new SqlParameter("@RemoveType", item.RemoveType);
                 para[20] = new SqlParameter("@Hole1", item.Hole1);
@@ -561,7 +578,7 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[5]
                 {
-                    new SqlParameter("@ID", info.ID),
+                    new("@ID", info.ID),
                     null,
                     null,
                     null,
@@ -594,7 +611,7 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[14]
                 {
-                    new SqlParameter("@ItemID", item.ItemID),
+                    new("@ItemID", item.ItemID),
                     null,
                     null,
                     null,
@@ -616,7 +633,7 @@ namespace Bussiness
                 sqlParameters[4] = new SqlParameter("@AgilityCompose", item.AgilityCompose);
                 sqlParameters[5] = new SqlParameter("@AttackCompose", item.AttackCompose);
                 sqlParameters[6] = new SqlParameter("@BeginDate", item.BeginDate);
-                sqlParameters[7] = new SqlParameter("@Color", (item.Color == null) ? "" : item.Color);
+                sqlParameters[7] = new SqlParameter("@Color", item.Color ?? "");
                 sqlParameters[8] = new SqlParameter("@Count", item.Count);
                 sqlParameters[9] = new SqlParameter("@DefendCompose", item.DefendCompose);
                 sqlParameters[10] = new SqlParameter("@IsBinds", item.IsBinds);
@@ -645,8 +662,10 @@ namespace Bussiness
             try
             {
                 SqlParameter[] para = new SqlParameter[17];
-                para[0] = new SqlParameter("@ID", info.ID);
-                para[0].Direction = ParameterDirection.Output;
+                para[0] = new SqlParameter("@ID", info.ID)
+                {
+                    Direction = ParameterDirection.Output
+                };
                 para[1] = new SqlParameter("@UserID", info.UserID);
                 para[2] = new SqlParameter("@dailyScore", info.dailyScore);
                 para[3] = new SqlParameter("@dailyWinCount", info.dailyWinCount);
@@ -662,9 +681,11 @@ namespace Bussiness
                 para[13] = new SqlParameter("@leagueGrade", info.leagueGrade);
                 para[14] = new SqlParameter("@leagueItemsGet", info.leagueItemsGet);
                 para[16] = new SqlParameter("@WeeklyWinCount", info.WeeklyWinCount);
-                para[15] = new SqlParameter("@Result", System.Data.SqlDbType.Int);
-                para[15].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UserMatch_Add", para);
+                para[15] = new SqlParameter("@Result", System.Data.SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_UserMatch_Add", para);
                 result = (int)para[15].Value == 0;
                 info.ID = (int)para[0].Value;
                 info.IsDirty = false;
@@ -673,7 +694,9 @@ namespace Bussiness
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("Init", e);
+                }
             }
             finally
             {
@@ -687,8 +710,10 @@ namespace Bussiness
             try
             {
                 SqlParameter[] para = new SqlParameter[16];
-                para[0] = new SqlParameter("@ID", item.ID);
-                para[0].Direction = ParameterDirection.Output;
+                para[0] = new SqlParameter("@ID", item.ID)
+                {
+                    Direction = ParameterDirection.Output
+                };
                 para[1] = new SqlParameter("@UserID", item.UserID);
                 para[2] = new SqlParameter("@UserRank", item.Name);
                 para[3] = new SqlParameter("@Attack", item.Attack);
@@ -701,11 +726,13 @@ namespace Bussiness
                 para[10] = new SqlParameter("@BeginDate", item.BeginDate);
                 para[11] = new SqlParameter("@Validate", item.Validate);
                 para[12] = new SqlParameter("@IsExit", item.IsExit);
-                para[13] = new SqlParameter("@Result", SqlDbType.Int);
-                para[13].Direction = ParameterDirection.ReturnValue;
+                para[13] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
                 para[14] = new SqlParameter("@NewTitleID", item.NewTitleID);
                 para[15] = new SqlParameter("@EndDate", item.EndDate);
-                db.RunProcedure("SP_UserRank_Add", para);
+                _ = db.RunProcedure("SP_UserRank_Add", para);
                 result = (int)para[13].Value == 0;
                 item.ID = (int)para[0].Value;
                 item.IsDirty = false;
@@ -714,7 +741,9 @@ namespace Bussiness
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("Init", e);
+                }
             }
             return result;
         }
@@ -726,16 +755,18 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[4]
                 {
-                    new SqlParameter("@userid", userid),
-                    new SqlParameter("@mailID", mailID),
-                    new SqlParameter("@senderID", SqlDbType.Int),
+                    new("@userid", userid),
+                    new("@mailID", mailID),
+                    new("@senderID", SqlDbType.Int),
                     null
                 };
                 sqlParameters[2].Value = senderID;
                 sqlParameters[2].Direction = ParameterDirection.InputOutput;
-                sqlParameters[3] = new SqlParameter("@Result", SqlDbType.Int);
-                sqlParameters[3].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Mail_PaymentCancel", sqlParameters);
+                sqlParameters[3] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_Mail_PaymentCancel", sqlParameters);
                 flag = (int)sqlParameters[3].Value == 0;
                 if (flag)
                 {
@@ -762,8 +793,8 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[3]
                 {
-                    new SqlParameter("@UserName", userName),
-                    new SqlParameter("@money", SqlDbType.Int),
+                    new("@UserName", userName),
+                    new("@money", SqlDbType.Int),
                     null
                 };
                 sqlParameters[1].Direction = ParameterDirection.Output;
@@ -790,12 +821,12 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[3]
                 {
-                    new SqlParameter("@Username", username),
-                    new SqlParameter("@Password", password),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@Username", username),
+                    new("@Password", password),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[2].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_CheckAccount", sqlParameters);
+                _ = db.RunProcedure("SP_CheckAccount", sqlParameters);
                 flag = (int)sqlParameters[2].Value == 0;
                 return flag;
             }
@@ -817,11 +848,11 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@Email", Email),
-                    new SqlParameter("@count", SqlDbType.BigInt)
+                    new("@Email", Email),
+                    new("@count", SqlDbType.BigInt)
                 };
                 sqlParameters[1].Direction = ParameterDirection.Output;
-                db.RunProcedure("CheckEmailIsValid", sqlParameters);
+                _ = db.RunProcedure("CheckEmailIsValid", sqlParameters);
                 if (int.Parse(sqlParameters[1].Value.ToString()) == 0)
                 {
                     flag = true;
@@ -847,12 +878,12 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[3]
                 {
-                    new SqlParameter("@AuctionID", auctionID),
-                    new SqlParameter("@UserID", userID),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@AuctionID", auctionID),
+                    new("@UserID", userID),
+                    new("@Result", SqlDbType.Int)
                 };
                 SqlParameters[2].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Auction_Delete", SqlParameters);
+                _ = db.RunProcedure("SP_Auction_Delete", SqlParameters);
                 int num = (int)SqlParameters[2].Value;
                 flag = num == 0;
                 switch (num)
@@ -889,8 +920,8 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@ID", FriendID),
-                    new SqlParameter("@UserID", UserID)
+                    new("@ID", FriendID),
+                    new("@UserID", UserID)
                 };
                 flag = db.RunProcedure("SP_Users_Friends_Delete", sqlParameters);
                 return flag;
@@ -913,7 +944,7 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@ID", itemID)
+                    new("@ID", itemID)
                 };
                 flag = db.RunProcedure("SP_Users_Items_Delete", sqlParameters);
                 return flag;
@@ -937,15 +968,17 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[4]
                 {
-                    new SqlParameter("@ID", mailID),
-                    new SqlParameter("@UserID", UserID),
-                    new SqlParameter("@SenderID", SqlDbType.Int),
+                    new("@ID", mailID),
+                    new("@UserID", UserID),
+                    new("@SenderID", SqlDbType.Int),
                     null
                 };
                 sqlParameters[2].Value = senderID;
                 sqlParameters[2].Direction = ParameterDirection.InputOutput;
-                sqlParameters[3] = new SqlParameter("@Result", SqlDbType.Int);
-                sqlParameters[3].Direction = ParameterDirection.ReturnValue;
+                sqlParameters[3] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
                 flag = db.RunProcedure("SP_Mail_Delete", sqlParameters);
                 if ((int)sqlParameters[3].Value == 0)
                 {
@@ -974,15 +1007,17 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[4]
                 {
-                    new SqlParameter("@ID", mailID),
-                    new SqlParameter("@UserID", UserID),
-                    new SqlParameter("@SenderID", SqlDbType.Int),
+                    new("@ID", mailID),
+                    new("@UserID", UserID),
+                    new("@SenderID", SqlDbType.Int),
                     null
                 };
                 sqlParameters[2].Value = senderID;
                 sqlParameters[2].Direction = ParameterDirection.InputOutput;
-                sqlParameters[3] = new SqlParameter("@Result", SqlDbType.Int);
-                sqlParameters[3].Direction = ParameterDirection.ReturnValue;
+                sqlParameters[3] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
                 flag = db.RunProcedure("SP_Mail_Delete", sqlParameters);
                 if ((int)sqlParameters[3].Value == 0)
                 {
@@ -1010,12 +1045,12 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[3]
                 {
-                    new SqlParameter("@ID", ID),
-                    new SqlParameter("@UserID", userID),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID", ID),
+                    new("@UserID", userID),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[2].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_MarryInfo_Delete", sqlParameters);
+                _ = db.RunProcedure("SP_MarryInfo_Delete", sqlParameters);
                 int num = (int)sqlParameters[2].Value;
                 flag = num == 0;
                 if (num == 0)
@@ -1043,9 +1078,9 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[3]
                 {
-                    new SqlParameter("@UserName", userName),
-                    new SqlParameter("@IsExist", isExit),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserName", userName),
+                    new("@IsExist", isExit),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[2].Direction = ParameterDirection.ReturnValue;
                 flag = db.RunProcedure("SP_Disable_User", sqlParameters);
@@ -1074,11 +1109,11 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@ID", ID),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID", ID),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[1].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Dispose_Marry_Room_Info", sqlParameters);
+                _ = db.RunProcedure("SP_Dispose_Marry_Room_Info", sqlParameters);
                 flag = (int)sqlParameters[1].Value == 0;
                 return flag;
             }
@@ -1095,16 +1130,16 @@ namespace Bussiness
 
         public ConsortiaUserInfo[] GetAllMemberByConsortia(int ConsortiaID)
         {
-            List<ConsortiaUserInfo> list = new List<ConsortiaUserInfo>();
+            List<ConsortiaUserInfo> list = [];
             SqlDataReader ResultDataReader = null;
             try
             {
                 SqlParameter[] SqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@ConsortiaID", SqlDbType.Int, 4)
+                    new("@ConsortiaID", SqlDbType.Int, 4)
                 };
                 SqlParameters[0].Value = ConsortiaID;
-                db.GetReader(ref ResultDataReader, "SP_Consortia_Users_All", SqlParameters);
+                _ = db.GetReader(ref ResultDataReader, "SP_Consortia_Users_All", SqlParameters);
                 while (ResultDataReader.Read())
                 {
                     list.Add(InitConsortiaUserInfo(ResultDataReader));
@@ -1129,15 +1164,15 @@ namespace Bussiness
 
         public UserMatchInfo[] GetAllUserMatchInfo()
         {
-            List<UserMatchInfo> list = new List<UserMatchInfo>();
+            List<UserMatchInfo> list = [];
             SqlDataReader resultDataReader = null;
             int num = 1;
             try
             {
-                db.GetReader(ref resultDataReader, "SP_UserMatch_All_DESC");
+                _ = db.GetReader(ref resultDataReader, "SP_UserMatch_All_DESC");
                 while (resultDataReader.Read())
                 {
-                    UserMatchInfo item = new UserMatchInfo
+                    UserMatchInfo item = new()
                     {
                         UserID = (int)resultDataReader["UserID"],
                         totalPrestige = (int)resultDataReader["totalPrestige"],
@@ -1166,14 +1201,14 @@ namespace Bussiness
 
         public UserMatchInfo[] GetTopUserMatchInfo()
         {
-            List<UserMatchInfo> list = new List<UserMatchInfo>();
+            List<UserMatchInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
-                db.GetReader(ref resultDataReader, "SP_GetListLeague");
+                _ = db.GetReader(ref resultDataReader, "SP_GetListLeague");
                 while (resultDataReader.Read())
                 {
-                    UserMatchInfo item = new UserMatchInfo
+                    UserMatchInfo item = new()
                     {
                         UserID = (int)resultDataReader["UserID"],
                         totalPrestige = (int)resultDataReader["totalPrestige"],
@@ -1202,7 +1237,7 @@ namespace Bussiness
 
         public AuctionInfo[] GetAuctionPage(int page, string name, int type, int pay, ref int total, int userID, int buyID, int order, bool sort, int size, string string_1)
         {
-            List<AuctionInfo> auctionInfoList = new List<AuctionInfo>();
+            List<AuctionInfo> auctionInfoList = [];
             try
             {
                 string str1 = " IsExist=1 ";
@@ -1355,14 +1390,14 @@ namespace Bussiness
                 string str3 = str2 + (sort ? " desc" : "") + ",AuctionID ";
                 SqlParameter[] SqlParameters = new SqlParameter[8]
                 {
-                    new SqlParameter("@QueryStr", "V_Auction_Scan"),
-                    new SqlParameter("@QueryWhere", str1),
-                    new SqlParameter("@PageSize", size),
-                    new SqlParameter("@PageCurrent", page),
-                    new SqlParameter("@FdShow", "*"),
-                    new SqlParameter("@FdOrder", str3),
-                    new SqlParameter("@FdKey", "AuctionID"),
-                    new SqlParameter("@TotalRow", total)
+                    new("@QueryStr", "V_Auction_Scan"),
+                    new("@QueryWhere", str1),
+                    new("@PageSize", size),
+                    new("@PageCurrent", page),
+                    new("@FdShow", "*"),
+                    new("@FdOrder", str3),
+                    new("@FdKey", "AuctionID"),
+                    new("@TotalRow", total)
                 };
                 SqlParameters[7].Direction = ParameterDirection.Output;
                 DataTable dataTable = db.GetDataTable("Auction", "SP_CustomPage", SqlParameters);
@@ -1406,9 +1441,9 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@AuctionID", auctionID)
+                    new("@AuctionID", auctionID)
                 };
-                db.GetReader(ref resultDataReader, "SP_Auction_Single", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Auction_Single", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return InitAuctionInfo(resultDataReader);
@@ -1433,23 +1468,23 @@ namespace Bussiness
 
         public BestEquipInfo[] GetCelebByDayBestEquip()
         {
-            List<BestEquipInfo> list = new List<BestEquipInfo>();
+            List<BestEquipInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
-                db.GetReader(ref resultDataReader, "SP_Users_BestEquip");
+                _ = db.GetReader(ref resultDataReader, "SP_Users_BestEquip");
                 while (resultDataReader.Read())
                 {
-                    BestEquipInfo item = new BestEquipInfo
+                    BestEquipInfo item = new()
                     {
                         Date = (DateTime)resultDataReader["RemoveDate"],
                         GP = (int)resultDataReader["GP"],
                         Grade = (int)resultDataReader["Grade"],
-                        ItemName = ((resultDataReader["Name"] == null) ? "" : resultDataReader["Name"].ToString()),
-                        NickName = ((resultDataReader["NickName"] == null) ? "" : resultDataReader["NickName"].ToString()),
+                        ItemName = (resultDataReader["Name"] == null) ? "" : resultDataReader["Name"].ToString(),
+                        NickName = (resultDataReader["NickName"] == null) ? "" : resultDataReader["NickName"].ToString(),
                         Sex = (bool)resultDataReader["Sex"],
                         Strengthenlevel = (int)resultDataReader["Strengthenlevel"],
-                        UserName = ((resultDataReader["UserName"] == null) ? "" : resultDataReader["UserName"].ToString())
+                        UserName = (resultDataReader["UserName"] == null) ? "" : resultDataReader["UserName"].ToString()
                     };
                     list.Add(item);
                 }
@@ -1473,23 +1508,23 @@ namespace Bussiness
 
         public ChargeRecordInfo[] GetChargeRecordInfo(DateTime date, int SaveRecordSecond)
         {
-            List<ChargeRecordInfo> list = new List<ChargeRecordInfo>();
+            List<ChargeRecordInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@Date", date.ToString("yyyy-MM-dd HH:mm:ss")),
-                    new SqlParameter("@Second", SaveRecordSecond)
+                    new("@Date", date.ToString("yyyy-MM-dd HH:mm:ss")),
+                    new("@Second", SaveRecordSecond)
                 };
-                db.GetReader(ref resultDataReader, "SP_Charge_Record", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Charge_Record", sqlParameters);
                 while (resultDataReader.Read())
                 {
-                    ChargeRecordInfo item = new ChargeRecordInfo
+                    ChargeRecordInfo item = new()
                     {
                         BoyTotalPay = (int)resultDataReader["BoyTotalPay"],
                         GirlTotalPay = (int)resultDataReader["GirlTotalPay"],
-                        PayWay = ((resultDataReader["PayWay"] == null) ? "" : resultDataReader["PayWay"].ToString()),
+                        PayWay = (resultDataReader["PayWay"] == null) ? "" : resultDataReader["PayWay"].ToString(),
                         TotalBoy = (int)resultDataReader["TotalBoy"],
                         TotalGirl = (int)resultDataReader["TotalGirl"]
                     };
@@ -1514,7 +1549,7 @@ namespace Bussiness
         }
 
 
-      
+
         public ExerciseInfo GetExerciseSingle(int Grade)
         {
             SqlDataReader resultDataReader = null;
@@ -1522,9 +1557,9 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@Grage", Grade)
+                    new("@Grage", Grade)
                 };
-                db.GetReader(ref resultDataReader, "SP_Get_Exercise_By_Grade", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Get_Exercise_By_Grade", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return new ExerciseInfo
@@ -1558,42 +1593,42 @@ namespace Bussiness
 
         public FriendInfo[] GetFriendsAll(int UserID)
         {
-            List<FriendInfo> friendInfoList = new List<FriendInfo>();
+            List<FriendInfo> friendInfoList = [];
             SqlDataReader ResultDataReader = null;
             try
             {
                 SqlParameter[] SqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 SqlParameters[0].Value = UserID;
-                db.GetReader(ref ResultDataReader, "SP_Users_Friends", SqlParameters);
+                _ = db.GetReader(ref ResultDataReader, "SP_Users_Friends", SqlParameters);
                 while (ResultDataReader.Read())
                 {
                     friendInfoList.Add(new FriendInfo
                     {
                         AddDate = (DateTime)ResultDataReader["AddDate"],
-                        Colors = ((ResultDataReader["Colors"] == null) ? "" : ResultDataReader["Colors"].ToString()),
+                        Colors = (ResultDataReader["Colors"] == null) ? "" : ResultDataReader["Colors"].ToString(),
                         FriendID = (int)ResultDataReader["FriendID"],
                         Grade = (int)ResultDataReader["Grade"],
                         Hide = (int)ResultDataReader["Hide"],
                         ID = (int)ResultDataReader["ID"],
                         IsExist = (bool)ResultDataReader["IsExist"],
-                        NickName = ((ResultDataReader["NickName"] == null) ? "" : ResultDataReader["NickName"].ToString()),
-                        Remark = ((ResultDataReader["Remark"] == null) ? "" : ResultDataReader["Remark"].ToString()),
-                        Sex = (((bool)ResultDataReader["Sex"]) ? 1 : 0),
+                        NickName = (ResultDataReader["NickName"] == null) ? "" : ResultDataReader["NickName"].ToString(),
+                        Remark = (ResultDataReader["Remark"] == null) ? "" : ResultDataReader["Remark"].ToString(),
+                        Sex = ((bool)ResultDataReader["Sex"]) ? 1 : 0,
                         State = (int)ResultDataReader["State"],
-                        Style = ((ResultDataReader["Style"] == null) ? "" : ResultDataReader["Style"].ToString()),
+                        Style = (ResultDataReader["Style"] == null) ? "" : ResultDataReader["Style"].ToString(),
                         UserID = (int)ResultDataReader["UserID"],
-                        ConsortiaName = ((ResultDataReader["ConsortiaName"] == null) ? "" : ResultDataReader["ConsortiaName"].ToString()),
+                        ConsortiaName = (ResultDataReader["ConsortiaName"] == null) ? "" : ResultDataReader["ConsortiaName"].ToString(),
                         Offer = (int)ResultDataReader["Offer"],
                         Win = (int)ResultDataReader["Win"],
                         Total = (int)ResultDataReader["Total"],
                         Escape = (int)ResultDataReader["Escape"],
                         Relation = (int)ResultDataReader["Relation"],
                         Repute = (int)ResultDataReader["Repute"],
-                        UserName = ((ResultDataReader["UserName"] == null) ? "" : ResultDataReader["UserName"].ToString()),
-                        DutyName = ((ResultDataReader["DutyName"] == null) ? "" : ResultDataReader["DutyName"].ToString()),
+                        UserName = (ResultDataReader["UserName"] == null) ? "" : ResultDataReader["UserName"].ToString(),
+                        DutyName = (ResultDataReader["DutyName"] == null) ? "" : ResultDataReader["DutyName"].ToString(),
                         Nimbus = (int)ResultDataReader["Nimbus"],
                         apprenticeshipState = (int)ResultDataReader["apprenticeshipState"]
                     });
@@ -1618,24 +1653,24 @@ namespace Bussiness
 
         public FriendInfo[] GetFriendsBbs(string condictArray)
         {
-            List<FriendInfo> list = new List<FriendInfo>();
+            List<FriendInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@SearchUserName", SqlDbType.NVarChar, 4000)
+                    new("@SearchUserName", SqlDbType.NVarChar, 4000)
                 };
                 sqlParameters[0].Value = condictArray;
-                db.GetReader(ref resultDataReader, "SP_Users_FriendsBbs", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_FriendsBbs", sqlParameters);
                 while (resultDataReader.Read())
                 {
-                    FriendInfo item = new FriendInfo
+                    FriendInfo item = new()
                     {
-                        NickName = ((resultDataReader["NickName"] == null) ? "" : resultDataReader["NickName"].ToString()),
+                        NickName = (resultDataReader["NickName"] == null) ? "" : resultDataReader["NickName"].ToString(),
                         UserID = (int)resultDataReader["UserID"],
-                        UserName = ((resultDataReader["UserName"] == null) ? "" : resultDataReader["UserName"].ToString()),
-                        IsExist = ((int)resultDataReader["UserID"] > 0)
+                        UserName = (resultDataReader["UserName"] == null) ? "" : resultDataReader["UserName"].ToString(),
+                        IsExist = (int)resultDataReader["UserID"] > 0
                     };
                     list.Add(item);
                 }
@@ -1659,19 +1694,19 @@ namespace Bussiness
 
         public ArrayList GetFriendsGood(string UserName)
         {
-            ArrayList list = new ArrayList();
+            ArrayList list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserName", SqlDbType.NVarChar)
+                    new("@UserName", SqlDbType.NVarChar)
                 };
                 sqlParameters[0].Value = UserName;
-                db.GetReader(ref resultDataReader, "SP_Users_Friends_Good", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_Friends_Good", sqlParameters);
                 while (resultDataReader.Read())
                 {
-                    list.Add((resultDataReader["UserName"] == null) ? "" : resultDataReader["UserName"].ToString());
+                    _ = list.Add((resultDataReader["UserName"] == null) ? "" : resultDataReader["UserName"].ToString());
                 }
                 return list;
             }
@@ -1695,16 +1730,16 @@ namespace Bussiness
 
         public Dictionary<int, int> GetFriendsIDAll(int UserID)
         {
-            Dictionary<int, int> dictionary = new Dictionary<int, int>();
+            Dictionary<int, int> dictionary = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = UserID;
-                db.GetReader(ref resultDataReader, "SP_Users_Friends_All", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_Friends_All", sqlParameters);
                 while (resultDataReader.Read())
                 {
                     if (!dictionary.ContainsKey((int)resultDataReader["FriendID"]))
@@ -1738,16 +1773,16 @@ namespace Bussiness
 
         public MailInfo[] GetMailBySenderID(int userID)
         {
-            List<MailInfo> list = new List<MailInfo>();
+            List<MailInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = userID;
-                db.GetReader(ref resultDataReader, "SP_Mail_BySenderID", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Mail_BySenderID", sqlParameters);
                 while (resultDataReader.Read())
                 {
                     list.Add(InitMail(resultDataReader));
@@ -1772,16 +1807,16 @@ namespace Bussiness
 
         public MailInfo[] GetMailByUserID(int userID)
         {
-            List<MailInfo> list = new List<MailInfo>();
+            List<MailInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = userID;
-                db.GetReader(ref resultDataReader, "SP_Mail_ByUserID", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Mail_ByUserID", sqlParameters);
                 while (resultDataReader.Read())
                 {
                     list.Add(InitMail(resultDataReader));
@@ -1811,10 +1846,10 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@ID", mailID),
-                    new SqlParameter("@UserID", UserID)
+                    new("@ID", mailID),
+                    new("@UserID", UserID)
                 };
-                db.GetReader(ref resultDataReader, "SP_Mail_Single", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Mail_Single", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return InitMail(resultDataReader);
@@ -1839,10 +1874,10 @@ namespace Bussiness
 
         public MarryInfo[] GetMarryInfoPage(int page, string name, bool sex, int size, ref int total)
         {
-            List<MarryInfo> list = new List<MarryInfo>();// sende niye hiç kullanılmamış bura :d ne bilim aq .dsıdhoudfg  bi bakim bende nası bu
+            List<MarryInfo> list = [];// sende niye hiç kullanılmamış bura :d ne bilim aq .dsıdhoudfg  bi bakim bende nası bu
             try
             {
-                string str = ((!sex) ? " IsExist=1 and Sex=0 and UserExist=1" : " IsExist=1 and Sex=1 and UserExist=1");
+                string str = (!sex) ? " IsExist=1 and Sex=0 and UserExist=1" : " IsExist=1 and Sex=1 and UserExist=1";
                 if (!string.IsNullOrEmpty(name))
                 {
                     str = str + " and NickName like '%" + name + "%' ";
@@ -1850,21 +1885,21 @@ namespace Bussiness
                 string str2 = "State desc,IsMarried";
                 SqlParameter[] sqlParameters = new SqlParameter[8]
                 {
-                    new SqlParameter("@QueryStr", "V_Sys_Marry_Info"),
-                    new SqlParameter("@QueryWhere", str),
-                    new SqlParameter("@PageSize", size),
-                    new SqlParameter("@PageCurrent", page),
-                    new SqlParameter("@FdShow", "*"),
-                    new SqlParameter("@FdOrder", str2),
-                    new SqlParameter("@FdKey", "ID"),
-                    new SqlParameter("@TotalRow", total)
+                    new("@QueryStr", "V_Sys_Marry_Info"),
+                    new("@QueryWhere", str),
+                    new("@PageSize", size),
+                    new("@PageCurrent", page),
+                    new("@FdShow", "*"),
+                    new("@FdOrder", str2),
+                    new("@FdKey", "ID"),
+                    new("@TotalRow", total)
                 };
                 sqlParameters[7].Direction = ParameterDirection.Output;
                 DataTable dataTable = db.GetDataTable("V_Sys_Marry_Info", "SP_CustomPage", sqlParameters);
                 total = (int)sqlParameters[7].Value;
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    MarryInfo item = new MarryInfo
+                    MarryInfo item = new()
                     {
                         ID = (int)row["ID"],
                         UserID = (int)row["UserID"],
@@ -1915,9 +1950,9 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@ID", ID)
+                    new("@ID", ID)
                 };
-                db.GetReader(ref resultDataReader, "SP_MarryInfo_Single", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_MarryInfo_Single", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return new MarryInfo
@@ -1954,9 +1989,9 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", id)
+                    new("@UserID", id)
                 };
-                db.GetReader(ref resultDataReader, "SP_Select_Marry_Prop", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Select_Marry_Prop", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return new MarryProp
@@ -1990,13 +2025,13 @@ namespace Bussiness
         public MarryRoomInfo[] GetMarryRoomInfo()
         {
             SqlDataReader resultDataReader = null;
-            List<MarryRoomInfo> list = new List<MarryRoomInfo>();
+            List<MarryRoomInfo> list = [];
             try
             {
-                db.GetReader(ref resultDataReader, "SP_Get_Marry_Room_Info");
+                _ = db.GetReader(ref resultDataReader, "SP_Get_Marry_Room_Info");
                 while (resultDataReader.Read())
                 {
-                    MarryRoomInfo item = new MarryRoomInfo
+                    MarryRoomInfo item = new()
                     {
                         ID = (int)resultDataReader["ID"],
                         Name = resultDataReader["Name"].ToString(),
@@ -2046,9 +2081,9 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@ID", id)
+                    new("@ID", id)
                 };
-                db.GetReader(ref resultDataReader, "SP_Get_Marry_Room_Info_Single", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Get_Marry_Room_Info_Single", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return new MarryRoomInfo
@@ -2099,23 +2134,16 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", userID)
+                    new("@UserID", userID)
                 };
-                db.GetReader(ref resultDataReader, "SP_Users_PasswordInfo", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_PasswordInfo", sqlParameters);
                 while (resultDataReader.Read())
                 {
-                    PasswordQuestion1 = ((resultDataReader["PasswordQuestion1"] == null) ? "" : resultDataReader["PasswordQuestion1"].ToString());
-                    PasswordAnswer1 = ((resultDataReader["PasswordAnswer1"] == null) ? "" : resultDataReader["PasswordAnswer1"].ToString());
-                    PasswordQuestion2 = ((resultDataReader["PasswordQuestion2"] == null) ? "" : resultDataReader["PasswordQuestion2"].ToString());
-                    PasswordAnswer2 = ((resultDataReader["PasswordAnswer2"] == null) ? "" : resultDataReader["PasswordAnswer2"].ToString());
-                    if ((DateTime)resultDataReader["LastFindDate"] == DateTime.Today)
-                    {
-                        Count = (int)resultDataReader["FailedPasswordAttemptCount"];
-                    }
-                    else
-                    {
-                        Count = 5;
-                    }
+                    PasswordQuestion1 = (resultDataReader["PasswordQuestion1"] == null) ? "" : resultDataReader["PasswordQuestion1"].ToString();
+                    PasswordAnswer1 = (resultDataReader["PasswordAnswer1"] == null) ? "" : resultDataReader["PasswordAnswer1"].ToString();
+                    PasswordQuestion2 = (resultDataReader["PasswordQuestion2"] == null) ? "" : resultDataReader["PasswordQuestion2"].ToString();
+                    PasswordAnswer2 = (resultDataReader["PasswordAnswer2"] == null) ? "" : resultDataReader["PasswordAnswer2"].ToString();
+                    Count = (DateTime)resultDataReader["LastFindDate"] == DateTime.Today ? (int)resultDataReader["FailedPasswordAttemptCount"] : 5;
                 }
             }
             catch (Exception exception)
@@ -2137,17 +2165,17 @@ namespace Bussiness
         public MarryApplyInfo[] GetPlayerMarryApply(int UserID)
         {
             SqlDataReader resultDataReader = null;
-            List<MarryApplyInfo> list = new List<MarryApplyInfo>();
+            List<MarryApplyInfo> list = [];
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", UserID)
+                    new("@UserID", UserID)
                 };
-                db.GetReader(ref resultDataReader, "SP_Get_Marry_Apply", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Get_Marry_Apply", sqlParameters);
                 while (resultDataReader.Read())
                 {
-                    MarryApplyInfo item = new MarryApplyInfo
+                    MarryApplyInfo item = new()
                     {
                         UserID = (int)resultDataReader["UserID"],
                         ApplyUserID = (int)resultDataReader["ApplyUserID"],
@@ -2180,27 +2208,29 @@ namespace Bussiness
 
         public PlayerInfo[] GetPlayerMathPage(int page, int size, ref int total, ref bool resultValue)
         {
-            List<PlayerInfo> playerInfoList = new List<PlayerInfo>();
+            List<PlayerInfo> playerInfoList = [];
             try
             {
                 string queryWhere = "  ";
                 string fdOreder = "weeklyScore desc";
                 foreach (DataRow row in GetPage("V_Sys_Users_Math", queryWhere, page, size, "*", fdOreder, "UserID", ref total).Rows)
                 {
-                    PlayerInfo playerInfo = new PlayerInfo();
+                    PlayerInfo playerInfo = new()
+                    {
+                        ID = (int)row["UserID"],
+                        Colors = (row["Colors"] == null) ? "" : row["Colors"].ToString(),
+                        GP = (int)row["GP"],
+                        Grade = (int)row["Grade"]
+                    };
                     playerInfo.ID = (int)row["UserID"];
-                    playerInfo.Colors = ((row["Colors"] == null) ? "" : row["Colors"].ToString());
-                    playerInfo.GP = (int)row["GP"];
-                    playerInfo.Grade = (int)row["Grade"];
-                    playerInfo.ID = (int)row["UserID"];
-                    playerInfo.NickName = ((row["NickName"] == null) ? "" : row["NickName"].ToString());
+                    playerInfo.NickName = (row["NickName"] == null) ? "" : row["NickName"].ToString();
                     playerInfo.Sex = (bool)row["Sex"];
                     playerInfo.State = (int)row["State"];
-                    playerInfo.Style = ((row["Style"] == null) ? "" : row["Style"].ToString());
+                    playerInfo.Style = (row["Style"] == null) ? "" : row["Style"].ToString();
                     playerInfo.Hide = (int)row["Hide"];
                     playerInfo.Repute = (int)row["Repute"];
-                    playerInfo.UserName = ((row["UserName"] == null) ? "" : row["UserName"].ToString());
-                    playerInfo.Skin = ((row["Skin"] == null) ? "" : row["Skin"].ToString());
+                    playerInfo.UserName = (row["UserName"] == null) ? "" : row["UserName"].ToString();
+                    playerInfo.Skin = (row["Skin"] == null) ? "" : row["Skin"].ToString();
                     playerInfo.Win = (int)row["Win"];
                     playerInfo.Total = (int)row["Total"];
                     playerInfo.Nimbus = (int)row["Nimbus"];
@@ -2230,7 +2260,7 @@ namespace Bussiness
 
         public PlayerInfo[] GetPlayerPage(int page, int size, ref int total, int order, int where, int userID, ref bool resultValue)
         {
-            List<PlayerInfo> list = new List<PlayerInfo>();
+            List<PlayerInfo> list = [];
             try
             {
                 string queryWhere = " IsExist=1 and IsFirst<> 0 ";
@@ -2293,73 +2323,75 @@ namespace Bussiness
                 string fdOreder = str + ",UserID";
                 foreach (DataRow dataRow in GetPage("V_Sys_Users_Detail", queryWhere, page, size, "*", fdOreder, "UserID", ref total).Rows)
                 {
-                    PlayerInfo playerInfo = new PlayerInfo();
-                    playerInfo.Agility = (int)dataRow["Agility"];
-                    playerInfo.Attack = (int)dataRow["Attack"];
-                    playerInfo.Colors = ((dataRow["Colors"] == null) ? "" : dataRow["Colors"].ToString());
-                    playerInfo.ConsortiaID = (int)dataRow["ConsortiaID"];
-                    playerInfo.Defence = (int)dataRow["Defence"];
-                    playerInfo.Gold = (int)dataRow["Gold"];
-                    playerInfo.GP = (int)dataRow["GP"];
-                    playerInfo.Grade = (int)dataRow["Grade"];
-                    playerInfo.ID = (int)dataRow["UserID"];
-                    playerInfo.Luck = (int)dataRow["Luck"];
-                    playerInfo.Money = (int)dataRow["Money"];
-                    playerInfo.NickName = ((dataRow["NickName"] == null) ? "" : dataRow["NickName"].ToString());
-                    playerInfo.Sex = (bool)dataRow["Sex"];
-                    playerInfo.State = (int)dataRow["State"];
-                    playerInfo.Style = ((dataRow["Style"] == null) ? "" : dataRow["Style"].ToString());
-                    playerInfo.Hide = (int)dataRow["Hide"];
-                    playerInfo.Repute = (int)dataRow["Repute"];
-                    playerInfo.UserName = ((dataRow["UserName"] == null) ? "" : dataRow["UserName"].ToString());
-                    playerInfo.ConsortiaName = ((dataRow["ConsortiaName"] == null) ? "" : dataRow["ConsortiaName"].ToString());
-                    playerInfo.Offer = (int)dataRow["Offer"];
-                    playerInfo.Skin = ((dataRow["Skin"] == null) ? "" : dataRow["Skin"].ToString());
-                    playerInfo.IsBanChat = (bool)dataRow["IsBanChat"];
-                    playerInfo.ReputeOffer = (int)dataRow["ReputeOffer"];
-                    playerInfo.ConsortiaRepute = (int)dataRow["ConsortiaRepute"];
-                    playerInfo.ConsortiaLevel = (int)dataRow["ConsortiaLevel"];
-                    playerInfo.StoreLevel = (int)dataRow["StoreLevel"];
-                    playerInfo.ShopLevel = (int)dataRow["ShopLevel"];
-                    playerInfo.SmithLevel = (int)dataRow["SmithLevel"];
-                    playerInfo.ConsortiaHonor = (int)dataRow["ConsortiaHonor"];
-                    playerInfo.RichesOffer = (int)dataRow["RichesOffer"];
-                    playerInfo.RichesRob = (int)dataRow["RichesRob"];
-                    playerInfo.DutyLevel = (int)dataRow["DutyLevel"];
-                    playerInfo.DutyName = ((dataRow["DutyName"] == null) ? "" : dataRow["DutyName"].ToString());
-                    playerInfo.Right = (int)dataRow["Right"];
-                    playerInfo.ChairmanName = ((dataRow["ChairmanName"] == null) ? "" : dataRow["ChairmanName"].ToString());
-                    playerInfo.Win = (int)dataRow["Win"];
-                    playerInfo.Total = (int)dataRow["Total"];
-                    playerInfo.Escape = (int)dataRow["Escape"];
-                    playerInfo.AddDayGP = (int)dataRow["AddDayGP"];
-                    playerInfo.AddDayOffer = (int)dataRow["AddDayOffer"];
-                    playerInfo.AddWeekGP = (int)dataRow["AddWeekGP"];
-                    playerInfo.AddWeekOffer = (int)dataRow["AddWeekOffer"];
-                    playerInfo.ConsortiaRiches = (int)dataRow["ConsortiaRiches"];
-                    playerInfo.CheckCount = (int)dataRow["CheckCount"];
-                    playerInfo.Nimbus = (int)dataRow["Nimbus"];
-                    playerInfo.GiftToken = (int)dataRow["GiftToken"];
-                    playerInfo.QuestSite = ((dataRow["QuestSite"] == null) ? new byte[200] : ((byte[])dataRow["QuestSite"]));
-                    playerInfo.PvePermission = ((dataRow["PvePermission"] == null) ? "" : dataRow["PvePermission"].ToString());
-                    playerInfo.FightLabPermission = ((dataRow["FightLabPermission"] == DBNull.Value) ? "" : dataRow["FightLabPermission"].ToString());
-                    playerInfo.FightPower = (int)dataRow["FightPower"];
-                    playerInfo.AchievementPoint = (int)dataRow["AchievementPoint"];
-                    playerInfo.Honor = (string)dataRow["Honor"];
-                    playerInfo.IsShowConsortia = (bool)dataRow["IsShowConsortia"];
-                    playerInfo.OptionOnOff = (int)dataRow["OptionOnOff"];
-                    playerInfo.badgeID = (int)dataRow["badgeID"];
-                    playerInfo.EliteScore = (int)dataRow["EliteScore"];
-                    playerInfo.apprenticeshipState = (int)dataRow["apprenticeshipState"];
-                    playerInfo.masterID = (int)dataRow["masterID"];
-                    playerInfo.graduatesCount = (int)dataRow["graduatesCount"];
-                    playerInfo.masterOrApprentices = ((dataRow["masterOrApprentices"] == DBNull.Value) ? "" : dataRow["masterOrApprentices"].ToString());
-                    playerInfo.honourOfMaster = ((dataRow["honourOfMaster"] == DBNull.Value) ? "" : dataRow["honourOfMaster"].ToString());
-                    playerInfo.IsMarried = (bool)dataRow["IsMarried"];
-                    playerInfo.typeVIP = Convert.ToByte(dataRow["typeVIP"]);
-                    playerInfo.VIPLevel = (int)dataRow["VIPLevel"];
-                    playerInfo.SpouseID = (int)dataRow["SpouseID"];
-                    playerInfo.SpouseName = ((dataRow["SpouseName"] == DBNull.Value) ? "" : dataRow["SpouseName"].ToString());
+                    PlayerInfo playerInfo = new()
+                    {
+                        Agility = (int)dataRow["Agility"],
+                        Attack = (int)dataRow["Attack"],
+                        Colors = (dataRow["Colors"] == null) ? "" : dataRow["Colors"].ToString(),
+                        ConsortiaID = (int)dataRow["ConsortiaID"],
+                        Defence = (int)dataRow["Defence"],
+                        Gold = (int)dataRow["Gold"],
+                        GP = (int)dataRow["GP"],
+                        Grade = (int)dataRow["Grade"],
+                        ID = (int)dataRow["UserID"],
+                        Luck = (int)dataRow["Luck"],
+                        Money = (int)dataRow["Money"],
+                        NickName = (dataRow["NickName"] == null) ? "" : dataRow["NickName"].ToString(),
+                        Sex = (bool)dataRow["Sex"],
+                        State = (int)dataRow["State"],
+                        Style = (dataRow["Style"] == null) ? "" : dataRow["Style"].ToString(),
+                        Hide = (int)dataRow["Hide"],
+                        Repute = (int)dataRow["Repute"],
+                        UserName = (dataRow["UserName"] == null) ? "" : dataRow["UserName"].ToString(),
+                        ConsortiaName = (dataRow["ConsortiaName"] == null) ? "" : dataRow["ConsortiaName"].ToString(),
+                        Offer = (int)dataRow["Offer"],
+                        Skin = (dataRow["Skin"] == null) ? "" : dataRow["Skin"].ToString(),
+                        IsBanChat = (bool)dataRow["IsBanChat"],
+                        ReputeOffer = (int)dataRow["ReputeOffer"],
+                        ConsortiaRepute = (int)dataRow["ConsortiaRepute"],
+                        ConsortiaLevel = (int)dataRow["ConsortiaLevel"],
+                        StoreLevel = (int)dataRow["StoreLevel"],
+                        ShopLevel = (int)dataRow["ShopLevel"],
+                        SmithLevel = (int)dataRow["SmithLevel"],
+                        ConsortiaHonor = (int)dataRow["ConsortiaHonor"],
+                        RichesOffer = (int)dataRow["RichesOffer"],
+                        RichesRob = (int)dataRow["RichesRob"],
+                        DutyLevel = (int)dataRow["DutyLevel"],
+                        DutyName = (dataRow["DutyName"] == null) ? "" : dataRow["DutyName"].ToString(),
+                        Right = (int)dataRow["Right"],
+                        ChairmanName = (dataRow["ChairmanName"] == null) ? "" : dataRow["ChairmanName"].ToString(),
+                        Win = (int)dataRow["Win"],
+                        Total = (int)dataRow["Total"],
+                        Escape = (int)dataRow["Escape"],
+                        AddDayGP = (int)dataRow["AddDayGP"],
+                        AddDayOffer = (int)dataRow["AddDayOffer"],
+                        AddWeekGP = (int)dataRow["AddWeekGP"],
+                        AddWeekOffer = (int)dataRow["AddWeekOffer"],
+                        ConsortiaRiches = (int)dataRow["ConsortiaRiches"],
+                        CheckCount = (int)dataRow["CheckCount"],
+                        Nimbus = (int)dataRow["Nimbus"],
+                        GiftToken = (int)dataRow["GiftToken"],
+                        QuestSite = (dataRow["QuestSite"] == null) ? new byte[200] : ((byte[])dataRow["QuestSite"]),
+                        PvePermission = (dataRow["PvePermission"] == null) ? "" : dataRow["PvePermission"].ToString(),
+                        FightLabPermission = (dataRow["FightLabPermission"] == DBNull.Value) ? "" : dataRow["FightLabPermission"].ToString(),
+                        FightPower = (int)dataRow["FightPower"],
+                        AchievementPoint = (int)dataRow["AchievementPoint"],
+                        Honor = (string)dataRow["Honor"],
+                        IsShowConsortia = (bool)dataRow["IsShowConsortia"],
+                        OptionOnOff = (int)dataRow["OptionOnOff"],
+                        badgeID = (int)dataRow["badgeID"],
+                        EliteScore = (int)dataRow["EliteScore"],
+                        apprenticeshipState = (int)dataRow["apprenticeshipState"],
+                        masterID = (int)dataRow["masterID"],
+                        graduatesCount = (int)dataRow["graduatesCount"],
+                        masterOrApprentices = (dataRow["masterOrApprentices"] == DBNull.Value) ? "" : dataRow["masterOrApprentices"].ToString(),
+                        honourOfMaster = (dataRow["honourOfMaster"] == DBNull.Value) ? "" : dataRow["honourOfMaster"].ToString(),
+                        IsMarried = (bool)dataRow["IsMarried"],
+                        typeVIP = Convert.ToByte(dataRow["typeVIP"]),
+                        VIPLevel = (int)dataRow["VIPLevel"],
+                        SpouseID = (int)dataRow["SpouseID"],
+                        SpouseName = (dataRow["SpouseName"] == DBNull.Value) ? "" : dataRow["SpouseName"].ToString()
+                    };
                     list.Add(playerInfo);
                 }
                 resultValue = true;
@@ -2385,10 +2417,10 @@ namespace Bussiness
                 }
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@Sex", SqlDbType.Int, 4)
+                    new("@Sex", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = sex;
-                db.GetReader(ref resultDataReader, "SP_GetSingle_RandomName", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_GetSingle_RandomName", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return (resultDataReader["Name"] == null) ? "unknown" : resultDataReader["Name"].ToString();
@@ -2418,10 +2450,10 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = UserID;
-                db.GetReader(ref resultDataReader, "SP_GetSingleUserMatchInfo", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_GetSingleUserMatchInfo", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return new UserMatchInfo
@@ -2465,33 +2497,35 @@ namespace Bussiness
         public List<UserRankInfo> GetSingleUserRank(int UserID)
         {
             SqlDataReader reader = null;
-            List<UserRankInfo> infos = new List<UserRankInfo>();
+            List<UserRankInfo> infos = [];
             try
             {
                 SqlParameter[] para = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 para[0].Value = UserID;
-                db.GetReader(ref reader, "SP_GetSingleUserRank", para);
+                _ = db.GetReader(ref reader, "SP_GetSingleUserRank", para);
                 while (reader.Read())
                 {
-                    UserRankInfo info = new UserRankInfo();
-                    info.ID = (int)reader["ID"];
-                    info.UserID = (int)reader["UserID"];
-                    info.Name = (string)reader["UserRank"];
-                    info.Attack = (int)reader["Attack"];
-                    info.Defence = (int)reader["Defence"];
-                    info.Luck = (int)reader["Luck"];
-                    info.Agility = (int)reader["Agility"];
-                    info.HP = (int)reader["HP"];
-                    info.Damage = (int)reader["Damage"];
-                    info.Guard = (int)reader["Guard"];
-                    info.BeginDate = (DateTime)reader["BeginDate"];
-                    info.Validate = (int)reader["Validate"];
-                    info.IsExit = (bool)reader["IsExit"];
-                    info.NewTitleID = (int)reader["NewTitleID"];
-                    info.EndDate = (DateTime)reader["EndDate"];
+                    UserRankInfo info = new()
+                    {
+                        ID = (int)reader["ID"],
+                        UserID = (int)reader["UserID"],
+                        Name = (string)reader["UserRank"],
+                        Attack = (int)reader["Attack"],
+                        Defence = (int)reader["Defence"],
+                        Luck = (int)reader["Luck"],
+                        Agility = (int)reader["Agility"],
+                        HP = (int)reader["HP"],
+                        Damage = (int)reader["Damage"],
+                        Guard = (int)reader["Guard"],
+                        BeginDate = (DateTime)reader["BeginDate"],
+                        Validate = (int)reader["Validate"],
+                        IsExit = (bool)reader["IsExit"],
+                        NewTitleID = (int)reader["NewTitleID"],
+                        EndDate = (DateTime)reader["EndDate"]
+                    };
                     infos.Add(info);
                 }
             }
@@ -2519,10 +2553,10 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = UserID;
-                db.GetReader(ref resultDataReader, "SP_GetSingleUsersExtra", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_GetSingleUsersExtra", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return new UsersExtraInfo
@@ -2534,8 +2568,8 @@ namespace Bussiness
                         coupleBossEnterNum = (int)resultDataReader["coupleBossEnterNum"],
                         coupleBossHurt = (int)resultDataReader["coupleBossHurt"],
                         coupleBossBoxNum = (int)resultDataReader["coupleBossBoxNum"],
-                        LeftRoutteCount = ((resultDataReader["LeftRoutteCount"] == DBNull.Value) ? GameProperties.LeftRouterMaxDay : ((int)resultDataReader["LeftRoutteCount"])),
-                        LeftRoutteRate = ((resultDataReader["LeftRoutteRate"] == DBNull.Value) ? 0f : float.Parse(resultDataReader["LeftRoutteRate"].ToString())),
+                        LeftRoutteCount = (resultDataReader["LeftRoutteCount"] == DBNull.Value) ? GameProperties.LeftRouterMaxDay : ((int)resultDataReader["LeftRoutteCount"]),
+                        LeftRoutteRate = (resultDataReader["LeftRoutteRate"] == DBNull.Value) ? 0f : float.Parse(resultDataReader["LeftRoutteRate"].ToString()),
                         FreeSendMailCount = (int)resultDataReader["FreeSendMailCount"]
                     };
                 }
@@ -2563,10 +2597,10 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = UserID;
-                db.GetReader(ref resultDataReader, "SP_User_Repute", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_User_Repute", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     int fightpower = 0;
@@ -2595,19 +2629,19 @@ namespace Bussiness
 
         public AchievementData[] GetUserAchievement(int userID)
         {
-            List<AchievementData> list = new List<AchievementData>();
+            List<AchievementData> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = userID;
-                db.GetReader(ref resultDataReader, "SP_Get_User_AchievementData", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Get_User_AchievementData", sqlParameters);
                 while (resultDataReader.Read())
                 {
-                    AchievementData item = new AchievementData
+                    AchievementData item = new()
                     {
                         UserID = (int)resultDataReader["UserID"],
                         AchievementID = (int)resultDataReader["AchievementID"],
@@ -2636,15 +2670,17 @@ namespace Bussiness
 
         public ItemInfo[] GetUserBagByType(int UserID, int bagType)
         {
-            List<ItemInfo> items = new List<ItemInfo>();
+            List<ItemInfo> items = [];
             SqlDataReader reader = null;
             try
             {
                 SqlParameter[] para = new SqlParameter[2];
-                para[0] = new SqlParameter("@UserID", SqlDbType.Int, 4);
-                para[0].Value = UserID;
+                para[0] = new SqlParameter("@UserID", SqlDbType.Int, 4)
+                {
+                    Value = UserID
+                };
                 para[1] = new SqlParameter("@BagType", bagType);
-                db.GetReader(ref reader, "SP_Users_BagByType", para);
+                _ = db.GetReader(ref reader, "SP_Users_BagByType", para);
 
                 while (reader.Read())
                 {
@@ -2655,12 +2691,16 @@ namespace Bussiness
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("Init", e);
+                }
             }
             finally
             {
                 if (reader != null && !reader.IsClosed)
+                {
                     reader.Close();
+                }
             }
             return items.ToArray();
 
@@ -2668,16 +2708,16 @@ namespace Bussiness
 
         public List<ItemInfo> GetUserBeadEuqip(int UserID)
         {
-            List<ItemInfo> list = new List<ItemInfo>();
+            List<ItemInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = UserID;
-                db.GetReader(ref resultDataReader, "SP_Users_Bead_Equip", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_Bead_Equip", sqlParameters);
                 while (resultDataReader.Read())
                 {
                     list.Add(InitItem(resultDataReader));
@@ -2704,22 +2744,22 @@ namespace Bussiness
 
         public BufferInfo[] GetUserBuffer(int userID)
         {
-            List<BufferInfo> list = new List<BufferInfo>();
+            List<BufferInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = userID;
-                db.GetReader(ref resultDataReader, "SP_User_Buff_All", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_User_Buff_All", sqlParameters);
                 while (resultDataReader.Read())
                 {
-                    BufferInfo item = new BufferInfo
+                    BufferInfo item = new()
                     {
                         BeginDate = (DateTime)resultDataReader["BeginDate"],
-                        Data = ((resultDataReader["Data"] == null) ? "" : resultDataReader["Data"].ToString()),
+                        Data = (resultDataReader["Data"] == null) ? "" : resultDataReader["Data"].ToString(),
                         Type = (int)resultDataReader["Type"],
                         UserID = (int)resultDataReader["UserID"],
                         ValidDate = (int)resultDataReader["ValidDate"],
@@ -2756,10 +2796,10 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@Place", SqlDbType.Int, 4)
+                    new("@Place", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = Place;
-                db.GetReader(ref resultDataReader, "SP_Get_UserCard_By_Place", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Get_UserCard_By_Place", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return InitCard(resultDataReader);
@@ -2784,16 +2824,16 @@ namespace Bussiness
 
         public List<UsersCardInfo> GetUserCardEuqip(int UserID)
         {
-            List<UsersCardInfo> list = new List<UsersCardInfo>();
+            List<UsersCardInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = UserID;
-                db.GetReader(ref resultDataReader, "SP_Users_Items_Card_Equip", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_Items_Card_Equip", sqlParameters);
                 while (resultDataReader.Read())
                 {
                     list.Add(InitCard(resultDataReader));
@@ -2820,16 +2860,16 @@ namespace Bussiness
 
         public UsersCardInfo[] GetUserCardSingles(int UserID)
         {
-            List<UsersCardInfo> list = new List<UsersCardInfo>();
+            List<UsersCardInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = UserID;
-                db.GetReader(ref resultDataReader, "SP_Get_UserCard_By_ID", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Get_UserCard_By_ID", sqlParameters);
                 while (resultDataReader.Read())
                 {
                     list.Add(InitCard(resultDataReader));
@@ -2854,16 +2894,16 @@ namespace Bussiness
 
         public ConsortiaBufferInfo[] GetUserConsortiaBuffer(int ConsortiaID)
         {
-            List<ConsortiaBufferInfo> list = new List<ConsortiaBufferInfo>();
+            List<ConsortiaBufferInfo> list = [];
             SqlDataReader ResultDataReader = null;
             try
             {
                 SqlParameter[] SqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@ConsortiaID", SqlDbType.Int, 4)
+                    new("@ConsortiaID", SqlDbType.Int, 4)
                 };
                 SqlParameters[0].Value = ConsortiaID;
-                db.GetReader(ref ResultDataReader, "SP_User_Consortia_Buff_All", SqlParameters);
+                _ = db.GetReader(ref ResultDataReader, "SP_User_Consortia_Buff_All", SqlParameters);
                 while (ResultDataReader.Read())
                 {
                     list.Add(new ConsortiaBufferInfo
@@ -2897,18 +2937,18 @@ namespace Bussiness
 
         public ConsortiaBufferInfo[] GetUserConsortiaBufferLess(int ConsortiaID, int LessID)
         {
-            List<ConsortiaBufferInfo> list = new List<ConsortiaBufferInfo>();
+            List<ConsortiaBufferInfo> list = [];
             SqlDataReader ResultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@ConsortiaID", SqlDbType.Int, 4),
+                    new("@ConsortiaID", SqlDbType.Int, 4),
                     null
                 };
                 sqlParameters[0].Value = ConsortiaID;
                 sqlParameters[1] = new SqlParameter("@LessID", LessID);
-                db.GetReader(ref ResultDataReader, "SP_User_Consortia_Buff_All", sqlParameters);
+                _ = db.GetReader(ref ResultDataReader, "SP_User_Consortia_Buff_All", sqlParameters);
                 while (ResultDataReader.Read())
                 {
                     list.Add(new ConsortiaBufferInfo
@@ -2947,13 +2987,13 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[]
                 {
-                    new SqlParameter("@ID", SqlDbType.Int, 4),
-                    new SqlParameter("@ConsortiaID", SqlDbType.Int, 4),
+                    new("@ID", SqlDbType.Int, 4),
+                    new("@ConsortiaID", SqlDbType.Int, 4),
 
                 };
                 SqlParameters[0].Value = ID;
                 SqlParameters[1].Value = conid;
-                db.GetReader(ref ResultDataReader, "SP_User_Consortia_Buff_Single", SqlParameters);
+                _ = db.GetReader(ref ResultDataReader, "SP_User_Consortia_Buff_Single", SqlParameters);
                 if (ResultDataReader.Read())
                 {
                     return new ConsortiaBufferInfo
@@ -2987,16 +3027,16 @@ namespace Bussiness
 
         public List<ItemInfo> GetUserEquip(int UserID)
         {
-            List<ItemInfo> list = new List<ItemInfo>();
+            List<ItemInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = UserID;
-                db.GetReader(ref resultDataReader, "SP_Users_Items_Equip", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_Items_Equip", sqlParameters);
                 while (resultDataReader.Read())
                 {
                     list.Add(InitItem(resultDataReader));
@@ -3023,16 +3063,16 @@ namespace Bussiness
 
         public List<ItemInfo> GetUserEuqipByNick(string Nick)
         {
-            List<ItemInfo> list = new List<ItemInfo>();
+            List<ItemInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@NickName", SqlDbType.NVarChar, 200)
+                    new("@NickName", SqlDbType.NVarChar, 200)
                 };
                 sqlParameters[0].Value = Nick;
-                db.GetReader(ref resultDataReader, "SP_Users_Items_Equip_By_Nick", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_Items_Equip_By_Nick", sqlParameters);
                 while (resultDataReader.Read())
                 {
                     list.Add(InitItem(resultDataReader));
@@ -3060,18 +3100,18 @@ namespace Bussiness
         public EventRewardProcessInfo[] GetUserEventProcess(int userID)
         {
             SqlDataReader resultDataReader = null;
-            List<EventRewardProcessInfo> list = new List<EventRewardProcessInfo>();
+            List<EventRewardProcessInfo> list = [];
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = userID;
-                db.GetReader(ref resultDataReader, "SP_Get_User_EventProcess", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Get_User_EventProcess", sqlParameters);
                 while (resultDataReader.Read())
                 {
-                    EventRewardProcessInfo item = new EventRewardProcessInfo
+                    EventRewardProcessInfo item = new()
                     {
                         UserID = (int)resultDataReader["UserID"],
                         ActiveType = (int)resultDataReader["ActiveType"],
@@ -3102,7 +3142,7 @@ namespace Bussiness
         public UserInfo GetUserInfo(int UserId)
         {
             SqlDataReader resultDataReader = null;
-            UserInfo info = new UserInfo
+            UserInfo info = new()
             {
                 UserID = UserId
             };
@@ -3110,17 +3150,17 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", UserId)
+                    new("@UserID", UserId)
                 };
-                db.GetReader(ref resultDataReader, "SP_Get_User_Info", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Get_User_Info", sqlParameters);
                 while (resultDataReader.Read())
                 {
                     info.UserID = int.Parse(resultDataReader["UserID"].ToString());
-                    info.UserEmail = ((resultDataReader["UserEmail"] == null) ? "" : resultDataReader["UserEmail"].ToString());
-                    info.UserPhone = ((resultDataReader["UserPhone"] == null) ? "" : resultDataReader["UserPhone"].ToString());
-                    info.UserOther1 = ((resultDataReader["UserOther1"] == null) ? "" : resultDataReader["UserOther1"].ToString());
-                    info.UserOther2 = ((resultDataReader["UserOther2"] == null) ? "" : resultDataReader["UserOther2"].ToString());
-                    info.UserOther3 = ((resultDataReader["UserOther3"] == null) ? "" : resultDataReader["UserOther3"].ToString());
+                    info.UserEmail = (resultDataReader["UserEmail"] == null) ? "" : resultDataReader["UserEmail"].ToString();
+                    info.UserPhone = (resultDataReader["UserPhone"] == null) ? "" : resultDataReader["UserPhone"].ToString();
+                    info.UserOther1 = (resultDataReader["UserOther1"] == null) ? "" : resultDataReader["UserOther1"].ToString();
+                    info.UserOther2 = (resultDataReader["UserOther2"] == null) ? "" : resultDataReader["UserOther2"].ToString();
+                    info.UserOther3 = (resultDataReader["UserOther3"] == null) ? "" : resultDataReader["UserOther3"].ToString();
                 }
                 return info;
             }
@@ -3144,16 +3184,16 @@ namespace Bussiness
 
         public ItemInfo[] GetUserItem(int UserID)
         {
-            List<ItemInfo> list = new List<ItemInfo>();
+            List<ItemInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = UserID;
-                db.GetReader(ref resultDataReader, "SP_Users_Items_All", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_Items_All", sqlParameters);
                 while (resultDataReader.Read())
                 {
                     list.Add(InitItem(resultDataReader));
@@ -3183,10 +3223,10 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@ID", SqlDbType.Int, 4)
+                    new("@ID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = itemID;
-                db.GetReader(ref resultDataReader, "SP_Users_Items_Single", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_Items_Single", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return InitItem(resultDataReader);
@@ -3216,9 +3256,9 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@Grade", Grade)
+                    new("@Grade", Grade)
                 };
-                db.GetReader(ref resultDataReader, "SP_Get_Level_By_Grade", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Get_Level_By_Grade", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return new LevelInfo
@@ -3253,10 +3293,10 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserName", SqlDbType.NVarChar, 200)
+                    new("@UserName", SqlDbType.NVarChar, 200)
                 };
                 sqlParameters[0].Value = userName;
-                db.GetReader(ref resultDataReader, "SP_Users_LimitByUserName", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_LimitByUserName", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return new PlayerLimitInfo
@@ -3285,16 +3325,16 @@ namespace Bussiness
 
         public PlayerInfo[] GetUserLoginList(string userName)
         {
-            List<PlayerInfo> list = new List<PlayerInfo>();
+            List<PlayerInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserName", SqlDbType.NVarChar, 200)
+                    new("@UserName", SqlDbType.NVarChar, 200)
                 };
                 sqlParameters[0].Value = userName;
-                db.GetReader(ref resultDataReader, "SP_Users_LoginList", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_LoginList", sqlParameters);
                 while (resultDataReader.Read())
                 {
                     list.Add(InitPlayerInfo(resultDataReader));
@@ -3319,16 +3359,16 @@ namespace Bussiness
 
         public QuestDataInfo[] GetUserQuest(int userID)
         {
-            List<QuestDataInfo> infos = new List<QuestDataInfo>();
+            List<QuestDataInfo> infos = [];
             SqlDataReader reader = null;
             try
             {
                 SqlParameter[] para = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 para[0].Value = userID;
-                db.GetReader(ref reader, "SP_QuestData_All", para);
+                _ = db.GetReader(ref reader, "SP_QuestData_All", para);
                 while (reader.Read())
                 {
                     infos.Add(new QuestDataInfo
@@ -3364,18 +3404,18 @@ namespace Bussiness
 
         public QuestDataInfo GetUserQuestSiger(int userID, int QuestID)
         {
-            new QuestDataInfo();
+            _ = new QuestDataInfo();
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int),
-                    new SqlParameter("@QuestID", SqlDbType.Int)
+                    new("@UserID", SqlDbType.Int),
+                    new("@QuestID", SqlDbType.Int)
                 };
                 sqlParameters[0].Value = userID;
                 sqlParameters[1].Value = QuestID;
-                db.GetReader(ref resultDataReader, "SP_QuestData_One", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_QuestData_One", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return new QuestDataInfo
@@ -3418,10 +3458,10 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@NickName", SqlDbType.NVarChar, 200)
+                    new("@NickName", SqlDbType.NVarChar, 200)
                 };
                 sqlParameters[0].Value = nickName;
-                db.GetReader(ref resultDataReader, "SP_Users_SingleByNickName", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_SingleByNickName", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return InitPlayerInfo(resultDataReader);
@@ -3448,10 +3488,10 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 sqlParameters[0].Value = UserID;
-                db.GetReader(ref resultDataReader, "SP_Users_SingleByUserID", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_SingleByUserID", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return InitPlayerInfo(resultDataReader);
@@ -3481,10 +3521,10 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserName", SqlDbType.NVarChar, 200)
+                    new("@UserName", SqlDbType.NVarChar, 200)
                 };
                 sqlParameters[0].Value = userName;
-                db.GetReader(ref resultDataReader, "SP_Users_SingleByUserName", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_SingleByUserName", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return InitPlayerInfo(resultDataReader);
@@ -3514,9 +3554,9 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", ID)
+                    new("@UserID", ID)
                 };
-                db.GetReader(ref resultDataReader, "SP_Get_UserTexp_By_ID", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Get_UserTexp_By_ID", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return new TexpInfo
@@ -3553,15 +3593,15 @@ namespace Bussiness
         public UsersCardInfo[] GetSingleUserCard(int UserID)
         {
             SqlDataReader ResultDataReader = null;
-            List<UsersCardInfo> userCardInfoList = new List<UsersCardInfo>();
+            List<UsersCardInfo> userCardInfoList = [];
             try
             {
                 SqlParameter[] SqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 SqlParameters[0].Value = UserID;
-                db.GetReader(ref ResultDataReader, "SP_GetSingleUserCard", SqlParameters);
+                _ = db.GetReader(ref ResultDataReader, "SP_GetSingleUserCard", SqlParameters);
                 while (ResultDataReader.Read())
                 {
                     UsersCardInfo userCardInfo = InitCard(ResultDataReader);
@@ -3592,11 +3632,11 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@UserName", UserName),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserName", UserName),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[1].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_GetVip", sqlParameters);
+                _ = db.RunProcedure("SP_GetVip", sqlParameters);
                 num = (int)sqlParameters[1].Value;
                 return num;
             }
@@ -3616,11 +3656,11 @@ namespace Bussiness
             return new AuctionInfo
             {
                 AuctioneerID = (int)reader["AuctioneerID"],
-                AuctioneerName = ((reader["AuctioneerName"] == null) ? "" : reader["AuctioneerName"].ToString()),
+                AuctioneerName = (reader["AuctioneerName"] == null) ? "" : reader["AuctioneerName"].ToString(),
                 AuctionID = (int)reader["AuctionID"],
                 BeginDate = (DateTime)reader["BeginDate"],
                 BuyerID = (int)reader["BuyerID"],
-                BuyerName = ((reader["BuyerName"] == null) ? "" : reader["BuyerName"].ToString()),
+                BuyerName = (reader["BuyerName"] == null) ? "" : reader["BuyerName"].ToString(),
                 IsExist = (bool)reader["IsExist"],
                 ItemID = (int)reader["ItemID"],
                 Mouthful = (int)reader["Mouthful"],
@@ -3701,27 +3741,29 @@ namespace Bussiness
 
         public ConsortiaUserInfo InitConsortiaUserInfo(SqlDataReader dr)
         {
-            ConsortiaUserInfo consortiaUserInfo = new ConsortiaUserInfo();
-            consortiaUserInfo.ID = (int)dr["ID"];
-            consortiaUserInfo.ConsortiaID = (int)dr["ConsortiaID"];
-            consortiaUserInfo.DutyID = (int)dr["DutyID"];
-            consortiaUserInfo.DutyName = dr["DutyName"].ToString();
-            consortiaUserInfo.IsExist = (bool)dr["IsExist"];
-            consortiaUserInfo.RatifierID = (int)dr["RatifierID"];
-            consortiaUserInfo.RatifierName = dr["RatifierName"].ToString();
-            consortiaUserInfo.Remark = dr["Remark"].ToString();
-            consortiaUserInfo.UserID = (int)dr["UserID"];
-            consortiaUserInfo.UserName = dr["UserName"].ToString();
-            consortiaUserInfo.Grade = (int)dr["Grade"];
-            consortiaUserInfo.GP = (int)dr["GP"];
-            consortiaUserInfo.Repute = (int)dr["Repute"];
-            consortiaUserInfo.State = (int)dr["State"];
-            consortiaUserInfo.Right = (int)dr["Right"];
-            consortiaUserInfo.Offer = (int)dr["Offer"];
-            consortiaUserInfo.Colors = dr["Colors"].ToString();
-            consortiaUserInfo.Style = dr["Style"].ToString();
-            consortiaUserInfo.Hide = (int)dr["Hide"];
-            consortiaUserInfo.Skin = ((dr["Skin"] == null) ? "" : consortiaUserInfo.Skin);
+            ConsortiaUserInfo consortiaUserInfo = new()
+            {
+                ID = (int)dr["ID"],
+                ConsortiaID = (int)dr["ConsortiaID"],
+                DutyID = (int)dr["DutyID"],
+                DutyName = dr["DutyName"].ToString(),
+                IsExist = (bool)dr["IsExist"],
+                RatifierID = (int)dr["RatifierID"],
+                RatifierName = dr["RatifierName"].ToString(),
+                Remark = dr["Remark"].ToString(),
+                UserID = (int)dr["UserID"],
+                UserName = dr["UserName"].ToString(),
+                Grade = (int)dr["Grade"],
+                GP = (int)dr["GP"],
+                Repute = (int)dr["Repute"],
+                State = (int)dr["State"],
+                Right = (int)dr["Right"],
+                Offer = (int)dr["Offer"],
+                Colors = dr["Colors"].ToString(),
+                Style = dr["Style"].ToString(),
+                Hide = (int)dr["Hide"]
+            };
+            consortiaUserInfo.Skin = (dr["Skin"] == null) ? "" : consortiaUserInfo.Skin;
             consortiaUserInfo.Level = (int)dr["Level"];
             consortiaUserInfo.LastDate = (DateTime)dr["LastDate"];
             consortiaUserInfo.Sex = (bool)dr["Sex"];
@@ -3731,7 +3773,7 @@ namespace Bussiness
             consortiaUserInfo.Escape = (int)dr["Escape"];
             consortiaUserInfo.RichesOffer = (int)dr["RichesOffer"];
             consortiaUserInfo.RichesRob = (int)dr["RichesRob"];
-            consortiaUserInfo.LoginName = ((dr["LoginName"] == null) ? "" : dr["LoginName"].ToString());
+            consortiaUserInfo.LoginName = (dr["LoginName"] == null) ? "" : dr["LoginName"].ToString();
             consortiaUserInfo.Nimbus = (int)dr["Nimbus"];
             consortiaUserInfo.FightPower = (int)dr["FightPower"];
             consortiaUserInfo.typeVIP = Convert.ToByte(dr["typeVIP"]);
@@ -3741,47 +3783,49 @@ namespace Bussiness
 
         public ItemInfo InitItem(SqlDataReader reader)
         {
-            ItemInfo item = new ItemInfo(ItemMgr.FindItemTemplate((int)reader["TemplateID"]));
-            item.AgilityCompose = (int)reader["AgilityCompose"];
-            item.AttackCompose = (int)reader["AttackCompose"];
-            item.Color = reader["Color"].ToString();
-            item.Count = (int)reader["Count"];
-            item.DefendCompose = (int)reader["DefendCompose"];
-            item.ItemID = (int)reader["ItemID"];
-            item.LuckCompose = (int)reader["LuckCompose"];
-            item.Place = (int)reader["Place"];
-            item.StrengthenLevel = (int)reader["StrengthenLevel"];
-            item.TemplateID = (int)reader["TemplateID"];
-            item.UserID = (int)reader["UserID"];
-            item.ValidDate = (int)reader["ValidDate"];
-            item.IsDirty = false;
-            item.IsExist = (bool)reader["IsExist"];
-            item.IsBinds = (bool)reader["IsBinds"];
-            item.IsUsed = (bool)reader["IsUsed"];
-            item.BeginDate = (DateTime)reader["BeginDate"];
-            item.IsJudge = (bool)reader["IsJudge"];
-            item.BagType = (int)reader["BagType"];
-            item.Skin = reader["Skin"].ToString();
-            item.RemoveDate = (DateTime)reader["RemoveDate"];
-            item.RemoveType = (int)reader["RemoveType"];
-            item.Hole1 = (int)reader["Hole1"];
-            item.Hole2 = (int)reader["Hole2"];
-            item.Hole3 = (int)reader["Hole3"];
-            item.Hole4 = (int)reader["Hole4"];
-            item.Hole5 = (int)reader["Hole5"];
-            item.Hole6 = (int)reader["Hole6"];
-            item.Hole5Level = (int)reader["Hole5Level"];
-            item.Hole5Exp = (int)reader["Hole5Exp"];
-            item.Hole6Level = (int)reader["Hole6Level"];
-            item.Hole6Exp = (int)reader["Hole6Exp"];
-            item.StrengthenTimes = (int)reader["StrengthenTimes"];
-            item.goldBeginTime = (DateTime)reader["goldBeginTime"];
-            item.goldValidDate = (int)reader["goldValidDate"];
-            item.StrengthenExp = (int)reader["StrengthenExp"];
-            item.Blood = (int)reader["Blood"];
-            item.latentEnergyCurStr = (string)reader["latentEnergyCurStr"];
-            item.latentEnergyNewStr = (string)reader["latentEnergyNewStr"];
-            item.latentEnergyEndTime = (DateTime)reader["latentEnergyEndTime"];
+            ItemInfo item = new(ItemMgr.FindItemTemplate((int)reader["TemplateID"]))
+            {
+                AgilityCompose = (int)reader["AgilityCompose"],
+                AttackCompose = (int)reader["AttackCompose"],
+                Color = reader["Color"].ToString(),
+                Count = (int)reader["Count"],
+                DefendCompose = (int)reader["DefendCompose"],
+                ItemID = (int)reader["ItemID"],
+                LuckCompose = (int)reader["LuckCompose"],
+                Place = (int)reader["Place"],
+                StrengthenLevel = (int)reader["StrengthenLevel"],
+                TemplateID = (int)reader["TemplateID"],
+                UserID = (int)reader["UserID"],
+                ValidDate = (int)reader["ValidDate"],
+                IsDirty = false,
+                IsExist = (bool)reader["IsExist"],
+                IsBinds = (bool)reader["IsBinds"],
+                IsUsed = (bool)reader["IsUsed"],
+                BeginDate = (DateTime)reader["BeginDate"],
+                IsJudge = (bool)reader["IsJudge"],
+                BagType = (int)reader["BagType"],
+                Skin = reader["Skin"].ToString(),
+                RemoveDate = (DateTime)reader["RemoveDate"],
+                RemoveType = (int)reader["RemoveType"],
+                Hole1 = (int)reader["Hole1"],
+                Hole2 = (int)reader["Hole2"],
+                Hole3 = (int)reader["Hole3"],
+                Hole4 = (int)reader["Hole4"],
+                Hole5 = (int)reader["Hole5"],
+                Hole6 = (int)reader["Hole6"],
+                Hole5Level = (int)reader["Hole5Level"],
+                Hole5Exp = (int)reader["Hole5Exp"],
+                Hole6Level = (int)reader["Hole6Level"],
+                Hole6Exp = (int)reader["Hole6Exp"],
+                StrengthenTimes = (int)reader["StrengthenTimes"],
+                goldBeginTime = (DateTime)reader["goldBeginTime"],
+                goldValidDate = (int)reader["goldValidDate"],
+                StrengthenExp = (int)reader["StrengthenExp"],
+                Blood = (int)reader["Blood"],
+                latentEnergyCurStr = (string)reader["latentEnergyCurStr"],
+                latentEnergyNewStr = (string)reader["latentEnergyNewStr"],
+                latentEnergyEndTime = (DateTime)reader["latentEnergyEndTime"]
+            };
             item.GoldEquip = ItemMgr.FindGoldItemTemplate(item.TemplateID, item.isGold);
             item.curExp = (int)reader["curExp"];
             item.cellLocked = (bool)reader["cellLocked"];
@@ -3810,100 +3854,95 @@ namespace Bussiness
                 ValidDate = (int)reader["ValidDate"],
                 IsRead = (bool)reader["IsRead"],
                 SendTime = (DateTime)reader["SendTime"],
-                Annex1Name = ((reader["Annex1Name"] == null) ? "" : reader["Annex1Name"].ToString()),
-                Annex2Name = ((reader["Annex2Name"] == null) ? "" : reader["Annex2Name"].ToString()),
+                Annex1Name = (reader["Annex1Name"] == null) ? "" : reader["Annex1Name"].ToString(),
+                Annex2Name = (reader["Annex2Name"] == null) ? "" : reader["Annex2Name"].ToString(),
                 Annex3 = reader["Annex3"].ToString(),
                 Annex4 = reader["Annex4"].ToString(),
                 Annex5 = reader["Annex5"].ToString(),
-                Annex3Name = ((reader["Annex3Name"] == null) ? "" : reader["Annex3Name"].ToString()),
-                Annex4Name = ((reader["Annex4Name"] == null) ? "" : reader["Annex4Name"].ToString()),
-                Annex5Name = ((reader["Annex5Name"] == null) ? "" : reader["Annex5Name"].ToString()),
-                AnnexRemark = ((reader["AnnexRemark"] == null) ? "" : reader["AnnexRemark"].ToString())
+                Annex3Name = (reader["Annex3Name"] == null) ? "" : reader["Annex3Name"].ToString(),
+                Annex4Name = (reader["Annex4Name"] == null) ? "" : reader["Annex4Name"].ToString(),
+                Annex5Name = (reader["Annex5Name"] == null) ? "" : reader["Annex5Name"].ToString(),
+                AnnexRemark = (reader["AnnexRemark"] == null) ? "" : reader["AnnexRemark"].ToString()
             };
         }
 
         public PlayerInfo InitPlayerInfo(SqlDataReader reader)
         {
-            PlayerInfo playerInfo = new PlayerInfo();
-            playerInfo.Password = (string)reader["Password"];
-            playerInfo.IsConsortia = (bool)reader["IsConsortia"];
-            playerInfo.Agility = (int)reader["Agility"];
-            playerInfo.Attack = (int)reader["Attack"];
-            playerInfo.hp = (int)reader["hp"];
-            playerInfo.Colors = ((reader["Colors"] == null) ? "" : reader["Colors"].ToString());
-            playerInfo.ConsortiaID = (int)reader["ConsortiaID"];
-            playerInfo.Defence = (int)reader["Defence"];
-            playerInfo.Gold = (int)reader["Gold"];
-            playerInfo.GP = (int)reader["GP"];
-            playerInfo.Grade = (int)reader["Grade"];
-            playerInfo.ID = (int)reader["UserID"];
-            playerInfo.Luck = (int)reader["Luck"];
-            playerInfo.Money = (int)reader["Money"];
-            playerInfo.NickName = (((string)reader["NickName"] == null) ? "" : ((string)reader["NickName"]));
-            playerInfo.Sex = (bool)reader["Sex"];
-            playerInfo.State = (int)reader["State"];
-            playerInfo.Style = ((reader["Style"] == null) ? "" : reader["Style"].ToString());
-            playerInfo.Hide = (int)reader["Hide"];
-            playerInfo.Repute = (int)reader["Repute"];
-            playerInfo.UserName = ((reader["UserName"] == null) ? "" : reader["UserName"].ToString());
-            playerInfo.ConsortiaName = ((reader["ConsortiaName"] == null) ? "" : reader["ConsortiaName"].ToString());
-            playerInfo.Offer = (int)reader["Offer"];
-            playerInfo.Win = (int)reader["Win"];
-            playerInfo.Total = (int)reader["Total"];
-            playerInfo.Escape = (int)reader["Escape"];
-            playerInfo.Skin = ((reader["Skin"] == null) ? "" : reader["Skin"].ToString());
-            playerInfo.IsBanChat = (bool)reader["IsBanChat"];
-            playerInfo.ReputeOffer = (int)reader["ReputeOffer"];
-            playerInfo.ConsortiaRepute = (int)reader["ConsortiaRepute"];
-            playerInfo.ConsortiaLevel = (int)reader["ConsortiaLevel"];
-            playerInfo.StoreLevel = (int)reader["StoreLevel"];
-            playerInfo.ShopLevel = (int)reader["ShopLevel"];
-            playerInfo.SmithLevel = (int)reader["SmithLevel"];
-            playerInfo.ConsortiaHonor = (int)reader["ConsortiaHonor"];
-            playerInfo.RichesOffer = (int)reader["RichesOffer"];
-            playerInfo.RichesRob = (int)reader["RichesRob"];
-            playerInfo.AntiAddiction = (int)reader["AntiAddiction"];
-            playerInfo.DutyLevel = (int)reader["DutyLevel"];
-            playerInfo.DutyName = ((reader["DutyName"] == null) ? "" : reader["DutyName"].ToString());
-            playerInfo.Right = (int)reader["Right"];
-            playerInfo.ChairmanName = ((reader["ChairmanName"] == null) ? "" : reader["ChairmanName"].ToString());
-            playerInfo.AddDayGP = (int)reader["AddDayGP"];
-            playerInfo.AddDayOffer = (int)reader["AddDayOffer"];
-            playerInfo.AddWeekGP = (int)reader["AddWeekGP"];
-            playerInfo.AddWeekOffer = (int)reader["AddWeekOffer"];
-            playerInfo.ConsortiaRiches = (int)reader["ConsortiaRiches"];
-            playerInfo.CheckCount = (int)reader["CheckCount"];
-            playerInfo.IsMarried = (bool)reader["IsMarried"];
-            playerInfo.SpouseID = (int)reader["SpouseID"];
-            playerInfo.SpouseName = ((reader["SpouseName"] == null) ? "" : reader["SpouseName"].ToString());
-            playerInfo.MarryInfoID = (int)reader["MarryInfoID"];
-            playerInfo.IsCreatedMarryRoom = (bool)reader["IsCreatedMarryRoom"];
-            playerInfo.DayLoginCount = (int)reader["DayLoginCount"];
-            playerInfo.PasswordTwo = ((reader["PasswordTwo"] == null) ? "" : reader["PasswordTwo"].ToString());
-            playerInfo.SelfMarryRoomID = (int)reader["SelfMarryRoomID"];
-            playerInfo.IsGotRing = (bool)reader["IsGotRing"];
-            playerInfo.Rename = (bool)reader["Rename"];
-            playerInfo.ConsortiaRename = (bool)reader["ConsortiaRename"];
-            playerInfo.IsDirty = false;
-            playerInfo.IsFirst = (int)reader["IsFirst"];
-            playerInfo.Nimbus = (int)reader["Nimbus"];
-            playerInfo.LastAward = (DateTime)reader["LastAward"];
-            playerInfo.GiftToken = (int)reader["GiftToken"];
-            playerInfo.QuestSite = ((reader["QuestSite"] == null) ? new byte[200] : ((byte[])reader["QuestSite"]));
-            playerInfo.PvePermission = ((reader["PvePermission"] == null) ? "" : reader["PvePermission"].ToString());
-            playerInfo.FightPower = (int)reader["FightPower"];
-            playerInfo.PasswordQuest1 = ((reader["PasswordQuestion1"] == null) ? "" : reader["PasswordQuestion1"].ToString());
-            playerInfo.PasswordQuest2 = ((reader["PasswordQuestion2"] == null) ? "" : reader["PasswordQuestion2"].ToString());
+            PlayerInfo playerInfo = new()
+            {
+                Password = (string)reader["Password"],
+                IsConsortia = (bool)reader["IsConsortia"],
+                Agility = (int)reader["Agility"],
+                Attack = (int)reader["Attack"],
+                hp = (int)reader["hp"],
+                Colors = (reader["Colors"] == null) ? "" : reader["Colors"].ToString(),
+                ConsortiaID = (int)reader["ConsortiaID"],
+                Defence = (int)reader["Defence"],
+                Gold = (int)reader["Gold"],
+                GP = (int)reader["GP"],
+                Grade = (int)reader["Grade"],
+                ID = (int)reader["UserID"],
+                Luck = (int)reader["Luck"],
+                Money = (int)reader["Money"],
+                NickName = (string)reader["NickName"] ?? "",
+                Sex = (bool)reader["Sex"],
+                State = (int)reader["State"],
+                Style = (reader["Style"] == null) ? "" : reader["Style"].ToString(),
+                Hide = (int)reader["Hide"],
+                Repute = (int)reader["Repute"],
+                UserName = (reader["UserName"] == null) ? "" : reader["UserName"].ToString(),
+                ConsortiaName = (reader["ConsortiaName"] == null) ? "" : reader["ConsortiaName"].ToString(),
+                Offer = (int)reader["Offer"],
+                Win = (int)reader["Win"],
+                Total = (int)reader["Total"],
+                Escape = (int)reader["Escape"],
+                Skin = (reader["Skin"] == null) ? "" : reader["Skin"].ToString(),
+                IsBanChat = (bool)reader["IsBanChat"],
+                ReputeOffer = (int)reader["ReputeOffer"],
+                ConsortiaRepute = (int)reader["ConsortiaRepute"],
+                ConsortiaLevel = (int)reader["ConsortiaLevel"],
+                StoreLevel = (int)reader["StoreLevel"],
+                ShopLevel = (int)reader["ShopLevel"],
+                SmithLevel = (int)reader["SmithLevel"],
+                ConsortiaHonor = (int)reader["ConsortiaHonor"],
+                RichesOffer = (int)reader["RichesOffer"],
+                RichesRob = (int)reader["RichesRob"],
+                AntiAddiction = (int)reader["AntiAddiction"],
+                DutyLevel = (int)reader["DutyLevel"],
+                DutyName = (reader["DutyName"] == null) ? "" : reader["DutyName"].ToString(),
+                Right = (int)reader["Right"],
+                ChairmanName = (reader["ChairmanName"] == null) ? "" : reader["ChairmanName"].ToString(),
+                AddDayGP = (int)reader["AddDayGP"],
+                AddDayOffer = (int)reader["AddDayOffer"],
+                AddWeekGP = (int)reader["AddWeekGP"],
+                AddWeekOffer = (int)reader["AddWeekOffer"],
+                ConsortiaRiches = (int)reader["ConsortiaRiches"],
+                CheckCount = (int)reader["CheckCount"],
+                IsMarried = (bool)reader["IsMarried"],
+                SpouseID = (int)reader["SpouseID"],
+                SpouseName = (reader["SpouseName"] == null) ? "" : reader["SpouseName"].ToString(),
+                MarryInfoID = (int)reader["MarryInfoID"],
+                IsCreatedMarryRoom = (bool)reader["IsCreatedMarryRoom"],
+                DayLoginCount = (int)reader["DayLoginCount"],
+                PasswordTwo = (reader["PasswordTwo"] == null) ? "" : reader["PasswordTwo"].ToString(),
+                SelfMarryRoomID = (int)reader["SelfMarryRoomID"],
+                IsGotRing = (bool)reader["IsGotRing"],
+                Rename = (bool)reader["Rename"],
+                ConsortiaRename = (bool)reader["ConsortiaRename"],
+                IsDirty = false,
+                IsFirst = (int)reader["IsFirst"],
+                Nimbus = (int)reader["Nimbus"],
+                LastAward = (DateTime)reader["LastAward"],
+                GiftToken = (int)reader["GiftToken"],
+                QuestSite = (reader["QuestSite"] == null) ? new byte[200] : ((byte[])reader["QuestSite"]),
+                PvePermission = (reader["PvePermission"] == null) ? "" : reader["PvePermission"].ToString(),
+                FightPower = (int)reader["FightPower"],
+                PasswordQuest1 = (reader["PasswordQuestion1"] == null) ? "" : reader["PasswordQuestion1"].ToString(),
+                PasswordQuest2 = (reader["PasswordQuestion2"] == null) ? "" : reader["PasswordQuestion2"].ToString()
+            };
             PlayerInfo player = playerInfo;
             PlayerInfo info2 = player;
-            if ((DateTime)reader["LastFindDate"] != DateTime.Today.Date)
-            {
-                info2.FailedPasswordAttemptCount = 5;
-            }
-            else
-            {
-                info2.FailedPasswordAttemptCount = (int)reader["FailedPasswordAttemptCount"];
-            }
+            info2.FailedPasswordAttemptCount = (DateTime)reader["LastFindDate"] != DateTime.Today.Date ? 5 : (int)reader["FailedPasswordAttemptCount"];
             player.AnswerSite = (int)reader["AnswerSite"];
             player.medal = (int)reader["Medal"];
             player.ChatCount = (int)reader["ChatCount"];
@@ -3947,17 +3986,17 @@ namespace Bussiness
             player.IsGetAward = (bool)reader["IsGetAward"];
             player.apprenticeshipState = (int)reader["apprenticeshipState"];
             player.masterID = (int)reader["masterID"];
-            player.masterOrApprentices = ((reader["masterOrApprentices"] == DBNull.Value) ? "" : ((string)reader["masterOrApprentices"]));
+            player.masterOrApprentices = (reader["masterOrApprentices"] == DBNull.Value) ? "" : ((string)reader["masterOrApprentices"]);
             player.graduatesCount = (int)reader["graduatesCount"];
-            player.honourOfMaster = ((reader["honourOfMaster"] == DBNull.Value) ? "" : ((string)reader["honourOfMaster"]));
-            player.freezesDate = ((reader["freezesDate"] == DBNull.Value) ? DateTime.Now : ((DateTime)reader["freezesDate"]));
-            player.charmGP = ((reader["charmGP"] != DBNull.Value) ? ((int)reader["charmGP"]) : 0);
+            player.honourOfMaster = (reader["honourOfMaster"] == DBNull.Value) ? "" : ((string)reader["honourOfMaster"]);
+            player.freezesDate = (reader["freezesDate"] == DBNull.Value) ? DateTime.Now : ((DateTime)reader["freezesDate"]);
+            player.charmGP = (reader["charmGP"] != DBNull.Value) ? ((int)reader["charmGP"]) : 0;
             player.evolutionGrade = (int)reader["evolutionGrade"];
             player.evolutionExp = (int)reader["evolutionExp"];
             player.hardCurrency = (int)reader["hardCurrency"];
             player.EliteScore = (int)reader["EliteScore"];
-            player.ShopFinallyGottenTime = ((reader["ShopFinallyGottenTime"] == DBNull.Value) ? DateTime.Now.AddDays(-1.0) : ((DateTime)reader["ShopFinallyGottenTime"]));
-            player.MoneyLock = ((reader["MoneyLock"] != DBNull.Value) ? ((int)reader["MoneyLock"]) : 0);
+            player.ShopFinallyGottenTime = (reader["ShopFinallyGottenTime"] == DBNull.Value) ? DateTime.Now.AddDays(-1.0) : ((DateTime)reader["ShopFinallyGottenTime"]);
+            player.MoneyLock = (reader["MoneyLock"] != DBNull.Value) ? ((int)reader["MoneyLock"]) : 0;
             player.LastGetEgg = (DateTime)reader["LastGetEgg"];
             player.IsFistGetPet = (bool)reader["IsFistGetPet"];
             player.LastRefreshPet = (DateTime)reader["LastRefreshPet"];
@@ -3984,7 +4023,7 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[20]
                 {
-                    new SqlParameter("@ID", info.ID),
+                    new("@ID", info.ID),
                     null,
                     null,
                     null,
@@ -4024,9 +4063,11 @@ namespace Bussiness
                 sqlParameters[16] = new SqlParameter("@ServerID", info.ServerID);
                 sqlParameters[17] = new SqlParameter("@IsHymeneal", info.IsHymeneal);
                 sqlParameters[18] = new SqlParameter("@IsGunsaluteUsed", info.IsGunsaluteUsed);
-                sqlParameters[19] = new SqlParameter("@Result", SqlDbType.Int);
-                sqlParameters[19].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Insert_Marry_Room_Info", sqlParameters);
+                sqlParameters[19] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_Insert_Marry_Room_Info", sqlParameters);
                 flag = (int)sqlParameters[19].Value == 0;
                 if (flag)
                 {
@@ -4053,16 +4094,16 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[7]
                 {
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@ApplyUserID", info.ApplyUserID),
-                    new SqlParameter("@ApplyUserName", info.ApplyUserName),
-                    new SqlParameter("@ApplyType", info.ApplyType),
-                    new SqlParameter("@ApplyResult", info.ApplyResult),
-                    new SqlParameter("@LoveProclamation", info.LoveProclamation),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", info.UserID),
+                    new("@ApplyUserID", info.ApplyUserID),
+                    new("@ApplyUserName", info.ApplyUserName),
+                    new("@ApplyType", info.ApplyType),
+                    new("@ApplyResult", info.ApplyResult),
+                    new("@LoveProclamation", info.LoveProclamation),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[6].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Insert_Marry_Apply", sqlParameters);
+                _ = db.RunProcedure("SP_Insert_Marry_Apply", sqlParameters);
                 flag = (int)sqlParameters[6].Value == 0;
                 return flag;
             }
@@ -4084,19 +4125,19 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[10]
                 {
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@attTexpExp", info.attTexpExp),
-                    new SqlParameter("@defTexpExp", info.defTexpExp),
-                    new SqlParameter("@hpTexpExp", info.hpTexpExp),
-                    new SqlParameter("@lukTexpExp", info.lukTexpExp),
-                    new SqlParameter("@spdTexpExp", info.spdTexpExp),
-                    new SqlParameter("@texpCount", info.texpCount),
-                    new SqlParameter("@texpTaskCount", info.texpTaskCount),
-                    new SqlParameter("@texpTaskDate", info.texpTaskDate.ToString("yyyy-MM-dd HH:mm:ss")),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", info.UserID),
+                    new("@attTexpExp", info.attTexpExp),
+                    new("@defTexpExp", info.defTexpExp),
+                    new("@hpTexpExp", info.hpTexpExp),
+                    new("@lukTexpExp", info.lukTexpExp),
+                    new("@spdTexpExp", info.spdTexpExp),
+                    new("@texpCount", info.texpCount),
+                    new("@texpTaskCount", info.texpTaskCount),
+                    new("@texpTaskDate", info.texpTaskDate.ToString("yyyy-MM-dd HH:mm:ss")),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[9].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UserTexp_Add", sqlParameters);
+                _ = db.RunProcedure("SP_UserTexp_Add", sqlParameters);
                 flag = (int)sqlParameters[9].Value == 0;
                 return flag;
             }
@@ -4120,61 +4161,35 @@ namespace Bussiness
                 para[0] = new SqlParameter("@ActiveID", activeID);
                 para[1] = new SqlParameter("@AwardID", awardID);
                 para[2] = new SqlParameter("@UserID", userID);
-                para[3] = new SqlParameter("@Result", System.Data.SqlDbType.Int);
-                para[3].Direction = ParameterDirection.ReturnValue;
+                para[3] = new SqlParameter("@Result", System.Data.SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
                 if (db.RunProcedure("SP_Active_PullDown", para))
                 {
                     result = (int)para[3].Value;
-                    switch (result)
+                    msg = result switch
                     {
-                        case 0:
-                            //msg = "ActiveBussiness.Msg0";
-                            msg = "Nhận lãnh thành công, vật phẩm đã gửi đến thư người dùng.";
-                            break;
-                        case 1:
-                            //msg = "ActiveBussiness.Msg1";
-                            msg = "Lỗi không xác định.";
-                            break;
-                        case 2:
-                            //msg = "ActiveBussiness.Msg2";
-                            msg = "Tên người dùngkhông tồn tại.";
-                            break;
-                        case 3:
-                            //msg = "ActiveBussiness.Msg3";
-                            msg = "Nhận vật phẩm  thất bại.";
-                            break;
-                        case 4:
-                            //msg = "ActiveBussiness.Msg4";
-                            msg = "Số này không tồn tại, hãy kiểm tra lại.";
-                            break;
-                        case 5:
-                            //msg = "ActiveBussiness.Msg5";
-                            msg = "Số này đã nhận thưởng, không thể nhận nữa.";
-                            break;
-                        case 6:
-                            //msg = "ActiveBussiness.Msg6";
-                            msg = "Bạn đã nhận phần thưởng này rồi";
-                            break;
-                        case 7:
-                            //msg = "ActiveBussiness.Msg7";
-                            msg = "Hoạt động chưa bắt đầu.";
-                            break;
-                        case 8:
-                            //msg = "ActiveBussiness.Msg8";
-                            msg = "Hoạt động đã quá hạn.";
-                            break;
-                        default:
-                            //msg = "ActiveBussiness.Msg9";
-                            msg = "Nhận thưởng thất bại.";
-                            break;
-                    }
+                        0 => "Nhận lãnh thành công, vật phẩm đã gửi đến thư người dùng.",//msg = "ActiveBussiness.Msg0";
+                        1 => "Lỗi không xác định.",//msg = "ActiveBussiness.Msg1";
+                        2 => "Tên người dùngkhông tồn tại.",//msg = "ActiveBussiness.Msg2";
+                        3 => "Nhận vật phẩm  thất bại.",//msg = "ActiveBussiness.Msg3";
+                        4 => "Số này không tồn tại, hãy kiểm tra lại.",//msg = "ActiveBussiness.Msg4";
+                        5 => "Số này đã nhận thưởng, không thể nhận nữa.",//msg = "ActiveBussiness.Msg5";
+                        6 => "Bạn đã nhận phần thưởng này rồi",//msg = "ActiveBussiness.Msg6";
+                        7 => "Hoạt động chưa bắt đầu.",//msg = "ActiveBussiness.Msg7";
+                        8 => "Hoạt động đã quá hạn.",//msg = "ActiveBussiness.Msg8";
+                        _ => "Nhận thưởng thất bại.",//msg = "ActiveBussiness.Msg9";
+                    };
                 }
 
             }
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("Init", e);
+                }
             }
             return result;
         }
@@ -4186,9 +4201,9 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[3]
                 {
-                    new SqlParameter("@AwardID", AwardID),
-                    new SqlParameter("@ActiveID", ActiveID),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@AwardID", AwardID),
+                    new("@ActiveID", ActiveID),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[2].Direction = ParameterDirection.ReturnValue;
                 flag = db.RunProcedure("SP_Active_Number_Add", sqlParameters);
@@ -4213,10 +4228,10 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@UserName", username),
-                    new SqlParameter("@Password", password)
+                    new("@UserName", username),
+                    new("@Password", password)
                 };
-                db.GetReader(ref resultDataReader, "SP_Users_Login", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_Login", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return InitPlayerInfo(resultDataReader);
@@ -4246,12 +4261,12 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[4]
                 {
-                    new SqlParameter("@UserName", username),
-                    new SqlParameter("@Password", ""),
-                    new SqlParameter("@FirstValidate", firstValidate),
-                    new SqlParameter("@Nickname", nickname)
+                    new("@UserName", username),
+                    new("@Password", ""),
+                    new("@FirstValidate", firstValidate),
+                    new("@Nickname", nickname)
                 };
-                db.GetReader(ref resultDataReader, "SP_Users_LoginWeb", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_LoginWeb", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     isFirst = (int)resultDataReader["IsFirst"];
@@ -4289,13 +4304,13 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[5]
                 {
-                    new SqlParameter("@UserName", username),
-                    new SqlParameter("@Password", ""),
-                    new SqlParameter("@FirstValidate", firstValidate),
-                    new SqlParameter("@Nickname", nickname),
-                    new SqlParameter("@ActiveIP", ActiveIP)
+                    new("@UserName", username),
+                    new("@Password", ""),
+                    new("@FirstValidate", firstValidate),
+                    new("@Nickname", nickname),
+                    new("@ActiveIP", ActiveIP)
                 };
-                db.GetReader(ref resultDataReader, "SP_Users_LoginWeb", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_LoginWeb", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     isFirst = (int)resultDataReader["IsFirst"];
@@ -4336,27 +4351,27 @@ namespace Bussiness
                 string[] strArray2 = gStyle.Split(',');
                 SqlParameter[] sqlParameters = new SqlParameter[21]
                 {
-                    new SqlParameter("@UserName", userName),
-                    new SqlParameter("@PassWord", passWord),
-                    new SqlParameter("@NickName", nickName),
-                    new SqlParameter("@BArmID", int.Parse(strArray[0])),
-                    new SqlParameter("@BHairID", int.Parse(strArray[1])),
-                    new SqlParameter("@BFaceID", int.Parse(strArray[2])),
-                    new SqlParameter("@BClothID", int.Parse(strArray[3])),
-                    new SqlParameter("@BHatID", int.Parse(strArray[4])),
-                    new SqlParameter("@GArmID", int.Parse(strArray2[0])),
-                    new SqlParameter("@GHairID", int.Parse(strArray2[1])),
-                    new SqlParameter("@GFaceID", int.Parse(strArray2[2])),
-                    new SqlParameter("@GClothID", int.Parse(strArray2[3])),
-                    new SqlParameter("@GHatID", int.Parse(strArray2[4])),
-                    new SqlParameter("@ArmColor", armColor),
-                    new SqlParameter("@HairColor", hairColor),
-                    new SqlParameter("@FaceColor", faceColor),
-                    new SqlParameter("@ClothColor", clothColor),
-                    new SqlParameter("@HatColor", clothColor),
-                    new SqlParameter("@Sex", sex),
-                    new SqlParameter("@StyleDate", validDate),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserName", userName),
+                    new("@PassWord", passWord),
+                    new("@NickName", nickName),
+                    new("@BArmID", int.Parse(strArray[0])),
+                    new("@BHairID", int.Parse(strArray[1])),
+                    new("@BFaceID", int.Parse(strArray[2])),
+                    new("@BClothID", int.Parse(strArray[3])),
+                    new("@BHatID", int.Parse(strArray[4])),
+                    new("@GArmID", int.Parse(strArray2[0])),
+                    new("@GHairID", int.Parse(strArray2[1])),
+                    new("@GFaceID", int.Parse(strArray2[2])),
+                    new("@GClothID", int.Parse(strArray2[3])),
+                    new("@GHatID", int.Parse(strArray2[4])),
+                    new("@ArmColor", armColor),
+                    new("@HairColor", hairColor),
+                    new("@FaceColor", faceColor),
+                    new("@ClothColor", clothColor),
+                    new("@HatColor", clothColor),
+                    new("@Sex", sex),
+                    new("@StyleDate", validDate),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[20].Direction = ParameterDirection.ReturnValue;
                 flag = db.RunProcedure("SP_Users_RegisterNotValidate", sqlParameters);
@@ -4392,17 +4407,17 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[8]
                 {
-                    new SqlParameter("@UserName", UserName),
-                    new SqlParameter("@Password", Password),
-                    new SqlParameter("@NickName", NickName),
-                    new SqlParameter("@Sex", Sex),
-                    new SqlParameter("@Money", Money),
-                    new SqlParameter("@GiftToken", GiftToken),
-                    new SqlParameter("@Gold", Gold),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserName", UserName),
+                    new("@Password", Password),
+                    new("@NickName", NickName),
+                    new("@Sex", Sex),
+                    new("@Money", Money),
+                    new("@GiftToken", GiftToken),
+                    new("@Gold", Gold),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[7].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Account_Register", sqlParameters);
+                _ = db.RunProcedure("SP_Account_Register", sqlParameters);
                 if ((int)sqlParameters[7].Value == 0)
                 {
                     flag = true;
@@ -4427,12 +4442,12 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[6]
                 {
-                    new SqlParameter("@UserID", userinfo.UserID),
-                    new SqlParameter("@UserEmail", userinfo.UserEmail),
-                    new SqlParameter("@UserPhone", (userinfo.UserPhone == null) ? string.Empty : userinfo.UserPhone),
-                    new SqlParameter("@UserOther1", (userinfo.UserOther1 == null) ? string.Empty : userinfo.UserOther1),
-                    new SqlParameter("@UserOther2", (userinfo.UserOther2 == null) ? string.Empty : userinfo.UserOther2),
-                    new SqlParameter("@UserOther3", (userinfo.UserOther3 == null) ? string.Empty : userinfo.UserOther3)
+                    new("@UserID", userinfo.UserID),
+                    new("@UserEmail", userinfo.UserEmail),
+                    new("@UserPhone", userinfo.UserPhone ?? string.Empty),
+                    new("@UserOther1", userinfo.UserOther1 ?? string.Empty),
+                    new("@UserOther2", userinfo.UserOther2 ?? string.Empty),
+                    new("@UserOther3", userinfo.UserOther3 ?? string.Empty)
                 };
                 return db.RunProcedure("SP_User_Info_Add", sqlParameters);
             }
@@ -4453,9 +4468,9 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@ID", ID)
+                    new("@ID", ID)
                 };
-                db.GetReader(ref resultDataReader, "SP_Users_Reload", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_Users_Reload", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return InitPlayerInfo(resultDataReader);
@@ -4485,11 +4500,11 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@UserID", ID),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", ID),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[1].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_RemoveIsArrange", sqlParameters);
+                _ = db.RunProcedure("SP_RemoveIsArrange", sqlParameters);
                 flag = (int)sqlParameters[1].Value == 0;
                 return flag;
             }
@@ -4511,11 +4526,11 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@UserID", ID),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", ID),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[1].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_RemoveTreasureDataByUser", sqlParameters);
+                _ = db.RunProcedure("SP_RemoveTreasureDataByUser", sqlParameters);
                 flag = (int)sqlParameters[1].Value == 0;
                 return flag;
             }
@@ -4539,8 +4554,10 @@ namespace Bussiness
                 para[0] = new SqlParameter("@UserName", userName);
                 para[1] = new SqlParameter("@NickName", nickName);
                 para[2] = new SqlParameter("@NewNickName", newNickName);
-                para[3] = new SqlParameter("@Result", System.Data.SqlDbType.Int);
-                para[3].Direction = ParameterDirection.ReturnValue;
+                para[3] = new SqlParameter("@Result", System.Data.SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
 
                 result = db.RunProcedure("SP_Users_RenameByCard", para);
                 int returnValue = (int)para[3].Value;
@@ -4549,7 +4566,9 @@ namespace Bussiness
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("RenameNick", e);
+                }
             }
             return result;
         }
@@ -4564,8 +4583,10 @@ namespace Bussiness
                 para[0] = new SqlParameter("@UserName", userName);
                 para[1] = new SqlParameter("@NickName", nickName);
                 para[2] = new SqlParameter("@NewNickName", newNickName);
-                para[3] = new SqlParameter("@Result", System.Data.SqlDbType.Int);
-                para[3].Direction = ParameterDirection.ReturnValue;
+                para[3] = new SqlParameter("@Result", System.Data.SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
 
                 result = db.RunProcedure("SP_Users_RenameNick", para);
                 int returnValue = (int)para[3].Value;
@@ -4581,7 +4602,9 @@ namespace Bussiness
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("RenameNick", e);
+                }
             }
             return result;
         }
@@ -4593,9 +4616,9 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[3]
                 {
-                    new SqlParameter("@UserId", UserId),
-                    new SqlParameter("@Sex", newSex),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserId", UserId),
+                    new("@Sex", newSex),
+                    new("@Result", SqlDbType.Int)
                 };
                 para[2].Direction = ParameterDirection.ReturnValue;
                 result = db.RunProcedure("SP_Users_ChangSexByCard", para);
@@ -4619,9 +4642,9 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[3]
                 {
-                    new SqlParameter("@ActiveID", ActiveID),
-                    new SqlParameter("@IsReset", IsReset),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ActiveID", ActiveID),
+                    new("@IsReset", IsReset),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[2].Direction = ParameterDirection.ReturnValue;
                 flag = db.RunProcedure("SP_ReCommunalActive", sqlParameters);
@@ -4665,15 +4688,15 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[9]
                 {
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@Type", info.Type),
-                    new SqlParameter("@BeginDate", info.BeginDate),
-                    new SqlParameter("@Data", (info.Data == null) ? "" : info.Data),
-                    new SqlParameter("@IsExist", info.IsExist),
-                    new SqlParameter("@ValidDate", info.ValidDate),
-                    new SqlParameter("@ValidCount", info.ValidCount),
-                    new SqlParameter("@Value", info.Value),
-                    new SqlParameter("@TemplateID", info.TemplateID)
+                    new("@UserID", info.UserID),
+                    new("@Type", info.Type),
+                    new("@BeginDate", info.BeginDate),
+                    new("@Data", info.Data ?? ""),
+                    new("@IsExist", info.IsExist),
+                    new("@ValidDate", info.ValidDate),
+                    new("@ValidCount", info.ValidCount),
+                    new("@Value", info.Value),
+                    new("@TemplateID", info.TemplateID)
                 };
                 flag = db.RunProcedure("SP_User_Buff_Add", sqlParameters);
                 info.IsDirty = false;
@@ -4697,13 +4720,13 @@ namespace Bussiness
             {
                 flag = db.RunProcedure("SP_User_Consortia_Buff_Add", new SqlParameter[7]
                 {
-                    new SqlParameter("@ConsortiaID", info.ConsortiaID),
-                    new SqlParameter("@BufferID", info.BufferID),
-                    new SqlParameter("@IsOpen", info.IsOpen ? 1 : 0),
-                    new SqlParameter("@BeginDate", info.BeginDate),
-                    new SqlParameter("@ValidDate", info.ValidDate),
-                    new SqlParameter("@Type ", info.Type),
-                    new SqlParameter("@Value", info.Value)
+                    new("@ConsortiaID", info.ConsortiaID),
+                    new("@BufferID", info.BufferID),
+                    new("@IsOpen", info.IsOpen ? 1 : 0),
+                    new("@BeginDate", info.BeginDate),
+                    new("@ValidDate", info.ValidDate),
+                    new("@Type ", info.Type),
+                    new("@Value", info.Value)
                 });
                 return flag;
             }
@@ -4725,20 +4748,22 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[9]
                 {
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@ApplyUserID", info.ApplyUserID),
-                    new SqlParameter("@ApplyUserName", info.ApplyUserName),
-                    new SqlParameter("@ApplyType", info.ApplyType),
-                    new SqlParameter("@ApplyResult", info.ApplyResult),
-                    new SqlParameter("@LoveProclamation", info.LoveProclamation),
-                    new SqlParameter("@AnswerId", answerId),
-                    new SqlParameter("@ouototal", SqlDbType.Int),
+                    new("@UserID", info.UserID),
+                    new("@ApplyUserID", info.ApplyUserID),
+                    new("@ApplyUserName", info.ApplyUserName),
+                    new("@ApplyType", info.ApplyType),
+                    new("@ApplyResult", info.ApplyResult),
+                    new("@LoveProclamation", info.LoveProclamation),
+                    new("@AnswerId", answerId),
+                    new("@ouototal", SqlDbType.Int),
                     null
                 };
                 sqlParameters[7].Direction = ParameterDirection.Output;
-                sqlParameters[8] = new SqlParameter("@Result", SqlDbType.Int);
-                sqlParameters[8].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Insert_Marry_Notice", sqlParameters);
+                sqlParameters[8] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_Insert_Marry_Notice", sqlParameters);
                 id = (int)sqlParameters[7].Value;
                 flag = (int)sqlParameters[8].Value == 0;
                 return flag;
@@ -4761,12 +4786,12 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@NoticeUserID", SqlDbType.NVarChar, 4000),
+                    new("@NoticeUserID", SqlDbType.NVarChar, 4000),
                     null
                 };
                 SqlParameters[0].Direction = ParameterDirection.Output;
                 SqlParameters[1] = new SqlParameter("@Cess", cess);
-                db.RunProcedure("SP_Auction_Scan", SqlParameters);
+                _ = db.RunProcedure("SP_Auction_Scan", SqlParameters);
                 noticeUserID = SqlParameters[0].Value.ToString();
                 flag = true;
                 return flag;
@@ -4789,10 +4814,10 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@NoticeUserID", SqlDbType.NVarChar, 4000)
+                    new("@NoticeUserID", SqlDbType.NVarChar, 4000)
                 };
                 sqlParameters[0].Direction = ParameterDirection.Output;
-                db.RunProcedure("SP_Mail_Scan", sqlParameters);
+                _ = db.RunProcedure("SP_Mail_Scan", sqlParameters);
                 noticeUserID = sqlParameters[0].Value.ToString();
                 flag = true;
                 return flag;
@@ -4814,40 +4839,42 @@ namespace Bussiness
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[29];
-                sqlParameters[0] = new SqlParameter("@ID", mail.ID);
-                sqlParameters[0].Direction = ParameterDirection.Output;
-                sqlParameters[1] = new SqlParameter("@Annex1", (mail.Annex1 == null) ? "" : mail.Annex1);
-                sqlParameters[2] = new SqlParameter("@Annex2", (mail.Annex2 == null) ? "" : mail.Annex2);
-                sqlParameters[3] = new SqlParameter("@Content", (mail.Content == null) ? "" : mail.Content);
+                sqlParameters[0] = new SqlParameter("@ID", mail.ID)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                sqlParameters[1] = new SqlParameter("@Annex1", mail.Annex1 ?? "");
+                sqlParameters[2] = new SqlParameter("@Annex2", mail.Annex2 ?? "");
+                sqlParameters[3] = new SqlParameter("@Content", mail.Content ?? "");
                 sqlParameters[4] = new SqlParameter("@Gold", mail.Gold);
                 sqlParameters[5] = new SqlParameter("@IsExist", true);
                 sqlParameters[6] = new SqlParameter("@Money", mail.Money);
-                sqlParameters[7] = new SqlParameter("@Receiver", (mail.Receiver == null) ? "" : mail.Receiver);
+                sqlParameters[7] = new SqlParameter("@Receiver", mail.Receiver ?? "");
                 sqlParameters[8] = new SqlParameter("@ReceiverID", mail.ReceiverID);
-                sqlParameters[9] = new SqlParameter("@Sender", (mail.Sender == null) ? "" : mail.Sender);
+                sqlParameters[9] = new SqlParameter("@Sender", mail.Sender ?? "");
                 sqlParameters[10] = new SqlParameter("@SenderID", mail.SenderID);
-                sqlParameters[11] = new SqlParameter("@Title", (mail.Title == null) ? "" : mail.Title);
+                sqlParameters[11] = new SqlParameter("@Title", mail.Title ?? "");
                 sqlParameters[12] = new SqlParameter("@IfDelS", false);
                 sqlParameters[13] = new SqlParameter("@IsDelete", false);
                 sqlParameters[14] = new SqlParameter("@IsDelR", false);
                 sqlParameters[15] = new SqlParameter("@IsRead", false);
                 sqlParameters[16] = new SqlParameter("@SendTime", DateTime.Now);
                 sqlParameters[17] = new SqlParameter("@Type", mail.Type);
-                sqlParameters[18] = new SqlParameter("@Annex1Name", (mail.Annex1Name == null) ? "" : mail.Annex1Name);
-                sqlParameters[19] = new SqlParameter("@Annex2Name", (mail.Annex2Name == null) ? "" : mail.Annex2Name);
-                sqlParameters[20] = new SqlParameter("@Annex3", (mail.Annex3 == null) ? "" : mail.Annex3);
-                sqlParameters[21] = new SqlParameter("@Annex4", (mail.Annex4 == null) ? "" : mail.Annex4);
-                sqlParameters[22] = new SqlParameter("@Annex5", (mail.Annex5 == null) ? "" : mail.Annex5);
-                sqlParameters[23] = new SqlParameter("@Annex3Name", (mail.Annex3Name == null) ? "" : mail.Annex3Name);
-                sqlParameters[24] = new SqlParameter("@Annex4Name", (mail.Annex4Name == null) ? "" : mail.Annex4Name);
-                sqlParameters[25] = new SqlParameter("@Annex5Name", (mail.Annex5Name == null) ? "" : mail.Annex5Name);
+                sqlParameters[18] = new SqlParameter("@Annex1Name", mail.Annex1Name ?? "");
+                sqlParameters[19] = new SqlParameter("@Annex2Name", mail.Annex2Name ?? "");
+                sqlParameters[20] = new SqlParameter("@Annex3", mail.Annex3 ?? "");
+                sqlParameters[21] = new SqlParameter("@Annex4", mail.Annex4 ?? "");
+                sqlParameters[22] = new SqlParameter("@Annex5", mail.Annex5 ?? "");
+                sqlParameters[23] = new SqlParameter("@Annex3Name", mail.Annex3Name ?? "");
+                sqlParameters[24] = new SqlParameter("@Annex4Name", mail.Annex4Name ?? "");
+                sqlParameters[25] = new SqlParameter("@Annex5Name", mail.Annex5Name ?? "");
                 sqlParameters[26] = new SqlParameter("@ValidDate", mail.ValidDate);
-                sqlParameters[27] = new SqlParameter("@AnnexRemark", (mail.AnnexRemark == null) ? "" : mail.AnnexRemark);
+                sqlParameters[27] = new SqlParameter("@AnnexRemark", mail.AnnexRemark ?? "");
                 sqlParameters[28] = new SqlParameter("@GiftToken", mail.GiftToken);
                 flag = db.RunProcedure("SP_Mail_Send", sqlParameters);
                 mail.ID = (int)sqlParameters[0].Value;
-                using CenterServiceClient client = new CenterServiceClient();
-                client.MailNotice(mail.ReceiverID);
+                using CenterServiceClient client = new();
+                _ = client.MailNotice(mail.ReceiverID);
                 return flag;
             }
             catch (Exception exception)
@@ -4868,24 +4895,24 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[34]
                 {
-                    new SqlParameter("@ItemID", item.ItemID),
-                    new SqlParameter("@UserID", item.UserID),
-                    new SqlParameter("@TemplateID", item.TemplateID),
-                    new SqlParameter("@Place", item.Place),
-                    new SqlParameter("@AgilityCompose", item.AgilityCompose),
-                    new SqlParameter("@AttackCompose", item.AttackCompose),
-                    new SqlParameter("@BeginDate", item.BeginDate),
-                    new SqlParameter("@Color", (item.Color == null) ? "" : item.Color),
-                    new SqlParameter("@Count", item.Count),
-                    new SqlParameter("@DefendCompose", item.DefendCompose),
-                    new SqlParameter("@IsBinds", item.IsBinds),
-                    new SqlParameter("@IsExist", item.IsExist),
-                    new SqlParameter("@IsJudge", item.IsJudge),
-                    new SqlParameter("@LuckCompose", item.LuckCompose),
-                    new SqlParameter("@StrengthenLevel", item.StrengthenLevel),
-                    new SqlParameter("@ValidDate", item.ValidDate),
-                    new SqlParameter("@BagType", item.BagType),
-                    new SqlParameter("@ID", mail.ID),
+                    new("@ItemID", item.ItemID),
+                    new("@UserID", item.UserID),
+                    new("@TemplateID", item.TemplateID),
+                    new("@Place", item.Place),
+                    new("@AgilityCompose", item.AgilityCompose),
+                    new("@AttackCompose", item.AttackCompose),
+                    new("@BeginDate", item.BeginDate),
+                    new("@Color", item.Color ?? ""),
+                    new("@Count", item.Count),
+                    new("@DefendCompose", item.DefendCompose),
+                    new("@IsBinds", item.IsBinds),
+                    new("@IsExist", item.IsExist),
+                    new("@IsJudge", item.IsJudge),
+                    new("@LuckCompose", item.LuckCompose),
+                    new("@StrengthenLevel", item.StrengthenLevel),
+                    new("@ValidDate", item.ValidDate),
+                    new("@BagType", item.BagType),
+                    new("@ID", mail.ID),
                     null,
                     null,
                     null,
@@ -4904,23 +4931,25 @@ namespace Bussiness
                     null
                 };
                 sqlParameters[17].Direction = ParameterDirection.Output;
-                sqlParameters[18] = new SqlParameter("@Annex1", (mail.Annex1 == null) ? "" : mail.Annex1);
-                sqlParameters[19] = new SqlParameter("@Annex2", (mail.Annex2 == null) ? "" : mail.Annex2);
-                sqlParameters[20] = new SqlParameter("@Content", (mail.Content == null) ? "" : mail.Content);
+                sqlParameters[18] = new SqlParameter("@Annex1", mail.Annex1 ?? "");
+                sqlParameters[19] = new SqlParameter("@Annex2", mail.Annex2 ?? "");
+                sqlParameters[20] = new SqlParameter("@Content", mail.Content ?? "");
                 sqlParameters[21] = new SqlParameter("@Gold", mail.Gold);
                 sqlParameters[22] = new SqlParameter("@Money", mail.Money);
-                sqlParameters[23] = new SqlParameter("@Receiver", (mail.Receiver == null) ? "" : mail.Receiver);
+                sqlParameters[23] = new SqlParameter("@Receiver", mail.Receiver ?? "");
                 sqlParameters[24] = new SqlParameter("@ReceiverID", mail.ReceiverID);
-                sqlParameters[25] = new SqlParameter("@Sender", (mail.Sender == null) ? "" : mail.Sender);
+                sqlParameters[25] = new SqlParameter("@Sender", mail.Sender ?? "");
                 sqlParameters[26] = new SqlParameter("@SenderID", mail.SenderID);
-                sqlParameters[27] = new SqlParameter("@Title", (mail.Title == null) ? "" : mail.Title);
+                sqlParameters[27] = new SqlParameter("@Title", mail.Title ?? "");
                 sqlParameters[28] = new SqlParameter("@IfDelS", false);
                 sqlParameters[29] = new SqlParameter("@IsDelete", false);
                 sqlParameters[30] = new SqlParameter("@IsDelR", false);
                 sqlParameters[31] = new SqlParameter("@IsRead", false);
                 sqlParameters[32] = new SqlParameter("@SendTime", DateTime.Now);
-                sqlParameters[33] = new SqlParameter("@Result", SqlDbType.Int);
-                sqlParameters[33].Direction = ParameterDirection.ReturnValue;
+                sqlParameters[33] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
                 flag = db.RunProcedure("SP_Admin_SendUserItem", sqlParameters);
                 returnValue = (int)sqlParameters[33].Value;
                 flag = returnValue == 0;
@@ -4928,8 +4957,8 @@ namespace Bussiness
                 {
                     return flag;
                 }
-                using CenterServiceClient client = new CenterServiceClient();
-                client.MailNotice(mail.ReceiverID);
+                using CenterServiceClient client = new();
+                _ = client.MailNotice(mail.ReceiverID);
                 return flag;
             }
             catch (Exception exception)
@@ -4950,24 +4979,24 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[8]
                 {
-                    new SqlParameter("@Title", title),
-                    new SqlParameter("@Content", content),
-                    new SqlParameter("@UserID", userID),
-                    new SqlParameter("@Gold", gold),
-                    new SqlParameter("@Money", money),
-                    new SqlParameter("@GiftToken", SqlDbType.BigInt),
-                    new SqlParameter("@Param", param),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@Title", title),
+                    new("@Content", content),
+                    new("@UserID", userID),
+                    new("@Gold", gold),
+                    new("@Money", money),
+                    new("@GiftToken", SqlDbType.BigInt),
+                    new("@Param", param),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[7].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Admin_SendAllItem", sqlParameters);
+                _ = db.RunProcedure("SP_Admin_SendAllItem", sqlParameters);
                 num = (int)sqlParameters[7].Value;
                 if (num != 0)
                 {
                     return num;
                 }
-                using CenterServiceClient client = new CenterServiceClient();
-                client.MailNotice(userID);
+                using CenterServiceClient client = new();
+                _ = client.MailNotice(userID);
                 return num;
             }
             catch (Exception exception)
@@ -4985,7 +5014,7 @@ namespace Bussiness
         // PlayerBussiness.cs dosyasında bulunan SendMailAndItem metodunun TAM ve DÜZELTİLMİŞ hali
         public int SendMailAndItem(string title, string content, int UserID, int templateID, int count, int validDate, int gold, int money, int StrengthenLevel, int AttackCompose, int DefendCompose, int AgilityCompose, int LuckCompose, bool isBinds)
         {
-            MailInfo mail = new MailInfo
+            MailInfo mail = new()
             {
                 Annex1 = "",
                 Content = title,
@@ -4997,7 +5026,7 @@ namespace Bussiness
                 SenderID = 0,
                 Title = content
             };
-            ItemInfo item = new ItemInfo(null)
+            ItemInfo item = new(null)
             {
                 AgilityCompose = AgilityCompose,
                 AttackCompose = AttackCompose,
@@ -5015,48 +5044,36 @@ namespace Bussiness
                 IsBinds = isBinds
             };
             int returnValue = 1;
-            SendMailAndItem(mail, item, ref returnValue);
+            _ = SendMailAndItem(mail, item, ref returnValue);
             return returnValue;
         }
 
         public int SendMailAndItemByNickName(string title, string content, string nickName, int gold, int money, string param)
         {
             PlayerInfo userSingleByNickName = GetUserSingleByNickName(nickName);
-            if (userSingleByNickName != null)
-            {
-                return SendMailAndItem(title, content, userSingleByNickName.ID, gold, money, param);
-            }
-            return 2;
+            return userSingleByNickName != null ? SendMailAndItem(title, content, userSingleByNickName.ID, gold, money, param) : 2;
         }
 
         public int SendMailAndItemByNickName(string title, string content, string NickName, int templateID, int count, int validDate, int gold, int money, int StrengthenLevel, int AttackCompose, int DefendCompose, int AgilityCompose, int LuckCompose, bool isBinds)
         {
             PlayerInfo userSingleByNickName = GetUserSingleByNickName(NickName);
-            if (userSingleByNickName != null)
-            {
-                return SendMailAndItem(title, content, userSingleByNickName.ID, templateID, count, validDate, gold, money, StrengthenLevel, AttackCompose, DefendCompose, AgilityCompose, LuckCompose, isBinds);
-            }
-            return 2;
+            return userSingleByNickName != null
+                ? SendMailAndItem(title, content, userSingleByNickName.ID, templateID, count, validDate, gold, money, StrengthenLevel, AttackCompose, DefendCompose, AgilityCompose, LuckCompose, isBinds)
+                : 2;
         }
 
         public int SendMailAndItemByUserName(string title, string content, string userName, int gold, int money, string param)
         {
             PlayerInfo userSingleByUserName = GetUserSingleByUserName(userName);
-            if (userSingleByUserName != null)
-            {
-                return SendMailAndItem(title, content, userSingleByUserName.ID, gold, money, param);
-            }
-            return 2;
+            return userSingleByUserName != null ? SendMailAndItem(title, content, userSingleByUserName.ID, gold, money, param) : 2;
         }
 
         public int SendMailAndItemByUserName(string title, string content, string userName, int templateID, int count, int validDate, int gold, int money, int StrengthenLevel, int AttackCompose, int DefendCompose, int AgilityCompose, int LuckCompose, bool isBinds)
         {
             PlayerInfo userSingleByUserName = GetUserSingleByUserName(userName);
-            if (userSingleByUserName != null)
-            {
-                return SendMailAndItem(title, content, userSingleByUserName.ID, templateID, count, validDate, gold, money, StrengthenLevel, AttackCompose, DefendCompose, AgilityCompose, LuckCompose, isBinds);
-            }
-            return 2;
+            return userSingleByUserName != null
+                ? SendMailAndItem(title, content, userSingleByUserName.ID, templateID, count, validDate, gold, money, StrengthenLevel, AttackCompose, DefendCompose, AgilityCompose, LuckCompose, isBinds)
+                : 2;
         }
 
         public bool SendMailAndMoney(MailInfo mail, ref int returnValue)
@@ -5066,7 +5083,7 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[18]
                 {
-                    new SqlParameter("@ID", mail.ID),
+                    new("@ID", mail.ID),
                     null,
                     null,
                     null,
@@ -5086,24 +5103,26 @@ namespace Bussiness
                     null
                 };
                 sqlParameters[0].Direction = ParameterDirection.Output;
-                sqlParameters[1] = new SqlParameter("@Annex1", (mail.Annex1 == null) ? "" : mail.Annex1);
-                sqlParameters[2] = new SqlParameter("@Annex2", (mail.Annex2 == null) ? "" : mail.Annex2);
-                sqlParameters[3] = new SqlParameter("@Content", (mail.Content == null) ? "" : mail.Content);
+                sqlParameters[1] = new SqlParameter("@Annex1", mail.Annex1 ?? "");
+                sqlParameters[2] = new SqlParameter("@Annex2", mail.Annex2 ?? "");
+                sqlParameters[3] = new SqlParameter("@Content", mail.Content ?? "");
                 sqlParameters[4] = new SqlParameter("@Gold", mail.Gold);
                 sqlParameters[5] = new SqlParameter("@IsExist", true);
                 sqlParameters[6] = new SqlParameter("@Money", mail.Money);
-                sqlParameters[7] = new SqlParameter("@Receiver", (mail.Receiver == null) ? "" : mail.Receiver);
+                sqlParameters[7] = new SqlParameter("@Receiver", mail.Receiver ?? "");
                 sqlParameters[8] = new SqlParameter("@ReceiverID", mail.ReceiverID);
-                sqlParameters[9] = new SqlParameter("@Sender", (mail.Sender == null) ? "" : mail.Sender);
+                sqlParameters[9] = new SqlParameter("@Sender", mail.Sender ?? "");
                 sqlParameters[10] = new SqlParameter("@SenderID", mail.SenderID);
-                sqlParameters[11] = new SqlParameter("@Title", (mail.Title == null) ? "" : mail.Title);
+                sqlParameters[11] = new SqlParameter("@Title", mail.Title ?? "");
                 sqlParameters[12] = new SqlParameter("@IfDelS", false);
                 sqlParameters[13] = new SqlParameter("@IsDelete", false);
                 sqlParameters[14] = new SqlParameter("@IsDelR", false);
                 sqlParameters[15] = new SqlParameter("@IsRead", false);
                 sqlParameters[16] = new SqlParameter("@SendTime", DateTime.Now);
-                sqlParameters[17] = new SqlParameter("@Result", SqlDbType.Int);
-                sqlParameters[17].Direction = ParameterDirection.ReturnValue;
+                sqlParameters[17] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
                 flag = db.RunProcedure("SP_Admin_SendUserMoney", sqlParameters);
                 returnValue = (int)sqlParameters[17].Value;
                 flag = returnValue == 0;
@@ -5127,7 +5146,7 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@DutyName", DutyName)
+                    new("@DutyName", DutyName)
                 };
                 flag = db.RunProcedure("SP_Test1", sqlParameters);
                 return flag;
@@ -5150,27 +5169,29 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[17]
                 {
-                    new SqlParameter("@AuctionID", info.AuctionID),
-                    new SqlParameter("@AuctioneerID", info.AuctioneerID),
-                    new SqlParameter("@AuctioneerName", (info.AuctioneerName == null) ? "" : info.AuctioneerName),
-                    new SqlParameter("@BeginDate", info.BeginDate),
-                    new SqlParameter("@BuyerID", info.BuyerID),
-                    new SqlParameter("@BuyerName", (info.BuyerName == null) ? "" : info.BuyerName),
-                    new SqlParameter("@IsExist", info.IsExist),
-                    new SqlParameter("@ItemID", info.ItemID),
-                    new SqlParameter("@Mouthful", info.Mouthful),
-                    new SqlParameter("@PayType", info.PayType),
-                    new SqlParameter("@Price", info.Price),
-                    new SqlParameter("@Rise", info.Rise),
-                    new SqlParameter("@ValidDate", info.ValidDate),
-                    new SqlParameter("@Name", info.Name),
-                    new SqlParameter("@Category", info.Category),
+                    new("@AuctionID", info.AuctionID),
+                    new("@AuctioneerID", info.AuctioneerID),
+                    new("@AuctioneerName", info.AuctioneerName ?? ""),
+                    new("@BeginDate", info.BeginDate),
+                    new("@BuyerID", info.BuyerID),
+                    new("@BuyerName", info.BuyerName ?? ""),
+                    new("@IsExist", info.IsExist),
+                    new("@ItemID", info.ItemID),
+                    new("@Mouthful", info.Mouthful),
+                    new("@PayType", info.PayType),
+                    new("@Price", info.Price),
+                    new("@Rise", info.Rise),
+                    new("@ValidDate", info.ValidDate),
+                    new("@Name", info.Name),
+                    new("@Category", info.Category),
                     null,
-                    new SqlParameter("@Cess", cess)
+                    new("@Cess", cess)
                 };
-                SqlParameters[15] = new SqlParameter("@Result", SqlDbType.Int);
-                SqlParameters[15].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Auction_Update", SqlParameters);
+                SqlParameters[15] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_Auction_Update", SqlParameters);
                 flag = (int)SqlParameters[15].Value == 0;
                 return flag;
             }
@@ -5192,15 +5213,15 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[6]
                 {
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@ActiveType", info.ActiveType),
-                    new SqlParameter("@Conditions", info.Conditions),
-                    new SqlParameter("@AwardGot", info.AwardGot),
-                    new SqlParameter("@Result", SqlDbType.Int),
-                    new SqlParameter("@IsReset", info.IsReset)
+                    new("@UserID", info.UserID),
+                    new("@ActiveType", info.ActiveType),
+                    new("@Conditions", info.Conditions),
+                    new("@AwardGot", info.AwardGot),
+                    new("@Result", SqlDbType.Int),
+                    new("@IsReset", info.IsReset)
                 };
                 sqlParameters[4].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UpdateUsersEventProcess", sqlParameters);
+                _ = db.RunProcedure("SP_UpdateUsersEventProcess", sqlParameters);
                 flag = (int)sqlParameters[4].Value == 0;
                 return flag;
             }
@@ -5218,10 +5239,10 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[0].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Update_Marry_Room_Info_Sever_Stop", sqlParameters);
+                _ = db.RunProcedure("SP_Update_Marry_Room_Info_Sever_Stop", sqlParameters);
                 flag = (int)sqlParameters[0].Value == 0;
                 return flag;
             }
@@ -5243,7 +5264,7 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@StoreID", storeId)
+                    new("@StoreID", storeId)
                 };
                 flag = db.RunProcedure("SP_Update_Buy_Store", sqlParameters);
                 return flag;
@@ -5266,7 +5287,7 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", UserID)
+                    new("@UserID", UserID)
                 };
                 flag = db.RunProcedure("SP_Quest_Reset", sqlParameters);
                 return flag;
@@ -5289,29 +5310,31 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[19]
                 {
-                    new SqlParameter("@CardID", item.CardID),
-                    new SqlParameter("@UserID", item.UserID),
-                    new SqlParameter("@TemplateID", item.TemplateID),
-                    new SqlParameter("@Place", item.Place),
-                    new SqlParameter("@Count", item.Count),
-                    new SqlParameter("@Attack", item.Attack),
-                    new SqlParameter("@Defence", item.Defence),
-                    new SqlParameter("@Agility", item.Agility),
-                    new SqlParameter("@Luck", item.Luck),
-                    new SqlParameter("@Guard", item.Guard),
-                    new SqlParameter("@Damage", item.Damage),
-                    new SqlParameter("@Level", item.Level),
-                    new SqlParameter("@CardGP", item.CardGP),
+                    new("@CardID", item.CardID),
+                    new("@UserID", item.UserID),
+                    new("@TemplateID", item.TemplateID),
+                    new("@Place", item.Place),
+                    new("@Count", item.Count),
+                    new("@Attack", item.Attack),
+                    new("@Defence", item.Defence),
+                    new("@Agility", item.Agility),
+                    new("@Luck", item.Luck),
+                    new("@Guard", item.Guard),
+                    new("@Damage", item.Damage),
+                    new("@Level", item.Level),
+                    new("@CardGP", item.CardGP),
                     null,
-                    new SqlParameter("@AttackReset", item.AttackReset),
-                    new SqlParameter("@DefenceReset", item.DefenceReset),
-                    new SqlParameter("@AgilityReset", item.AgilityReset),
-                    new SqlParameter("@LuckReset", item.LuckReset),
-                    new SqlParameter("@isFirstGet", item.isFirstGet)
+                    new("@AttackReset", item.AttackReset),
+                    new("@DefenceReset", item.DefenceReset),
+                    new("@AgilityReset", item.AgilityReset),
+                    new("@LuckReset", item.LuckReset),
+                    new("@isFirstGet", item.isFirstGet)
                 };
-                SqlParameters[13] = new SqlParameter("@Result", SqlDbType.Int);
-                SqlParameters[13].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UpdateUserCard", SqlParameters);
+                SqlParameters[13] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_UpdateUserCard", SqlParameters);
                 flag = (int)SqlParameters[13].Value == 0;
                 return flag;
             }
@@ -5333,12 +5356,12 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[3]
                 {
-                    new SqlParameter("@UserName", UserName),
-                    new SqlParameter("@Cash", cash),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserName", UserName),
+                    new("@Cash", cash),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[2].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Update_Cash", sqlParameters);
+                _ = db.RunProcedure("SP_Update_Cash", sqlParameters);
                 num = (int)sqlParameters[2].Value;
                 return num;
             }
@@ -5360,10 +5383,10 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[4]
                 {
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@AchievementID", info.AchievementID),
-                    new SqlParameter("@IsComplete", info.IsComplete),
-                    new SqlParameter("@CompletedDate", info.CompletedDate)
+                    new("@UserID", info.UserID),
+                    new("@AchievementID", info.AchievementID),
+                    new("@IsComplete", info.IsComplete),
+                    new("@CompletedDate", info.CompletedDate)
                 };
                 result = db.RunProcedure("SP_Achievement_Data_Add", para);
                 info.IsDirty = false;
@@ -5378,16 +5401,16 @@ namespace Bussiness
 
         public List<AchievementDataInfo> GetUserAchievementData(int userID)
         {
-            List<AchievementDataInfo> infos = new List<AchievementDataInfo>();
+            List<AchievementDataInfo> infos = [];
             SqlDataReader reader = null;
             try
             {
                 SqlParameter[] para = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 para[0].Value = userID;
-                db.GetReader(ref reader, "SP_Achievement_Data_All", para);
+                _ = db.GetReader(ref reader, "SP_Achievement_Data_All", para);
                 while (reader.Read())
                 {
                     infos.Add(new AchievementDataInfo
@@ -5417,17 +5440,17 @@ namespace Bussiness
 
         public List<AchievementDataInfo> GetUserAchievementData(int userID, int id)
         {
-            List<AchievementDataInfo> infos = new List<AchievementDataInfo>();
+            List<AchievementDataInfo> infos = [];
             SqlDataReader reader = null;
             try
             {
                 SqlParameter[] para = new SqlParameter[2]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4),
-                    new SqlParameter("@AchievementID", id)
+                    new("@UserID", SqlDbType.Int, 4),
+                    new("@AchievementID", id)
                 };
                 para[0].Value = userID;
-                db.GetReader(ref reader, "SP_Achievement_Data_Single", para);
+                _ = db.GetReader(ref reader, "SP_Achievement_Data_Single", para);
                 while (reader.Read())
                 {
                     infos.Add(new AchievementDataInfo
@@ -5457,16 +5480,16 @@ namespace Bussiness
 
         public List<UsersRecordInfo> GetUserRecord(int userID)
         {
-            List<UsersRecordInfo> infos = new List<UsersRecordInfo>();
+            List<UsersRecordInfo> infos = [];
             SqlDataReader reader = null;
             try
             {
                 SqlParameter[] para = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 para[0].Value = userID;
-                db.GetReader(ref reader, "SP_Users_Record_All", para);
+                _ = db.GetReader(ref reader, "SP_Users_Record_All", para);
                 while (reader.Read())
                 {
                     infos.Add(new UsersRecordInfo
@@ -5500,9 +5523,9 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[3]
                 {
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@RecordID", info.RecordID),
-                    new SqlParameter("@Total", info.Total)
+                    new("@UserID", info.UserID),
+                    new("@RecordID", info.RecordID),
+                    new("@Total", info.Total)
                 };
                 result = db.RunProcedure("SP_Users_Record_Add", para);
                 info.IsDirty = false;
@@ -5522,17 +5545,17 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[11]
                 {
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@QuestID", info.QuestID),
-                    new SqlParameter("@CompletedDate", info.CompletedDate),
-                    new SqlParameter("@IsComplete", info.IsComplete),
-                    new SqlParameter("@Condition1", (info.Condition1 > -1) ? info.Condition1 : 0),
-                    new SqlParameter("@Condition2", (info.Condition2 > -1) ? info.Condition2 : 0),
-                    new SqlParameter("@Condition3", (info.Condition3 > -1) ? info.Condition3 : 0),
-                    new SqlParameter("@Condition4", (info.Condition4 > -1) ? info.Condition4 : 0),
-                    new SqlParameter("@IsExist", info.IsExist),
-                    new SqlParameter("@RepeatFinish", (info.RepeatFinish == -1) ? 1 : info.RepeatFinish),
-                    new SqlParameter("@RandDobule", info.RandDobule)
+                    new("@UserID", info.UserID),
+                    new("@QuestID", info.QuestID),
+                    new("@CompletedDate", info.CompletedDate),
+                    new("@IsComplete", info.IsComplete),
+                    new("@Condition1", (info.Condition1 > -1) ? info.Condition1 : 0),
+                    new("@Condition2", (info.Condition2 > -1) ? info.Condition2 : 0),
+                    new("@Condition3", (info.Condition3 > -1) ? info.Condition3 : 0),
+                    new("@Condition4", (info.Condition4 > -1) ? info.Condition4 : 0),
+                    new("@IsExist", info.IsExist),
+                    new("@RepeatFinish", (info.RepeatFinish == -1) ? 1 : info.RepeatFinish),
+                    new("@RandDobule", info.RandDobule)
                 };
                 flag = db.RunProcedure("SP_QuestData_Add", sqlParameters);
                 info.IsDirty = false;
@@ -5556,11 +5579,11 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@UserID", ID),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", ID),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[1].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UpdateFriendHelpTimes", sqlParameters);
+                _ = db.RunProcedure("SP_UpdateFriendHelpTimes", sqlParameters);
                 flag = (int)sqlParameters[1].Value == 0;
                 return flag;
             }
@@ -5582,48 +5605,48 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[42]
                 {
-                    new SqlParameter("@ItemID", item.ItemID),
-                    new SqlParameter("@UserID", item.UserID),
-                    new SqlParameter("@TemplateID", item.Template.TemplateID),
-                    new SqlParameter("@Place", item.Place),
-                    new SqlParameter("@AgilityCompose", item.AgilityCompose),
-                    new SqlParameter("@AttackCompose", item.AttackCompose),
-                    new SqlParameter("@BeginDate", item.BeginDate),
-                    new SqlParameter("@Color", (item.Color == null) ? "" : item.Color),
-                    new SqlParameter("@Count", item.Count),
-                    new SqlParameter("@DefendCompose", item.DefendCompose),
-                    new SqlParameter("@IsBinds", item.IsBinds),
-                    new SqlParameter("@IsExist", item.IsExist),
-                    new SqlParameter("@IsJudge", item.IsJudge),
-                    new SqlParameter("@LuckCompose", item.LuckCompose),
-                    new SqlParameter("@StrengthenLevel", item.StrengthenLevel),
-                    new SqlParameter("@ValidDate", item.ValidDate),
-                    new SqlParameter("@BagType", item.BagType),
-                    new SqlParameter("@Skin", item.Skin),
-                    new SqlParameter("@IsUsed", item.IsUsed),
-                    new SqlParameter("@RemoveDate", item.RemoveDate),
-                    new SqlParameter("@RemoveType", item.RemoveType),
-                    new SqlParameter("@Hole1", item.Hole1),
-                    new SqlParameter("@Hole2", item.Hole2),
-                    new SqlParameter("@Hole3", item.Hole3),
-                    new SqlParameter("@Hole4", item.Hole4),
-                    new SqlParameter("@Hole5", item.Hole5),
-                    new SqlParameter("@Hole6", item.Hole6),
-                    new SqlParameter("@StrengthenTimes", item.StrengthenTimes),
-                    new SqlParameter("@Hole5Level", item.Hole5Level),
-                    new SqlParameter("@Hole5Exp", item.Hole5Exp),
-                    new SqlParameter("@Hole6Level", item.Hole6Level),
-                    new SqlParameter("@Hole6Exp", item.Hole6Exp),
-                    new SqlParameter("@IsGold", item.IsGold),
-                    new SqlParameter("@goldBeginTime", item.goldBeginTime),
-                    new SqlParameter("@goldValidDate", item.goldValidDate),
-                    new SqlParameter("@StrengthenExp", item.StrengthenExp),
-                    new SqlParameter("@Blood", item.Blood),
-                    new SqlParameter("@latentEnergyCurStr", item.latentEnergyCurStr),
-                    new SqlParameter("@latentEnergyNewStr", item.latentEnergyNewStr),
-                    new SqlParameter("@latentEnergyEndTime", item.latentEnergyEndTime),
-                    new SqlParameter("@curExp", item.curExp),
-                    new SqlParameter("@cellLocked", item.cellLocked)
+                    new("@ItemID", item.ItemID),
+                    new("@UserID", item.UserID),
+                    new("@TemplateID", item.Template.TemplateID),
+                    new("@Place", item.Place),
+                    new("@AgilityCompose", item.AgilityCompose),
+                    new("@AttackCompose", item.AttackCompose),
+                    new("@BeginDate", item.BeginDate),
+                    new("@Color", item.Color ?? ""),
+                    new("@Count", item.Count),
+                    new("@DefendCompose", item.DefendCompose),
+                    new("@IsBinds", item.IsBinds),
+                    new("@IsExist", item.IsExist),
+                    new("@IsJudge", item.IsJudge),
+                    new("@LuckCompose", item.LuckCompose),
+                    new("@StrengthenLevel", item.StrengthenLevel),
+                    new("@ValidDate", item.ValidDate),
+                    new("@BagType", item.BagType),
+                    new("@Skin", item.Skin),
+                    new("@IsUsed", item.IsUsed),
+                    new("@RemoveDate", item.RemoveDate),
+                    new("@RemoveType", item.RemoveType),
+                    new("@Hole1", item.Hole1),
+                    new("@Hole2", item.Hole2),
+                    new("@Hole3", item.Hole3),
+                    new("@Hole4", item.Hole4),
+                    new("@Hole5", item.Hole5),
+                    new("@Hole6", item.Hole6),
+                    new("@StrengthenTimes", item.StrengthenTimes),
+                    new("@Hole5Level", item.Hole5Level),
+                    new("@Hole5Exp", item.Hole5Exp),
+                    new("@Hole6Level", item.Hole6Level),
+                    new("@Hole6Exp", item.Hole6Exp),
+                    new("@IsGold", item.IsGold),
+                    new("@goldBeginTime", item.goldBeginTime),
+                    new("@goldValidDate", item.goldValidDate),
+                    new("@StrengthenExp", item.StrengthenExp),
+                    new("@Blood", item.Blood),
+                    new("@latentEnergyCurStr", item.latentEnergyCurStr),
+                    new("@latentEnergyNewStr", item.latentEnergyNewStr),
+                    new("@latentEnergyEndTime", item.latentEnergyEndTime),
+                    new("@curExp", item.curExp),
+                    new("@cellLocked", item.cellLocked)
                 };
                 flag = db.RunProcedure("SP_Users_Items_Update", sqlParameters);
                 item.IsDirty = false;
@@ -5647,12 +5670,12 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[3]
                 {
-                    new SqlParameter("@UserID", ID),
-                    new SqlParameter("@LastVIPPackTime", DateTime.Now.Date),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", ID),
+                    new("@LastVIPPackTime", DateTime.Now.Date),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[2].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UpdateUserLastVIPPackTime", sqlParameters);
+                _ = db.RunProcedure("SP_UpdateUserLastVIPPackTime", sqlParameters);
                 flag = true;
                 return flag;
             }
@@ -5674,29 +5697,29 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[30]
                 {
-                    new SqlParameter("@ID", mail.ID),
-                    new SqlParameter("@Annex1", (mail.Annex1 == null) ? "" : mail.Annex1),
-                    new SqlParameter("@Annex2", (mail.Annex2 == null) ? "" : mail.Annex2),
-                    new SqlParameter("@Content", (mail.Content == null) ? "" : mail.Content),
-                    new SqlParameter("@Gold", mail.Gold),
-                    new SqlParameter("@IsExist", mail.IsExist),
-                    new SqlParameter("@Money", mail.Money),
-                    new SqlParameter("@Receiver", (mail.Receiver == null) ? "" : mail.Receiver),
-                    new SqlParameter("@ReceiverID", mail.ReceiverID),
-                    new SqlParameter("@Sender", (mail.Sender == null) ? "" : mail.Sender),
-                    new SqlParameter("@SenderID", mail.SenderID),
-                    new SqlParameter("@Title", (mail.Title == null) ? "" : mail.Title),
-                    new SqlParameter("@IfDelS", false),
-                    new SqlParameter("@IsDelete", false),
-                    new SqlParameter("@IsDelR", false),
-                    new SqlParameter("@IsRead", mail.IsRead),
-                    new SqlParameter("@SendTime", mail.SendTime),
-                    new SqlParameter("@Type", mail.Type),
-                    new SqlParameter("@OldMoney", oldMoney),
-                    new SqlParameter("@ValidDate", mail.ValidDate),
-                    new SqlParameter("@Annex1Name", mail.Annex1Name),
-                    new SqlParameter("@Annex2Name", mail.Annex2Name),
-                    new SqlParameter("@Result", SqlDbType.Int),
+                    new("@ID", mail.ID),
+                    new("@Annex1", mail.Annex1 ?? ""),
+                    new("@Annex2", mail.Annex2 ?? ""),
+                    new("@Content", mail.Content ?? ""),
+                    new("@Gold", mail.Gold),
+                    new("@IsExist", mail.IsExist),
+                    new("@Money", mail.Money),
+                    new("@Receiver", mail.Receiver ?? ""),
+                    new("@ReceiverID", mail.ReceiverID),
+                    new("@Sender", mail.Sender ?? ""),
+                    new("@SenderID", mail.SenderID),
+                    new("@Title", mail.Title ?? ""),
+                    new("@IfDelS", false),
+                    new("@IsDelete", false),
+                    new("@IsDelR", false),
+                    new("@IsRead", mail.IsRead),
+                    new("@SendTime", mail.SendTime),
+                    new("@Type", mail.Type),
+                    new("@OldMoney", oldMoney),
+                    new("@ValidDate", mail.ValidDate),
+                    new("@Annex1Name", mail.Annex1Name),
+                    new("@Annex2Name", mail.Annex2Name),
+                    new("@Result", SqlDbType.Int),
                     null,
                     null,
                     null,
@@ -5706,14 +5729,14 @@ namespace Bussiness
                     null
                 };
                 sqlParameters[22].Direction = ParameterDirection.ReturnValue;
-                sqlParameters[23] = new SqlParameter("@Annex3", (mail.Annex3 == null) ? "" : mail.Annex3);
-                sqlParameters[24] = new SqlParameter("@Annex4", (mail.Annex4 == null) ? "" : mail.Annex4);
-                sqlParameters[25] = new SqlParameter("@Annex5", (mail.Annex5 == null) ? "" : mail.Annex5);
-                sqlParameters[26] = new SqlParameter("@Annex3Name", (mail.Annex3Name == null) ? "" : mail.Annex3Name);
-                sqlParameters[27] = new SqlParameter("@Annex4Name", (mail.Annex4Name == null) ? "" : mail.Annex4Name);
-                sqlParameters[28] = new SqlParameter("@Annex5Name", (mail.Annex5Name == null) ? "" : mail.Annex5Name);
+                sqlParameters[23] = new SqlParameter("@Annex3", mail.Annex3 ?? "");
+                sqlParameters[24] = new SqlParameter("@Annex4", mail.Annex4 ?? "");
+                sqlParameters[25] = new SqlParameter("@Annex5", mail.Annex5 ?? "");
+                sqlParameters[26] = new SqlParameter("@Annex3Name", mail.Annex3Name ?? "");
+                sqlParameters[27] = new SqlParameter("@Annex4Name", mail.Annex4Name ?? "");
+                sqlParameters[28] = new SqlParameter("@Annex5Name", mail.Annex5Name ?? "");
                 sqlParameters[29] = new SqlParameter("GiftToken", mail.GiftToken);
-                db.RunProcedure("SP_Mail_Update", sqlParameters);
+                _ = db.RunProcedure("SP_Mail_Update", sqlParameters);
                 flag = (int)sqlParameters[22].Value == 0;
                 return flag;
             }
@@ -5735,15 +5758,15 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[6]
                 {
-                    new SqlParameter("@ID", info.ID),
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@IsPublishEquip", info.IsPublishEquip),
-                    new SqlParameter("@Introduction", info.Introduction),
-                    new SqlParameter("@RegistTime", info.RegistTime.ToString("yyyy-MM-dd HH:mm:ss")),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID", info.ID),
+                    new("@UserID", info.UserID),
+                    new("@IsPublishEquip", info.IsPublishEquip),
+                    new("@Introduction", info.Introduction),
+                    new("@RegistTime", info.RegistTime.ToString("yyyy-MM-dd HH:mm:ss")),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[5].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_MarryInfo_Update", sqlParameters);
+                _ = db.RunProcedure("SP_MarryInfo_Update", sqlParameters);
                 flag = (int)sqlParameters[5].Value == 0;
                 return flag;
             }
@@ -5765,18 +5788,18 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[9]
                 {
-                    new SqlParameter("@ID", info.ID),
-                    new SqlParameter("@AvailTime", info.AvailTime),
-                    new SqlParameter("@BreakTime", info.BreakTime),
-                    new SqlParameter("@roomIntroduction", info.RoomIntroduction),
-                    new SqlParameter("@isHymeneal", info.IsHymeneal),
-                    new SqlParameter("@Name", info.Name),
-                    new SqlParameter("@Pwd", info.Pwd),
-                    new SqlParameter("@IsGunsaluteUsed", info.IsGunsaluteUsed),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID", info.ID),
+                    new("@AvailTime", info.AvailTime),
+                    new("@BreakTime", info.BreakTime),
+                    new("@roomIntroduction", info.RoomIntroduction),
+                    new("@isHymeneal", info.IsHymeneal),
+                    new("@Name", info.Name),
+                    new("@Pwd", info.Pwd),
+                    new("@IsGunsaluteUsed", info.IsGunsaluteUsed),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[8].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Update_Marry_Room_Info", sqlParameters);
+                _ = db.RunProcedure("SP_Update_Marry_Room_Info", sqlParameters);
                 flag = (int)sqlParameters[8].Value == 0;
                 return flag;
             }
@@ -5798,8 +5821,8 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@UserID", userID),
-                    new SqlParameter("@Password", password)
+                    new("@UserID", userID),
+                    new("@Password", password)
                 };
                 flag = db.RunProcedure("SP_Users_UpdatePassword", sqlParameters);
                 return flag;
@@ -5822,12 +5845,12 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[6]
                 {
-                    new SqlParameter("@UserID", userID),
-                    new SqlParameter("@PasswordQuestion1", PasswordQuestion1),
-                    new SqlParameter("@PasswordAnswer1", PasswordAnswer1),
-                    new SqlParameter("@PasswordQuestion2", PasswordQuestion2),
-                    new SqlParameter("@PasswordAnswer2", PasswordAnswer2),
-                    new SqlParameter("@FailedPasswordAttemptCount", Count)
+                    new("@UserID", userID),
+                    new("@PasswordQuestion1", PasswordQuestion1),
+                    new("@PasswordAnswer1", PasswordAnswer1),
+                    new("@PasswordQuestion2", PasswordQuestion2),
+                    new("@PasswordAnswer2", PasswordAnswer2),
+                    new("@FailedPasswordAttemptCount", Count)
                 };
                 flag = db.RunProcedure("SP_Users_Password_Add", sqlParameters);
                 return flag;
@@ -5850,8 +5873,8 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@UserID", userID),
-                    new SqlParameter("@PasswordTwo", passwordTwo)
+                    new("@UserID", userID),
+                    new("@PasswordTwo", passwordTwo)
                 };
                 flag = db.RunProcedure("SP_Users_UpdatePasswordTwo", sqlParameters);
                 return flag;
@@ -5884,7 +5907,7 @@ namespace Bussiness
                 SqlParameter[] para = new SqlParameter[89];
                 para[0] = new SqlParameter("@UserID", player.ID);
                 para[1] = new SqlParameter("@Attack", player.Attack);
-                para[2] = new SqlParameter("@Colors", (player.Colors == null) ? "" : player.Colors);
+                para[2] = new SqlParameter("@Colors", player.Colors ?? "");
                 para[3] = new SqlParameter("@ConsortiaID", player.ConsortiaID);
                 para[4] = new SqlParameter("@Defence", player.Defence);
                 para[5] = new SqlParameter("@Gold", player.Gold);
@@ -5892,7 +5915,7 @@ namespace Bussiness
                 para[7] = new SqlParameter("@Grade", player.Grade);
                 para[8] = new SqlParameter("@Luck", player.Luck);
                 para[9] = new SqlParameter("@Money", player.Money);
-                para[10] = new SqlParameter("@Style", (player.Style == null) ? "" : player.Style);
+                para[10] = new SqlParameter("@Style", player.Style ?? "");
                 para[11] = new SqlParameter("@Agility", player.Agility);
                 para[12] = new SqlParameter("@State", player.State);
                 para[13] = new SqlParameter("@Hide", player.Hide);
@@ -5900,16 +5923,22 @@ namespace Bussiness
                 para[15] = new SqlParameter("@Win", player.Win);
                 para[16] = new SqlParameter("@Total", player.Total);
                 para[17] = new SqlParameter("@Escape", player.Escape);
-                para[18] = new SqlParameter("@Skin", (player.Skin == null) ? "" : player.Skin);
+                para[18] = new SqlParameter("@Skin", player.Skin ?? "");
                 para[19] = new SqlParameter("@Offer", player.Offer);
-                para[20] = new SqlParameter("@AntiAddiction", player.AntiAddiction);
-                para[20].Direction = ParameterDirection.InputOutput;
-                para[21] = new SqlParameter("@Result", SqlDbType.Int);
-                para[21].Direction = ParameterDirection.ReturnValue;
+                para[20] = new SqlParameter("@AntiAddiction", player.AntiAddiction)
+                {
+                    Direction = ParameterDirection.InputOutput
+                };
+                para[21] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
                 para[22] = new SqlParameter("@RichesOffer", player.RichesOffer);
                 para[23] = new SqlParameter("@RichesRob", player.RichesRob);
-                para[24] = new SqlParameter("@CheckCount", player.CheckCount);
-                para[24].Direction = ParameterDirection.InputOutput;
+                para[24] = new SqlParameter("@CheckCount", player.CheckCount)
+                {
+                    Direction = ParameterDirection.InputOutput
+                };
                 para[25] = new SqlParameter("@MarryInfoID", player.MarryInfoID);
                 para[26] = new SqlParameter("@DayLoginCount", player.DayLoginCount);
                 para[27] = new SqlParameter("@Nimbus", player.Nimbus);
@@ -5975,7 +6004,7 @@ namespace Bussiness
                 para[87] = new SqlParameter("@fineSuitExp", player.fineSuitExp);
                 para[88] = new SqlParameter("@DailyMoneyUsed", player.DailyMoneyUsed);
                 sqlParameters2 = para;
-                db.RunProcedure("SP_Users_Update", para);
+                _ = db.RunProcedure("SP_Users_Update", para);
                 flag = (int)para[21].Value == 0;
                 if (flag)
                 {
@@ -6010,12 +6039,12 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[3]
                 {
-                    new SqlParameter("@GroomID", groomID),
-                    new SqlParameter("@BrideID", brideID),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@GroomID", groomID),
+                    new("@BrideID", brideID),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[2].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Update_GotRing_Prop", sqlParameters);
+                _ = db.RunProcedure("SP_Update_GotRing_Prop", sqlParameters);
                 flag = (int)sqlParameters[2].Value == 0;
                 return flag;
             }
@@ -6037,8 +6066,8 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@UserID", id),
-                    new SqlParameter("@Type", type)
+                    new("@UserID", id),
+                    new("@Type", type)
                 };
                 flag = db.RunProcedure("SP_Users_LastAward", sqlParameters);
                 return flag;
@@ -6061,13 +6090,13 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[7]
                 {
-                    new SqlParameter("@UserID", player.ID),
-                    new SqlParameter("@IsMarried", player.IsMarried),
-                    new SqlParameter("@SpouseID", player.SpouseID),
-                    new SqlParameter("@SpouseName", player.SpouseName),
-                    new SqlParameter("@IsCreatedMarryRoom", player.IsCreatedMarryRoom),
-                    new SqlParameter("@SelfMarryRoomID", player.SelfMarryRoomID),
-                    new SqlParameter("@IsGotRing", player.IsGotRing)
+                    new("@UserID", player.ID),
+                    new("@IsMarried", player.IsMarried),
+                    new("@SpouseID", player.SpouseID),
+                    new("@SpouseName", player.SpouseName),
+                    new("@IsCreatedMarryRoom", player.IsCreatedMarryRoom),
+                    new("@SelfMarryRoomID", player.SelfMarryRoomID),
+                    new("@IsGotRing", player.IsGotRing)
                 };
                 flag = db.RunProcedure("SP_Users_Marry", sqlParameters);
                 return flag;
@@ -6090,13 +6119,13 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[4]
                 {
-                    new SqlParameter("@UserID", UserID),
-                    new SqlParameter("@LoveProclamation", loveProclamation),
-                    new SqlParameter("@isExist", isExist),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", UserID),
+                    new("@LoveProclamation", loveProclamation),
+                    new("@isExist", isExist),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[3].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Update_Marry_Apply", sqlParameters);
+                _ = db.RunProcedure("SP_Update_Marry_Apply", sqlParameters);
                 flag = (int)sqlParameters[3].Value == 0;
                 return flag;
             }
@@ -6133,9 +6162,11 @@ namespace Bussiness
                 para[13] = new SqlParameter("@leagueGrade", info.leagueGrade);
                 para[14] = new SqlParameter("@leagueItemsGet", info.leagueItemsGet);
                 para[15] = new SqlParameter("@WeeklyWinCount", info.WeeklyWinCount);
-                para[16] = new SqlParameter("@Result", System.Data.SqlDbType.Int);
-                para[16].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UpdateUserMatch", para);
+                para[16] = new SqlParameter("@Result", System.Data.SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_UpdateUserMatch", para);
                 flag = (int)para[16].Value == 0;
             }
             catch (Exception exception)
@@ -6155,27 +6186,27 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[16]
                 {
-                    new SqlParameter("@ID", item.ID),
-                    new SqlParameter("@UserID", item.UserID),
-                    new SqlParameter("@UserRank", item.Name),
-                    new SqlParameter("@Attack", item.Attack),
-                    new SqlParameter("@Defence", item.Defence),
-                    new SqlParameter("@Luck", item.Luck),
-                    new SqlParameter("@Agility", item.Agility),
-                    new SqlParameter("@HP", item.HP),
-                    new SqlParameter("@Damage", item.Damage),
-                    new SqlParameter("@Guard", item.Guard),
-                    new SqlParameter("@BeginDate", item.BeginDate),
-                    new SqlParameter("@Validate", item.Validate),
-                    new SqlParameter("@IsExit", item.IsExit),
-                    new SqlParameter("@Result", SqlDbType.Int),
+                    new("@ID", item.ID),
+                    new("@UserID", item.UserID),
+                    new("@UserRank", item.Name),
+                    new("@Attack", item.Attack),
+                    new("@Defence", item.Defence),
+                    new("@Luck", item.Luck),
+                    new("@Agility", item.Agility),
+                    new("@HP", item.HP),
+                    new("@Damage", item.Damage),
+                    new("@Guard", item.Guard),
+                    new("@BeginDate", item.BeginDate),
+                    new("@Validate", item.Validate),
+                    new("@IsExit", item.IsExit),
+                    new("@Result", SqlDbType.Int),
                     null,
                     null
                 };
                 para[13].Direction = ParameterDirection.ReturnValue;
                 para[14] = new SqlParameter("@NewTitleID", item.NewTitleID);
                 para[15] = new SqlParameter("@EndDate", item.EndDate);
-                db.RunProcedure("SP_UpdateUserRank", para);
+                _ = db.RunProcedure("SP_UpdateUserRank", para);
                 result = (int)para[13].Value == 0;
             }
             catch (Exception exception)
@@ -6195,18 +6226,18 @@ namespace Bussiness
             {
                 flag = db.RunProcedure("SP_Update_User_Extra", new SqlParameter[12]
                 {
-                    new SqlParameter("@UserID", ex.UserID),
-                    new SqlParameter("@LastTimeHotSpring", ex.LastTimeHotSpring),
-                    new SqlParameter("@MinHotSpring", ex.MinHotSpring),
-                    new SqlParameter("@coupleBossEnterNum", ex.coupleBossEnterNum),
-                    new SqlParameter("@coupleBossHurt", ex.coupleBossHurt),
-                    new SqlParameter("@coupleBossBoxNum", ex.coupleBossBoxNum),
-                    new SqlParameter("@LastFreeTimeHotSpring", ex.LastFreeTimeHotSpring),
-                    new SqlParameter("@isGetAwardMarry", ex.isGetAwardMarry),
-                    new SqlParameter("@isFirstAwardMarry", ex.isFirstAwardMarry),
-                    new SqlParameter("@LeftRoutteCount", ex.LeftRoutteCount),
-                    new SqlParameter("@LeftRoutteRate", ex.LeftRoutteRate),
-                    new SqlParameter("@FreeSendMailCount", ex.FreeSendMailCount)
+                    new("@UserID", ex.UserID),
+                    new("@LastTimeHotSpring", ex.LastTimeHotSpring),
+                    new("@MinHotSpring", ex.MinHotSpring),
+                    new("@coupleBossEnterNum", ex.coupleBossEnterNum),
+                    new("@coupleBossHurt", ex.coupleBossHurt),
+                    new("@coupleBossBoxNum", ex.coupleBossBoxNum),
+                    new("@LastFreeTimeHotSpring", ex.LastFreeTimeHotSpring),
+                    new("@isGetAwardMarry", ex.isGetAwardMarry),
+                    new("@isFirstAwardMarry", ex.isFirstAwardMarry),
+                    new("@LeftRoutteCount", ex.LeftRoutteCount),
+                    new("@LeftRoutteRate", ex.LeftRoutteRate),
+                    new("@FreeSendMailCount", ex.FreeSendMailCount)
                 });
                 return flag;
             }
@@ -6228,19 +6259,19 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[10]
                 {
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@attTexpExp", info.attTexpExp),
-                    new SqlParameter("@defTexpExp", info.defTexpExp),
-                    new SqlParameter("@hpTexpExp", info.hpTexpExp),
-                    new SqlParameter("@lukTexpExp", info.lukTexpExp),
-                    new SqlParameter("@spdTexpExp", info.spdTexpExp),
-                    new SqlParameter("@texpCount", info.texpCount),
-                    new SqlParameter("@texpTaskCount", info.texpTaskCount),
-                    new SqlParameter("@texpTaskDate", info.texpTaskDate),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", info.UserID),
+                    new("@attTexpExp", info.attTexpExp),
+                    new("@defTexpExp", info.defTexpExp),
+                    new("@hpTexpExp", info.hpTexpExp),
+                    new("@lukTexpExp", info.lukTexpExp),
+                    new("@spdTexpExp", info.spdTexpExp),
+                    new("@texpCount", info.texpCount),
+                    new("@texpTaskCount", info.texpTaskCount),
+                    new("@texpTaskDate", info.texpTaskDate),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[9].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UserTexp_Update", sqlParameters);
+                _ = db.RunProcedure("SP_UserTexp_Update", sqlParameters);
                 flag = (int)sqlParameters[9].Value == 0;
                 return flag;
             }
@@ -6262,19 +6293,19 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[10]
                 {
-                    new SqlParameter("@ID", p.ID),
-                    new SqlParameter("@VIPLevel", p.VIPLevel),
-                    new SqlParameter("@VIPExp", p.VIPExp),
-                    new SqlParameter("@VIPOnlineDays", SqlDbType.BigInt),
-                    new SqlParameter("@VIPOfflineDays", SqlDbType.BigInt),
-                    new SqlParameter("@VIPExpireDay", p.VIPExpireDay),
-                    new SqlParameter("@VIPLastDate", DateTime.Now),
-                    new SqlParameter("@VIPNextLevelDaysNeeded", p.GetVIPNextLevelDaysNeeded(p.VIPLevel, p.VIPExp)),
-                    new SqlParameter("@CanTakeVipReward", p.CanTakeVipReward),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID", p.ID),
+                    new("@VIPLevel", p.VIPLevel),
+                    new("@VIPExp", p.VIPExp),
+                    new("@VIPOnlineDays", SqlDbType.BigInt),
+                    new("@VIPOfflineDays", SqlDbType.BigInt),
+                    new("@VIPExpireDay", p.VIPExpireDay),
+                    new("@VIPLastDate", DateTime.Now),
+                    new("@VIPNextLevelDaysNeeded", p.GetVIPNextLevelDaysNeeded(p.VIPLevel, p.VIPExp)),
+                    new("@CanTakeVipReward", p.CanTakeVipReward),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[9].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UpdateVIPInfo", sqlParameters);
+                _ = db.RunProcedure("SP_UpdateVIPInfo", sqlParameters);
                 flag = true;
                 return flag;
             }
@@ -6296,11 +6327,11 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@UserID", ID),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", ID),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[1].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_VIPLastdate_Single", sqlParameters);
+                _ = db.RunProcedure("SP_VIPLastdate_Single", sqlParameters);
                 num = (int)sqlParameters[1].Value;
                 return num;
             }
@@ -6322,15 +6353,15 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[5]
                 {
-                    new SqlParameter("@NickName", nickName),
-                    new SqlParameter("@RenewalDays", renewalDays),
-                    new SqlParameter("@ExpireDayOut", DateTime.Now),
-                    new SqlParameter("@typeVIP", typeVIP),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@NickName", nickName),
+                    new("@RenewalDays", renewalDays),
+                    new("@ExpireDayOut", DateTime.Now),
+                    new("@typeVIP", typeVIP),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[2].Direction = ParameterDirection.Output;
                 sqlParameters[4].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_VIPRenewal_Single", sqlParameters);
+                _ = db.RunProcedure("SP_VIPRenewal_Single", sqlParameters);
                 ExpireDayOut = (DateTime)sqlParameters[2].Value;
                 num = (int)sqlParameters[4].Value;
                 return num;
@@ -6353,18 +6384,20 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[8]
                 {
-                    new SqlParameter("@UserID", player.ID),
-                    new SqlParameter("@apprenticeshipState", player.apprenticeshipState),
-                    new SqlParameter("@masterID", player.masterID),
-                    new SqlParameter("@masterOrApprentices", player.masterOrApprentices),
-                    new SqlParameter("@graduatesCount", player.graduatesCount),
-                    new SqlParameter("@honourOfMaster", player.honourOfMaster),
+                    new("@UserID", player.ID),
+                    new("@apprenticeshipState", player.apprenticeshipState),
+                    new("@masterID", player.masterID),
+                    new("@masterOrApprentices", player.masterOrApprentices),
+                    new("@graduatesCount", player.graduatesCount),
+                    new("@honourOfMaster", player.honourOfMaster),
                     null,
-                    new SqlParameter("@freezesDate", player.freezesDate)
+                    new("@freezesDate", player.freezesDate)
                 };
-                SqlParameters[6] = new SqlParameter("@Result", SqlDbType.Int);
-                SqlParameters[6].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UsersAcademy_Update", SqlParameters);
+                SqlParameters[6] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_UsersAcademy_Update", SqlParameters);
                 flag = (int)SqlParameters[6].Value == 0;
                 return flag;
             }
@@ -6385,11 +6418,11 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[3]
                 {
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@Type", info.Type),
-                    new SqlParameter("@Value", info.Value)
+                    new("@UserID", info.UserID),
+                    new("@Type", info.Type),
+                    new("@Value", info.Value)
                 };
-                db.RunProcedure("SP_DailyRecordInfo_Add", sqlParameters);
+                _ = db.RunProcedure("SP_DailyRecordInfo_Add", sqlParameters);
             }
             catch (Exception exception)
             {
@@ -6407,8 +6440,8 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@UserID", UserID),
-                    new SqlParameter("@Type", Type)
+                    new("@UserID", UserID),
+                    new("@Type", Type)
                 };
                 flag = db.RunProcedure("SP_DailyRecordInfo_Delete", sqlParameters);
                 return flag;
@@ -6426,18 +6459,18 @@ namespace Bussiness
 
         public DailyRecordInfo[] GetDailyRecord(int UserID)
         {
-            List<DailyRecordInfo> list = new List<DailyRecordInfo>();
+            List<DailyRecordInfo> list = [];
             SqlDataReader resultDataReader = null;
             try
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", UserID)
+                    new("@UserID", UserID)
                 };
-                db.GetReader(ref resultDataReader, "SP_DailyRecordInfo_Single", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_DailyRecordInfo_Single", sqlParameters);
                 while (resultDataReader.Read())
                 {
-                    DailyRecordInfo item = new DailyRecordInfo
+                    DailyRecordInfo item = new()
                     {
                         UserID = (int)resultDataReader["UserID"],
                         Type = (int)resultDataReader["Type"],
@@ -6470,9 +6503,9 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", UserID)
+                    new("@UserID", UserID)
                 };
-                db.GetReader(ref resultDataReader, "SP_ASSInfo_Single", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_ASSInfo_Single", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return resultDataReader["IDNumber"].ToString();
@@ -6502,9 +6535,9 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", UserID)
+                    new("@UserID", UserID)
                 };
-                db.GetReader(ref resultDataReader, "SP_DailyLogList_Single", sqlParameters);
+                _ = db.GetReader(ref resultDataReader, "SP_DailyLogList_Single", sqlParameters);
                 if (resultDataReader.Read())
                 {
                     return new DailyLogListInfo
@@ -6538,11 +6571,11 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[5]
                 {
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@UserAwardLog", info.UserAwardLog),
-                    new SqlParameter("@DayLog", info.DayLog),
-                    new SqlParameter("@LastDate", info.LastDate),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", info.UserID),
+                    new("@UserAwardLog", info.UserAwardLog),
+                    new("@DayLog", info.DayLog),
+                    new("@LastDate", info.LastDate),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[4].Direction = ParameterDirection.ReturnValue;
                 flag = db.RunProcedure("SP_DailyLogList_Update", sqlParameters);
@@ -6566,12 +6599,12 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[6]
                 {
-                    new SqlParameter("@UserID", userid),
-                    new SqlParameter("@BoxProgression", boxProgression),
-                    new SqlParameter("@GetBoxLevel", getBoxLevel),
-                    new SqlParameter("@AddGPLastDate", DateTime.Now),
-                    new SqlParameter("@BoxGetDate", BoxGetDate),
-                    new SqlParameter("@AlreadyGetBox", alreadyBox)
+                    new("@UserID", userid),
+                    new("@BoxProgression", boxProgression),
+                    new("@GetBoxLevel", getBoxLevel),
+                    new("@AddGPLastDate", DateTime.Now),
+                    new("@BoxGetDate", BoxGetDate),
+                    new("@AlreadyGetBox", alreadyBox)
                 };
                 result = db.RunProcedure("SP_User_Update_BoxProgression", para);
                 return result;
@@ -6590,13 +6623,13 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[4]
                 {
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@LastQuestsTime", info.LastQuestsTime),
-                    new SqlParameter("@LastTreasureTime", info.LastTreasureTime),
-                    new SqlParameter("@OutPut", SqlDbType.Int)
+                    new("@UserID", info.UserID),
+                    new("@LastQuestsTime", info.LastQuestsTime),
+                    new("@LastTreasureTime", info.LastTreasureTime),
+                    new("@OutPut", SqlDbType.Int)
                 };
                 sqlParameters[3].Direction = ParameterDirection.Output;
-                db.RunProcedure("SP_User_Update_History", sqlParameters);
+                _ = db.RunProcedure("SP_User_Update_History", sqlParameters);
                 flag = (int)sqlParameters[6].Value == 1;
                 return flag;
             }
@@ -6618,14 +6651,14 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[5]
                 {
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@Name", info.Name),
-                    new SqlParameter("@IDNumber", info.IDNumber),
-                    new SqlParameter("@State", info.State),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", info.UserID),
+                    new("@Name", info.Name),
+                    new("@IDNumber", info.IDNumber),
+                    new("@State", info.State),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameters[4].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_ASSInfo_Add", sqlParameters);
+                _ = db.RunProcedure("SP_ASSInfo_Add", sqlParameters);
                 flag = (int)sqlParameters[4].Value == 0;
                 return flag;
             }
@@ -6646,13 +6679,13 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameters = new SqlParameter[5]
                 {
-                    new SqlParameter("@UserID", UserID),
-                    new SqlParameter("@UserName", UserName),
-                    new SqlParameter("@NickName", NickName),
-                    new SqlParameter("@Type", Type),
-                    new SqlParameter("@Content", Content)
+                    new("@UserID", UserID),
+                    new("@UserName", UserName),
+                    new("@NickName", NickName),
+                    new("@Type", Type),
+                    new("@Content", Content)
                 };
-                db.RunProcedure("SP_Insert_UsersLog", sqlParameters);
+                _ = db.RunProcedure("SP_Insert_UsersLog", sqlParameters);
             }
             catch (Exception)
             {
@@ -6662,21 +6695,21 @@ namespace Bussiness
         public Dictionary<int, List<string>> LoadCommands()
         {
             SqlDataReader sqlDataReader = null;
-            Dictionary<int, List<string>> commands = new Dictionary<int, List<string>>();
-            db.GetReader(ref sqlDataReader, "SP_GetAllCommands");
+            Dictionary<int, List<string>> commands = [];
+            _ = db.GetReader(ref sqlDataReader, "SP_GetAllCommands");
             while (sqlDataReader.Read())
             {
                 string[] array = Convert.ToString(sqlDataReader["Commands"] ?? "").Split('$');
-                List<string> c = new List<string>();
+                List<string> c = [];
                 string[] array2 = array;
                 string[] array3 = array2;
                 foreach (string s in array3)
                 {
                     c.Add(s);
                 }
-                if (!commands.ContainsKey(Convert.ToInt32(sqlDataReader["UserID"] ?? ((object)0))))
+                if (!commands.ContainsKey(Convert.ToInt32(sqlDataReader["UserID"] ?? 0)))
                 {
-                    commands.Add(Convert.ToInt32(sqlDataReader["UserID"] ?? ((object)0)), c);
+                    commands.Add(Convert.ToInt32(sqlDataReader["UserID"] ?? 0), c);
                 }
             }
             return commands;
@@ -6689,29 +6722,29 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[23]
                 {
-                    new SqlParameter("@TemplateID", info.TemplateID),
-                    new SqlParameter("@Name", (info.Name == null) ? "Error!" : info.Name),
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@Attack", info.Attack),
-                    new SqlParameter("@Defence", info.Defence),
-                    new SqlParameter("@Luck", info.Luck),
-                    new SqlParameter("@Agility", info.Agility),
-                    new SqlParameter("@Blood", info.Blood),
-                    new SqlParameter("@Damage", info.Damage),
-                    new SqlParameter("@Guard", info.Guard),
-                    new SqlParameter("@AttackGrow", info.AttackGrow),
-                    new SqlParameter("@DefenceGrow", info.DefenceGrow),
-                    new SqlParameter("@LuckGrow", info.LuckGrow),
-                    new SqlParameter("@AgilityGrow", info.AgilityGrow),
-                    new SqlParameter("@BloodGrow", info.BloodGrow),
-                    new SqlParameter("@DamageGrow", info.DamageGrow),
-                    new SqlParameter("@GuardGrow", info.GuardGrow),
-                    new SqlParameter("@Skill", info.Skill),
-                    new SqlParameter("@SkillEquip", info.SkillEquip),
-                    new SqlParameter("@Place", info.Place),
-                    new SqlParameter("@IsExit", info.IsExit),
-                    new SqlParameter("@IsUse", isUse),
-                    new SqlParameter("@ID", info.ID)
+                    new("@TemplateID", info.TemplateID),
+                    new("@Name", info.Name ?? "Error!"),
+                    new("@UserID", info.UserID),
+                    new("@Attack", info.Attack),
+                    new("@Defence", info.Defence),
+                    new("@Luck", info.Luck),
+                    new("@Agility", info.Agility),
+                    new("@Blood", info.Blood),
+                    new("@Damage", info.Damage),
+                    new("@Guard", info.Guard),
+                    new("@AttackGrow", info.AttackGrow),
+                    new("@DefenceGrow", info.DefenceGrow),
+                    new("@LuckGrow", info.LuckGrow),
+                    new("@AgilityGrow", info.AgilityGrow),
+                    new("@BloodGrow", info.BloodGrow),
+                    new("@DamageGrow", info.DamageGrow),
+                    new("@GuardGrow", info.GuardGrow),
+                    new("@Skill", info.Skill),
+                    new("@SkillEquip", info.SkillEquip),
+                    new("@Place", info.Place),
+                    new("@IsExit", info.IsExit),
+                    new("@IsUse", isUse),
+                    new("@ID", info.ID)
                 };
                 para[22].Direction = ParameterDirection.Output;
                 result = db.RunProcedure("SP_User_AdoptPet", para);
@@ -6735,11 +6768,11 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[2]
                 {
-                    new SqlParameter("@ID", ID),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID", ID),
+                    new("@Result", SqlDbType.Int)
                 };
                 para[1].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Remove_User_AdoptPet", para);
+                _ = db.RunProcedure("SP_Remove_User_AdoptPet", para);
                 int returnValue = (int)para[1].Value;
                 result = returnValue == 0;
             }
@@ -6760,11 +6793,11 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[2]
                 {
-                    new SqlParameter("@ID", ID),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID", ID),
+                    new("@Result", SqlDbType.Int)
                 };
                 para[1].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Update_User_AdoptPet", para);
+                _ = db.RunProcedure("SP_Update_User_AdoptPet", para);
                 int returnValue = (int)para[1].Value;
                 result = returnValue == 0;
             }
@@ -6785,11 +6818,11 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[2]
                 {
-                    new SqlParameter("@ID", ID),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID", ID),
+                    new("@Result", SqlDbType.Int)
                 };
                 para[1].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Clear_AdoptPet", para);
+                _ = db.RunProcedure("SP_Clear_AdoptPet", para);
                 int returnValue = (int)para[1].Value;
                 result = returnValue == 0;
             }
@@ -6805,16 +6838,16 @@ namespace Bussiness
 
         public UsersPetInfo[] GetUserPetSingles(int UserID, int vipLv)
         {
-            List<UsersPetInfo> items = new List<UsersPetInfo>();
+            List<UsersPetInfo> items = [];
             SqlDataReader reader = null;
             try
             {
                 SqlParameter[] para = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 para[0].Value = UserID;
-                db.GetReader(ref reader, "SP_Get_UserPet_By_ID", para);
+                _ = db.GetReader(ref reader, "SP_Get_UserPet_By_ID", para);
                 while (reader.Read())
                 {
                     UsersPetInfo info = InitPet(reader);
@@ -6846,37 +6879,37 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[39]
                 {
-                    new SqlParameter("@TemplateID", item.TemplateID),
-                    new SqlParameter("@Name", (item.Name == null) ? "Error!" : item.Name),
-                    new SqlParameter("@UserID", item.UserID),
-                    new SqlParameter("@Attack", item.Attack),
-                    new SqlParameter("@Defence", item.Defence),
-                    new SqlParameter("@Luck", item.Luck),
-                    new SqlParameter("@Agility", item.Agility),
-                    new SqlParameter("@Blood", item.Blood),
-                    new SqlParameter("@Damage", item.Damage),
-                    new SqlParameter("@Guard", item.Guard),
-                    new SqlParameter("@AttackGrow", item.AttackGrow),
-                    new SqlParameter("@DefenceGrow", item.DefenceGrow),
-                    new SqlParameter("@LuckGrow", item.LuckGrow),
-                    new SqlParameter("@AgilityGrow", item.AgilityGrow),
-                    new SqlParameter("@BloodGrow", item.BloodGrow),
-                    new SqlParameter("@DamageGrow", item.DamageGrow),
-                    new SqlParameter("@GuardGrow", item.GuardGrow),
-                    new SqlParameter("@Level", item.Level),
-                    new SqlParameter("@GP", item.GP),
-                    new SqlParameter("@MaxGP", item.MaxGP),
-                    new SqlParameter("@Hunger", item.Hunger),
-                    new SqlParameter("@PetHappyStar", item.PetHappyStar),
-                    new SqlParameter("@MP", item.MP),
-                    new SqlParameter("@IsEquip", item.IsEquip),
-                    new SqlParameter("@Place", item.Place),
-                    new SqlParameter("@IsExit", item.IsExit),
-                    new SqlParameter("@ID", item.ID),
-                    new SqlParameter("@Skill", item.Skill),
-                    new SqlParameter("@SkillEquip", item.SkillEquip),
-                    new SqlParameter("@currentStarExp", item.currentStarExp),
-                    new SqlParameter("@Result", SqlDbType.Int),
+                    new("@TemplateID", item.TemplateID),
+                    new("@Name", item.Name ?? "Error!"),
+                    new("@UserID", item.UserID),
+                    new("@Attack", item.Attack),
+                    new("@Defence", item.Defence),
+                    new("@Luck", item.Luck),
+                    new("@Agility", item.Agility),
+                    new("@Blood", item.Blood),
+                    new("@Damage", item.Damage),
+                    new("@Guard", item.Guard),
+                    new("@AttackGrow", item.AttackGrow),
+                    new("@DefenceGrow", item.DefenceGrow),
+                    new("@LuckGrow", item.LuckGrow),
+                    new("@AgilityGrow", item.AgilityGrow),
+                    new("@BloodGrow", item.BloodGrow),
+                    new("@DamageGrow", item.DamageGrow),
+                    new("@GuardGrow", item.GuardGrow),
+                    new("@Level", item.Level),
+                    new("@GP", item.GP),
+                    new("@MaxGP", item.MaxGP),
+                    new("@Hunger", item.Hunger),
+                    new("@PetHappyStar", item.PetHappyStar),
+                    new("@MP", item.MP),
+                    new("@IsEquip", item.IsEquip),
+                    new("@Place", item.Place),
+                    new("@IsExit", item.IsExit),
+                    new("@ID", item.ID),
+                    new("@Skill", item.Skill),
+                    new("@SkillEquip", item.SkillEquip),
+                    new("@currentStarExp", item.currentStarExp),
+                    new("@Result", SqlDbType.Int),
                     null,
                     null,
                     null,
@@ -6895,7 +6928,7 @@ namespace Bussiness
                 SqlParameters[36] = new SqlParameter("@breakBlood", item.breakBlood);
                 SqlParameters[37] = new SqlParameter("@eQPets", item.eQPets);
                 SqlParameters[38] = new SqlParameter("@BaseProp", item.BaseProp);
-                db.RunProcedure("SP_UserPet_Update", SqlParameters);
+                _ = db.RunProcedure("SP_UserPet_Update", SqlParameters);
                 flag = (int)SqlParameters[30].Value == 0;
                 return flag;
             }
@@ -6917,35 +6950,35 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[39]
                 {
-                    new SqlParameter("@TemplateID", item.TemplateID),
-                    new SqlParameter("@Name", (item.Name == null) ? "Error!" : item.Name),
-                    new SqlParameter("@UserID", item.UserID),
-                    new SqlParameter("@Attack", item.Attack),
-                    new SqlParameter("@Defence", item.Defence),
-                    new SqlParameter("@Luck", item.Luck),
-                    new SqlParameter("@Agility", item.Agility),
-                    new SqlParameter("@Blood", item.Blood),
-                    new SqlParameter("@Damage", item.Damage),
-                    new SqlParameter("@Guard", item.Guard),
-                    new SqlParameter("@AttackGrow", item.AttackGrow),
-                    new SqlParameter("@DefenceGrow", item.DefenceGrow),
-                    new SqlParameter("@LuckGrow", item.LuckGrow),
-                    new SqlParameter("@AgilityGrow", item.AgilityGrow),
-                    new SqlParameter("@BloodGrow", item.BloodGrow),
-                    new SqlParameter("@DamageGrow", item.DamageGrow),
-                    new SqlParameter("@GuardGrow", item.GuardGrow),
-                    new SqlParameter("@Level", item.Level),
-                    new SqlParameter("@GP", item.GP),
-                    new SqlParameter("@MaxGP", item.MaxGP),
-                    new SqlParameter("@Hunger", item.Hunger),
-                    new SqlParameter("@PetHappyStar", item.PetHappyStar),
-                    new SqlParameter("@MP", item.MP),
-                    new SqlParameter("@IsEquip", item.IsEquip),
-                    new SqlParameter("@Skill", item.Skill),
-                    new SqlParameter("@SkillEquip", item.SkillEquip),
-                    new SqlParameter("@Place", item.Place),
-                    new SqlParameter("@IsExit", item.IsExit),
-                    new SqlParameter("@ID", item.ID),
+                    new("@TemplateID", item.TemplateID),
+                    new("@Name", item.Name ?? "Error!"),
+                    new("@UserID", item.UserID),
+                    new("@Attack", item.Attack),
+                    new("@Defence", item.Defence),
+                    new("@Luck", item.Luck),
+                    new("@Agility", item.Agility),
+                    new("@Blood", item.Blood),
+                    new("@Damage", item.Damage),
+                    new("@Guard", item.Guard),
+                    new("@AttackGrow", item.AttackGrow),
+                    new("@DefenceGrow", item.DefenceGrow),
+                    new("@LuckGrow", item.LuckGrow),
+                    new("@AgilityGrow", item.AgilityGrow),
+                    new("@BloodGrow", item.BloodGrow),
+                    new("@DamageGrow", item.DamageGrow),
+                    new("@GuardGrow", item.GuardGrow),
+                    new("@Level", item.Level),
+                    new("@GP", item.GP),
+                    new("@MaxGP", item.MaxGP),
+                    new("@Hunger", item.Hunger),
+                    new("@PetHappyStar", item.PetHappyStar),
+                    new("@MP", item.MP),
+                    new("@IsEquip", item.IsEquip),
+                    new("@Skill", item.Skill),
+                    new("@SkillEquip", item.SkillEquip),
+                    new("@Place", item.Place),
+                    new("@IsExit", item.IsExit),
+                    new("@ID", item.ID),
                     null,
                     null,
                     null,
@@ -6959,8 +6992,10 @@ namespace Bussiness
                 };
                 SqlParameters[28].Direction = ParameterDirection.Output;
                 SqlParameters[29] = new SqlParameter("@currentStarExp", item.currentStarExp);
-                SqlParameters[30] = new SqlParameter("@Result", SqlDbType.Int);
-                SqlParameters[30].Direction = ParameterDirection.ReturnValue;
+                SqlParameters[30] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
                 SqlParameters[31] = new SqlParameter("@breakGrade", item.breakGrade);
                 SqlParameters[32] = new SqlParameter("@breakAttack", item.breakAttack);
                 SqlParameters[33] = new SqlParameter("@breakDefence", item.breakDefence);
@@ -7025,8 +7060,8 @@ namespace Bussiness
                 breakAgility = (int)reader["breakAgility"],
                 breakLuck = (int)reader["breakLuck"],
                 breakBlood = (int)reader["breakBlood"],
-                eQPets = ((reader["eQPets"] == null) ? "" : reader["eQPets"].ToString()),
-                BaseProp = ((reader["BaseProp"] == null) ? "" : reader["BaseProp"].ToString())
+                eQPets = (reader["eQPets"] == null) ? "" : reader["eQPets"].ToString(),
+                BaseProp = (reader["BaseProp"] == null) ? "" : reader["BaseProp"].ToString()
             };
         }
 
@@ -7069,8 +7104,10 @@ namespace Bussiness
                 SqlParameters[28] = new SqlParameter("@Defence", defence);
                 SqlParameters[29] = new SqlParameter("@Agility", agility);
                 SqlParameters[30] = new SqlParameter("@Luck", luck);
-                SqlParameters[20] = new SqlParameter("@Result", SqlDbType.Int);
-                SqlParameters[20].Direction = ParameterDirection.ReturnValue;
+                SqlParameters[20] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
                 flag = db.RunProcedure("SP_Users_RegisterNotValidate2", SqlParameters);
                 int num = (int)SqlParameters[20].Value;
                 flag = num == 0;
@@ -7105,10 +7142,10 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@Result", SqlDbType.Int)
                 };
                 SqlParameters[0].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Update_Repute_FightPower", SqlParameters);
+                _ = db.RunProcedure("SP_Update_Repute_FightPower", SqlParameters);
                 flag = (int)SqlParameters[0].Value == 0;
                 return flag;
             }
@@ -7125,11 +7162,11 @@ namespace Bussiness
 
         public UsersExtraInfo[] GetRankCaddy()
         {
-            List<UsersExtraInfo> userExtraInfoList = new List<UsersExtraInfo>();
+            List<UsersExtraInfo> userExtraInfoList = [];
             SqlDataReader ResultDataReader = null;
             try
             {
-                db.GetReader(ref ResultDataReader, "SP_Get_Rank_Caddy");
+                _ = db.GetReader(ref ResultDataReader, "SP_Get_Rank_Caddy");
                 while (ResultDataReader.Read())
                 {
                     userExtraInfoList.Add(new UsersExtraInfo
@@ -7164,10 +7201,10 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[1]
                 {
-                    new SqlParameter("@ID", SqlDbType.Int, 4)
+                    new("@ID", SqlDbType.Int, 4)
                 };
                 SqlParameters[0].Value = ID;
-                db.GetReader(ref ResultDataReader, "SP_GetSingleLabyrinth", SqlParameters);
+                _ = db.GetReader(ref ResultDataReader, "SP_GetSingleLabyrinth", SqlParameters);
                 if (ResultDataReader.Read())
                 {
                     return new UserLabyrinthInfo
@@ -7216,27 +7253,27 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[18]
                 {
-                    new SqlParameter("@UserID", laby.UserID),
-                    new SqlParameter("@myProgress", laby.myProgress),
-                    new SqlParameter("@myRanking", laby.myRanking),
-                    new SqlParameter("@completeChallenge", laby.completeChallenge),
-                    new SqlParameter("@isDoubleAward", laby.isDoubleAward),
-                    new SqlParameter("@currentFloor", laby.currentFloor),
-                    new SqlParameter("@accumulateExp", laby.accumulateExp),
-                    new SqlParameter("@remainTime", laby.remainTime),
-                    new SqlParameter("@currentRemainTime", laby.currentRemainTime),
-                    new SqlParameter("@cleanOutAllTime", laby.cleanOutAllTime),
-                    new SqlParameter("@cleanOutGold", laby.cleanOutGold),
-                    new SqlParameter("@tryAgainComplete", laby.tryAgainComplete),
-                    new SqlParameter("@isInGame", laby.isInGame),
-                    new SqlParameter("@isCleanOut", laby.isCleanOut),
-                    new SqlParameter("@serverMultiplyingPower", laby.serverMultiplyingPower),
-                    new SqlParameter("@LastDate", laby.LastDate),
-                    new SqlParameter("@ProcessAward", laby.ProcessAward),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", laby.UserID),
+                    new("@myProgress", laby.myProgress),
+                    new("@myRanking", laby.myRanking),
+                    new("@completeChallenge", laby.completeChallenge),
+                    new("@isDoubleAward", laby.isDoubleAward),
+                    new("@currentFloor", laby.currentFloor),
+                    new("@accumulateExp", laby.accumulateExp),
+                    new("@remainTime", laby.remainTime),
+                    new("@currentRemainTime", laby.currentRemainTime),
+                    new("@cleanOutAllTime", laby.cleanOutAllTime),
+                    new("@cleanOutGold", laby.cleanOutGold),
+                    new("@tryAgainComplete", laby.tryAgainComplete),
+                    new("@isInGame", laby.isInGame),
+                    new("@isCleanOut", laby.isCleanOut),
+                    new("@serverMultiplyingPower", laby.serverMultiplyingPower),
+                    new("@LastDate", laby.LastDate),
+                    new("@ProcessAward", laby.ProcessAward),
+                    new("@Result", SqlDbType.Int)
                 };
                 SqlParameters[17].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Users_Labyrinth_Add", SqlParameters);
+                _ = db.RunProcedure("SP_Users_Labyrinth_Add", SqlParameters);
                 flag = (int)SqlParameters[17].Value == 0;
                 return flag;
             }
@@ -7258,27 +7295,27 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[18]
                 {
-                    new SqlParameter("@UserID", laby.UserID),
-                    new SqlParameter("@myProgress", laby.myProgress),
-                    new SqlParameter("@myRanking", laby.myRanking),
-                    new SqlParameter("@completeChallenge", laby.completeChallenge),
-                    new SqlParameter("@isDoubleAward", laby.isDoubleAward),
-                    new SqlParameter("@currentFloor", laby.currentFloor),
-                    new SqlParameter("@accumulateExp", laby.accumulateExp),
-                    new SqlParameter("@remainTime", laby.remainTime),
-                    new SqlParameter("@currentRemainTime", laby.currentRemainTime),
-                    new SqlParameter("@cleanOutAllTime", laby.cleanOutAllTime),
-                    new SqlParameter("@cleanOutGold", laby.cleanOutGold),
-                    new SqlParameter("@tryAgainComplete", laby.tryAgainComplete),
-                    new SqlParameter("@isInGame", laby.isInGame),
-                    new SqlParameter("@isCleanOut", laby.isCleanOut),
-                    new SqlParameter("@serverMultiplyingPower", laby.serverMultiplyingPower),
-                    new SqlParameter("@LastDate", laby.LastDate),
-                    new SqlParameter("@ProcessAward", laby.ProcessAward),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", laby.UserID),
+                    new("@myProgress", laby.myProgress),
+                    new("@myRanking", laby.myRanking),
+                    new("@completeChallenge", laby.completeChallenge),
+                    new("@isDoubleAward", laby.isDoubleAward),
+                    new("@currentFloor", laby.currentFloor),
+                    new("@accumulateExp", laby.accumulateExp),
+                    new("@remainTime", laby.remainTime),
+                    new("@currentRemainTime", laby.currentRemainTime),
+                    new("@cleanOutAllTime", laby.cleanOutAllTime),
+                    new("@cleanOutGold", laby.cleanOutGold),
+                    new("@tryAgainComplete", laby.tryAgainComplete),
+                    new("@isInGame", laby.isInGame),
+                    new("@isCleanOut", laby.isCleanOut),
+                    new("@serverMultiplyingPower", laby.serverMultiplyingPower),
+                    new("@LastDate", laby.LastDate),
+                    new("@ProcessAward", laby.ProcessAward),
+                    new("@Result", SqlDbType.Int)
                 };
                 SqlParameters[17].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UpdateLabyrinthInfo", SqlParameters);
+                _ = db.RunProcedure("SP_UpdateLabyrinthInfo", SqlParameters);
                 flag = true;
                 return flag;
             }
@@ -7295,16 +7332,16 @@ namespace Bussiness
 
         public UserGiftInfo[] GetAllUserGifts(int userid, bool isReceive)
         {
-            List<UserGiftInfo> userGiftInfoList = new List<UserGiftInfo>();
+            List<UserGiftInfo> userGiftInfoList = [];
             SqlDataReader ResultDataReader = null;
             try
             {
                 SqlParameter[] SqlParameters = new SqlParameter[2]
                 {
-                    new SqlParameter("@UserID", userid),
-                    new SqlParameter("@IsReceive", isReceive)
+                    new("@UserID", userid),
+                    new("@IsReceive", isReceive)
                 };
-                db.GetReader(ref ResultDataReader, "SP_Users_Gift_Single", SqlParameters);
+                _ = db.GetReader(ref ResultDataReader, "SP_Users_Gift_Single", SqlParameters);
                 while (ResultDataReader.Read())
                 {
                     userGiftInfoList.Add(new UserGiftInfo
@@ -7338,7 +7375,7 @@ namespace Bussiness
 
         public UserGiftInfo[] GetAllUserReceivedGifts(int userid)
         {
-            Dictionary<int, UserGiftInfo> dictionary = new Dictionary<int, UserGiftInfo>();
+            Dictionary<int, UserGiftInfo> dictionary = [];
             SqlDataReader sqlDataReader = null;
             try
             {
@@ -7382,12 +7419,12 @@ namespace Bussiness
             bool flag = false;
             try
             {
-                db.RunProcedure("SP_Users_Gift_Add", new SqlParameter[4]
+                _ = db.RunProcedure("SP_Users_Gift_Add", new SqlParameter[4]
                 {
-                    new SqlParameter("@SenderID", info.SenderID),
-                    new SqlParameter("@ReceiverID", info.ReceiverID),
-                    new SqlParameter("@TemplateID", info.TemplateID),
-                    new SqlParameter("@Count", info.Count)
+                    new("@SenderID", info.SenderID),
+                    new("@ReceiverID", info.ReceiverID),
+                    new("@TemplateID", info.TemplateID),
+                    new("@Count", info.Count)
                 });
                 flag = true;
                 return flag;
@@ -7410,12 +7447,12 @@ namespace Bussiness
             {
                 SqlParameter[] SqlParameters = new SqlParameter[3]
                 {
-                    new SqlParameter("@UserID", userId),
-                    new SqlParameter("@CharmGP", int_1),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@UserID", userId),
+                    new("@CharmGP", int_1),
+                    new("@Result", SqlDbType.Int)
                 };
                 SqlParameters[2].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Users_UpdateCharmGP", SqlParameters);
+                _ = db.RunProcedure("SP_Users_UpdateCharmGP", SqlParameters);
                 flag = (int)SqlParameters[2].Value == 0;
                 return flag;
             }
@@ -7437,7 +7474,7 @@ namespace Bussiness
             {
                 return db.RunProcedure("SP_EliteGame_Reset", new SqlParameter[1]
                 {
-                    new SqlParameter("@EliteScore", point)
+                    new("@EliteScore", point)
                 });
             }
             catch (Exception ex)
@@ -7458,10 +7495,10 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[1]
                 {
-                    new SqlParameter("@ID", SqlDbType.Int, 4)
+                    new("@ID", SqlDbType.Int, 4)
                 };
                 para[0].Value = ID;
-                db.GetReader(ref reader, "SP_Sys_Eat_Pets_All", para);
+                _ = db.GetReader(ref reader, "SP_Sys_Eat_Pets_All", para);
                 if (reader.Read())
                 {
                     return InitEatPetsInfo(reader);
@@ -7486,15 +7523,17 @@ namespace Bussiness
 
         public EatPetsInfo InitEatPetsInfo(SqlDataReader dr)
         {
-            EatPetsInfo info = new EatPetsInfo();
-            info.ID = (int)dr["ID"];
-            info.UserID = (int)dr["UserID"];
-            info.weaponExp = (int)dr["weaponExp"];
-            info.weaponLevel = (int)dr["weaponLevel"];
-            info.clothesExp = (int)dr["clothesExp"];
-            info.clothesLevel = (int)dr["clothesLevel"];
-            info.hatExp = (int)dr["hatExp"];
-            info.hatLevel = (int)dr["hatLevel"];
+            EatPetsInfo info = new()
+            {
+                ID = (int)dr["ID"],
+                UserID = (int)dr["UserID"],
+                weaponExp = (int)dr["weaponExp"],
+                weaponLevel = (int)dr["weaponLevel"],
+                clothesExp = (int)dr["clothesExp"],
+                clothesLevel = (int)dr["clothesLevel"],
+                hatExp = (int)dr["hatExp"],
+                hatLevel = (int)dr["hatLevel"]
+            };
             return info;
         }
 
@@ -7505,14 +7544,14 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[8]
                 {
-                    new SqlParameter("@ID", info.ID),
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@weaponExp", info.weaponExp),
-                    new SqlParameter("@weaponLevel", info.weaponLevel),
-                    new SqlParameter("@clothesExp", info.clothesExp),
-                    new SqlParameter("@clothesLevel", info.clothesLevel),
-                    new SqlParameter("@hatExp", info.hatExp),
-                    new SqlParameter("@hatLevel", info.hatLevel)
+                    new("@ID", info.ID),
+                    new("@UserID", info.UserID),
+                    new("@weaponExp", info.weaponExp),
+                    new("@weaponLevel", info.weaponLevel),
+                    new("@clothesExp", info.clothesExp),
+                    new("@clothesLevel", info.clothesLevel),
+                    new("@hatExp", info.hatExp),
+                    new("@hatLevel", info.hatLevel)
                 };
                 result = db.RunProcedure("SP_Sys_Eat_Pets_Update", para);
             }
@@ -7533,14 +7572,14 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[8]
                 {
-                    new SqlParameter("@ID", info.ID),
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@weaponExp", info.weaponExp),
-                    new SqlParameter("@weaponLevel", info.weaponLevel),
-                    new SqlParameter("@clothesExp", info.clothesExp),
-                    new SqlParameter("@clothesLevel", info.clothesLevel),
-                    new SqlParameter("@hatExp", info.hatExp),
-                    new SqlParameter("@hatLevel", info.hatLevel)
+                    new("@ID", info.ID),
+                    new("@UserID", info.UserID),
+                    new("@weaponExp", info.weaponExp),
+                    new("@weaponLevel", info.weaponLevel),
+                    new("@clothesExp", info.clothesExp),
+                    new("@clothesLevel", info.clothesLevel),
+                    new("@hatExp", info.hatExp),
+                    new("@hatLevel", info.hatLevel)
                 };
                 para[0].Direction = ParameterDirection.Output;
                 result = db.RunProcedure("SP_Sys_Eat_Pets_Add", para);
@@ -7559,16 +7598,16 @@ namespace Bussiness
 
         public Suit_Manager Get_Suit_Manager(int UserID)
         {
-            Suit_Manager items = new Suit_Manager();
+            Suit_Manager items = new();
             SqlDataReader reader = null;
             try
             {
                 SqlParameter[] para2 = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 para2[0].Value = UserID;
-                db.GetReader(ref reader, "SP_Suit_Manager_GET", para2);
+                _ = db.GetReader(ref reader, "SP_Suit_Manager_GET", para2);
                 while (reader.Read())
                 {
                     items.UserID = (int)reader["UserID"];
@@ -7597,9 +7636,9 @@ namespace Bussiness
                     {
                         SqlParameter[] para = new SqlParameter[1]
                         {
-                            new SqlParameter("@UserID", UserID)
+                            new("@UserID", UserID)
                         };
-                        db.RunProcedure("SP_Suit_Manager_ADD", para);
+                        _ = db.RunProcedure("SP_Suit_Manager_ADD", para);
                     }
                     catch (Exception e)
                     {
@@ -7645,12 +7684,12 @@ namespace Bussiness
 
         public UserRankDateInfo[] GetAllUserRankDate()
         {
-            List<UserRankDateInfo> list = new List<UserRankDateInfo>();
+            List<UserRankDateInfo> list = [];
             SqlDataReader reader = null;
             try
             {
                 SqlParameter[] para = new SqlParameter[0];
-                db.GetReader(ref reader, "SP_Sys_Users_Rank_Date_All", para);
+                _ = db.GetReader(ref reader, "SP_Sys_Users_Rank_Date_All", para);
                 while (reader.Read())
                 {
                     list.Add(InitUserRankDateInfo(reader));
@@ -7680,10 +7719,10 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 para[0].Value = userID;
-                db.GetReader(ref reader, "SP_Sys_Users_Rank_Date", para);
+                _ = db.GetReader(ref reader, "SP_Sys_Users_Rank_Date", para);
                 if (reader.Read())
                 {
                     return InitUserRankDateInfo(reader);
@@ -7708,73 +7747,77 @@ namespace Bussiness
 
         public UserRankDateInfo InitUserRankDateInfo(SqlDataReader dr)
         {
-            UserRankDateInfo info = new UserRankDateInfo();
-            info.UserID = (int)dr["UserID"];
-            info.ConsortiaID = (int)dr["ConsortiaID"];
-            info.FightPower = (int)dr["FightPower"];
-            info.PrevFightPower = (int)dr["PrevFightPower"];
-            info.GP = (int)dr["GP"];
-            info.PrevGP = (int)dr["PrevGP"];
-            info.AchievementPoint = (int)dr["AchievementPoint"];
-            info.PrevAchievementPoint = (int)dr["PrevAchievementPoint"];
-            info.charmGP = (int)dr["charmGP"];
-            info.PrecharmGP = (int)dr["PrecharmGP"];
-            info.LeagueAddWeek = (int)dr["LeagueAddWeek"];
-            info.PrevLeagueAddWeek = (int)dr["PrevLeagueAddWeek"];
-            info.ConsortiaFightPower = (int)dr["ConsortiaFightPower"];
-            info.ConsortiaPrevFightPower = (int)dr["ConsortiaPrevFightPower"];
-            info.ConsortiaLevel = (int)dr["ConsortiaLevel"];
-            info.ConsortiaPrevLevel = (int)dr["ConsortiaPrevLevel"];
-            info.ConsortiaRiches = (int)dr["ConsortiaRiches"];
-            info.ConsortiaPrevRiches = (int)dr["ConsortiaPrevRiches"];
-            info.ConsortiacharmGP = (int)dr["ConsortiacharmGP"];
-            info.ConsortiaPrevcharmGP = (int)dr["ConsortiaPrevcharmGP"];
+            UserRankDateInfo info = new()
+            {
+                UserID = (int)dr["UserID"],
+                ConsortiaID = (int)dr["ConsortiaID"],
+                FightPower = (int)dr["FightPower"],
+                PrevFightPower = (int)dr["PrevFightPower"],
+                GP = (int)dr["GP"],
+                PrevGP = (int)dr["PrevGP"],
+                AchievementPoint = (int)dr["AchievementPoint"],
+                PrevAchievementPoint = (int)dr["PrevAchievementPoint"],
+                charmGP = (int)dr["charmGP"],
+                PrecharmGP = (int)dr["PrecharmGP"],
+                LeagueAddWeek = (int)dr["LeagueAddWeek"],
+                PrevLeagueAddWeek = (int)dr["PrevLeagueAddWeek"],
+                ConsortiaFightPower = (int)dr["ConsortiaFightPower"],
+                ConsortiaPrevFightPower = (int)dr["ConsortiaPrevFightPower"],
+                ConsortiaLevel = (int)dr["ConsortiaLevel"],
+                ConsortiaPrevLevel = (int)dr["ConsortiaPrevLevel"],
+                ConsortiaRiches = (int)dr["ConsortiaRiches"],
+                ConsortiaPrevRiches = (int)dr["ConsortiaPrevRiches"],
+                ConsortiacharmGP = (int)dr["ConsortiacharmGP"],
+                ConsortiaPrevcharmGP = (int)dr["ConsortiaPrevcharmGP"]
+            };
             return info;
         }
 
         public UsersPetInfo[] GetUserAdoptPetSingles(int UserID)
         {
-            List<UsersPetInfo> items = new List<UsersPetInfo>();
+            List<UsersPetInfo> items = [];
             SqlDataReader reader = null;
             try
             {
                 SqlParameter[] para = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 para[0].Value = UserID;
-                db.GetReader(ref reader, "SP_Get_User_AdoptPetList", para);
+                _ = db.GetReader(ref reader, "SP_Get_User_AdoptPetList", para);
                 while (reader.Read())
                 {
-                    UsersPetInfo info = new UsersPetInfo();
-                    info.ID = (int)reader["ID"];
-                    info.TemplateID = (int)reader["TemplateID"];
-                    info.Name = reader["Name"].ToString();
-                    info.UserID = (int)reader["UserID"];
-                    info.Attack = (int)reader["Attack"];
-                    info.AttackGrow = (int)reader["AttackGrow"];
-                    info.Agility = (int)reader["Agility"];
-                    info.AgilityGrow = (int)reader["AgilityGrow"];
-                    info.Defence = (int)reader["Defence"];
-                    info.DefenceGrow = (int)reader["DefenceGrow"];
-                    info.Luck = (int)reader["Luck"];
-                    info.LuckGrow = (int)reader["LuckGrow"];
-                    info.Blood = (int)reader["Blood"];
-                    info.BloodGrow = (int)reader["BloodGrow"];
-                    info.Damage = (int)reader["Damage"];
-                    info.DamageGrow = (int)reader["DamageGrow"];
-                    info.Guard = (int)reader["Guard"];
-                    info.GuardGrow = (int)reader["GuardGrow"];
-                    info.Level = (int)reader["Level"];
-                    info.GP = (int)reader["GP"];
-                    info.MaxGP = (int)reader["MaxGP"];
-                    info.Hunger = (int)reader["Hunger"];
-                    info.MP = (int)reader["MP"];
-                    info.Place = (int)reader["Place"];
-                    info.IsEquip = (bool)reader["IsEquip"];
-                    info.IsExit = (bool)reader["IsExit"];
-                    info.Skill = reader["Skill"].ToString();
-                    info.SkillEquip = reader["SkillEquip"].ToString();
+                    UsersPetInfo info = new()
+                    {
+                        ID = (int)reader["ID"],
+                        TemplateID = (int)reader["TemplateID"],
+                        Name = reader["Name"].ToString(),
+                        UserID = (int)reader["UserID"],
+                        Attack = (int)reader["Attack"],
+                        AttackGrow = (int)reader["AttackGrow"],
+                        Agility = (int)reader["Agility"],
+                        AgilityGrow = (int)reader["AgilityGrow"],
+                        Defence = (int)reader["Defence"],
+                        DefenceGrow = (int)reader["DefenceGrow"],
+                        Luck = (int)reader["Luck"],
+                        LuckGrow = (int)reader["LuckGrow"],
+                        Blood = (int)reader["Blood"],
+                        BloodGrow = (int)reader["BloodGrow"],
+                        Damage = (int)reader["Damage"],
+                        DamageGrow = (int)reader["DamageGrow"],
+                        Guard = (int)reader["Guard"],
+                        GuardGrow = (int)reader["GuardGrow"],
+                        Level = (int)reader["Level"],
+                        GP = (int)reader["GP"],
+                        MaxGP = (int)reader["MaxGP"],
+                        Hunger = (int)reader["Hunger"],
+                        MP = (int)reader["MP"],
+                        Place = (int)reader["Place"],
+                        IsEquip = (bool)reader["IsEquip"],
+                        IsExit = (bool)reader["IsExit"],
+                        Skill = reader["Skill"].ToString(),
+                        SkillEquip = reader["SkillEquip"].ToString()
+                    };
                     items.Add(info);
                 }
             }
@@ -7802,35 +7845,37 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[1]
                 {
-                    new SqlParameter("@ID", SqlDbType.Int, 4)
+                    new("@ID", SqlDbType.Int, 4)
                 };
                 para[0].Value = Id;
-                db.GetReader(ref reader, "SP_Get_SingleFarm", para);
+                _ = db.GetReader(ref reader, "SP_Get_SingleFarm", para);
                 if (reader.Read())
                 {
-                    UserFarmInfo infos = new UserFarmInfo();
-                    infos.ID = (int)reader["ID"];
-                    infos.FarmID = (int)reader["FarmID"];
-                    infos.PayFieldMoney = (string)reader["PayFieldMoney"];
-                    infos.PayAutoMoney = (string)reader["PayAutoMoney"];
-                    infos.AutoPayTime = (DateTime)reader["AutoPayTime"];
-                    infos.AutoValidDate = (int)reader["AutoValidDate"];
-                    infos.VipLimitLevel = (int)reader["VipLimitLevel"];
-                    infos.FarmerName = (string)reader["FarmerName"];
-                    infos.GainFieldId = (int)reader["GainFieldId"];
-                    infos.MatureId = (int)reader["MatureId"];
-                    infos.KillCropId = (int)reader["KillCropId"];
-                    infos.isAutoId = (int)reader["isAutoId"];
-                    infos.isFarmHelper = (bool)reader["isFarmHelper"];
-                    infos.buyExpRemainNum = (int)reader["buyExpRemainNum"];
-                    infos.isArrange = (bool)reader["isArrange"];
-                    infos.TreeLevel = (int)reader["TreeLevel"];
-                    infos.TreeExp = (int)reader["TreeExp"];
-                    infos.LoveScore = (int)reader["LoveScore"];
-                    infos.MonsterExp = (int)reader["MonsterExp"];
-                    infos.PoultryState = (int)reader["PoultryState"];
-                    infos.CountDownTime = (DateTime)reader["CountDownTime"];
-                    infos.TreeCostExp = (int)reader["TreeCostExp"];
+                    UserFarmInfo infos = new()
+                    {
+                        ID = (int)reader["ID"],
+                        FarmID = (int)reader["FarmID"],
+                        PayFieldMoney = (string)reader["PayFieldMoney"],
+                        PayAutoMoney = (string)reader["PayAutoMoney"],
+                        AutoPayTime = (DateTime)reader["AutoPayTime"],
+                        AutoValidDate = (int)reader["AutoValidDate"],
+                        VipLimitLevel = (int)reader["VipLimitLevel"],
+                        FarmerName = (string)reader["FarmerName"],
+                        GainFieldId = (int)reader["GainFieldId"],
+                        MatureId = (int)reader["MatureId"],
+                        KillCropId = (int)reader["KillCropId"],
+                        isAutoId = (int)reader["isAutoId"],
+                        isFarmHelper = (bool)reader["isFarmHelper"],
+                        buyExpRemainNum = (int)reader["buyExpRemainNum"],
+                        isArrange = (bool)reader["isArrange"],
+                        TreeLevel = (int)reader["TreeLevel"],
+                        TreeExp = (int)reader["TreeExp"],
+                        LoveScore = (int)reader["LoveScore"],
+                        MonsterExp = (int)reader["MonsterExp"],
+                        PoultryState = (int)reader["PoultryState"],
+                        CountDownTime = (DateTime)reader["CountDownTime"],
+                        TreeCostExp = (int)reader["TreeCostExp"]
+                    };
                     return infos;
                 }
             }
@@ -7858,19 +7903,19 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[22]
                 {
-                    new SqlParameter("@FarmID", info.FarmID),
-                    new SqlParameter("@PayFieldMoney", info.PayFieldMoney),
-                    new SqlParameter("@PayAutoMoney", info.PayAutoMoney),
-                    new SqlParameter("@AutoPayTime", info.AutoPayTime),
-                    new SqlParameter("@AutoValidDate", info.AutoValidDate),
-                    new SqlParameter("@VipLimitLevel", info.VipLimitLevel),
-                    new SqlParameter("@FarmerName", info.FarmerName),
-                    new SqlParameter("@GainFieldId", info.GainFieldId),
-                    new SqlParameter("@MatureId", info.MatureId),
-                    new SqlParameter("@KillCropId", info.KillCropId),
-                    new SqlParameter("@isAutoId", info.isAutoId),
-                    new SqlParameter("@isFarmHelper", info.isFarmHelper),
-                    new SqlParameter("@ID", info.ID),
+                    new("@FarmID", info.FarmID),
+                    new("@PayFieldMoney", info.PayFieldMoney),
+                    new("@PayAutoMoney", info.PayAutoMoney),
+                    new("@AutoPayTime", info.AutoPayTime),
+                    new("@AutoValidDate", info.AutoValidDate),
+                    new("@VipLimitLevel", info.VipLimitLevel),
+                    new("@FarmerName", info.FarmerName),
+                    new("@GainFieldId", info.GainFieldId),
+                    new("@MatureId", info.MatureId),
+                    new("@KillCropId", info.KillCropId),
+                    new("@isAutoId", info.isAutoId),
+                    new("@isFarmHelper", info.isFarmHelper),
+                    new("@ID", info.ID),
                     null,
                     null,
                     null,
@@ -7915,28 +7960,28 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[22]
                 {
-                    new SqlParameter("@ID", info.ID),
-                    new SqlParameter("@FarmID", info.FarmID),
-                    new SqlParameter("@PayFieldMoney", info.PayFieldMoney),
-                    new SqlParameter("@PayAutoMoney", info.PayAutoMoney),
-                    new SqlParameter("@AutoPayTime", info.AutoPayTime),
-                    new SqlParameter("@AutoValidDate", info.AutoValidDate),
-                    new SqlParameter("@VipLimitLevel", info.VipLimitLevel),
-                    new SqlParameter("@FarmerName", info.FarmerName),
-                    new SqlParameter("@GainFieldId", info.GainFieldId),
-                    new SqlParameter("@MatureId", info.MatureId),
-                    new SqlParameter("@KillCropId", info.KillCropId),
-                    new SqlParameter("@isAutoId", info.isAutoId),
-                    new SqlParameter("@isFarmHelper", info.isFarmHelper),
-                    new SqlParameter("@buyExpRemainNum", info.buyExpRemainNum),
-                    new SqlParameter("@isArrange", info.isArrange),
-                    new SqlParameter("@TreeLevel", info.TreeLevel),
-                    new SqlParameter("@TreeExp", info.TreeExp),
-                    new SqlParameter("@LoveScore", info.LoveScore),
-                    new SqlParameter("@MonsterExp", info.MonsterExp),
-                    new SqlParameter("@PoultryState", info.PoultryState),
-                    new SqlParameter("@CountDownTime", info.CountDownTime),
-                    new SqlParameter("@TreeCostExp", info.TreeCostExp)
+                    new("@ID", info.ID),
+                    new("@FarmID", info.FarmID),
+                    new("@PayFieldMoney", info.PayFieldMoney),
+                    new("@PayAutoMoney", info.PayAutoMoney),
+                    new("@AutoPayTime", info.AutoPayTime),
+                    new("@AutoValidDate", info.AutoValidDate),
+                    new("@VipLimitLevel", info.VipLimitLevel),
+                    new("@FarmerName", info.FarmerName),
+                    new("@GainFieldId", info.GainFieldId),
+                    new("@MatureId", info.MatureId),
+                    new("@KillCropId", info.KillCropId),
+                    new("@isAutoId", info.isAutoId),
+                    new("@isFarmHelper", info.isFarmHelper),
+                    new("@buyExpRemainNum", info.buyExpRemainNum),
+                    new("@isArrange", info.isArrange),
+                    new("@TreeLevel", info.TreeLevel),
+                    new("@TreeExp", info.TreeExp),
+                    new("@LoveScore", info.LoveScore),
+                    new("@MonsterExp", info.MonsterExp),
+                    new("@PoultryState", info.PoultryState),
+                    new("@CountDownTime", info.CountDownTime),
+                    new("@TreeCostExp", info.TreeCostExp)
                 };
                 result = db.RunProcedure("SP_Users_Farm_Update", para);
             }
@@ -7952,36 +7997,38 @@ namespace Bussiness
 
         public UserFieldInfo[] GetSingleFields(int ID)
         {
-            List<UserFieldInfo> infos = new List<UserFieldInfo>();
+            List<UserFieldInfo> infos = [];
             SqlDataReader reader = null;
             try
             {
                 SqlParameter[] para = new SqlParameter[1]
                 {
-                    new SqlParameter("@ID", SqlDbType.Int, 4)
+                    new("@ID", SqlDbType.Int, 4)
                 };
                 para[0].Value = ID;
-                db.GetReader(ref reader, "SP_Get_SingleFields", para);
+                _ = db.GetReader(ref reader, "SP_Get_SingleFields", para);
                 while (reader.Read())
                 {
-                    UserFieldInfo info = new UserFieldInfo();
-                    info.ID = (int)reader["ID"];
-                    info.FarmID = (int)reader["FarmID"];
-                    info.FieldID = (int)reader["FieldID"];
-                    info.SeedID = (int)reader["SeedID"];
-                    info.PlantTime = (DateTime)reader["PlantTime"];
-                    info.AccelerateTime = (int)reader["AccelerateTime"];
-                    info.FieldValidDate = (int)reader["FieldValidDate"];
-                    info.PayTime = (DateTime)reader["PayTime"];
-                    info.GainCount = (int)reader["GainCount"];
-                    info.AutoSeedID = (int)reader["AutoSeedID"];
-                    info.AutoFertilizerID = (int)reader["AutoFertilizerID"];
-                    info.AutoSeedIDCount = (int)reader["AutoSeedIDCount"];
-                    info.AutoFertilizerCount = (int)reader["AutoFertilizerCount"];
-                    info.isAutomatic = (bool)reader["isAutomatic"];
-                    info.AutomaticTime = (DateTime)reader["AutomaticTime"];
-                    info.IsExit = (bool)reader["IsExit"];
-                    info.payFieldTime = (int)reader["payFieldTime"];
+                    UserFieldInfo info = new()
+                    {
+                        ID = (int)reader["ID"],
+                        FarmID = (int)reader["FarmID"],
+                        FieldID = (int)reader["FieldID"],
+                        SeedID = (int)reader["SeedID"],
+                        PlantTime = (DateTime)reader["PlantTime"],
+                        AccelerateTime = (int)reader["AccelerateTime"],
+                        FieldValidDate = (int)reader["FieldValidDate"],
+                        PayTime = (DateTime)reader["PayTime"],
+                        GainCount = (int)reader["GainCount"],
+                        AutoSeedID = (int)reader["AutoSeedID"],
+                        AutoFertilizerID = (int)reader["AutoFertilizerID"],
+                        AutoSeedIDCount = (int)reader["AutoSeedIDCount"],
+                        AutoFertilizerCount = (int)reader["AutoFertilizerCount"],
+                        isAutomatic = (bool)reader["isAutomatic"],
+                        AutomaticTime = (DateTime)reader["AutomaticTime"],
+                        IsExit = (bool)reader["IsExit"],
+                        payFieldTime = (int)reader["payFieldTime"]
+                    };
                     infos.Add(info);
                 }
             }
@@ -8009,23 +8056,23 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[17]
                 {
-                    new SqlParameter("@FarmID", item.FarmID),
-                    new SqlParameter("@FieldID", item.FieldID),
-                    new SqlParameter("@SeedID", item.SeedID),
-                    new SqlParameter("@PlantTime", item.PlantTime),
-                    new SqlParameter("@AccelerateTime", item.AccelerateTime),
-                    new SqlParameter("@FieldValidDate", item.FieldValidDate),
-                    new SqlParameter("@PayTime", item.PayTime),
-                    new SqlParameter("@GainCount", item.GainCount),
-                    new SqlParameter("@AutoSeedID", item.AutoSeedID),
-                    new SqlParameter("@AutoFertilizerID", item.AutoFertilizerID),
-                    new SqlParameter("@AutoSeedIDCount", item.AutoSeedIDCount),
-                    new SqlParameter("@AutoFertilizerCount", item.AutoFertilizerCount),
-                    new SqlParameter("@isAutomatic", item.isAutomatic),
-                    new SqlParameter("@AutomaticTime", item.AutomaticTime),
-                    new SqlParameter("@IsExit", item.IsExit),
-                    new SqlParameter("@payFieldTime", item.payFieldTime),
-                    new SqlParameter("@ID", item.ID)
+                    new("@FarmID", item.FarmID),
+                    new("@FieldID", item.FieldID),
+                    new("@SeedID", item.SeedID),
+                    new("@PlantTime", item.PlantTime),
+                    new("@AccelerateTime", item.AccelerateTime),
+                    new("@FieldValidDate", item.FieldValidDate),
+                    new("@PayTime", item.PayTime),
+                    new("@GainCount", item.GainCount),
+                    new("@AutoSeedID", item.AutoSeedID),
+                    new("@AutoFertilizerID", item.AutoFertilizerID),
+                    new("@AutoSeedIDCount", item.AutoSeedIDCount),
+                    new("@AutoFertilizerCount", item.AutoFertilizerCount),
+                    new("@isAutomatic", item.isAutomatic),
+                    new("@AutomaticTime", item.AutomaticTime),
+                    new("@IsExit", item.IsExit),
+                    new("@payFieldTime", item.payFieldTime),
+                    new("@ID", item.ID)
                 };
                 para[16].Direction = ParameterDirection.Output;
                 result = db.RunProcedure("SP_Users_Fields_Add", para);
@@ -8052,23 +8099,23 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[17]
                 {
-                    new SqlParameter("@ID", info.ID),
-                    new SqlParameter("@FarmID", info.FarmID),
-                    new SqlParameter("@FieldID", info.FieldID),
-                    new SqlParameter("@SeedID", info.SeedID),
-                    new SqlParameter("@PlantTime", info.PlantTime),
-                    new SqlParameter("@AccelerateTime", info.AccelerateTime),
-                    new SqlParameter("@FieldValidDate", info.FieldValidDate),
-                    new SqlParameter("@PayTime", info.PayTime),
-                    new SqlParameter("@GainCount", info.GainCount),
-                    new SqlParameter("@AutoSeedID", info.AutoSeedID),
-                    new SqlParameter("@AutoFertilizerID", info.AutoFertilizerID),
-                    new SqlParameter("@AutoSeedIDCount", info.AutoSeedIDCount),
-                    new SqlParameter("@AutoFertilizerCount", info.AutoFertilizerCount),
-                    new SqlParameter("@isAutomatic", info.isAutomatic),
-                    new SqlParameter("@AutomaticTime", info.AutomaticTime),
-                    new SqlParameter("@IsExit", info.IsExit),
-                    new SqlParameter("@payFieldTime", info.payFieldTime)
+                    new("@ID", info.ID),
+                    new("@FarmID", info.FarmID),
+                    new("@FieldID", info.FieldID),
+                    new("@SeedID", info.SeedID),
+                    new("@PlantTime", info.PlantTime),
+                    new("@AccelerateTime", info.AccelerateTime),
+                    new("@FieldValidDate", info.FieldValidDate),
+                    new("@PayTime", info.PayTime),
+                    new("@GainCount", info.GainCount),
+                    new("@AutoSeedID", info.AutoSeedID),
+                    new("@AutoFertilizerID", info.AutoFertilizerID),
+                    new("@AutoSeedIDCount", info.AutoSeedIDCount),
+                    new("@AutoFertilizerCount", info.AutoFertilizerCount),
+                    new("@isAutomatic", info.isAutomatic),
+                    new("@AutomaticTime", info.AutomaticTime),
+                    new("@IsExit", info.IsExit),
+                    new("@payFieldTime", info.payFieldTime)
                 };
                 result = db.RunProcedure("SP_Users_Fields_Update", para);
             }
@@ -8084,16 +8131,16 @@ namespace Bussiness
 
         public NewChickenBoxItemInfo[] GetSingleNewChickenBox(int UserID)
         {
-            List<NewChickenBoxItemInfo> list = new List<NewChickenBoxItemInfo>();
+            List<NewChickenBoxItemInfo> list = [];
             SqlDataReader sqlDataReader = null;
             try
             {
                 SqlParameter[] array = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 array[0].Value = UserID;
-                db.GetReader(ref sqlDataReader, "SP_GetSingleNewChickenBox", array);
+                _ = db.GetReader(ref sqlDataReader, "SP_GetSingleNewChickenBox", array);
                 while (sqlDataReader.Read())
                 {
                     list.Add(new NewChickenBoxItemInfo
@@ -8139,7 +8186,7 @@ namespace Bussiness
             {
                 SqlParameter[] array = new SqlParameter[15]
                 {
-                    new SqlParameter("@ID", info.ID),
+                    new("@ID", info.ID),
                     null,
                     null,
                     null,
@@ -8169,9 +8216,11 @@ namespace Bussiness
                 array[11] = new SqlParameter("@IsSelected", info.IsSelected);
                 array[12] = new SqlParameter("@IsSeeded", info.IsSeeded);
                 array[13] = new SqlParameter("@IsBinds", info.IsBinds);
-                array[14] = new SqlParameter("@Result", SqlDbType.Int);
-                array[14].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_NewChickenBox_Add", array);
+                array[14] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_NewChickenBox_Add", array);
                 result = (int)array[14].Value == 0;
                 info.ID = (int)array[0].Value;
                 info.IsDirty = false;
@@ -8193,24 +8242,24 @@ namespace Bussiness
             {
                 SqlParameter[] array = new SqlParameter[15]
                 {
-                    new SqlParameter("@ID", info.ID),
-                    new SqlParameter("@UserID", info.UserID),
-                    new SqlParameter("@TemplateID", info.TemplateID),
-                    new SqlParameter("@Count", info.Count),
-                    new SqlParameter("@ValidDate", info.ValidDate),
-                    new SqlParameter("@StrengthenLevel", info.StrengthenLevel),
-                    new SqlParameter("@AttackCompose", info.AttackCompose),
-                    new SqlParameter("@DefendCompose", info.DefendCompose),
-                    new SqlParameter("@AgilityCompose", info.AgilityCompose),
-                    new SqlParameter("@LuckCompose", info.LuckCompose),
-                    new SqlParameter("@Position", info.Position),
-                    new SqlParameter("@IsSelected", info.IsSelected),
-                    new SqlParameter("@IsSeeded", info.IsSeeded),
-                    new SqlParameter("@IsBinds", info.IsBinds),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID", info.ID),
+                    new("@UserID", info.UserID),
+                    new("@TemplateID", info.TemplateID),
+                    new("@Count", info.Count),
+                    new("@ValidDate", info.ValidDate),
+                    new("@StrengthenLevel", info.StrengthenLevel),
+                    new("@AttackCompose", info.AttackCompose),
+                    new("@DefendCompose", info.DefendCompose),
+                    new("@AgilityCompose", info.AgilityCompose),
+                    new("@LuckCompose", info.LuckCompose),
+                    new("@Position", info.Position),
+                    new("@IsSelected", info.IsSelected),
+                    new("@IsSeeded", info.IsSeeded),
+                    new("@IsBinds", info.IsBinds),
+                    new("@Result", SqlDbType.Int)
                 };
                 array[14].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UpdateNewChickenBox", array);
+                _ = db.RunProcedure("SP_UpdateNewChickenBox", array);
                 result = (int)array[14].Value == 0;
             }
             catch (Exception ex)
@@ -8230,10 +8279,10 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 para[0].Value = UserID;
-                db.GetReader(ref reader, "SP_GetSingleActiveSystem", para);
+                _ = db.GetReader(ref reader, "SP_GetSingleActiveSystem", para);
                 if (reader.Read())
                 {
                     return new ActiveSystemInfo
@@ -8274,7 +8323,7 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[10]
                 {
-                new SqlParameter("@ID", info.ID),
+                new("@ID", info.ID),
                 null,
                 null,
                 null,
@@ -8294,10 +8343,12 @@ namespace Bussiness
                 para[6] = new SqlParameter("@ChickActiveData", info.ChickActiveData);
                 para[7] = new SqlParameter("@LuckystarCoins", info.LuckystarCoins);
                 para[8] = new SqlParameter("@ActiveMoney", info.ActiveMoney);
-                para[9] = new SqlParameter("@Result", SqlDbType.Int);
-                para[9].Direction = ParameterDirection.ReturnValue;
+                para[9] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
 
-                db.RunProcedure("SP_ActiveSystem_Add", para);
+                _ = db.RunProcedure("SP_ActiveSystem_Add", para);
                 result = (int)para[9].Value == 0;
                 info.ID = (int)para[0].Value;
                 info.IsDirty = false;
@@ -8356,15 +8407,19 @@ namespace Bussiness
                 para[6] = new SqlParameter("@ChickActiveData", item.ChickActiveData);
                 para[7] = new SqlParameter("@LuckystarCoins", item.LuckystarCoins);
                 para[8] = new SqlParameter("@ActiveMoney", item.ActiveMoney);
-                para[9] = new SqlParameter("@Result", SqlDbType.Int);
-                para[9].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Active_System_Data_Update", para);
+                para[9] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_Active_System_Data_Update", para);
                 result = (int)para[9].Value == 0;
             }
             catch (Exception Err)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("UpdateActiveSystem", Err);
+                }
             }
 
             return result;
@@ -8372,12 +8427,12 @@ namespace Bussiness
 
         public ConsortiaWithTaskInfo[] GetConsortiaTaskInfos()
         {
-            List<ConsortiaWithTaskInfo> list = new List<ConsortiaWithTaskInfo>();
+            List<ConsortiaWithTaskInfo> list = [];
             SqlDataReader reader = null;
             try
             {
                 SqlParameter[] para = new SqlParameter[0];
-                db.GetReader(ref reader, "SP_Consortia_Task_Info_All", para);
+                _ = db.GetReader(ref reader, "SP_Consortia_Task_Info_All", para);
                 while (reader.Read())
                 {
                     list.Add(InitConsortiaTaskInfo(reader));
@@ -8417,15 +8472,19 @@ namespace Bussiness
                 para[8] = new SqlParameter("@Time", item.Time);
                 para[9] = new SqlParameter("@ConditionData", item.ConditionData);
                 para[10] = new SqlParameter("@RankTable", item.RankTable);
-                para[11] = new SqlParameter("@Result", SqlDbType.Int);
-                para[11].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Consortia_Task_Info_Create_Or_Update", para);
+                para[11] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_Consortia_Task_Info_Create_Or_Update", para);
                 result = (int)para[11].Value == 0;
             }
             catch (Exception Err)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("CreateOrUpdateConsortiaTaskInfo", Err);
+                }
             }
 
             return result;
@@ -8438,15 +8497,19 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[2];
                 para[0] = new SqlParameter("@ConsortiaID", ConsortiaID);
-                para[1] = new SqlParameter("@Result", SqlDbType.Int);
-                para[1].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Consortia_Task_Info_Delete", para);
+                para[1] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_Consortia_Task_Info_Delete", para);
                 result = (int)para[1].Value == 0;
             }
             catch (Exception Err)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("RemoveConsortiaTaskInfo", Err);
+                }
             }
 
             return result;
@@ -8454,19 +8517,21 @@ namespace Bussiness
 
         public ConsortiaWithTaskInfo InitConsortiaTaskInfo(SqlDataReader dr)
         {
-            ConsortiaWithTaskInfo info = new ConsortiaWithTaskInfo();
-            info.ID = (int)dr["ID"];
-            info.ConsortiaID = (int)dr["ConsortiaID"];
-            info.BeginTime = (DateTime)dr["BeginTime"];
-            info.Contribution = (int)dr["Contribution"];
-            info.Expirience = (int)dr["Expirience"];
-            info.Offer = (int)dr["Offer"];
-            info.BuffID = (int)dr["BuffID"];
-            info.Level = (int)dr["Level"];
-            info.Riches = (int)dr["Riches"];
-            info.Time = (int)dr["Time"];
-            info.ConditionData = (dr["ConditionData"] == DBNull.Value) ? string.Empty : (string)dr["ConditionData"];
-            info.RankTable = (dr["RankTable"] == DBNull.Value) ? string.Empty : (string)dr["RankTable"];
+            ConsortiaWithTaskInfo info = new()
+            {
+                ID = (int)dr["ID"],
+                ConsortiaID = (int)dr["ConsortiaID"],
+                BeginTime = (DateTime)dr["BeginTime"],
+                Contribution = (int)dr["Contribution"],
+                Expirience = (int)dr["Expirience"],
+                Offer = (int)dr["Offer"],
+                BuffID = (int)dr["BuffID"],
+                Level = (int)dr["Level"],
+                Riches = (int)dr["Riches"],
+                Time = (int)dr["Time"],
+                ConditionData = (dr["ConditionData"] == DBNull.Value) ? string.Empty : (string)dr["ConditionData"],
+                RankTable = (dr["RankTable"] == DBNull.Value) ? string.Empty : (string)dr["RankTable"]
+            };
             return info;
         }
 
@@ -8478,15 +8543,19 @@ namespace Bussiness
                 SqlParameter[] para = new SqlParameter[3];
                 para[0] = new SqlParameter("@UserID", UserID);
                 para[1] = new SqlParameter("@ActiveCode", Code);
-                para[2] = new SqlParameter("@Result", System.Data.SqlDbType.Int);
-                para[2].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_Active_ChickCode", para);
+                para[2] = new SqlParameter("@Result", System.Data.SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_Active_ChickCode", para);
                 result = (int)para[2].Value;
             }
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("Init", e);
+                }
             }
             return result;
         }
@@ -8502,7 +8571,9 @@ namespace Bussiness
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("SP_Active_Delete", e);
+                }
             }
             return result;
         }
@@ -8537,7 +8608,9 @@ namespace Bussiness
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("SP_Active_Add", e);
+                }
             }
             return result;
         }
@@ -8566,27 +8639,31 @@ namespace Bussiness
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("SP_Active_Award_Add", e);
+                }
             }
             return result;
         }
 
         public LuckstarActivityRankInfo[] GetAllLuckstarActivityRank()
         {
-            List<LuckstarActivityRankInfo> infos = new List<LuckstarActivityRankInfo>();
+            List<LuckstarActivityRankInfo> infos = [];
             SqlDataReader reader = null;
             try
             {
-                db.GetReader(ref reader, "SP_Luckstar_Activity_Rank_All");
+                _ = db.GetReader(ref reader, "SP_Luckstar_Activity_Rank_All");
                 int rank = 1;
                 while (reader.Read())
                 {
-                    LuckstarActivityRankInfo info = new LuckstarActivityRankInfo();
-                    info.rank = rank;
-                    info.UserID = (int)reader["UserID"];
-                    info.useStarNum = (int)reader["useStarNum"];
-                    info.isVip = (int)reader["isVip"];
-                    info.nickName = (string)reader["nickName"];
+                    LuckstarActivityRankInfo info = new()
+                    {
+                        rank = rank,
+                        UserID = (int)reader["UserID"],
+                        useStarNum = (int)reader["useStarNum"],
+                        isVip = (int)reader["isVip"],
+                        nickName = (string)reader["nickName"]
+                    };
                     infos.Add(info);
                     rank++;
                 }
@@ -8594,12 +8671,16 @@ namespace Bussiness
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("Init", e);
+                }
             }
             finally
             {
                 if (reader != null && !reader.IsClosed)
+                {
                     reader.Close();
+                }
             }
             return infos.ToArray();
         }
@@ -8619,18 +8700,18 @@ namespace Bussiness
 
         public List<UserGemStone> GetSingleGemStones(int ID)
         {
-            List<UserGemStone> userGemStones = new List<UserGemStone>();
+            List<UserGemStone> userGemStones = [];
             SqlDataReader sqlDataReader = null;
             try
             {
                 try
                 {
-                    SqlParameter[] sqlParameter = new SqlParameter[] { new SqlParameter("@ID", SqlDbType.Int, 4) };
+                    SqlParameter[] sqlParameter = new SqlParameter[] { new("@ID", SqlDbType.Int, 4) };
                     sqlParameter[0].Value = ID;
-                    this.db.GetReader(ref sqlDataReader, "SP_GetSingleGemStone", sqlParameter);
+                    _ = db.GetReader(ref sqlDataReader, "SP_GetSingleGemStone", sqlParameter);
                     while (sqlDataReader.Read())
                     {
-                        userGemStones.Add(this.InitGemStones(sqlDataReader));
+                        userGemStones.Add(InitGemStones(sqlDataReader));
                     }
                 }
                 catch (Exception exception1)
@@ -8659,15 +8740,15 @@ namespace Bussiness
             {
                 SqlParameter[] sqlParameter = new SqlParameter[]
                 {
-                    new SqlParameter("@ID", (object)g.ID),
-                    new SqlParameter("@UserID", (object)g.UserID),
-                    new SqlParameter("@FigSpiritId", (object)g.FigSpiritId),
-                    new SqlParameter("@FigSpiritIdValue", g.FigSpiritIdValue),
-                    new SqlParameter("@EquipPlace", (object)g.EquipPlace),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID", g.ID),
+                    new("@UserID", g.UserID),
+                    new("@FigSpiritId", g.FigSpiritId),
+                    new("@FigSpiritIdValue", g.FigSpiritIdValue),
+                    new("@EquipPlace", g.EquipPlace),
+                    new("@Result", SqlDbType.Int)
                 };
                 sqlParameter[5].Direction = ParameterDirection.ReturnValue;
-                this.db.RunProcedure("SP_UpdateGemStoneInfo", sqlParameter);
+                _ = db.RunProcedure("SP_UpdateGemStoneInfo", sqlParameter);
                 flag = true;
             }
             catch (Exception exception1)
@@ -8686,15 +8767,17 @@ namespace Bussiness
             bool value = false;
             try
             {
-                SqlParameter[] sqlParameter = new SqlParameter[] { new SqlParameter("@ID", (object)item.ID), null, null, null, null, null };
+                SqlParameter[] sqlParameter = new SqlParameter[] { new("@ID", item.ID), null, null, null, null, null };
                 sqlParameter[0].Direction = ParameterDirection.Output;
-                sqlParameter[1] = new SqlParameter("@UserID", (object)item.UserID);
-                sqlParameter[2] = new SqlParameter("@FigSpiritId", (object)item.FigSpiritId);
+                sqlParameter[1] = new SqlParameter("@UserID", item.UserID);
+                sqlParameter[2] = new SqlParameter("@FigSpiritId", item.FigSpiritId);
                 sqlParameter[3] = new SqlParameter("@FigSpiritIdValue", item.FigSpiritIdValue);
-                sqlParameter[4] = new SqlParameter("@EquipPlace", (object)item.EquipPlace);
-                sqlParameter[5] = new SqlParameter("@Result", SqlDbType.Int);
-                sqlParameter[5].Direction = ParameterDirection.ReturnValue;
-                this.db.RunProcedure("SP_Users_GemStones_Add", sqlParameter);
+                sqlParameter[4] = new SqlParameter("@EquipPlace", item.EquipPlace);
+                sqlParameter[5] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_Users_GemStones_Add", sqlParameter);
                 value = (int)sqlParameter[5].Value == 0;
                 item.ID = (int)sqlParameter[0].Value;
                 item.IsDirty = false;
@@ -8713,16 +8796,16 @@ namespace Bussiness
         public List<UserAvatarCollectionInfo> GetSingleAvatarCollect(int userId)
         {
             SqlDataReader sqlDataReader = null;
-            List<UserAvatarCollectionInfo> list = new List<UserAvatarCollectionInfo>();
+            List<UserAvatarCollectionInfo> list = [];
             try
             {
                 SqlParameter[] array = new SqlParameter[]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 array[0].Value = userId;
-                this.db.GetReader(ref sqlDataReader, "SP_Get_AvatarCollect", array);
-                UserAvatarCollectionInfo item = new UserAvatarCollectionInfo();
+                _ = db.GetReader(ref sqlDataReader, "SP_Get_AvatarCollect", array);
+                UserAvatarCollectionInfo item = new();
                 while (sqlDataReader.Read())
                 {
                     item = new UserAvatarCollectionInfo
@@ -8763,8 +8846,10 @@ namespace Bussiness
             try
             {
                 SqlParameter[] array = new SqlParameter[10];
-                array[0] = new SqlParameter("@ID", item.ID);
-                array[0].Direction = ParameterDirection.Output;
+                array[0] = new SqlParameter("@ID", item.ID)
+                {
+                    Direction = ParameterDirection.Output
+                };
                 array[1] = new SqlParameter("@UserID", item.UserID);
                 array[2] = new SqlParameter("@AvatarID", item.AvatarID);
                 array[3] = new SqlParameter("@Sex", item.Sex);
@@ -8773,10 +8858,12 @@ namespace Bussiness
                 array[6] = new SqlParameter("@TimeStart", item.TimeStart.ToString("MM/dd/yyyy hh:mm:ss"));
                 array[7] = new SqlParameter("@TimeEnd", item.TimeEnd.ToString("MM/dd/yyyy hh:mm:ss"));
                 array[8] = new SqlParameter("@IsExit", item.IsExit);
-                array[9] = new SqlParameter("@Result", SqlDbType.Int);
-                array[9].Direction = ParameterDirection.ReturnValue;
-                this.db.RunProcedure("SP_AvatarCollect_Add", array);
-                result = ((int)array[9].Value == 0);
+                array[9] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_AvatarCollect_Add", array);
+                result = (int)array[9].Value == 0;
                 item.ID = (int)array[0].Value;
                 item.IsDirty = false;
             }
@@ -8797,20 +8884,20 @@ namespace Bussiness
             {
                 SqlParameter[] array = new SqlParameter[]
                 {
-                    new SqlParameter("@ID", item.ID),
-                    new SqlParameter("@UserID", item.UserID),
-                    new SqlParameter("@AvatarID", item.AvatarID),
-                    new SqlParameter("@Sex", item.Sex),
-                    new SqlParameter("@IsActive", item.IsActive),
-                    new SqlParameter("@Data", item.Data),
-                    new SqlParameter("@TimeStart", item.TimeStart.ToString("MM/dd/yyyy hh:mm:ss")),
-                    new SqlParameter("@TimeEnd", item.TimeEnd.ToString("MM/dd/yyyy hh:mm:ss")),
-                    new SqlParameter("@IsExit", item.IsExit),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID", item.ID),
+                    new("@UserID", item.UserID),
+                    new("@AvatarID", item.AvatarID),
+                    new("@Sex", item.Sex),
+                    new("@IsActive", item.IsActive),
+                    new("@Data", item.Data),
+                    new("@TimeStart", item.TimeStart.ToString("MM/dd/yyyy hh:mm:ss")),
+                    new("@TimeEnd", item.TimeEnd.ToString("MM/dd/yyyy hh:mm:ss")),
+                    new("@IsExit", item.IsExit),
+                    new("@Result", SqlDbType.Int)
                 };
                 array[9].Direction = ParameterDirection.ReturnValue;
-                this.db.RunProcedure("SP_AvatarCollect_Update", array);
-                result = ((int)array[9].Value == 0);
+                _ = db.RunProcedure("SP_AvatarCollect_Update", array);
+                result = (int)array[9].Value == 0;
                 item.IsDirty = false;
             }
             catch (Exception exception)
@@ -8826,16 +8913,16 @@ namespace Bussiness
         public List<UserLeagueInfo> GetSingleUserLeague(int userId)
         {
             SqlDataReader sqlDataReader = null;
-            List<UserLeagueInfo> list = new List<UserLeagueInfo>();
+            List<UserLeagueInfo> list = [];
             try
             {
                 SqlParameter[] array = new SqlParameter[]
                 {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
                 array[0].Value = userId;
-                this.db.GetReader(ref sqlDataReader, "SP_GetSingleUserLeague", array);
-                UserLeagueInfo item = new UserLeagueInfo();
+                _ = db.GetReader(ref sqlDataReader, "SP_GetSingleUserLeague", array);
+                UserLeagueInfo item = new();
                 while (sqlDataReader.Read())
                 {
                     item = new UserLeagueInfo
@@ -8875,8 +8962,10 @@ namespace Bussiness
             try
             {
                 SqlParameter[] array = new SqlParameter[10];
-                array[0] = new SqlParameter("@ID", item.ID);
-                array[0].Direction = ParameterDirection.Output;
+                array[0] = new SqlParameter("@ID", item.ID)
+                {
+                    Direction = ParameterDirection.Output
+                };
                 array[1] = new SqlParameter("@UserID", item.UserID);
                 array[2] = new SqlParameter("@RankID", item.RankID);
                 array[3] = new SqlParameter("@Point", item.Point);
@@ -8885,10 +8974,12 @@ namespace Bussiness
                 array[6] = new SqlParameter("@IsBanned", item.IsBanned);
                 array[7] = new SqlParameter("@ForbidDate", item.ForbidDate.ToString("MM/dd/yyyy hh:mm:ss"));
                 array[8] = new SqlParameter("@ForbidReason", item.ForbidReason);
-                array[9] = new SqlParameter("@Result", SqlDbType.Int);
-                array[9].Direction = ParameterDirection.ReturnValue;
-                this.db.RunProcedure("SP_UserLeague_Add", array);
-                result = ((int)array[9].Value == 0);
+                array[9] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_UserLeague_Add", array);
+                result = (int)array[9].Value == 0;
                 item.ID = (int)array[0].Value;
                 item.IsDirty = false;
             }
@@ -8909,20 +9000,20 @@ namespace Bussiness
             {
                 SqlParameter[] array = new SqlParameter[]
                 {
-                    new SqlParameter("@ID", item.ID),
-                    new SqlParameter("@UserID", item.UserID),
-                    new SqlParameter("@RankID", item.RankID),
-                    new SqlParameter("@Point", item.Point),
-                    new SqlParameter("@Win", item.Win),
-                    new SqlParameter("@Lose", item.Lose),
-                    new SqlParameter("@IsBanned", item.IsBanned),
-                    new SqlParameter("@ForbidDate", item.ForbidDate.ToString("MM/dd/yyyy hh:mm:ss")),
-                    new SqlParameter("@ForbidReason", item.ForbidReason),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID", item.ID),
+                    new("@UserID", item.UserID),
+                    new("@RankID", item.RankID),
+                    new("@Point", item.Point),
+                    new("@Win", item.Win),
+                    new("@Lose", item.Lose),
+                    new("@IsBanned", item.IsBanned),
+                    new("@ForbidDate", item.ForbidDate.ToString("MM/dd/yyyy hh:mm:ss")),
+                    new("@ForbidReason", item.ForbidReason),
+                    new("@Result", SqlDbType.Int)
                 };
                 array[9].Direction = ParameterDirection.ReturnValue;
-                this.db.RunProcedure("SP_UserLeague_Update", array);
-                result = ((int)array[9].Value == 0);
+                _ = db.RunProcedure("SP_UserLeague_Update", array);
+                result = (int)array[9].Value == 0;
                 item.IsDirty = false;
             }
             catch (Exception exception)
@@ -8945,7 +9036,9 @@ namespace Bussiness
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("Init Sp_Renames_Batch", e);
+                }
             }
             return result;
         }
@@ -8957,15 +9050,15 @@ namespace Bussiness
             {
                 SqlParameter[] array = new SqlParameter[]
                 {
-                    new SqlParameter("@ServerID", item.ServerID),
-                    new SqlParameter("@UserID", item.UserID),
-                    new SqlParameter("@IsFirstStreng", item.IsFirstStreng),
-                    new SqlParameter("@IsFirstLv", item.IsFirstLv),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ServerID", item.ServerID),
+                    new("@UserID", item.UserID),
+                    new("@IsFirstStreng", item.IsFirstStreng),
+                    new("@IsFirstLv", item.IsFirstLv),
+                    new("@Result", SqlDbType.Int)
                 };
                 array[4].Direction = ParameterDirection.ReturnValue;
-                this.db.RunProcedure("SP_UpdateEventSevenDays", array);
-                result = ((int)array[4].Value == 0);
+                _ = db.RunProcedure("SP_UpdateEventSevenDays", array);
+                result = (int)array[4].Value == 0;
                 item.IsDirty = false;
             }
             catch (Exception exception)
@@ -8985,10 +9078,10 @@ namespace Bussiness
             {
                 SqlParameter[] para = new SqlParameter[1]
                 {
-                    new SqlParameter("@ServerID", SqlDbType.Int, 4)
+                    new("@ServerID", SqlDbType.Int, 4)
                 };
                 para[0].Value = ServerID;
-                db.GetReader(ref reader, "SP_GetEventSevenDays_Single", para);
+                _ = db.GetReader(ref reader, "SP_GetEventSevenDays_Single", para);
                 if (reader.Read())
                 {
                     return new EventSevenDaysInfo
@@ -9023,36 +9116,44 @@ namespace Bussiness
             try
             {
                 SqlParameter[] para = new SqlParameter[1];
-                para[0] = new SqlParameter("@UserID", SqlDbType.Int, 4);
-                para[0].Value = UserID;
-                db.GetReader(ref reader, "SP_GetSingleUserChristmas", para);
+                para[0] = new SqlParameter("@UserID", SqlDbType.Int, 4)
+                {
+                    Value = UserID
+                };
+                _ = db.GetReader(ref reader, "SP_GetSingleUserChristmas", para);
                 while (reader.Read())
                 {
-                    UserChristmasInfo info = new UserChristmasInfo();
-                    info.ID = (int)reader["ID"];
-                    info.UserID = (int)reader["UserID"];
-                    info.exp = (int)reader["exp"];
-                    info.awardState = (int)reader["awardState"];
-                    info.count = (int)reader["count"];
-                    info.packsNumber = (int)reader["packsNumber"];
-                    info.lastPacks = (int)reader["lastPacks"];
-                    info.gameBeginTime = (DateTime)reader["gameBeginTime"];
-                    info.gameEndTime = (DateTime)reader["gameEndTime"];
-                    info.isEnter = (bool)reader["isEnter"];
-                    info.dayPacks = (int)reader["dayPacks"];
-                    info.AvailTime = (int)reader["AvailTime"];
+                    UserChristmasInfo info = new()
+                    {
+                        ID = (int)reader["ID"],
+                        UserID = (int)reader["UserID"],
+                        exp = (int)reader["exp"],
+                        awardState = (int)reader["awardState"],
+                        count = (int)reader["count"],
+                        packsNumber = (int)reader["packsNumber"],
+                        lastPacks = (int)reader["lastPacks"],
+                        gameBeginTime = (DateTime)reader["gameBeginTime"],
+                        gameEndTime = (DateTime)reader["gameEndTime"],
+                        isEnter = (bool)reader["isEnter"],
+                        dayPacks = (int)reader["dayPacks"],
+                        AvailTime = (int)reader["AvailTime"]
+                    };
                     return info;
                 }
             }
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("SP_GetSingleUserChristmas", e);
+                }
             }
             finally
             {
                 if (reader != null && !reader.IsClosed)
+                {
                     reader.Close();
+                }
             }
             return null;
         }
@@ -9063,8 +9164,10 @@ namespace Bussiness
             try
             {
                 SqlParameter[] para = new SqlParameter[13];
-                para[0] = new SqlParameter("@ID", info.ID);
-                para[0].Direction = ParameterDirection.Output;
+                para[0] = new SqlParameter("@ID", info.ID)
+                {
+                    Direction = ParameterDirection.Output
+                };
                 para[1] = new SqlParameter("@UserID", info.UserID);
                 para[2] = new SqlParameter("@exp", info.exp);
                 para[3] = new SqlParameter("@awardState", info.awardState);
@@ -9076,9 +9179,11 @@ namespace Bussiness
                 para[9] = new SqlParameter("@isEnter", info.isEnter);
                 para[10] = new SqlParameter("@dayPacks", info.dayPacks);
                 para[11] = new SqlParameter("@AvailTime", info.AvailTime);
-                para[12] = new SqlParameter("@Result", System.Data.SqlDbType.Int);
-                para[12].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UserChristmas_Add", para);
+                para[12] = new SqlParameter("@Result", System.Data.SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_UserChristmas_Add", para);
                 result = (int)para[12].Value == 0;
                 info.ID = (int)para[0].Value;
                 info.IsDirty = false;
@@ -9087,7 +9192,9 @@ namespace Bussiness
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("Init", e);
+                }
             }
             finally
             {
@@ -9113,9 +9220,11 @@ namespace Bussiness
                 para[9] = new SqlParameter("@isEnter", info.isEnter);
                 para[10] = new SqlParameter("@dayPacks", info.dayPacks);
                 para[11] = new SqlParameter("@AvailTime", info.AvailTime);
-                para[12] = new SqlParameter("@Result", System.Data.SqlDbType.Int);
-                para[12].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_UpdateUserChristmas", para);
+                para[12] = new SqlParameter("@Result", System.Data.SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_UpdateUserChristmas", para);
                 flag = (int)para[12].Value == 0;
             }
             catch (Exception exception)
@@ -9131,16 +9240,16 @@ namespace Bussiness
 
         public List<UserGmActivityCondition> GetUserGmActivityConditionInfo(int userId)
         {
-            List<UserGmActivityCondition> list = new List<UserGmActivityCondition>();
+            List<UserGmActivityCondition> list = [];
             SqlDataReader ResultDataReader = null;
             try
             {
                 SqlParameter[] array = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserId", SqlDbType.Int, 4)
+                    new("@UserId", SqlDbType.Int, 4)
                 };
                 array[0].Value = userId;
-                db.GetReader(ref ResultDataReader, "SP_GMActivityConditionData_Get", array);
+                _ = db.GetReader(ref ResultDataReader, "SP_GMActivityConditionData_Get", array);
                 while (ResultDataReader.Read())
                 {
                     list.Add(InitUserGmActivityConditionInfo(ResultDataReader));
@@ -9179,16 +9288,16 @@ namespace Bussiness
 
         public List<UserGmActivityReward> GetUserGmActivityRewardInfo(int userId)
         {
-            List<UserGmActivityReward> list = new List<UserGmActivityReward>();
+            List<UserGmActivityReward> list = [];
             SqlDataReader ResultDataReader = null;
             try
             {
                 SqlParameter[] array = new SqlParameter[1]
                 {
-                    new SqlParameter("@UserId", SqlDbType.Int, 4)
+                    new("@UserId", SqlDbType.Int, 4)
                 };
                 array[0].Value = userId;
-                db.GetReader(ref ResultDataReader, "SP_GMActivityRewardData_Get", array);
+                _ = db.GetReader(ref ResultDataReader, "SP_GMActivityRewardData_Get", array);
                 while (ResultDataReader.Read())
                 {
                     list.Add(InitUserGmActivityRewardInfo(ResultDataReader));
@@ -9230,15 +9339,15 @@ namespace Bussiness
             {
                 SqlParameter[] array = new SqlParameter[6]
                 {
-                    new SqlParameter("@ID", gmActivityReward.ID),
-                    new SqlParameter("@UserID", gmActivityReward.UserID),
-                    new SqlParameter("@activityId", gmActivityReward.ActivityID),
-                    new SqlParameter("@giftbagId", gmActivityReward.GiftBagID),
-                    new SqlParameter("@times", gmActivityReward.Times),
-                    new SqlParameter("@resultId", SqlDbType.BigInt)
+                    new("@ID", gmActivityReward.ID),
+                    new("@UserID", gmActivityReward.UserID),
+                    new("@activityId", gmActivityReward.ActivityID),
+                    new("@giftbagId", gmActivityReward.GiftBagID),
+                    new("@times", gmActivityReward.Times),
+                    new("@resultId", SqlDbType.BigInt)
                 };
                 array.Last().Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_GMActivityRewardData_Update", array);
+                _ = db.RunProcedure("SP_GMActivityRewardData_Update", array);
                 if (gmActivityReward.ID == 0)
                 {
                     gmActivityReward.ID = long.Parse(array.Last().Value.ToString());
@@ -9259,16 +9368,16 @@ namespace Bussiness
             {
                 SqlParameter[] array = new SqlParameter[7]
                 {
-                    new SqlParameter("@ID", gmActivityCondition.ID),
-                    new SqlParameter("@UserID", gmActivityCondition.UserID),
-                    new SqlParameter("@activityId", gmActivityCondition.ActivityID),
-                    new SqlParameter("@giftbagId", gmActivityCondition.GiftBagID),
-                    new SqlParameter("@statusId", gmActivityCondition.StatusID),
-                    new SqlParameter("@statusValue", gmActivityCondition.StatusValue),
-                    new SqlParameter("@resultId", SqlDbType.BigInt)
+                    new("@ID", gmActivityCondition.ID),
+                    new("@UserID", gmActivityCondition.UserID),
+                    new("@activityId", gmActivityCondition.ActivityID),
+                    new("@giftbagId", gmActivityCondition.GiftBagID),
+                    new("@statusId", gmActivityCondition.StatusID),
+                    new("@statusValue", gmActivityCondition.StatusValue),
+                    new("@resultId", SqlDbType.BigInt)
                 };
                 array.Last().Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_GMActivityConditionData_Update", array);
+                _ = db.RunProcedure("SP_GMActivityConditionData_Update", array);
                 if (gmActivityCondition.ID == 0)
                 {
                     gmActivityCondition.ID = long.Parse(array.Last().Value.ToString());
@@ -9286,41 +9395,50 @@ namespace Bussiness
 
         public PyramidInfo GetSinglePyramid(int UserID)
         {
-            SqlDataReader ResultDataReader = (SqlDataReader)null;
+            SqlDataReader ResultDataReader = null;
             try
             {
                 SqlParameter[] SqlParameters = new SqlParameter[1] {
-                    new SqlParameter("@UserID", SqlDbType.Int, 4)
+                    new("@UserID", SqlDbType.Int, 4)
                 };
-                SqlParameters[0].Value = (object)UserID;
-                this.db.GetReader(ref ResultDataReader, "SP_GetSinglePyramid", SqlParameters);
-                if (ResultDataReader.Read()) return new PyramidInfo()
+                SqlParameters[0].Value = UserID;
+                _ = db.GetReader(ref ResultDataReader, "SP_GetSinglePyramid", SqlParameters);
+                if (ResultDataReader.Read())
                 {
-                    ID = (int)ResultDataReader["ID"],
-                    UserID = (int)ResultDataReader[nameof(UserID)],
-                    currentLayer = (int)ResultDataReader["currentLayer"],
-                    maxLayer = (int)ResultDataReader["maxLayer"],
-                    totalPoint = (int)ResultDataReader["totalPoint"],
-                    turnPoint = (int)ResultDataReader["turnPoint"],
-                    pointRatio = (int)ResultDataReader["pointRatio"],
-                    currentFreeCount = (int)ResultDataReader["currentFreeCount"],
-                    currentReviveCount = (int)ResultDataReader["currentReviveCount"],
-                    isPyramidStart = (bool)ResultDataReader["isPyramidStart"],
-                    LayerItems = (string)ResultDataReader["LayerItems"]
-                };
+                    return new PyramidInfo()
+                    {
+                        ID = (int)ResultDataReader["ID"],
+                        UserID = (int)ResultDataReader[nameof(UserID)],
+                        currentLayer = (int)ResultDataReader["currentLayer"],
+                        maxLayer = (int)ResultDataReader["maxLayer"],
+                        totalPoint = (int)ResultDataReader["totalPoint"],
+                        turnPoint = (int)ResultDataReader["turnPoint"],
+                        pointRatio = (int)ResultDataReader["pointRatio"],
+                        currentFreeCount = (int)ResultDataReader["currentFreeCount"],
+                        currentReviveCount = (int)ResultDataReader["currentReviveCount"],
+                        isPyramidStart = (bool)ResultDataReader["isPyramidStart"],
+                        LayerItems = (string)ResultDataReader["LayerItems"]
+                    };
+                }
             }
             catch (Exception ex)
             {
-                if (BaseBussiness.log.IsErrorEnabled) BaseBussiness.log.Error((object)"SP_GetSinglePyramid", ex);
+                if (BaseBussiness.log.IsErrorEnabled)
+                {
+                    BaseBussiness.log.Error("SP_GetSinglePyramid", ex);
+                }
             }
             finally
             {
-                if (ResultDataReader != null && !ResultDataReader.IsClosed) ResultDataReader.Close();
+                if (ResultDataReader != null && !ResultDataReader.IsClosed)
+                {
+                    ResultDataReader.Close();
+                }
             }
-            return (PyramidInfo)null;
+            return null;
         }
 
-      
+
 
         public bool AddPyramid(PyramidInfo info)
         {
@@ -9328,28 +9446,35 @@ namespace Bussiness
             try
             {
                 SqlParameter[] SqlParameters = new SqlParameter[12];
-                SqlParameters[0] = new SqlParameter("@ID", (object)info.ID);
-                SqlParameters[0].Direction = ParameterDirection.Output;
-                SqlParameters[1] = new SqlParameter("@UserID", (object)info.UserID);
-                SqlParameters[2] = new SqlParameter("@currentLayer", (object)info.currentLayer);
-                SqlParameters[3] = new SqlParameter("@maxLayer", (object)info.maxLayer);
-                SqlParameters[4] = new SqlParameter("@totalPoint", (object)info.totalPoint);
-                SqlParameters[5] = new SqlParameter("@turnPoint", (object)info.turnPoint);
-                SqlParameters[6] = new SqlParameter("@pointRatio", (object)info.pointRatio);
-                SqlParameters[7] = new SqlParameter("@currentFreeCount", (object)info.currentFreeCount);
-                SqlParameters[8] = new SqlParameter("@currentReviveCount", (object)info.currentReviveCount);
-                SqlParameters[9] = new SqlParameter("@isPyramidStart", (object)info.isPyramidStart);
-                SqlParameters[10] = new SqlParameter("@LayerItems", (object)info.LayerItems);
-                SqlParameters[11] = new SqlParameter("@Result", SqlDbType.Int);
-                SqlParameters[11].Direction = ParameterDirection.ReturnValue;
-                this.db.RunProcedure("SP_Pyramid_Add", SqlParameters);
+                SqlParameters[0] = new SqlParameter("@ID", info.ID)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                SqlParameters[1] = new SqlParameter("@UserID", info.UserID);
+                SqlParameters[2] = new SqlParameter("@currentLayer", info.currentLayer);
+                SqlParameters[3] = new SqlParameter("@maxLayer", info.maxLayer);
+                SqlParameters[4] = new SqlParameter("@totalPoint", info.totalPoint);
+                SqlParameters[5] = new SqlParameter("@turnPoint", info.turnPoint);
+                SqlParameters[6] = new SqlParameter("@pointRatio", info.pointRatio);
+                SqlParameters[7] = new SqlParameter("@currentFreeCount", info.currentFreeCount);
+                SqlParameters[8] = new SqlParameter("@currentReviveCount", info.currentReviveCount);
+                SqlParameters[9] = new SqlParameter("@isPyramidStart", info.isPyramidStart);
+                SqlParameters[10] = new SqlParameter("@LayerItems", info.LayerItems);
+                SqlParameters[11] = new SqlParameter("@Result", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_Pyramid_Add", SqlParameters);
                 flag = (int)SqlParameters[11].Value == 0;
                 info.ID = (int)SqlParameters[0].Value;
                 info.IsDirty = false;
             }
             catch (Exception ex)
             {
-                if (BaseBussiness.log.IsErrorEnabled) BaseBussiness.log.Error((object)"SP_Pyramid_Add", ex);
+                if (BaseBussiness.log.IsErrorEnabled)
+                {
+                    BaseBussiness.log.Error("SP_Pyramid_Add", ex);
+                }
             }
             return flag;
         }
@@ -9359,26 +9484,29 @@ namespace Bussiness
             try
             {
                 SqlParameter[] SqlParameters = new SqlParameter[12] {
-                    new SqlParameter("@ID", (object) info.ID),
-                    new SqlParameter("@UserID", (object) info.UserID),
-                    new SqlParameter("@currentLayer", (object) info.currentLayer),
-                    new SqlParameter("@maxLayer", (object) info.maxLayer),
-                    new SqlParameter("@totalPoint", (object) info.totalPoint),
-                    new SqlParameter("@turnPoint", (object) info.turnPoint),
-                    new SqlParameter("@pointRatio", (object) info.pointRatio),
-                    new SqlParameter("@currentFreeCount", (object) info.currentFreeCount),
-                    new SqlParameter("@currentReviveCount", (object) info.currentReviveCount),
-                    new SqlParameter("@isPyramidStart", (object) info.isPyramidStart),
-                    new SqlParameter("@LayerItems", (object) info.LayerItems),
-                    new SqlParameter("@Result", SqlDbType.Int)
+                    new("@ID",  info.ID),
+                    new("@UserID",  info.UserID),
+                    new("@currentLayer",  info.currentLayer),
+                    new("@maxLayer",  info.maxLayer),
+                    new("@totalPoint",  info.totalPoint),
+                    new("@turnPoint",  info.turnPoint),
+                    new("@pointRatio",  info.pointRatio),
+                    new("@currentFreeCount",  info.currentFreeCount),
+                    new("@currentReviveCount",  info.currentReviveCount),
+                    new("@isPyramidStart",  info.isPyramidStart),
+                    new("@LayerItems",  info.LayerItems),
+                    new("@Result", SqlDbType.Int)
                 };
                 SqlParameters[11].Direction = ParameterDirection.ReturnValue;
-                this.db.RunProcedure("SP_UpdatePyramid", SqlParameters);
+                _ = db.RunProcedure("SP_UpdatePyramid", SqlParameters);
                 flag = (int)SqlParameters[11].Value == 0;
             }
             catch (Exception ex)
             {
-                if (BaseBussiness.log.IsErrorEnabled) BaseBussiness.log.Error((object)"SP_UpdatePyramid", ex);
+                if (BaseBussiness.log.IsErrorEnabled)
+                {
+                    BaseBussiness.log.Error("SP_UpdatePyramid", ex);
+                }
             }
             return flag;
         }
@@ -9417,9 +9545,11 @@ namespace Bussiness
                 para[0] = new SqlParameter("@UserID", info.UserID);
                 para[1] = new SqlParameter("@ActiveType", info.ActiveType);
                 para[2] = new SqlParameter("@IsReset", info.IsReset);
-                para[3] = new SqlParameter("@Result", System.Data.SqlDbType.Int);
-                para[3].Direction = ParameterDirection.ReturnValue;
-                db.RunProcedure("SP_ResetUsersEventProcess", para);
+                para[3] = new SqlParameter("@Result", System.Data.SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                _ = db.RunProcedure("SP_ResetUsersEventProcess", para);
                 flag = (int)para[3].Value == 0;
             }
             catch (Exception exception)

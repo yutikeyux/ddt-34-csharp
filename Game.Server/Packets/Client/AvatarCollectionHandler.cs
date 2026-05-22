@@ -2,20 +2,20 @@
 using Game.Server.Managers;
 using SqlDataProvider.Data;
 using System;
+using System.Collections.Generic;
 
 namespace Game.Server.Packets.Client
 {
     [PacketHandler((short)ePackageType.AVATAR_COLLECTION, "Avatar Collection Handler")]
     public class AvatarCollectionHandler : IPacketHandler
     {
-        #region Constants
+        #region Sabitler
 
-        private const byte CMD_ACTIVATE_ITEM = 3;
-        private const byte CMD_RENEW_COLLECTION = 4;
+        private const byte CMD_ACTIVATE_ITEM = 3; // AvatarCollectionPackageType.ACTIVE
+        private const byte CMD_RENEW_COLLECTION = 4; // AvatarCollectionPackageType.DELAY_TIME
         private const int PACKET_ID = 402;
         private const int DEFAULT_ACTIVATE_DAYS = 7;
 
-        // Hata mesajları
         private const string ERROR_ITEM_NOT_FOUND = "Böyle bir çizim bulunamadı.";
         private const string ERROR_SET_NOT_AVAILABLE = "Bu çizim seti mevcut değil.";
         private const string ERROR_INSUFFICIENT_GOLD = "Yetersiz altın.";
@@ -26,91 +26,133 @@ namespace Game.Server.Packets.Client
         private const string ERROR_CANNOT_RENEW = "Bu çizim seti yenilenemez!";
         private const string ERROR_INVALID_DAYS = "Geçersiz gün değeri.";
 
-        // Başarı mesajları
         private const string SUCCESS_ACTIVATION = "Çizim başarıyla etkinleştirildi!";
         private const string SUCCESS_RENEWAL = "Çizim seti başarıyla {0} gün yenilendi.";
 
         #endregion
 
-        #region Packet Handler
+        // -----------------------------------------------------------------------
+        // ANA İŞLEYİCİ
+        // -----------------------------------------------------------------------
 
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
             if (client == null || client.Player == null)
             {
-                Console.WriteLine("[AvatarCollectionHandler] Null client or player.");
+                Console.WriteLine("[AvatarCollection] Null client veya player.");
                 return 0;
             }
 
             try
             {
                 byte subCommand = packet.ReadByte();
-                Console.WriteLine("[AvatarCollectionHandler] Command received: " + subCommand);
+                Console.WriteLine($"[AvatarCollection] subCommand={subCommand}");
 
                 switch (subCommand)
                 {
-                    case CMD_ACTIVATE_ITEM:
+                    case CMD_ACTIVATE_ITEM:    // 3 = AvatarCollectionPackageType.ACTIVE
                         return HandleActivateItem(client, packet);
 
-                    case CMD_RENEW_COLLECTION:
+                    case CMD_RENEW_COLLECTION: // 4 = AvatarCollectionPackageType.DELAY_TIME
                         return HandleRenewCollection(client, packet);
 
                     default:
-                        Console.WriteLine("[AvatarCollectionHandler] Unknown command: " + subCommand);
+                        Console.WriteLine($"[AvatarCollection] Bilinmeyen subCommand: {subCommand}");
                         return 1;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("[AvatarCollectionHandler] Exception: " + ex);
+                Console.WriteLine("[AvatarCollection] HandlePacket hatası: " + ex);
                 client.Player.SendMessage("İşlem sırasında bir hata oluştu.");
                 return 0;
             }
         }
 
-        #endregion
+        // -----------------------------------------------------------------------
+        // ETKİNLEŞTİRME — subCommand 3
+        //
+        // AS sendAvatarCollectionActive(param1, param2, param3):
+        //   writeByte(ACTIVE=3)   ← subCommand (zaten okundu)
+        //   writeInt(param1)      → groupId
+        //   writeInt(param2)      → templateId
+        //   writeInt(param3)      → sex
+        // -----------------------------------------------------------------------
 
-        #region Command Handlers
-
-        /// <summary>
-        /// Eşya etkinleştirme (subCommand = 3)
-        /// </summary>
         private int HandleActivateItem(GameClient client, GSPacketIn packet)
         {
-            int groupId = packet.ReadInt();
-            int templateId = packet.ReadInt();
-            int sex = packet.ReadInt();
+            int groupId = packet.ReadInt(); // param1
+            int templateId = packet.ReadInt(); // param2
+            int sex = packet.ReadInt(); // param3
+
+            Console.WriteLine($"[AvatarCollection] ACTIVATE → groupId={groupId}, templateId={templateId}, sex={sex}");
 
             if (groupId <= 0 || templateId <= 0)
             {
+                Console.WriteLine("[AvatarCollection] groupId veya templateId geçersiz.");
                 client.Player.SendMessage(ERROR_ITEM_NOT_FOUND);
                 return 1;
             }
 
-            // DÜZELTME: Orijinal kodda eşya bulunamayınca ERROR_BAG_FULL dönüyordu.
-            // Doğru mesaj ERROR_ITEM_NOT_FOUND olmalı.
+            // --- Envanter kontrolü ---
+            // GetItemByTemplateID(minSlot=0, templateId): slot 0'dan tüm EquipBag'i tarar
             ItemInfo playerItem = client.Player.EquipBag.GetItemByTemplateID(0, templateId);
+            Console.WriteLine($"[AvatarCollection] EquipBag templateId={templateId} → {(playerItem != null ? "BULUNDU" : "BULUNAMADI")}");
+
             if (playerItem == null)
             {
                 client.Player.SendMessage(ERROR_ITEM_NOT_FOUND);
                 return 1;
             }
 
+            // --- Koleksiyon grubu kontrolü ---
+            //
+            // DİKKAT: ClothGroupTemplateInfoMgr.LoadClothGroup sözlüğe
+            //   clothGroup.Add(item.ItemID, item) ile yüklüyor.
+            // GetClothGroup ise Values üzerinde item.ID + item.TemplateID + item.Sex
+            // üçlüsüyle arıyor.
+            //
+            // Eğer ItemID != ID ise eşleşme hiç bulunamaz.
+            // Aşağıdaki tanı logları bunu gösterecek.
             ClothGroupTemplateInfo clothGroup =
                 ClothGroupTemplateInfoMgr.GetClothGroup(groupId, templateId, sex);
+
+            Console.WriteLine($"[AvatarCollection] GetClothGroup({groupId},{templateId},{sex}) → " +
+                              $"{(clothGroup != null ? $"BULUNDU cost={clothGroup.Cost}" : "BULUNAMADI")}");
+
             if (clothGroup == null)
             {
+                // Tanı 1: groupId ile herhangi bir kayıt var mı?
+                List<ClothGroupTemplateInfo> groupRecords =
+                    ClothGroupTemplateInfoMgr.GetClothGroupWithID(groupId);
+
+                Console.WriteLine($"[AvatarCollection] GetClothGroupWithID({groupId}) → {groupRecords?.Count ?? 0} kayıt");
+                if (groupRecords != null)
+                    foreach (var r in groupRecords)
+                        Console.WriteLine($"[AvatarCollection]   ItemID={r.ItemID}, ID={r.ID}, TemplateID={r.TemplateID}, Sex={r.Sex}");
+
+                // Tanı 2: templateId groupId'ye eşit mi? (AS param1=groupId param2=templateId)
+                Console.WriteLine($"[AvatarCollection] templateId({templateId}) == groupId({groupId})? {templateId == groupId}");
+
                 client.Player.SendMessage(ERROR_ITEM_NOT_FOUND);
                 return 1;
             }
 
+            // --- Koleksiyon özelliği kontrolü ---
             ClothPropertyTemplateInfo clothProperty =
                 ClothPropertyTemplateInfoMgr.GetClothPropertyWithID(clothGroup.ID);
+
+            Console.WriteLine($"[AvatarCollection] GetClothPropertyWithID({clothGroup.ID}) → " +
+                              $"{(clothProperty != null ? "BULUNDU" : "BULUNAMADI")}");
+
             if (clothProperty == null)
             {
                 client.Player.SendMessage(ERROR_SET_NOT_AVAILABLE);
                 return 1;
             }
+
+            // --- Altın kontrolü ---
+            Console.WriteLine($"[AvatarCollection] Oyuncu altın={client.Player.PlayerCharacter.Gold}, Gereken={clothGroup.Cost}");
 
             if (client.Player.PlayerCharacter.Gold < clothGroup.Cost)
             {
@@ -121,31 +163,9 @@ namespace Game.Server.Packets.Client
             return ExecuteActivation(client, clothGroup, clothProperty);
         }
 
-        /// <summary>
-        /// Koleksiyon yenileme (subCommand = 4).
-        /// AS tarafından gelen paket: avatarId (int) + days (int)
-        /// AS: sendAvatarCollectionDelayTime(data.id, selectedCount)
-        /// </summary>
-        private int HandleRenewCollection(GameClient client, GSPacketIn packet)
-        {
-            int avatarId = packet.ReadInt();
-            int days = packet.ReadInt();
-
-            if (days <= 0)
-            {
-                client.Player.SendMessage(ERROR_INVALID_DAYS);
-                return 1;
-            }
-
-            // avatarId == -1 → toplu yenileme
-            return avatarId == -1
-                ? HandleMassRenewal(client, days)
-                : HandleSingleRenewal(client, avatarId, days);
-        }
-
-        #endregion
-
-        #region Activation Logic
+        // -----------------------------------------------------------------------
+        // ETKİNLEŞTİRME UYGULAMA
+        // -----------------------------------------------------------------------
 
         private int ExecuteActivation(
             GameClient client,
@@ -154,7 +174,6 @@ namespace Game.Server.Packets.Client
         {
             bool isNewlyActivated = false;
 
-            // Altını önce düş
             int removeResult = client.Player.RemoveGold(clothGroup.Cost);
             if (removeResult <= 0)
             {
@@ -167,69 +186,41 @@ namespace Game.Server.Packets.Client
                 UserAvatarCollectionInfo collection =
                     GetOrCreateCollection(client, clothProperty);
 
-                UserAvatarCollectionDataInfo newItem =
-                    new(clothGroup.TemplateID, clothGroup.Sex);
+                var newItem = new UserAvatarCollectionDataInfo(clothGroup.TemplateID, clothGroup.Sex);
 
                 if (!collection.AddItem(newItem))
                 {
-                    // Ekleme başarısız → altını iade et
                     client.Player.AddGold(clothGroup.Cost);
                     client.Player.SendMessage(ERROR_ACTIVATION_FAILED);
                     return 1;
                 }
 
-                // Toplam ve mevcut eleman sayıları
                 int totalItems = ClothGroupTemplateInfoMgr.CountClothGroupWithID(collection.AvatarID);
                 int halfItems = totalItems / 2;
                 int currentCount = collection.Items != null ? collection.Items.Count : 0;
 
-                // Koleksiyonun yarısı tamamlandıysa ve daha önce aktif değilse etkinleştir
                 if (currentCount >= halfItems && !collection.IsActive)
                 {
                     collection.ActiveAvatar(DEFAULT_ACTIVATE_DAYS);
                     isNewlyActivated = true;
                 }
 
-                // Paketleri gönder
                 SendActivationPackets(client, collection, clothGroup, isNewlyActivated);
 
-                // -------------------------------------------------------
-                // DÜZELTME: Her eleman eklenişinde UpdatePlayerProperties
-                // çağrılıyor.
-                //
-                // Akış:
-                //   EquipBag.UpdatePlayerProperties()
-                //     → GetBaseAttack()  → DamageAvatar (avatar koleksiyon bonusu) hesaplanır
-                //     → GetBaseDefence() → GuardAvatar  (avatar koleksiyon bonusu) hesaplanır
-                //     → UpdateBaseProperties() çağrılır
-                //     → UpdateFightPower() çağrılır   ← savaş gücü güncellenir
-                //     → OnPropertiesChanged()
-                //       → UpdateProperties()
-                //         → Out.SendUpdatePrivateInfo(...)  ← istemciye güncelleme paketi
-                //         → Out.SendUpdatePublicPlayer(...) ← oda içi güncelleme paketi
-                //
-                // Orijinal kodda bu sadece halfItems veya totalItems eşiğinde
-                // tetikleniyordu; ara elemanlarda güç güncellemesi gerçekleşmiyordu.
-                // -------------------------------------------------------
                 client.Player.EquipBag.UpdatePlayerProperties();
-
                 client.Player.SendMessage(SUCCESS_ACTIVATION);
                 return 1;
             }
             catch (Exception ex)
             {
-                // Hata → altını iade et
                 client.Player.AddGold(clothGroup.Cost);
-                Console.WriteLine("[AvatarCollectionHandler] Activation error: " + ex);
+                Console.WriteLine("[AvatarCollection] ExecuteActivation hatası: " + ex);
                 client.Player.SendMessage(ERROR_ACTIVATION_FAILED);
                 return 0;
             }
         }
 
-        /// <summary>
-        /// Koleksiyonu getir; yoksa oluştur ve listeye ekle.
-        /// </summary>
-        private UserAvatarCollectionInfo GetOrCreateCollection(
+        private static UserAvatarCollectionInfo GetOrCreateCollection(
             GameClient client,
             ClothPropertyTemplateInfo clothProperty)
         {
@@ -243,51 +234,65 @@ namespace Game.Server.Packets.Client
                     clothProperty.ID,
                     clothProperty.Sex,
                     false,
-                    DateTime.Now
-                );
+                    DateTime.Now);
+
                 client.Player.AvatarCollect.AddAvatarCollection(collection);
             }
 
             return collection;
         }
 
-        /// <summary>
-        /// Etkinleştirme sonrası istemciye gönderilecek paketler.
-        /// </summary>
-        private void SendActivationPackets(
+        private static void SendActivationPackets(
             GameClient client,
             UserAvatarCollectionInfo collection,
             ClothGroupTemplateInfo clothGroup,
             bool isNewlyActivated)
         {
-            // Koleksiyon ilk kez aktif olduysa zaman bilgisi paketi gönder
             if (isNewlyActivated)
             {
-                GSPacketIn activationPacket = new(PACKET_ID);
-                activationPacket.WriteByte(CMD_RENEW_COLLECTION); // 4
+                GSPacketIn activationPacket = new GSPacketIn(PACKET_ID);
+                activationPacket.WriteByte(CMD_RENEW_COLLECTION);
                 activationPacket.WriteInt(collection.AvatarID);
                 activationPacket.WriteInt(collection.Sex);
                 activationPacket.WriteDateTime(collection.TimeEnd);
                 client.Player.SendTCP(activationPacket);
             }
 
-            // Eşya etkinleştirme onay paketi
-            GSPacketIn confirmPacket = new(PACKET_ID);
-            confirmPacket.WriteByte(CMD_ACTIVATE_ITEM); // 3
+            GSPacketIn confirmPacket = new GSPacketIn(PACKET_ID);
+            confirmPacket.WriteByte(CMD_ACTIVATE_ITEM);
             confirmPacket.WriteInt(clothGroup.ID);
             confirmPacket.WriteInt(clothGroup.TemplateID);
             confirmPacket.WriteInt(clothGroup.Sex);
             client.Player.SendTCP(confirmPacket);
         }
 
-        #endregion
+        // -----------------------------------------------------------------------
+        // YENİLEME — subCommand 4
+        //
+        // AS sendAvatarCollectionDelayTime(avatarId, days):
+        //   writeByte(DELAY_TIME=4)  ← subCommand (zaten okundu)
+        //   writeInt(avatarId)
+        //   writeInt(days)
+        // -----------------------------------------------------------------------
 
-        #region Renewal Logic
+        private int HandleRenewCollection(GameClient client, GSPacketIn packet)
+        {
+            int avatarId = packet.ReadInt();
+            int days = packet.ReadInt();
 
-        /// <summary>
-        /// Toplu yenileme (avatarId = -1).
-        /// Süresi dolmuş ve yenilenebilir tüm koleksiyonları uzatır.
-        /// </summary>
+            Console.WriteLine($"[AvatarCollection] RENEW → avatarId={avatarId}, days={days}");
+
+            if (days <= 0)
+            {
+                client.Player.SendMessage(ERROR_INVALID_DAYS);
+                return 1;
+            }
+
+            return avatarId == -1
+                ? HandleMassRenewal(client, days)
+                : HandleSingleRenewal(client, avatarId, days);
+        }
+
         private int HandleMassRenewal(GameClient client, int days)
         {
             int renewedCount = 0;
@@ -295,45 +300,16 @@ namespace Game.Server.Packets.Client
             foreach (UserAvatarCollectionInfo collection in
                      client.Player.AvatarCollect.AvatarCollect)
             {
-                // Süresi henüz dolmamış koleksiyonları atla
-                if (collection.IsAvailable())
-                {
-                    continue;
-                }
-
-                // Yeterli eleman kontrolü (activeCount >= totalCount / 2)
-                if (!CanRenewCollection(collection))
-                {
-                    continue;
-                }
+                if (collection.IsAvailable()) continue;
+                if (!CanRenewCollection(collection)) continue;
 
                 ClothPropertyTemplateInfo property =
                     ClothPropertyTemplateInfoMgr.GetClothPropertyWithID(collection.AvatarID);
+                if (property == null) continue;
 
-                if (property == null)
-                {
-                    continue;
-                }
-
-                // AS tarafındaki needHonor hesabıyla birebir eşleşen maliyet:
-                //   Tam koleksiyon → Cost * 2
-                //   Yarısı dolu   → Cost
-                int totalItems = ClothGroupTemplateInfoMgr.CountClothGroupWithID(collection.AvatarID);
-                int currentItems = collection.Items != null ? collection.Items.Count : 0;
-                int baseHonor = currentItems >= totalItems
-                    ? property.Cost * 2
-                    : property.Cost;
-
-                int totalCost = baseHonor * days;
-
-                // DÜZELTME: AS tarafıyla örtüşen onur kontrolü:
-                // totalCost <= 0 → geçersiz değer, atla
-                // myHonor < totalCost → yetersiz onur, atla
-                if (totalCost <= 0 ||
-                    client.Player.PlayerCharacter.myHonor < totalCost)
-                {
-                    continue;
-                }
+                int totalCost = CalculateRenewalCost(collection, property, days);
+                if (totalCost <= 0) continue;
+                if (client.Player.PlayerCharacter.myHonor < totalCost) continue;
 
                 client.Player.RemovemyHonor(totalCost);
                 collection.ActiveAvatar(days);
@@ -343,12 +319,8 @@ namespace Game.Server.Packets.Client
 
             if (renewedCount > 0)
             {
-                // Koleksiyon listesini istemciye gönder
                 client.Player.Out.SendAvatarCollect(client.Player.AvatarCollect);
-
-                // Tüm yenilenen koleksiyonların bonusları güce yansısın
                 client.Player.EquipBag.UpdatePlayerProperties();
-
                 client.Player.SendMessage(string.Format(SUCCESS_RENEWAL, days));
             }
             else
@@ -359,11 +331,6 @@ namespace Game.Server.Packets.Client
             return 1;
         }
 
-        /// <summary>
-        /// Tekil yenileme.
-        /// AS: sendAvatarCollectionDelayTime(data.id, selectedCount)
-        /// selectedCount = kullanıcının onayladığı gün sayısı
-        /// </summary>
         private int HandleSingleRenewal(GameClient client, int avatarId, int days)
         {
             UserAvatarCollectionInfo collection =
@@ -375,13 +342,9 @@ namespace Game.Server.Packets.Client
                 return 1;
             }
 
-            // Eleman listesi henüz yüklü değilse yükle
             if (collection.Items == null)
-            {
                 collection.UpdateItems();
-            }
 
-            // Yenilenebilirlik kontrolü (activeCount >= totalCount / 2)
             if (!CanRenewCollection(collection))
             {
                 client.Player.SendMessage(ERROR_RENEW_NOT_ENOUGH_ITEMS);
@@ -390,26 +353,14 @@ namespace Game.Server.Packets.Client
 
             ClothPropertyTemplateInfo property =
                 ClothPropertyTemplateInfoMgr.GetClothPropertyWithID(avatarId);
-
             if (property == null)
             {
                 client.Player.SendMessage(ERROR_CANNOT_RENEW);
                 return 1;
             }
 
-            // AS tarafıyla birebir eşleşen maliyet hesabı:
-            //   Tam koleksiyon → Cost * 2, değilse → Cost
-            int totalItems = ClothGroupTemplateInfoMgr.CountClothGroupWithID(collection.AvatarID);
-            int currentItems = collection.Items != null ? collection.Items.Count : 0;
-            int baseHonor = currentItems >= totalItems
-                ? property.Cost * 2
-                : property.Cost;
+            int totalCost = CalculateRenewalCost(collection, property, days);
 
-            int totalCost = baseHonor * days;
-
-            // DÜZELTME: AS tarafındaki honor kontrolüyle örtüşen kontrol.
-            // totalCost <= 0 → geçersiz değer (negatif days * honor durumu)
-            // myHonor < totalCost → yetersiz onur
             if (totalCost <= 0 ||
                 client.Player.PlayerCharacter.myHonor < totalCost)
             {
@@ -421,41 +372,44 @@ namespace Game.Server.Packets.Client
             collection.ActiveAvatar(days);
             SendRenewalPacket(client, collection);
 
-            // Yenileme sonrası koleksiyon bonusu güce yansısın
             client.Player.EquipBag.UpdatePlayerProperties();
-
             client.Player.SendMessage(string.Format(SUCCESS_RENEWAL, days));
             return 1;
         }
 
-        /// <summary>
-        /// Yenileme onay paketini istemciye gönderir.
-        /// </summary>
-        private void SendRenewalPacket(
+        private static void SendRenewalPacket(
             GameClient client,
             UserAvatarCollectionInfo collection)
         {
-            GSPacketIn packet = new(PACKET_ID);
-            packet.WriteByte(CMD_RENEW_COLLECTION); // 4
+            GSPacketIn packet = new GSPacketIn(PACKET_ID);
+            packet.WriteByte(CMD_RENEW_COLLECTION);
             packet.WriteInt(collection.AvatarID);
             packet.WriteInt(collection.Sex);
             packet.WriteDateTime(collection.TimeEnd);
             client.Player.SendTCP(packet);
         }
 
-        /// <summary>
-        /// Koleksiyonun yenilenip yenilenemeyeceğini kontrol eder.
-        /// AS tarafındaki kural: activeCount >= totalCount / 2
-        /// </summary>
-        private bool CanRenewCollection(UserAvatarCollectionInfo collection)
+        // -----------------------------------------------------------------------
+        // YARDIMCI METODlar
+        // -----------------------------------------------------------------------
+
+        private static int CalculateRenewalCost(
+            UserAvatarCollectionInfo collection,
+            ClothPropertyTemplateInfo property,
+            int days)
+        {
+            int totalItems = ClothGroupTemplateInfoMgr.CountClothGroupWithID(collection.AvatarID);
+            int currentItems = collection.Items != null ? collection.Items.Count : 0;
+            int baseHonor = currentItems >= totalItems ? property.Cost * 2 : property.Cost;
+            return baseHonor * days;
+        }
+
+        private static bool CanRenewCollection(UserAvatarCollectionInfo collection)
         {
             int totalItems = ClothGroupTemplateInfoMgr.CountClothGroupWithID(collection.AvatarID);
             int requiredItems = totalItems / 2;
             int currentItems = collection.Items != null ? collection.Items.Count : 0;
-
             return currentItems >= requiredItems;
         }
-
-        #endregion
     }
 }

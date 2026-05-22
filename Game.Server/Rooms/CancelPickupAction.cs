@@ -25,7 +25,7 @@ namespace Game.Server.Rooms
                 m_room.SendRoomSetupChange(m_room);
                 m_room.SendCancelPickUp();
                 RoomMgr.WaitingRoom.SendUpdateCurrentRoom(m_room);
-                //RoomMgr.WaitingRoom.SendUpdateRoom(m_room);
+                RoomMgr.WaitingRoom.SendUpdateRoom(m_room);
 
             }
         }
