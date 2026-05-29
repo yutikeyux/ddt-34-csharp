@@ -286,17 +286,17 @@ namespace Game.Server.Packets.Client
                         {
                             client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.Silah_Guclendirme, item.StrengthenLevel);
                         }
-                        if (item.Template.CategoryID == 5 && client.Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.Kıyafet_Guclendirme))
+                        if (item.Template.CategoryID == 5 && client.Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.Kiyafet_Guclendirme))
                         {
-                            client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.Kıyafet_Guclendirme, item.StrengthenLevel);
+                            client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.Kiyafet_Guclendirme, item.StrengthenLevel);
                         }
                         else if (item.Template.CategoryID == 1 && client.Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.Sapka_Guclendirme))
                         {
                             client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.Sapka_Guclendirme, item.StrengthenLevel);
                         }
-                        if (item.Template.CategoryID == 17 && client.Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.DestekEkipmanıGuclendirme))
+                        if (item.Template.CategoryID == 17 && client.Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.DestekEkipmaniGuclendirme))
                         {
-                            client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.DestekEkipmanıGuclendirme, item.StrengthenLevel);
+                            client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.DestekEkipmaniGuclendirme, item.StrengthenLevel);
                         }
                     }
                     else

@@ -507,7 +507,7 @@ namespace Game.Server.GameUtils
                     return true;
                 case NoviceActiveType.Silah_Guclendirme:
                     return true;
-                case NoviceActiveType.Kıyafet_Guclendirme:
+                case NoviceActiveType.Kiyafet_Guclendirme:
                     return true;
                 case NoviceActiveType.Sapka_Guclendirme:
                     return true;
@@ -517,9 +517,9 @@ namespace Game.Server.GameUtils
                     return true;
                 case NoviceActiveType.Gunluk_Harcama:
                     return true;
-                case NoviceActiveType.Haftalık_Harcama:
+                case NoviceActiveType.Haftalik_Harcama:
                     return true;
-                case NoviceActiveType.DestekEkipmanıGuclendirme:
+                case NoviceActiveType.DestekEkipmaniGuclendirme:
                     return true;
                 case NoviceActiveType.Ilk_Yukleme:
                     return true;
@@ -527,13 +527,49 @@ namespace Game.Server.GameUtils
                     return true;
                 case NoviceActiveType.TOHUM_TOPLAMA:
                     return true;
-                case NoviceActiveType.Arkadasdan_Ekin_Clalma:
+                case NoviceActiveType.Arkadasdan_Ekin_Calma:
                     return true;
                 case NoviceActiveType.BIRLIK_SAVASI:
                     return true;
                 case NoviceActiveType.Ozgur_Savas:
                     return true;
                 case NoviceActiveType.Kesif_Tamamlama:
+                    return true;
+                case NoviceActiveType.PET_SAHIPLENME:
+                    return true;
+                case NoviceActiveType.PET_SEVIYE:
+                    return true;
+                case NoviceActiveType.KART_TAKMA:
+                    return true;
+                case NoviceActiveType.ITEM_BIRLESTIRME:
+                    return true;
+                case NoviceActiveType.ITEM_FUZYON:
+                    return true;
+                case NoviceActiveType.ILK_EVLENME:
+                    return true;
+                case NoviceActiveType.CIRAKLIK_ALMA:
+                    return true;
+                case NoviceActiveType.USTA_OLMA:
+                    return true;
+                case NoviceActiveType.LONCA_KATILMA:
+                    return true;
+                case NoviceActiveType.MAC_KAZANMA_SERISI:
+                    return true;
+                case NoviceActiveType.TOPLAM_HASAR:
+                    return true;
+                case NoviceActiveType.ILK_BOSS_OLDURME:
+                    return true;
+                case NoviceActiveType.EKIPMAN_SETI_TAMAMLAMA:
+                    return true;
+                case NoviceActiveType.TOTEM_ACMA:
+                    return true;
+                case NoviceActiveType.CIFTLIK_HASAT:
+                    return true;
+                case NoviceActiveType.BUFF_KULLANIMI:
+                    return true;
+                case NoviceActiveType.GUNLUK_GOREV_TAMAMLAMA:
+                    return true;
+                case NoviceActiveType.ALTIN_TOPLAMA:
                     return true;
                 default:
                     return false;

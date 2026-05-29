@@ -43,7 +43,13 @@ namespace Game.Server.GmActivity
 				14 => new MountMaster(player, gmActivityInfo, userGmActivityConditions, userGmActivityRewards), 
 				15 => new CarnivalActivity(player, gmActivityInfo, userGmActivityConditions, userGmActivityRewards), 
 				20 => new TempleUp(player, gmActivityInfo, userGmActivityConditions, userGmActivityRewards), 
-				31 => new SignActive(player, gmActivityInfo, userGmActivityConditions, userGmActivityRewards), 
+				31 => new SignActive(player, gmActivityInfo, userGmActivityConditions, userGmActivityRewards),
+				32 => new LoginStreakActivity(player, gmActivityInfo, userGmActivityConditions, userGmActivityRewards),
+				33 => new BattleWinActivity(player, gmActivityInfo, userGmActivityConditions, userGmActivityRewards),
+				34 => new GuildDonateActivity(player, gmActivityInfo, userGmActivityConditions, userGmActivityRewards),
+				35 => new LevelUpActivity(player, gmActivityInfo, userGmActivityConditions, userGmActivityRewards),
+				36 => new BossKillActivity(player, gmActivityInfo, userGmActivityConditions, userGmActivityRewards),
+				37 => new PetTrainingActivity(player, gmActivityInfo, userGmActivityConditions, userGmActivityRewards),
 				_ => new NullActive(player, gmActivityInfo, userGmActivityConditions, userGmActivityRewards), 
 			};
 			if (1 == 0)

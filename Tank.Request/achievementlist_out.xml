@@ -1,9 +1,9 @@
-<Result value="true" message="Success!">
-  <Item ID="5094" AchievementPoint="20" AchievementType="0" CanHide="true" Detail="Atom bombası aksesuarı kullanma 200 kez" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="0" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="67" PlaceID="4" PreAchievementID="0," StartDate="2000-01-01 00:00:00" Title="Atom bombası">
-    <Item_Condiction AchievementID="5094" CondictionID="1" CondictionType="35" Condiction_Para1="0" Condiction_Para2="200" />
+<Result value="true" message="Başarılı!">
+  <Item ID="5094" AchievementPoint="20" AchievementType="0" CanHide="true" Detail="Atom Bombası'nı 10000 kez kullan!" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="0" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="67" PlaceID="4" PreAchievementID="0," StartDate="2000-01-01 00:00:00" Title="Oppenheimer">
+    <Item_Condiction AchievementID="5094" CondictionID="1" CondictionType="35" Condiction_Para1="0" Condiction_Para2="10000" />
   </Item>
-  <Item ID="5093" AchievementPoint="20" AchievementType="0" CanHide="true" Detail="Zırh delici aksesuarı kullanma 200 kez" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="0" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="66" PlaceID="4" PreAchievementID="0," StartDate="2000-01-01 00:00:00" Title="ZIRH delici">
-    <Item_Condiction AchievementID="5093" CondictionID="1" CondictionType="34" Condiction_Para1="0" Condiction_Para2="200" />
+  <Item ID="5093" AchievementPoint="20" AchievementType="0" CanHide="true" Detail="Zırh Delici'yi 10.000 kez kullan!" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="0" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="66" PlaceID="4" PreAchievementID="0," StartDate="2000-01-01 00:00:00" Title="Delgeç">
+    <Item_Condiction AchievementID="5093" CondictionID="1" CondictionType="34" Condiction_Para1="0" Condiction_Para2="10000" />
   </Item>
   <Item ID="5092" AchievementPoint="10" AchievementType="0" CanHide="true" Detail="Bir damla kan ile  zafer 50 kez" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="0" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="65" PlaceID="4" PreAchievementID="0," StartDate="2000-01-01 00:00:00" Title="Ölüme meydan okuma">
     <Item_Condiction AchievementID="5092" CondictionID="1" CondictionType="41" Condiction_Para1="0" Condiction_Para2="50" />
@@ -659,15 +659,15 @@
   <Item ID="3001" AchievementPoint="10" AchievementType="0" CanHide="false" Detail="“İyi insan geri dönüşümü” görevini tamamlama" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="0" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="24" PlaceID="2" PreAchievementID="0," StartDate="2000-01-01 00:00:00" Title="Erdemli insan">
     <Item_Condiction AchievementID="3001" CondictionID="1" CondictionType="59" Condiction_Para1="0" Condiction_Para2="1" />
   </Item>
-  <Item ID="2094" AchievementPoint="50" AchievementType="1" CanHide="false" Detail="60.seviyeye yükseldi" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="19" PlaceID="1" PreAchievementID="2093," StartDate="2000-01-01 00:00:00" Title="60.seviye">
+  <Item ID="2094" AchievementPoint="50" AchievementType="1" CanHide="false" Detail="60. seviyeye yüksel!" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="19" PlaceID="1" PreAchievementID="2093," StartDate="2000-01-01 00:00:00" Title="60.seviye">
     <Item_Condiction AchievementID="2094" CondictionID="1" CondictionType="10" Condiction_Para1="0" Condiction_Para2="60" />
     <Item_Reward AchievementID="2094" RewardValueId="80" RewardCount="1" RewardType="1" RewardPara="Bombom Tanrısı" />
   </Item>
-  <Item ID="2093" AchievementPoint="50" AchievementType="0" CanHide="false" Detail="50.seviyeye yükseldi" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="19" PlaceID="1" PreAchievementID="2030," StartDate="2000-01-01 00:00:00" Title="50.seviye">
+  <Item ID="2093" AchievementPoint="50" AchievementType="0" CanHide="false" Detail="50. seviyeye yüksel!" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="19" PlaceID="1" PreAchievementID="2030," StartDate="2000-01-01 00:00:00" Title="50.seviye">
     <Item_Condiction AchievementID="2093" CondictionID="1" CondictionType="10" Condiction_Para1="0" Condiction_Para2="50" />
     <Item_Reward AchievementID="2093" RewardValueId="79" RewardCount="1" RewardType="1" RewardPara="Güçlü Bombom oyuncusu" />
   </Item>
-  <Item ID="2088" AchievementPoint="40" AchievementType="1" CanHide="false" Detail="Bir set 30.seviye savaşçı arenası kartı donat" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="100" PlaceID="1" PreAchievementID="2087," StartDate="2000-01-01 00:00:00" Title="Kart seti: Savaşçı arenası">
+  <Item ID="2088" AchievementPoint="40" AchievementType="1" CanHide="false" Detail="Bir set 30.seviye savaşçı arenası kartı donat" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="100" PlaceID="1" PreAchievementID="2087," StartDate="2000-01-01 00:00:00" Title="Kart seti: Savaşçı Arenası">
     <Item_Condiction AchievementID="2088" CondictionID="1" CondictionType="101" Condiction_Para1="0" Condiction_Para2="4" />
   </Item>
   <Item ID="2087" AchievementPoint="30" AchievementType="0" CanHide="false" Detail="Bir set 20.seviye savaşçı arenası kartı donat" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="100" PlaceID="1" PreAchievementID="2086," StartDate="2000-01-01 00:00:00" Title="Kart seti: Savaşçı arenası">
@@ -927,17 +927,17 @@
   <Item ID="2006" AchievementPoint="10" AchievementType="0" CanHide="false" Detail="Savunma değerinin  1200 olması " EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="15" PlaceID="1" PreAchievementID="0," StartDate="2000-01-01 00:00:00" Title="Ölüm geçirmez">
     <Item_Condiction AchievementID="2006" CondictionID="1" CondictionType="2" Condiction_Para1="0" Condiction_Para2="1200" />
   </Item>
-  <Item ID="2005" AchievementPoint="50" AchievementType="1" CanHide="false" Detail="Saldırı değerinin 2 bin  olması " EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="14" PlaceID="1" PreAchievementID="2004," StartDate="2000-01-01 00:00:00" Title="Delip geçme">
+  <Item ID="2005" AchievementPoint="50" AchievementType="1" CanHide="false" Detail="Saldırı değerinin 2000  olması " EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="14" PlaceID="1" PreAchievementID="2004," StartDate="2000-01-01 00:00:00" Title="Delip geçme">
     <Item_Condiction AchievementID="2005" CondictionID="1" CondictionType="1" Condiction_Para1="0" Condiction_Para2="2000" />
     <Item_Reward AchievementID="2005" RewardValueId="7" RewardCount="1" RewardType="1" RewardPara="Delip geçme" />
   </Item>
-  <Item ID="2004" AchievementPoint="40" AchievementType="0" CanHide="false" Detail="Saldırı değerinin  1800 olması " EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="14" PlaceID="1" PreAchievementID="2003," StartDate="2000-01-01 00:00:00" Title="Delip geçme">
+  <Item ID="2004" AchievementPoint="40" AchievementType="0" CanHide="false" Detail="Saldırı değerinin 1800 olması " EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="14" PlaceID="1" PreAchievementID="2003," StartDate="2000-01-01 00:00:00" Title="Delip geçme">
     <Item_Condiction AchievementID="2004" CondictionID="1" CondictionType="1" Condiction_Para1="0" Condiction_Para2="1800" />
   </Item>
-  <Item ID="2003" AchievementPoint="30" AchievementType="0" CanHide="false" Detail="Saldırı değerinin  1600 olması " EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="14" PlaceID="1" PreAchievementID="2002," StartDate="2000-01-01 00:00:00" Title="Delip geçme">
+  <Item ID="2003" AchievementPoint="30" AchievementType="0" CanHide="false" Detail="Saldırı değerinin 1600 olması " EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="14" PlaceID="1" PreAchievementID="2002," StartDate="2000-01-01 00:00:00" Title="Delip geçme">
     <Item_Condiction AchievementID="2003" CondictionID="1" CondictionType="1" Condiction_Para1="0" Condiction_Para2="1600" />
   </Item>
-  <Item ID="2002" AchievementPoint="20" AchievementType="0" CanHide="false" Detail="Saldırı değerinin  1400 olması " EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="14" PlaceID="1" PreAchievementID="2001," StartDate="2000-01-01 00:00:00" Title="Delip geçme">
+  <Item ID="2002" AchievementPoint="20" AchievementType="0" CanHide="false" Detail="Saldırı değerinin 1400 olması " EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="14" PlaceID="1" PreAchievementID="2001," StartDate="2000-01-01 00:00:00" Title="Delip geçme">
     <Item_Condiction AchievementID="2002" CondictionID="1" CondictionType="1" Condiction_Para1="0" Condiction_Para2="1400" />
   </Item>
   <Item ID="2001" AchievementPoint="10" AchievementType="0" CanHide="false" Detail="Saldırı değerinin 1200 olması " EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="14" PlaceID="1" PreAchievementID="0," StartDate="2000-01-01 00:00:00" Title="Delip geçme">
@@ -1028,37 +1028,37 @@
   <Item ID="1016" AchievementPoint="10" AchievementType="0" CanHide="false" Detail="Arkadaşa hediye gönderme" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="0" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="4" PlaceID="0" PreAchievementID="0," StartDate="2000-01-01 00:00:00" Title="Gerçek dost">
     <Item_Condiction AchievementID="1016" CondictionID="1" CondictionType="23" Condiction_Para1="0" Condiction_Para2="1" />
   </Item>
-  <Item ID="1015" AchievementPoint="50" AchievementType="1" CanHide="true" Detail="5 bin tane mükafat toplama" EndDate="2010-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="3" PlaceID="0" PreAchievementID="1014," StartDate="2000-01-01 00:00:00" Title="Halaskar">
+  <Item ID="1015" AchievementPoint="50" AchievementType="1" CanHide="true" Detail="5 bin tane mükafat toplama" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="3" PlaceID="0" PreAchievementID="1014," StartDate="2000-01-01 00:00:00" Title="Halaskar">
     <Item_Condiction AchievementID="1015" CondictionID="1" CondictionType="40" Condiction_Para1="0" Condiction_Para2="5000" />
     <Item_Reward AchievementID="1015" RewardValueId="23" RewardCount="1" RewardType="1" RewardPara="Tanrı onuru" />
   </Item>
-  <Item ID="1014" AchievementPoint="40" AchievementType="0" CanHide="true" Detail="2 bin  tane mükafat toplama" EndDate="2010-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="3" PlaceID="0" PreAchievementID="1013," StartDate="2000-01-01 00:00:00" Title="Vatan kahramanı">
+  <Item ID="1014" AchievementPoint="40" AchievementType="0" CanHide="true" Detail="2 bin  tane mükafat toplama" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="3" PlaceID="0" PreAchievementID="1013," StartDate="2000-01-01 00:00:00" Title="Vatan kahramanı">
     <Item_Condiction AchievementID="1014" CondictionID="1" CondictionType="40" Condiction_Para1="0" Condiction_Para2="2000" />
   </Item>
-  <Item ID="1013" AchievementPoint="30" AchievementType="0" CanHide="true" Detail="1000 tane mükafat toplama" EndDate="2010-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="3" PlaceID="0" PreAchievementID="1012," StartDate="2000-01-01 00:00:00" Title="Halk kahramanı">
+  <Item ID="1013" AchievementPoint="30" AchievementType="0" CanHide="true" Detail="1000 tane mükafat toplama" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="3" PlaceID="0" PreAchievementID="1012," StartDate="2000-01-01 00:00:00" Title="Halk kahramanı">
     <Item_Condiction AchievementID="1013" CondictionID="1" CondictionType="40" Condiction_Para1="0" Condiction_Para2="1000" />
   </Item>
-  <Item ID="1012" AchievementPoint="20" AchievementType="0" CanHide="true" Detail="500 tane mükafat toplama" EndDate="2010-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="3" PlaceID="0" PreAchievementID="1011," StartDate="2000-01-01 00:00:00" Title="Savaş kahramanı">
+  <Item ID="1012" AchievementPoint="20" AchievementType="0" CanHide="true" Detail="500 tane mükafat toplama" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="3" PlaceID="0" PreAchievementID="1011," StartDate="2000-01-01 00:00:00" Title="Savaş kahramanı">
     <Item_Condiction AchievementID="1012" CondictionID="1" CondictionType="40" Condiction_Para1="0" Condiction_Para2="500" />
   </Item>
-  <Item ID="1011" AchievementPoint="10" AchievementType="0" CanHide="true" Detail="300 tane mükafat toplama" EndDate="2010-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="3" PlaceID="0" PreAchievementID="0," StartDate="2000-01-01 00:00:00" Title="Yüce onur">
+  <Item ID="1011" AchievementPoint="10" AchievementType="0" CanHide="true" Detail="300 tane mükafat toplama" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="3" PlaceID="0" PreAchievementID="0," StartDate="2000-01-01 00:00:00" Title="Yüce onur">
     <Item_Condiction AchievementID="1011" CondictionID="1" CondictionType="40" Condiction_Para1="0" Condiction_Para2="300" />
     <Item_Reward AchievementID="1011" RewardValueId="22" RewardCount="1" RewardType="1" RewardPara="Yüce onur" />
   </Item>
-  <Item ID="1010" AchievementPoint="50" AchievementType="1" CanHide="true" Detail="600 bin altın toplama" EndDate="2010-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="2" PlaceID="0" PreAchievementID="1009," StartDate="2000-01-01 00:00:00" Title="İmparator hediye altını">
+  <Item ID="1010" AchievementPoint="50" AchievementType="1" CanHide="true" Detail="600 bin altın toplama" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="2" PlaceID="0" PreAchievementID="1009," StartDate="2000-01-01 00:00:00" Title="İmparator hediye altını">
     <Item_Condiction AchievementID="1010" CondictionID="1" CondictionType="39" Condiction_Para1="0" Condiction_Para2="600000" />
     <Item_Reward AchievementID="1010" RewardValueId="21" RewardCount="1" RewardType="1" RewardPara="Altın tanrısı" />
   </Item>
-  <Item ID="1009" AchievementPoint="40" AchievementType="0" CanHide="true" Detail="300 bin altın toplama" EndDate="2010-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="2" PlaceID="0" PreAchievementID="1008," StartDate="2000-01-01 00:00:00" Title="Veliaht hediye altını">
+  <Item ID="1009" AchievementPoint="40" AchievementType="0" CanHide="true" Detail="300 bin altın toplama" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="2" PlaceID="0" PreAchievementID="1008," StartDate="2000-01-01 00:00:00" Title="Veliaht hediye altını">
     <Item_Condiction AchievementID="1009" CondictionID="1" CondictionType="39" Condiction_Para1="0" Condiction_Para2="300000" />
   </Item>
-  <Item ID="1008" AchievementPoint="30" AchievementType="0" CanHide="true" Detail="100 bin altın toplama" EndDate="2010-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="2" PlaceID="0" PreAchievementID="1007," StartDate="2000-01-01 00:00:00" Title="Abi hediye altını">
+  <Item ID="1008" AchievementPoint="30" AchievementType="0" CanHide="true" Detail="100 bin altın toplama" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="2" PlaceID="0" PreAchievementID="1007," StartDate="2000-01-01 00:00:00" Title="Abi hediye altını">
     <Item_Condiction AchievementID="1008" CondictionID="1" CondictionType="39" Condiction_Para1="0" Condiction_Para2="100000" />
   </Item>
-  <Item ID="1007" AchievementPoint="20" AchievementType="0" CanHide="true" Detail="50 bin altın toplama" EndDate="2010-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="2" PlaceID="0" PreAchievementID="1006," StartDate="2000-01-01 00:00:00" Title="Beyefendi hediye altını">
+  <Item ID="1007" AchievementPoint="20" AchievementType="0" CanHide="true" Detail="50 bin altın toplama" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="2" PlaceID="0" PreAchievementID="1006," StartDate="2000-01-01 00:00:00" Title="Beyefendi hediye altını">
     <Item_Condiction AchievementID="1007" CondictionID="1" CondictionType="39" Condiction_Para1="0" Condiction_Para2="50000" />
   </Item>
-  <Item ID="1006" AchievementPoint="10" AchievementType="0" CanHide="true" Detail="20 bin altın toplama" EndDate="2010-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="2" PlaceID="0" PreAchievementID="0," StartDate="2000-01-01 00:00:00" Title="Küçük Bey hediye altını">
+  <Item ID="1006" AchievementPoint="10" AchievementType="0" CanHide="true" Detail="20 bin altın toplama" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="2" PlaceID="0" PreAchievementID="0," StartDate="2000-01-01 00:00:00" Title="Küçük Bey hediye altını">
     <Item_Condiction AchievementID="1006" CondictionID="1" CondictionType="39" Condiction_Para1="0" Condiction_Para2="20000" />
   </Item>
   <Item ID="1005" AchievementPoint="50" AchievementType="1" CanHide="true" Detail="10 milyon altın toplama" EndDate="2050-01-01 00:00:00" IsActive="1" IsOther="1" IsShare="true" NeedMaxLevel="100" NeedMinLevel="0" PicID="1" PlaceID="0" PreAchievementID="1004," StartDate="2000-01-01 00:00:00" Title="Dünya zengini">

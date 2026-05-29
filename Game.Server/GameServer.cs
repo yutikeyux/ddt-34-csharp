@@ -739,7 +739,7 @@ namespace Game.Server
                     if (player.PlayerCharacter.ID > 0)
                     {
                         //var IKI_VS_IKI_SAVAS = player.Extra.GetEventProcess((int)NoviceActiveType.IKI_VS_IKI_SAVAS).IsReset;
-                        var Haftalık_Harcama = player.Extra.GetEventProcess((int)NoviceActiveType.Haftalık_Harcama).IsReset;
+                        var Haftalik_Harcama = player.Extra.GetEventProcess((int)NoviceActiveType.Haftalik_Harcama).IsReset;
                         if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
                         {
                             //if (!IKI_VS_IKI_SAVAS)
@@ -747,9 +747,9 @@ namespace Game.Server
                             // player.Extra.ResetNoviceEvent(NoviceActiveType.IKI_VS_IKI_SAVAS);
                             //result = true;
                             // }
-                            if (!Haftalık_Harcama)
+                            if (!Haftalik_Harcama)
                             {
-                                player.Extra.ResetNoviceEvent(NoviceActiveType.Haftalık_Harcama);
+                                player.Extra.ResetNoviceEvent(NoviceActiveType.Haftalik_Harcama);
                                 result = true;
                             }
                             if (result)
@@ -757,7 +757,7 @@ namespace Game.Server
                                 isReset = true;
                                 player.SendMessage("Haftalık harcama etkinliği sıfırlandı!");
                                 //player.Extra.ResetUsersEventProcess((int)NoviceActiveType.IKI_VS_IKI_SAVAS, isReset);
-                                player.Extra.ResetUsersEventProcess((int)NoviceActiveType.Haftalık_Harcama, isReset);
+                                player.Extra.ResetUsersEventProcess((int)NoviceActiveType.Haftalik_Harcama, isReset);
                             }
                         }
                         else
@@ -766,12 +766,12 @@ namespace Game.Server
                             //{
                             //    isReset = false;
                             // }
-                            if (Haftalık_Harcama)
+                            if (Haftalik_Harcama)
                             {
                                 isReset = false;
                             }
                             //player.Extra.ResetUsersEventProcess((int)NoviceActiveType.IKI_VS_IKI_SAVAS, isReset);
-                            player.Extra.ResetUsersEventProcess((int)NoviceActiveType.Haftalık_Harcama, isReset);
+                            player.Extra.ResetUsersEventProcess((int)NoviceActiveType.Haftalik_Harcama, isReset);
                         }
                     }
                 }

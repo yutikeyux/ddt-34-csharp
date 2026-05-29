@@ -1,4 +1,4 @@
-<Result value="true" message="Success!">
+<Result value="true" message="Başarılı!">
   <item ID="1" Type="1" NeedMoney="2000" AddHonor="200" />
   <item ID="2" Type="1" NeedMoney="4000" AddHonor="200" />
   <item ID="3" Type="1" NeedMoney="6000" AddHonor="200" />

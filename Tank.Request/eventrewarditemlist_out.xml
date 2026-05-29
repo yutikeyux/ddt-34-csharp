@@ -1,4 +1,4 @@
-<Result value="true" message="Success!">
+<Result value="true" message="Başarılı!">
   <ActivityType value="1">
     <Items SubActivityType="1" Condition="10">
       <Item TemplateId="7003" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="0" Count="1" />
@@ -39,7 +39,7 @@
       <Item TemplateId="1716" StrengthLevel="12" AttackCompose="50" DefendCompose="50" LuckCompose="50" AgilityCompose="50" IsBind="true" ValidDate="365" Count="1" />
       <Item TemplateId="1815" StrengthLevel="12" AttackCompose="50" DefendCompose="50" LuckCompose="50" AgilityCompose="50" IsBind="true" ValidDate="365" Count="1" />
       <Item TemplateId="5596" StrengthLevel="12" AttackCompose="50" DefendCompose="50" LuckCompose="50" AgilityCompose="50" IsBind="true" ValidDate="365" Count="1" />
-      <Item TemplateId="5810" StrengthLevel="12" AttackCompose="50" DefendCompose="50" LuckCompose="50" AgilityCompose="50" IsBind="true" ValidDate="365" Count="1" />
+      <Item TemplateId="5664" StrengthLevel="12" AttackCompose="50" DefendCompose="50" LuckCompose="50" AgilityCompose="50" IsBind="true" ValidDate="365" Count="1" />
       <Item TemplateId="7064" StrengthLevel="0" AttackCompose="0" DefendCompose="0" LuckCompose="0" AgilityCompose="0" IsBind="true" ValidDate="30" Count="1" />
     </Items>
   </ActivityType>

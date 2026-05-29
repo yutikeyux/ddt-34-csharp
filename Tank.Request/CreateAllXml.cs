@@ -68,6 +68,19 @@ namespace Tank.Request
                 build.Append(suittemplateinfolist.Build(context));
                 build.Append(DailyLeagueLevelList.Build(context));
                 build.Append(DailyLeagueAwardList.Build(context));
+                build.Append(clothgrouptemplateinfo.Build(context));
+                build.Append(clothpropertytemplateinfo.Build(context));
+                build.Append(consortiabuffertemp.Build(context));
+                build.Append(runetemplatelist.Build(context));
+                build.Append(petlevellist.Build(context));
+                build.Append(loadpetfightproperty.Build(context));
+                build.Append(loadpetmoeproperty.Build(context));
+                build.Append(totemhonortemplate.Build(context));
+                build.Append(suitpartequipinfolist.Build(context));
+                build.Append(achievementlist.Build(context));
+                build.Append(GMActivityInfo.Build(context));
+                build.Append(bombconfig.Build(context));
+                build.Append(fightlabdropitemlist.Build(context));
                 context.Response.ContentType = "text/plain";
                 context.Response.Write(build.ToString());
             }

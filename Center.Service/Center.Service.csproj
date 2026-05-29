@@ -9,6 +9,7 @@
   <PropertyGroup>
     <LangVersion>Preview</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>CS0414;CS0169;CS0618;CS0649;CS0219;CS0162;CS1522;CS0168;CS0652</NoWarn>
     <ApplicationIcon>alpha.ico</ApplicationIcon>
     <StartupObject>Center.Service.Program</StartupObject>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

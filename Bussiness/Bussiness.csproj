@@ -8,6 +8,7 @@
   <PropertyGroup>
     <LangVersion>Preview</LangVersion>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <NoWarn>CS0414;CS0169;CS0618;CS0649;CS0219;CS0162;CS1522;CS0168;CS0652;MSB3270</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
@@ -31,9 +32,6 @@
   <ItemGroup>
     <Reference Include="Game.Server">
       <HintPath>..\Game.Server\bin\Debug\net472\Game.Server.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\Game.Server\bin\Debug\net472\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System.Data">
       <HintPath>C:\WINDOWS\Microsoft.NET\assembly\GAC_32\System.Data\v4.0_4.0.0.0__b77a5c561934e089\System.Data.dll</HintPath>

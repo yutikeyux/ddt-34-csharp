@@ -57,6 +57,24 @@ namespace Tank.Request
                 build.Append(suittemplateinfolist.Build(context));
                 build.Append(DailyLeagueLevelList.Build(context));
                 build.Append(DailyLeagueAwardList.Build(context));
+
+                // ClothGroup ve ClothProperty - SQL verisi otomatik XML'e
+                build.Append(clothgrouptemplateinfo.Build(context));
+                build.Append(clothpropertytemplateinfo.Build(context));
+
+                // Daha once eksik olan handler'lar
+                build.Append(consortiabuffertemp.Bulid(context));
+                build.Append(runetemplatelist.Bulid(context));
+                build.Append(petlevellist.Bulid(context));
+                build.Append(loadpetfightproperty.Bulid(context));
+                build.Append(loadpetmoeproperty.Bulid(context));
+                build.Append(totemhonortemplate.Bulid(context));
+                build.Append(suitpartequipinfolist.Bulid(context));
+                build.Append(achievementlist.Bulid(context));
+                build.Append(GMActivityInfo.Build(context));
+                build.Append(bombconfig.Bulid(context));
+                build.Append(fightlabdropitemlist.Bulid(context));
+
                 context.Response.ContentType = "text/plain";
                 context.Response.Write(build.ToString());
 

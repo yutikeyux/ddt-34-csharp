@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(dotnet restore \"T�mKaynak.sln\" 2>&1)",
+      "Bash(\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" TümKaynak.sln /p:Configuration=Debug /p:Platform=\"Any CPU\" /verbosity:minimal)",
+      "PowerShell($binLog4net = \"C:\\\\Users\\\\yuti\\\\Desktop\\\\yutikeyu\\\\DDT34\\\\ddt-34-csharp-main\\\\ddt-34-csharp-main\\\\Tank.Request\\\\bin\\\\log4net.dll\"; if \\(Test-Path $binLog4net\\) { [System.Reflection.AssemblyName]::GetAssemblyName\\($binLog4net\\) | Select-Object Name, Version, FullName } else { \"NOT FOUND in Tank.Request\\\\bin\" })"
+    ]
+  }
+}

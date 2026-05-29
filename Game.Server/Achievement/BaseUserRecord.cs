@@ -305,6 +305,85 @@ namespace Game.Server.Achievement
                     case 95:
                         new MissionEquipCardWSBCondition(m_player, num);
                         break;
+                    // ===== YENI ACHIEVEMENT CONDITION'LARI =====
+                    case 100:
+                        new MoneyChargeCondition(m_player, num);
+                        break;
+                    case 101:
+                        new ItemComposeCondition(m_player, num);
+                        break;
+                    case 102:
+                        new ItemFusionCondition(m_player, num);
+                        break;
+                    case 103:
+                        new ItemMeltCondition(m_player, num);
+                        break;
+                    case 104:
+                        new ItemInsertCondition(m_player, num);
+                        break;
+                    case 105:
+                        new AdoptPetCondition(m_player, num);
+                        break;
+                    case 106:
+                        new PetLevelUpCondition(m_player, num);
+                        break;
+                    case 107:
+                        new GameOverWinCondition(m_player, num);
+                        break;
+                    case 108:
+                        new GameOver2v2Condition(m_player, num);
+                        break;
+                    case 109:
+                        new EquipCardCondition(m_player, num);
+                        break;
+                    case 110:
+                        new DonateRichesCondition(m_player, num);
+                        break;
+                    case 111:
+                        new UseBufferCondition(m_player, num);
+                        break;
+                    case 112:
+                        new MarryCondition(m_player, num);
+                        break;
+                    case 113:
+                        new SeedFarmCondition(m_player, num);
+                        break;
+                    case 114:
+                        new CropHarvestCondition(m_player, num);
+                        break;
+                    case 115:
+                        new AcademyCondition(m_player, num);
+                        break;
+                    case 116:
+                        new BossKillAchievementCondition(m_player, num);
+                        break;
+                    case 117:
+                        new TotalDamageAchievementCondition(m_player, num);
+                        break;
+                    case 118:
+                        new QuestCompleteAchievementCondition(m_player, num);
+                        break;
+                    case 119:
+                        new TeamBattleWinCondition(m_player, num);
+                        break;
+                    case 120:
+                        new MarryTeamBattleCondition(m_player, num);
+                        break;
+                    case 121:
+                        new TotemGemstoneAchievementCondition(m_player, num);
+                        break;
+                    case 122:
+                        new NewGearAchievementCondition(m_player, num);
+                        break;
+                    case 123:
+                        new MissionFullClearCondition(m_player, num);
+                        break;
+                    case 124:
+                        new GuildJoinAchievementCondition(m_player, num);
+                        break;
+                    case 125:
+                        new EnterHotSpringAchievementCondition(m_player, num);
+                        break;
                 }
             }
         }

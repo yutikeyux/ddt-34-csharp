@@ -44,10 +44,6 @@ namespace Tank.Request
                     {
                         var regexItem = new Regex("^[a-za-z0-9àáâãèéêìíòóôõùúăđĩũơàáâãèéêìíòóôõùúăđĩũơưăạảấầẩẫậắằẳẵặẹẻẽềềểếưăạảấầẩẫậắằẳẵặẹẻẽềềểếễệỉịọỏốồổỗộớờởỡợụủứừễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵýỷỹửữựỳỵỷỹ\\s|_.]+$");
                         if (!regexItem.IsMatch(nickName))
-                        //string specialCharacters = @"%!@#$%^&*()?/>.<,:;'\|}]{[_~`+=-" + "\"";
-                        //char[] specialCharactersArray = specialCharacters.ToCharArray();
-
-                        //if (nickName.IndexOfAny(specialCharactersArray) != -1)
                         {
                             message = LanguageMgr.GetTranslation("UseReworkNameHandler.HasSpecialCharacters");
                         }
@@ -55,12 +51,11 @@ namespace Tank.Request
                         {
                             using (PlayerBussiness db = new PlayerBussiness())
                             {
-                                if (db.GetUserSingleByNickName(nickName) == null)
+                                bool flag4 = db.GetUserSingleByNickName(nickName) == null;
+                                if (flag4)
                                 {
                                     value = true;
-                                    //message = "You can register!";
                                     message = LanguageMgr.GetTranslation("Tank.Request.NickNameCheck.Right");
-
                                 }
                             }
                         }

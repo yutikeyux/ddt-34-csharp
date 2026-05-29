@@ -3359,3 +3359,4 @@
 [2026-05-21 19:37:46] IP: 88.209.248.52 - Sayfa: CreateAllCeleb - Durum: Başarılı (Admin)
 [2026-05-21 19:50:33] IP: 88.209.248.52 - Giriş Durumu: Başarılı (Admin)
 [2026-05-21 19:53:02] IP: 88.209.248.52 - Giriş Durumu: Başarılı (Admin)
+[2026-05-29 19:18:47] IP: 88.209.248.52 - Giriş Durumu: Başarılı (Admin)

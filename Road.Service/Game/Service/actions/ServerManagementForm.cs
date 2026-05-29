@@ -252,28 +252,28 @@ gamePlayer.PlayerCharacter.Grade.ToString()
         // Token: 0x0600004D RID: 77 RVA: 0x000022A6 File Offset: 0x000004A6
         private void button11_Click(object sender, EventArgs e)
         {
-            Process.Start("http://88.209.248.52/ddt-quest-s1/activelist.ashx");
+            Process.Start("http://127.0.0.1/ddt-quest-s1/activelist.ashx");
             MessageBox.Show("(Zaman Sınırlı) Güncellendi [Başarılı]");
         }
 
         // Token: 0x0600004E RID: 78 RVA: 0x000022BF File Offset: 0x000004BF
         private void button12_Click(object sender, EventArgs e)
         {
-            Process.Start("http://88.209.248.52/ddt-quest-s1/CelebList/CreateAllCeleb.ashx");
+            Process.Start("http://127.0.0.1/ddt-quest-s1/CelebList/CreateAllCeleb.ashx");
             MessageBox.Show("(Onur Listesi) Güncellendi [Başarılı]");
         }
 
         // Token: 0x0600004F RID: 79 RVA: 0x000022D8 File Offset: 0x000004D8
         private void button13_Click(object sender, EventArgs e)
         {
-            Process.Start("http://88.209.248.52/ddt-quest-s1/LoadPVEItems.ashx");
+            Process.Start("http://127.0.0.1/ddt-quest-s1/LoadPVEItems.ashx");
             MessageBox.Show("(Droplar) Güncellendi [Başarılı]");
         }
 
         // Token: 0x06000050 RID: 80 RVA: 0x000022F1 File Offset: 0x000004F1
         private void button14_Click(object sender, EventArgs e)
         {
-            Process.Start("http://88.209.248.52/ddt-quest-s1/questlist.ashx");
+            Process.Start("http://127.0.0.1/ddt-quest-s1/questlist.ashx");
             MessageBox.Show("(Görevler) Güncellendi [Başarılı]");
         }
 
@@ -361,7 +361,7 @@ gamePlayer.PlayerCharacter.Grade.ToString()
         // Token: 0x06000056 RID: 86 RVA: 0x00002325 File Offset: 0x00000525
         private void button18_Click(object sender, EventArgs e)
         {
-            Process.Start("http://88.209.248.52/ddt-quest-s1/NPCInfoList.ashx");
+            Process.Start("http://127.0.0.1/ddt-quest-s1/NPCInfoList.ashx");
             MessageBox.Show("(NPC'Ler) Güncellendi [Başarılı]");
         }
 
@@ -1073,7 +1073,7 @@ this.comboBox1.Text,
         private SqlConnection Baglanti_Membership_2 = new SqlConnection("Data Source=element-yuti/SA;Initial Catalog=Db_Membership;Persist Security Info=True;User ID=sa;Password=ElementYuti2026.123@");
 
         // Token: 0x04000020 RID: 32
-        private static string link = "http://88.209.248.52/ddt-quest-s1/";
+        private static string link = "http://127.0.0.1/ddt-quest-s1/";
 
         private void label7_Click(object sender, EventArgs e)
         {

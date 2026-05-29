@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>CS0414;CS0169;CS0618;CS0649;CS0219;CS0162;CS0168;CS0108;CS0612;MSB3270</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -29,25 +30,14 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>CS0414;CS0169;CS0618;CS0649;CS0219;CS0162;CS0168;CS0108;CS0612;MSB3270</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ajax">
       <HintPath>bin\Ajax.dll</HintPath>
     </Reference>
-    <Reference Include="Bussiness">
-      <HintPath>bin\Bussiness.dll</HintPath>
-    </Reference>
-    <Reference Include="Game.Base">
-      <HintPath>bin\Game.Base.dll</HintPath>
-    </Reference>
     <Reference Include="log4net">
       <HintPath>bin\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Road.Flash">
-      <HintPath>bin\Road.Flash.dll</HintPath>
-    </Reference>
-    <Reference Include="SqlDataProvider">
-      <HintPath>bin\SqlDataProvider.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -85,6 +75,8 @@
     <Compile Include="AuctionPageList.cs" />
     <Compile Include="BallList.cs" />
     <Compile Include="bombconfig.cs" />
+    <Compile Include="clothgrouptemplateinfo.cs" />
+    <Compile Include="clothpropertytemplateinfo.cs" />
     <Compile Include="CardUpdateCondition.cs" />
     <Compile Include="CardUpdateInfo.cs" />
     <Compile Include="CelebList\CelebByConsortiaDayHonor.cs" />
@@ -250,6 +242,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bussiness\Bussiness.csproj" />
+    <ProjectReference Include="..\Game.Base\Game.Base.csproj" />
+    <ProjectReference Include="..\Road.Flash\Road.Flash.csproj" />
+    <ProjectReference Include="..\SqlDataProvider\SqlDataProvider.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -63,7 +63,7 @@ namespace Tank.Request
                             using (PlayerBussiness db = new PlayerBussiness())
                             {
                                 // ID'yi gönderiyoruz
-                                bool flag4 = db.GetUserSingleByNickName(nickName, userID) == null;
+                                bool flag4 = db.GetUserSingleByNickName(nickName) == null;
 
                                 if (flag4)
                                 {

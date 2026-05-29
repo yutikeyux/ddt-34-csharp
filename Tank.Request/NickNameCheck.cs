@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -26,14 +26,6 @@ namespace Tank.Request
             {
                 string nickName = csFunction.ConvertSql(HttpUtility.UrlDecode(context.Request["NickName"]));
 
-                // --- DEĞİŞİKLİK BAŞLANGICI ---
-                // İstekten UserID parametresini alıyoruz (Kullanıcı giriş yapmışsa ID gelecektir)
-                int userID = 0;
-                string uidStr = context.Request["UserID"]; // Request parametresi genelde "UserID" veya "ID" olur
-                if (string.IsNullOrEmpty(uidStr)) uidStr = context.Request["ID"];
-                int.TryParse(uidStr, out userID);
-                // --- DEĞİŞİKLİK SONU ---
-
                 bool flag = Encoding.Default.GetByteCount(nickName) <= 14;
                 if (flag)
                 {
@@ -50,12 +42,7 @@ namespace Tank.Request
                         {
                             using (PlayerBussiness db = new PlayerBussiness())
                             {
-                                // --- DEĞİŞİKLİK BAŞLANGICI ---
-                                // userID parametresini de veritabanı fonksiyonuna gönderiyoruz.
-                                // Eğer isim kullanıcının kendi ismiyse null dönecek ve isim müsait sayılacak.
-                                bool flag4 = db.GetUserSingleByNickName(nickName, userID,0) == null;
-                                // --- DEĞİŞİKLİK SONU ---
-
+                                bool flag4 = db.GetUserSingleByNickName(nickName) == null;
                                 if (flag4)
                                 {
                                     value = true;

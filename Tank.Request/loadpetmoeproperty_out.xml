@@ -1,4 +1,4 @@
-<Result value="true" message="Success!">
+<Result value="true" message="Başarılı!">
   <ItemTemplate>
     <Item Level="1" Attack="6" Lucky="6" Agility="6" Blood="40" Defence="6" Guard="3" Exp="80" />
     <Item Level="2" Attack="9" Lucky="9" Agility="9" Blood="55" Defence="9" Guard="5" Exp="110" />

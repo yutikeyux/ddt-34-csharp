@@ -2836,7 +2836,7 @@ public class GamePlayer : IGamePlayer
                 if (DateTime.Now.DayOfWeek == DayOfWeek.Monday)
                 {
                     //Extra.ResetNoviceEvent(NoviceActiveType.IKI_VS_IKI_SAVAS);
-                    Extra.ResetNoviceEvent(NoviceActiveType.Haftalık_Harcama);
+                    Extra.ResetNoviceEvent(NoviceActiveType.Haftalik_Harcama);
                 }
                 UserVIPInfo.MaxBuyHonor = 0;
                 Farm.ResetFarmProp();
@@ -4189,9 +4189,9 @@ public class GamePlayer : IGamePlayer
                     {
                         Extra.UpdateEventCondition((int)NoviceActiveType.Gunluk_Harcama, value, isPlus: true, 0);
                     }
-                    if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Haftalık_Harcama))
+                    if (Extra.CheckNoviceActiveOpen(NoviceActiveType.Haftalik_Harcama))
                     {
-                        Extra.UpdateEventCondition((int)NoviceActiveType.Haftalık_Harcama, value, isPlus: true, 0);
+                        Extra.UpdateEventCondition((int)NoviceActiveType.Haftalik_Harcama, value, isPlus: true, 0);
                     }
                 }
                 OnPropertiesChanged();

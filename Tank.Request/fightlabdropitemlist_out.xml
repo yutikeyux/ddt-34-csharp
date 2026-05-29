@@ -1,4 +1,4 @@
-<Result value="true" message="Success!">
+<Result value="true" message="Başarılı!">
   <Item ID="1000" Easy="0" AwardItem="11021" Count="4" />
   <Item ID="1000" Easy="0" AwardItem="11002" Count="4" />
   <Item ID="1000" Easy="0" AwardItem="11006" Count="4" />

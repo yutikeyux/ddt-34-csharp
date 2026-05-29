@@ -25,9 +25,9 @@ namespace Game.Server.Farm.Handle
 
             if (userId == Player.PlayerCharacter.ID && Player.Farm.GainField(fieldId))
             {
-                msg = LanguageMgr.GetTranslation("Ekin Toplama Baþarýlý!"); //türkçeleþtirildi not: yuti
+                msg = LanguageMgr.GetTranslation("Ekin Toplama Baï¿½arï¿½lï¿½!"); //tï¿½rkï¿½eleï¿½tirildi not: yuti
 
-                // Etkinlik Mantýðý: Tohum Toplama (Kendi tarlasýndan hasat yapma)
+                // Etkinlik Mantï¿½ï¿½ï¿½: Tohum Toplama (Kendi tarlasï¿½ndan hasat yapma)
                 var info = Player.Client.Player.Extra.GetEventProcess((int)NoviceActiveType.TOHUM_TOPLAMA);
                 Player.Client.Player.Extra.UpdateEventCondition((int)NoviceActiveType.TOHUM_TOPLAMA, info.Conditions + 1);
             }
@@ -35,18 +35,18 @@ namespace Game.Server.Farm.Handle
             {
                 if (Player.Farm.GainFriendFields(userId, fieldId))
                 {
-                    msg = LanguageMgr.GetTranslation("Ekin Çalma Baþarýlý!"); //türkçeleþtirildi not: yuti
+                    msg = LanguageMgr.GetTranslation("Ekin ï¿½alma Baï¿½arï¿½lï¿½!"); //tï¿½rkï¿½eleï¿½tirildi not: yuti
 
-                    // Etkinlik Mantýðý: Arkadaþtan Ekin Çalma
-                    if (Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.Arkadasdan_Ekin_Clalma))
+                    // Etkinlik Mantï¿½ï¿½ï¿½: Arkadaï¿½tan Ekin ï¿½alma
+                    if (Player.Extra.CheckNoviceActiveOpen(NoviceActiveType.Arkadasdan_Ekin_Calma))
                     {
-                        var info2 = Player.Client.Player.Extra.GetEventProcess((int)NoviceActiveType.Arkadasdan_Ekin_Clalma);
-                        Player.Extra.UpdateEventCondition((int)NoviceActiveType.Arkadasdan_Ekin_Clalma, info2.Conditions + 1);
+                        var info2 = Player.Client.Player.Extra.GetEventProcess((int)NoviceActiveType.Arkadasdan_Ekin_Calma);
+                        Player.Extra.UpdateEventCondition((int)NoviceActiveType.Arkadasdan_Ekin_Calma, info2.Conditions + 1);
                     }
                 }
                 else
                 {
-                    msg = LanguageMgr.GetTranslation("Daha Fazla Çalamazsýn!"); //türkçeleþtirildi not: yuti
+                    msg = LanguageMgr.GetTranslation("Daha Fazla ï¿½alamazsï¿½n!"); //tï¿½rkï¿½eleï¿½tirildi not: yuti
                 }
             }
             Player.SendMessage(msg);

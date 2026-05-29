@@ -30,6 +30,18 @@ namespace Game.Server.Managers
 
 		public static List<GmActivityInfo> SignActivity = new List<GmActivityInfo>();
 
+		public static List<GmActivityInfo> LoginStreakActives = new List<GmActivityInfo>();
+
+		public static List<GmActivityInfo> BattleWinActives = new List<GmActivityInfo>();
+
+		public static List<GmActivityInfo> GuildDonateActives = new List<GmActivityInfo>();
+
+		public static List<GmActivityInfo> LevelUpActives = new List<GmActivityInfo>();
+
+		public static List<GmActivityInfo> BossKillActives = new List<GmActivityInfo>();
+
+		public static List<GmActivityInfo> PetTrainingActives = new List<GmActivityInfo>();
+
 		public static List<GmActivityInfo> GmActivityInfos;
 
 		public static List<GmGiftInfo> GmGiftInfos;
@@ -49,6 +61,12 @@ namespace Game.Server.Managers
 			MountActives = new List<GmActivityInfo>();
 			TempleActives = new List<GmActivityInfo>();
 			SignActivity = new List<GmActivityInfo>();
+			LoginStreakActives = new List<GmActivityInfo>();
+			BattleWinActives = new List<GmActivityInfo>();
+			GuildDonateActives = new List<GmActivityInfo>();
+			LevelUpActives = new List<GmActivityInfo>();
+			BossKillActives = new List<GmActivityInfo>();
+			PetTrainingActives = new List<GmActivityInfo>();
 			foreach (GmActivityInfo item in GmActivityInfos.FindAll((GmActivityInfo a) => a.endTime > DateTime.Now && a.beginTime <= DateTime.Now))
 			{
 				int activityType = item.activityType;
@@ -63,6 +81,12 @@ namespace Game.Server.Managers
 					14 => MountActives,
 					20 => TempleActives,
 					31 => SignActivity,
+					32 => LoginStreakActives,
+					33 => BattleWinActives,
+					34 => GuildDonateActives,
+					35 => LevelUpActives,
+					36 => BossKillActives,
+					37 => PetTrainingActives,
 					_ => null,
 				};
 				if (1 == 0)

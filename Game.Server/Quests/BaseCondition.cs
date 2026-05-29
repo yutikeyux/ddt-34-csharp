@@ -166,6 +166,26 @@ namespace Game.Server.Quests
 					return new KesifGecmeCountluHaliCondition(quest, info, value);
 				case 104:
 					return new DiscordBaglaCondition(quest, info, value);
+				case 56:
+					return new BossKillQuestCondition(quest, info, value);
+				case 57:
+					return new GuildDonateQuestCondition(quest, info, value);
+				case 58:
+					return new EquipCardQuestCondition(quest, info, value);
+				case 59:
+					return new UseBufferQuestCondition(quest, info, value);
+				case 60:
+					return new VIPReachQuestCondition(quest, info, value);
+				case 61:
+					return new HotSpringTimeQuestCondition(quest, info, value);
+				case 62:
+					return new TotalDamageQuestCondition(quest, info, value);
+				case 63:
+					return new WinStreakQuestCondition(quest, info, value);
+				case 64:
+					return new ConsecutiveLoginQuestCondition(quest, info, value);
+				case 65:
+					return new FightOfferQuestCondition(quest, info, value);
 
 				default:
 					if (log.IsErrorEnabled)

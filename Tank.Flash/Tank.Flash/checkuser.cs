@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Web;
 using System.Web.SessionState;
@@ -30,18 +30,18 @@ namespace Tank.Flash
 			string text2 = context.Request["password"];
 			using (MemberShipBussiness memberShipBussiness = new MemberShipBussiness())
 			{
-				if (memberShipBussiness.CheckUsername(this.SiteTitle, text, text2))
+				if (memberShipBussiness.CheckUsername(text, text2))
 				{
 					context.Session["username"] = text;
 					context.Session["password"] = text2;
-					LoadingManager.Add(text, text2);
-					context.Response.Write("ok");
-				}
-				else if (memberShipBussiness.CheckUsername("GameAdmin", text, text2))
-				{
-					context.Session["username"] = text;
-					context.Session["password"] = text2;
-					LoadingManager.Add(text, text2, true);
+					if (memberShipBussiness.CheckAdmin(text))
+					{
+						LoadingManager.Add(text, text2, true);
+					}
+					else
+					{
+						LoadingManager.Add(text, text2);
+					}
 					context.Response.Write("ok");
 				}
 				else
