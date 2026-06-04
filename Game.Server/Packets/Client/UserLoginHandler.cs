@@ -509,6 +509,9 @@ namespace Game.Server.Packets.Client
                 ResetFailedAttempts(username);
                 _ = _pendingLogins.TryRemove(playerInfo.ID, out _);
 
+                // Izinli IP listesine kaydet
+                Game.Base.AllowedIPFilter.RegisterLoginIP(username, clientIp);
+
                 GameServer.log.Info($"Player {username} (ID: {playerInfo.ID}) logged in successfully from IP: {clientIp}");
 
                 return 1;

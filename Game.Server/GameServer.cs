@@ -1444,6 +1444,7 @@ namespace Game.Server
                     return false;
                 }
                 HydroFilter.Start();
+                AllowedIPFilter.Start();
                 GameEventMgr.Notify(GameServerEvent.Started, this);
                 GC.Collect(GC.MaxGeneration);
                 if (log.IsInfoEnabled)
@@ -1558,6 +1559,7 @@ namespace Game.Server
                     m_bagMailScanTimer.Dispose();
                     m_bagMailScanTimer = null;
                 }
+                AllowedIPFilter.Stop();
                 base.Stop();
                 Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
                 log.Info("Server Stopped!");

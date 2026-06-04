@@ -4023,7 +4023,7 @@ ToyGrapple.ErroAward:Sistem ödülü henüz güncellemedi, lütfen daha sonra te
 BuyBadgeHandler.Success:Rozet başarıyla satın alındı!
 BuyBadgeHandler.Fail:Rozet satın alınamadı!
 ConsortiaBussiness.BuyBadge.Msg2:Yetkiler yeterli değil!
-ConsortiaBussiness.Riches.Msg3:A propriedade não é suficiente!
+ConsortiaBussiness.Riches.Msg3:Koşul Yetersiz!
 BuyBadge.BadgeNotFound:Sistem hala bu başlığı satmıyor!
 SingleRoomBegin.Survival.Close:Etkinlik her gün 01:00 - 24:00 saatleri arasında başlar.
 SurvivalMode.Msg:Eşleştirme başarılı! Yaşam ve ölüm savaşı başladı.

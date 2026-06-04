@@ -19,222 +19,226 @@ namespace Game.Base
 
         private static readonly int SEND_BUFF_SIZE = 16384;
 
-        public int ClientCount=> _clients.Count;
+        public int ClientCount => _clients.Count;
 
         public BaseServer()
         {
-			ac_event.Completed += AcceptAsyncCompleted;
+            ac_event.Completed += AcceptAsyncCompleted;
         }
 
         private void AcceptAsync()
         {
-			try
-			{
-				if (_linstener != null)
-				{
-					SocketAsyncEventArgs e = new SocketAsyncEventArgs();
-					e.Completed += AcceptAsyncCompleted;
-					_linstener.AcceptAsync(e);
-				}
-			}
-			catch (Exception exception)
-			{
-				log.Error("AcceptAsync is error!", exception);
-			}
+            try
+            {
+                if (_linstener != null)
+                {
+                    SocketAsyncEventArgs e = new SocketAsyncEventArgs();
+                    e.Completed += AcceptAsyncCompleted;
+                    _linstener.AcceptAsync(e);
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("AcceptAsync is error!", exception);
+            }
         }
 
-		private void AcceptAsyncCompleted(object sender, SocketAsyncEventArgs e)
-		{
-			Socket socket = null;
-			try
-			{
-				socket = e.AcceptSocket;
-				socket.SendBufferSize = SEND_BUFF_SIZE;
-				socket.NoDelay = true;
-				socket.SendTimeout = 500;
-				socket.ReceiveTimeout = 500;
-				BaseClient newClient = GetNewClient();
-				try
-				{
-					if (HydroFilter.IsBlocked(socket.RemoteEndPoint))
-					{
-						Console.Write("-");
-						//Statistics.BlockedConnections++;
-						HydroFilter.BlockedConnections++;
-						newClient.Disconnect();
-					}
-					else
-					{
-						//Statistics.ConnectionCount++;
-						HydroFilter.ConnectionCount++;
-						if (HydroFilter.IsActive)
-						{
-							HydroFilter.LogNewConnection(socket.RemoteEndPoint);
-						}
-						if (log.IsInfoEnabled)
-						{
-							log.Info("Incoming connection from " + (socket.Connected ? socket.RemoteEndPoint.ToString() : "socket disconnected"));
-						}
-
-						lock (_clients.SyncRoot)
-						{
-							_clients.Add(newClient, newClient);
-							newClient.Disconnected += client_Disconnected;
-							Statistics.ClientsCount = _clients.Count;
-						}
-						newClient.Connect(socket);
-						newClient.ReceiveAsync();
-					}
-				}
-				catch (Exception arg)
-				{
-					log.ErrorFormat("create client failed:{0}", arg);
-					newClient.Disconnect();
-				}
-			}
-			catch
-			{
-				if (socket == null)
-				{
-					return;
-				}
-				try
-				{
-					socket.Close();
-				}
-				catch (Exception exception)
-				{
-					if (log.IsErrorEnabled)
-					{
-						log.Error("AcceptAsyncCompleted", exception);
-					}
-				}
-			}
-			finally
-			{
-				e.Dispose();
-				AcceptAsync();
-			}
-		}
-
-		private void client_Disconnected(BaseClient client)
+        private void AcceptAsyncCompleted(object sender, SocketAsyncEventArgs e)
         {
-			client.Disconnected -= client_Disconnected;
-			RemoveClient(client);
+            Socket socket = null;
+            try
+            {
+                socket = e.AcceptSocket;
+                socket.SendBufferSize = SEND_BUFF_SIZE;
+                socket.NoDelay = true;
+                socket.SendTimeout = 500;
+                socket.ReceiveTimeout = 500;
+                BaseClient newClient = GetNewClient();
+                try
+                {
+                    if (HydroFilter.IsBlocked(socket.RemoteEndPoint))
+                    {
+                        Console.Write("-");
+                        HydroFilter.BlockedConnections++;
+                        newClient.Disconnect();
+                    }
+                    else if (!AllowedIPFilter.IsAllowed(socket.RemoteEndPoint))
+                    {
+                        AllowedIPFilter.IncrementRejected();
+                        newClient.Disconnect();
+                    }
+                    else
+                    {
+                        //Statistics.ConnectionCount++;
+                        HydroFilter.ConnectionCount++;
+                        if (HydroFilter.IsActive)
+                        {
+                            HydroFilter.LogNewConnection(socket.RemoteEndPoint);
+                        }
+                        if (log.IsInfoEnabled)
+                        {
+                            log.Info("Incoming connection from " + (socket.Connected ? socket.RemoteEndPoint.ToString() : "socket disconnected"));
+                        }
+
+                        lock (_clients.SyncRoot)
+                        {
+                            _clients.Add(newClient, newClient);
+                            newClient.Disconnected += client_Disconnected;
+                            Statistics.ClientsCount = _clients.Count;
+                        }
+                        newClient.Connect(socket);
+                        newClient.ReceiveAsync();
+                    }
+                }
+                catch (Exception arg)
+                {
+                    log.ErrorFormat("create client failed:{0}", arg);
+                    newClient.Disconnect();
+                }
+            }
+            catch
+            {
+                if (socket == null)
+                {
+                    return;
+                }
+                try
+                {
+                    socket.Close();
+                }
+                catch (Exception exception)
+                {
+                    if (log.IsErrorEnabled)
+                    {
+                        log.Error("AcceptAsyncCompleted", exception);
+                    }
+                }
+            }
+            finally
+            {
+                e.Dispose();
+                AcceptAsync();
+            }
+        }
+
+        private void client_Disconnected(BaseClient client)
+        {
+            client.Disconnected -= client_Disconnected;
+            RemoveClient(client);
         }
 
         public void Dispose()
         {
-			ac_event.Dispose();
+            ac_event.Dispose();
         }
 
         public BaseClient[] GetAllClients()
         {
-			lock (_clients.SyncRoot)
-			{
-				BaseClient[] array = new BaseClient[_clients.Count];
-				_clients.Keys.CopyTo(array, 0);
-				return array;
-			}
+            lock (_clients.SyncRoot)
+            {
+                BaseClient[] array = new BaseClient[_clients.Count];
+                _clients.Keys.CopyTo(array, 0);
+                return array;
+            }
         }
 
         protected virtual BaseClient GetNewClient()
         {
-			return new BaseClient(new byte[8192], new byte[8192]);
+            return new BaseClient(new byte[8192], new byte[8192]);
         }
 
         public virtual bool InitSocket(IPAddress ip, int port)
         {
-			try
-			{
-				_linstener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-				_linstener.Bind(new IPEndPoint(ip, port));
-			}
-			catch (Exception exception)
-			{
-				log.Error("InitSocket", exception);
-				return false;
-			}
-			return true;
+            try
+            {
+                _linstener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                _linstener.Bind(new IPEndPoint(ip, port));
+            }
+            catch (Exception exception)
+            {
+                log.Error("InitSocket", exception);
+                return false;
+            }
+            return true;
         }
 
         public virtual void RemoveClient(BaseClient client)
         {
-			lock (_clients.SyncRoot)
-			{
-				_clients.Remove(client);
-			}
+            lock (_clients.SyncRoot)
+            {
+                _clients.Remove(client);
+            }
         }
 
         public virtual bool Start()
         {
-			if (_linstener == null)
-			{
-				return false;
-			}
-			try
-			{
-				_linstener.Listen(100);
-				AcceptAsync();
-				if (log.IsDebugEnabled)
-				{
-					log.Debug("Server is now listening to incoming connections!");
-				}
-			}
-			catch (Exception exception)
-			{
-				if (log.IsErrorEnabled)
-				{
-					log.Error("Start", exception);
-				}
-				if (_linstener != null)
-				{
-					_linstener.Close();
-				}
-				return false;
-			}
-			return true;
+            if (_linstener == null)
+            {
+                return false;
+            }
+            try
+            {
+                _linstener.Listen(100);
+                AcceptAsync();
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("Server is now listening to incoming connections!");
+                }
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Start", exception);
+                }
+                if (_linstener != null)
+                {
+                    _linstener.Close();
+                }
+                return false;
+            }
+            return true;
         }
 
         public virtual void Stop()
         {
-			log.Debug("Stopping server! - Entering method");
-			try
-			{
-				if (_linstener != null)
-				{
-					Socket linstener = _linstener;
-					_linstener = null;
-					linstener.Close();
-					log.Debug("Server is no longer listening for incoming connections!");
-				}
-			}
-			catch (Exception exception)
-			{
-				log.Error("Stop", exception);
-			}
-			if (_clients != null)
-			{
-				lock (_clients.SyncRoot)
-				{
-					try
-					{
-						BaseClient[] array = new BaseClient[_clients.Keys.Count];
-						_clients.Keys.CopyTo(array, 0);
-						BaseClient[] array2 = array;
-						for (int i = 0; i < array2.Length; i++)
-						{
-							array2[i].Disconnect();
-						}
-						log.Debug("Stopping server! - Cleaning up client list!");
-					}
-					catch (Exception exception2)
-					{
-						log.Error("Stop", exception2);
-					}
-				}
-			}
-			log.Debug("Stopping server! - End of method!");
+            log.Debug("Stopping server! - Entering method");
+            try
+            {
+                if (_linstener != null)
+                {
+                    Socket linstener = _linstener;
+                    _linstener = null;
+                    linstener.Close();
+                    log.Debug("Server is no longer listening for incoming connections!");
+                }
+            }
+            catch (Exception exception)
+            {
+                log.Error("Stop", exception);
+            }
+            if (_clients != null)
+            {
+                lock (_clients.SyncRoot)
+                {
+                    try
+                    {
+                        BaseClient[] array = new BaseClient[_clients.Keys.Count];
+                        _clients.Keys.CopyTo(array, 0);
+                        BaseClient[] array2 = array;
+                        for (int i = 0; i < array2.Length; i++)
+                        {
+                            array2[i].Disconnect();
+                        }
+                        log.Debug("Stopping server! - Cleaning up client list!");
+                    }
+                    catch (Exception exception2)
+                    {
+                        log.Error("Stop", exception2);
+                    }
+                }
+            }
+            log.Debug("Stopping server! - End of method!");
         }
     }
 }

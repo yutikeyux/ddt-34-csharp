@@ -174,7 +174,7 @@ namespace Game.Service
             {
                 using (WebClient wc = new WebClient())
                 {
-                    wc.DownloadString("http://127.0.0.1/ddt-quest-s1/celeblist/createallceleb.ashx");
+                    wc.DownloadString("https://trbombom.com/ddt-quest-s1/celeblist/createallceleb.ashx");
                 }
                 Console.WriteLine("Onur listesi güncellendi!");
             }

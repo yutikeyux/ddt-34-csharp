@@ -3409,6 +3409,11 @@ public class GamePlayer : IGamePlayer
                         string NoticeOnline = string.Format("Moderatör [yutikeyu] oyuna giriş yaptı!");
                         WorldMgr.SendMessageAll(NoticeOnline);
                     }
+                    if (PlayerCharacter.NickName == "bubuli")
+                    {
+                        string NoticeOnline = string.Format("G-MOD [bubuli] oyuna giriş yaptı!");
+                        WorldMgr.SendMessageAll(NoticeOnline);
+                    }
                     if (PlayerCharacter.NickName == "element")
                     {
                         string NoticeOnline = string.Format("Yönetici [element] oyuna giriş yaptı!");
