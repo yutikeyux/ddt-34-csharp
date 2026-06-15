@@ -34,7 +34,7 @@ namespace Tank.Request
 			string key = context.Request["key"];
 			string activeKey = context.Request["activeKey"];
 			bool value = false;
-			string message = "ActivePullDownHandler.Fail";
+			string message = "Okan";
 			string awardID = "";
 			XElement result = new XElement("Result");
 			bool flag = activeKey != "";

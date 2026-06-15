@@ -4168,18 +4168,18 @@ namespace Bussiness
                 if (db.RunProcedure("SP_Active_PullDown", para))
                 {
                     result = (int)para[3].Value;
-                    msg = result switch
+                    msg = result switch  
                     {
-                        0 => "Nhận lãnh thành công, vật phẩm đã gửi đến thư người dùng.",//msg = "ActiveBussiness.Msg0";
-                        1 => "Lỗi không xác định.",//msg = "ActiveBussiness.Msg1";
-                        2 => "Tên người dùngkhông tồn tại.",//msg = "ActiveBussiness.Msg2";
-                        3 => "Nhận vật phẩm  thất bại.",//msg = "ActiveBussiness.Msg3";
-                        4 => "Số này không tồn tại, hãy kiểm tra lại.",//msg = "ActiveBussiness.Msg4";
-                        5 => "Số này đã nhận thưởng, không thể nhận nữa.",//msg = "ActiveBussiness.Msg5";
-                        6 => "Bạn đã nhận phần thưởng này rồi",//msg = "ActiveBussiness.Msg6";
-                        7 => "Hoạt động chưa bắt đầu.",//msg = "ActiveBussiness.Msg7";
-                        8 => "Hoạt động đã quá hạn.",//msg = "ActiveBussiness.Msg8";
-                        _ => "Nhận thưởng thất bại.",//msg = "ActiveBussiness.Msg9";
+                        0 => "Başarıyla alındı, öğe kullanıcının posta kutusuna gönderildi.",//msg = "ActiveBussiness.Msg0";
+                        1 => "Bilinmeyen bir hata.",//msg = "ActiveBussiness.Msg1";
+                        2 => "Kullanıcı adı mevcut değil.",//msg = "ActiveBussiness.Msg2";
+                        3 => "Öğe alma işlemi başarısız oldu.",//msg = "ActiveBussiness.Msg3";
+                        4 => "Bu numara mevcut değil, lütfen tekrar kontrol edin.",//msg = "ActiveBussiness.Msg4";
+                        5 => "Bu numara zaten bir ödül aldı ve başka bir ödül alamaz.",//msg = "ActiveBussiness.Msg5";
+                        6 => "Bu ödülü zaten aldınız.",//msg = "ActiveBussiness.Msg6";
+                        7 => "Faaliyet henüz başlamadı.",//msg = "ActiveBussiness.Msg7";
+                        8 => "Etkinliğin süresi doldu.",//msg = "ActiveBussiness.Msg8";
+                        _ => "Ödül talep edilmedi.",//msg = "ActiveBussiness.Msg9"; //
                     };
                 }
 

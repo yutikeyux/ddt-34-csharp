@@ -216,7 +216,7 @@ namespace Game.Server.Packets.Client
                         {
                             GameServer.Instance.LoginServer.SendPacket(
                                 WorldMgr.SendSysNotice(eMessageType.ChatNormal,
-                                    $"[{client.Player.ZoneName}] Tebrikler! [{client.Player.PlayerCharacter.NickName}] kutu açarak [{value3.Template.Name}] kazandı!",
+                                    $"{client.Player.ZoneName} oyuncusu [{client.Player.PlayerCharacter.NickName}] kutu açarak kazandı: ",
                                     value3.ItemID, value3.TemplateID, null));
                         }
 

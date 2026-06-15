@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4C958881-203A-4377-98CA-AC60E7E4383E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Bussiness</RootNamespace>
+    <AssemblyName>Bussiness</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Game.Base">
+      <HintPath>..\..\..\..\..\DDTANK\C#\Tank.Request\bin\Game.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\..\..\DDTANK\C#\Tank.Request\bin\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlDataProvider">
+      <HintPath>..\..\..\..\..\DDTANK\C#\Tank.Request\bin\SqlDataProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActiveBussiness.cs" />
+    <Compile Include="AreaBussiness.cs" />
+    <Compile Include="Base64.cs" />
+    <Compile Include="BaseBussiness.cs" />
+    <Compile Include="BaseCrossBussiness.cs" />
+    <Compile Include="BuffType.cs" />
+    <Compile Include="CenterService\CenterServiceClient.cs" />
+    <Compile Include="CenterService\ICenterService.cs" />
+    <Compile Include="CenterService\ICenterServiceChannel.cs" />
+    <Compile Include="CenterService\ServerData.cs" />
+    <Compile Include="ChatInputView.cs" />
+    <Compile Include="CheckCode.cs" />
+    <Compile Include="ConsortiaBussiness.cs" />
+    <Compile Include="CookieInfoBussiness.cs" />
+    <Compile Include="CountBussiness.cs" />
+    <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="GameProperties.cs" />
+    <Compile Include="Game\Server\Managers\ConsortiaLevelMgr.cs" />
+    <Compile Include="Helpers\DictionaryHelper.cs" />
+    <Compile Include="Helpers\Functions.cs" />
+    <Compile Include="IniReader.cs" />
+    <Compile Include="Interface\BaseInterface.cs" />
+    <Compile Include="Interface\DWInterface.cs" />
+    <Compile Include="Interface\QYInterface.cs" />
+    <Compile Include="Interface\SRInterface.cs" />
+    <Compile Include="ItemRecordBussiness.cs" />
+    <Compile Include="LanguageMgr.cs" />
+    <Compile Include="ManageBussiness.cs" />
+    <Compile Include="Managers\AccumulActiveLoginMgr.cs" />
+    <Compile Include="Managers\AchievementMgr.cs" />
+    <Compile Include="Managers\ActiveMgr.cs" />
+    <Compile Include="Managers\ConsortiaExtraMgr.cs" />
+    <Compile Include="Managers\DailyLeagueAwardMgr.cs" />
+    <Compile Include="Managers\DiceLevelAwardMgr.cs" />
+    <Compile Include="Managers\DropMgr.cs" />
+    <Compile Include="Managers\EventAwardMgr.cs" />
+    <Compile Include="Managers\EventLiveMgr.cs" />
+    <Compile Include="Managers\FightSpiritTemplateMgr.cs" />
+    <Compile Include="Managers\GoldEquipMgr.cs" />
+    <Compile Include="Managers\ItemBoxMgr.cs" />
+    <Compile Include="Managers\ItemMgr.cs" />
+    <Compile Include="Managers\NewTitleMgr.cs" />
+    <Compile Include="Managers\PetMoePropertyMgr.cs" />
+    <Compile Include="Managers\QQTipsMgr.cs" />
+    <Compile Include="Managers\QuestMgr.cs" />
+    <Compile Include="Managers\SetsBuildTempMgr.cs" />
+    <Compile Include="Managers\ShopMgr.cs" />
+    <Compile Include="Managers\SubActiveMgr.cs" />
+    <Compile Include="Managers\TotemHonorMgr.cs" />
+    <Compile Include="Managers\TotemMgr.cs" />
+    <Compile Include="Managers\WorldEventMgr.cs" />
+    <Compile Include="MapBussiness.cs" />
+    <Compile Include="MemberShipBussiness.cs" />
+    <Compile Include="OrderBussiness.cs" />
+    <Compile Include="PlayerBussiness.cs" />
+    <Compile Include="ProduceBussiness.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol\eDropType.cs" />
+    <Compile Include="Protocol\eEventPacket.cs" />
+    <Compile Include="Protocol\eReloadType.cs" />
+    <Compile Include="PveBussiness.cs" />
+    <Compile Include="RandomSafe.cs" />
+    <Compile Include="ServiceBussiness.cs" />
+    <Compile Include="StaticFunction.cs" />
+    <Compile Include="Statistics.cs" />
+    <Compile Include="ThreadSafeRandom.cs" />
+    <Compile Include="UserInfoBussiness.cs" />
+    <Compile Include="WebLogin\ChenckValidateRequest.cs" />
+    <Compile Include="WebLogin\ChenckValidateRequestBody.cs" />
+    <Compile Include="WebLogin\ChenckValidateResponse.cs" />
+    <Compile Include="WebLogin\ChenckValidateResponseBody.cs" />
+    <Compile Include="WebLogin\Get_UserSexRequest.cs" />
+    <Compile Include="WebLogin\Get_UserSexRequestBody.cs" />
+    <Compile Include="WebLogin\Get_UserSexResponse.cs" />
+    <Compile Include="WebLogin\Get_UserSexResponseBody.cs" />
+    <Compile Include="WebLogin\PassPortSoap.cs" />
+    <Compile Include="WebLogin\PassPortSoapChannel.cs" />
+    <Compile Include="WebLogin\PassPortSoapClient.cs" />
+    <Compile Include="XmlExtends.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

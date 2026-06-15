@@ -144,7 +144,7 @@ namespace Game.Server.RingStation
             {
                 AttackMultiplier = atkDefMultiplier,
                 DefenceMultiplier = atkDefMultiplier,
-                HpMultiplier = 3.0,   // Her zaman 3 kat can
+                HpMultiplier = 1.0,   // Her zaman 3 kat can
                 AgilityMultiplier = 1.0,   // Her zaman oyuncuyla eşit agility
                 Difficulty = GetDifficulty(playerGrade)
             };
@@ -158,8 +158,8 @@ namespace Game.Server.RingStation
         {
             if (grade <= 0) grade = 1;
 
-            if (grade <= 15) return 0.55; // Beginner — en kolay
-            if (grade <= 30) return 0.58; // Normal
+            if (grade <= 15) return 0.1; // Beginner — en kolay
+            if (grade <= 30) return 0.5; // Normal
             if (grade <= 50) return 0.62; // Hard
             return 0.67;                  // Expert  (Lv 51-60)
         }

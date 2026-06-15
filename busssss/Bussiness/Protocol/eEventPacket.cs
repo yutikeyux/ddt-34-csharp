@@ -1,0 +1,19 @@
+﻿using System;
+
+namespace Bussiness.Protocol
+{
+	// Token: 0x0200002D RID: 45
+	public enum eEventPacket
+	{
+		// Token: 0x0400010E RID: 270
+		RANKING_LIGHTRIDDLE = 1,
+		// Token: 0x0400010F RID: 271
+		UPDATE_RANKING_LIGHTRIDDLE,
+		// Token: 0x04000110 RID: 272
+		SEND_LIGHTRIDDLE_AWARD,
+		// Token: 0x04000111 RID: 273
+		LUCKSTAR_REWARD_RECORD,
+		// Token: 0x04000112 RID: 274
+		HALLOWEEN_RANK_RECORD
+	}
+}

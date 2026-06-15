@@ -36,8 +36,24 @@
     <Reference Include="Ajax">
       <HintPath>bin\Ajax.dll</HintPath>
     </Reference>
+    <Reference Include="Bussiness, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bussiness\bin\Debug\net472\Bussiness.dll</HintPath>
+    </Reference>
+    <Reference Include="Game.Base, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Game.Base.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>bin\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Road.Flash, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Road.Flash.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlDataProvider, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SqlDataProvider\bin\Debug\net472\SqlDataProvider.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -244,10 +260,12 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Bussiness\Bussiness.csproj" />
-    <ProjectReference Include="..\Game.Base\Game.Base.csproj" />
-    <ProjectReference Include="..\Road.Flash\Road.Flash.csproj" />
-    <ProjectReference Include="..\SqlDataProvider\SqlDataProvider.csproj" />
+    <Analyzer Include="..\Game.Base\bin\Debug\net472\Game.Base.dll" />
+    <Analyzer Include="..\Road.Flash\bin\Debug\Road.Flash.dll" />
+    <Analyzer Include="..\SqlDataProvider\bin\Debug\net472\SqlDataProvider.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

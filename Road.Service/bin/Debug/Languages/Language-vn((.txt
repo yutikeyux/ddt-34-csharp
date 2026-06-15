@@ -2349,16 +2349,18 @@ Labyrinth.Msg6:Thao tác thành công!
 WishBeadHandler.congratulation: Holy Shit! [{0}] đã dát vàng {1} thành công năng lực vô cực.
 ConsortiaBussiness.BuyBadge.Msg2:Mua huy hiệu thành công.
 OK:OK!
-ActiveBussiness.Msg0:Nhận lãnh thành công, vật phẩm đã gửi đến thư người dùng.
-ActiveBussiness.Msg1:Lỗi không xác định.
-ActiveBussiness.Msg2:Tên người dùng không tồn tại.
-ActiveBussiness.Msg3:Nhận vật phẩm  thất bại.
-ActiveBussiness.Msg4:Số này không tồn tại, hãy kiểm tra lại.
-ActiveBussiness.Msg5:Số này đã nhận thưởng, không thể nhận nữa.
-ActiveBussiness.Msg6:Bạn đã nhận phần thưởng này rồi.
-ActiveBussiness.Msg7:Hoạt động chưa bắt đầu.
-ActiveBussiness.Msg8:Hoạt động đã quá hạn.
-ActiveBussiness.Msg9:Nhận thưởng thất bại.
+
+ActiveBussiness.Msg0:Ödül alımı başarılı, ödülünüz mail kutunuza gönderildi. 
+ActiveBussiness.Msg1:Bilinmeyen hata. 
+ActiveBussiness.Msg2:Kullanıcı adı mevcut değil. 
+ActiveBussiness.Msg3:Öğe alımı başarısız. 
+ActiveBussiness.Msg4:Bu numara mevcut değil, lütfen doğru yazdığınızdan emin olun. 
+ActiveBussiness.Msg5:Bu numara daha önce ödül almış, tekrar alamazsınız. 
+ActiveBussiness.Msg6:Daha önce bu etkinlikte ödül almışsınız. 
+ActiveBussiness.Msg7:Etkinlik henüz başlamadı. 
+ActiveBussiness.Msg8:Etkinlik tarihi geçmiş. 
+ActiveBussiness.Msg9:Toplama başarısız. 
+
 texpSystem.texpCountToplimit:Bạn đã đạt giới hạn tu luyện hàng ngày, vui lòng tiếp tục vào ngày mai.
 PropUseHandler.ChickActivation.Success:Kích hoạt Code Gà hành thành công!
 PropUseHandler.ChickActivation.Fail:Bạn đã kích hoạt Code Gà Hành.

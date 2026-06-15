@@ -9,6 +9,7 @@
     <LangVersion>Preview</LangVersion>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <NoWarn>CS0414;CS0169;CS0618;CS0649;CS0219;CS0162;CS1522;CS0168;CS0652;MSB3270</NoWarn>
+    <BaseOutputPath>C:\DDTANK\C#\Tank.Request\bin</BaseOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
