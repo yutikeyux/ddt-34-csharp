@@ -764,10 +764,9 @@ namespace Game.Server.Managers
             {
                 DateTime date = value.EndDate.Date;
                 DateTime date2 = DateTime.Now.Date;
-                if (date > date2)
-                {
+                
                     list.Add(value);
-                }
+                
             }
             return list.ToArray();
         }

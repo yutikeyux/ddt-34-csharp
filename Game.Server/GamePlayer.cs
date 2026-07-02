@@ -3344,6 +3344,7 @@ public class GamePlayer : IGamePlayer
                     _ = Out.SendAvatarCollect(AvatarCollect);
                     AvatarCollect.ScanAvatarVaildDate();
                     Out.SendEdictumVersion();
+                    
                     PlayerState = ePlayerState.Manual;
                     _ = Out.SendBufferList(this, BufferList.GetAllBufferByTemplate());
                     _ = Out.SendUpdateAchievementData(AchievementInventory.GetSuccessAchievement());
