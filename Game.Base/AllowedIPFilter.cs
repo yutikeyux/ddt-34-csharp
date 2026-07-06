@@ -23,9 +23,9 @@ namespace Game.Base
         // Izinli IP'lerin thread-safe listesi
         private static readonly ConcurrentDictionary<string, bool> _allowedIPs = new ConcurrentDictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
 
-        // Veritabanindan guncelleme timer'i (60 saniyede bir)
+        // Veritabanindan guncelleme timer'i (5 saniyede bir)
         private static Timer _refreshTimer;
-        private const int REFRESH_INTERVAL_MS = 60000; // 60 saniye
+        private const int REFRESH_INTERVAL_MS = 5000; // 5 saniye
 
         // Filtrenin aktif olup olmadigini belirler
         public static bool IsEnabled { get; private set; }
@@ -93,8 +93,7 @@ namespace Game.Base
             if (!IsEnabled)
                 return true; // Filtre devre disiysa herkese izin ver
 
-            IPEndPoint ipEndPoint = endPoint as IPEndPoint;
-            if (ipEndPoint == null)
+            if (endPoint is not IPEndPoint ipEndPoint)
                 return false;
 
             return IsAllowed(ipEndPoint.Address.ToString());

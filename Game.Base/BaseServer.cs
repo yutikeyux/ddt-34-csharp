@@ -64,7 +64,9 @@ namespace Game.Base
                     }
                     else if (!AllowedIPFilter.IsAllowed(socket.RemoteEndPoint))
                     {
+                        newClient.DisplayMessage("Your connection has been rejected. Please wait for a moment and try again.");
                         AllowedIPFilter.IncrementRejected();
+                        Console.WriteLine("Rejected connection from " + socket.RemoteEndPoint);
                         newClient.Disconnect();
                     }
                     else

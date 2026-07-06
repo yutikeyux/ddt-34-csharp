@@ -1,3 +1,4 @@
+using Game.Base.Events;
 using Game.Base.Packets;
 using log4net;
 using System;
@@ -193,6 +194,7 @@ namespace Game.Base
 
         public virtual void DisplayMessage(string msg)
         {
+
         }
 
         protected virtual void OnConnect()
