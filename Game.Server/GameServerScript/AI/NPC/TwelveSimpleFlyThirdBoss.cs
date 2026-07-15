@@ -159,9 +159,10 @@ namespace GameServerScript.AI.NPC
             foreach (Player player in players)
             {
                 int y = boltMoveYs[Game.Random.Next(boltMoveYs.Length)];
-                player.BoltMove(player.X, y, 0);
-                Game.yutikeyu(player, 0, 0, "");
                 ((PVEGame)Game).SendFreeFocus(player.X, y, 1, 500, 1);
+                player.StartFalling(true, delay: 10, 10);
+                player.BoltMove(player.X, y, 0);
+                
             }
         }
 
@@ -175,13 +176,13 @@ namespace GameServerScript.AI.NPC
                     MoveBeatD();
                     break;
                 case 2:
-                    MoveBeatB();
+                    MoveBeatD();
                     break;
                 case 3:
-                    MoveBeatC();
+                    MoveBeatD();
                     break;
                 case 4:
-                    MoveBeatA();
+                    MoveBeatD();
                     break;
                 default:
                     turn = 1;
